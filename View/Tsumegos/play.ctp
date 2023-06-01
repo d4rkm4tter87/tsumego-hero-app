@@ -13,24 +13,6 @@
 	if($authorx=='Jérôme Hubert') $authorx = 'jhubert';
 	
 	
-	/*
-	$cTest = base64_encode('Hello World');
-	echo '<pre>'; print_r($cTest); echo '</pre>'; 
-	$masterArray2 = $masterArray;
-	for($i=0;$i<count($masterArray2);$i++){
-		$masterArray2[$i][0] = base64_encode(($masterArray2[$i][0]+100)*100*$t['Tsumego']['id']);
-		$masterArray2[$i][1] = base64_encode(($masterArray2[$i][1]+100)*100*$t['Tsumego']['id']);
-		$masterArray2[$i][4] = base64_encode(($masterArray2[$i][4]+100)*100*$t['Tsumego']['id']);
-		$masterArray2[$i][5] = base64_encode(($masterArray2[$i][5]+100)*100*$t['Tsumego']['id']);
-	}
-	
-	for($i=0;$i<count($masterArray2);$i++){
-		$masterArray2[$i][0] = (base64_decode($masterArray2[$i][0])/100/$t['Tsumego']['id'])-100;
-		$masterArray2[$i][1] = (base64_decode($masterArray2[$i][1])/100/$t['Tsumego']['id'])-100;
-		$masterArray2[$i][4] = (base64_decode($masterArray2[$i][4])/100/$t['Tsumego']['id'])-100;
-		$masterArray2[$i][5] = (base64_decode($masterArray2[$i][5])/100/$t['Tsumego']['id'])-100;
-	}
-	*/
 	
 	
 	$heroPower1 = 'hp1x';
@@ -1448,8 +1430,9 @@
 					}
 					if($_SESSION['loggedInUser']['User']['isAdmin']==1){
 						if($showComment[$i]['Comment']['status']==0){
-							echo '<a id="adminComment2-'.$i.'" class="adminComment" href=""><br>asdf</a>';
-							echo '<br><a class="deleteComment" href="/tsumegos/play/'.$t['Tsumego']['id'].'?deleteComment='.$showComment[$i]['Comment']['id'].'&changeComment=2">Can\'t Resolve This</a>';
+							//echo '<br><a class="deleteComment" href="/tsumegos/play/'.$t['Tsumego']['id'].'?deleteComment='.$showComment[$i]['Comment']['id'].'&changeComment=2">Can\'t Resolve This</a>';
+							echo '<br>';
+							echo '<a class="deleteComment" href="/tsumegos/play/'.$t['Tsumego']['id'].'?deleteComment='.$showComment[$i]['Comment']['id'].'&changeComment=3"><img class="thumbs-small" title="approve this comment" width="20px" src="/img/thumbs-small.png"></a>';
 							echo '&nbsp;<a id="adminComment'.$i.'" class="adminComment" href="">Answer</a>';
 							
 						}else{

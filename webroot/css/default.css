@@ -2788,7 +2788,10 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		padding:0;
 		margin:0;
 	}
-	
+	.thumbs-small{
+		position:relative;
+		top:4px;
+	}
 	
 	
 	

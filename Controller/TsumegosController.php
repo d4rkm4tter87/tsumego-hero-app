@@ -389,6 +389,7 @@ class TsumegosController extends AppController{
 			if(isset($this->params['url']['changeComment'])){
 				if($this->params['url']['changeComment']==1) $deleteComment['Comment']['status'] = 97;
 				elseif($this->params['url']['changeComment']==2) $deleteComment['Comment']['status'] = 98;
+				elseif($this->params['url']['changeComment']==3) $deleteComment['Comment']['status'] = 96;
 			}else $deleteComment['Comment']['status'] = 99;
 			$adminActivity = array();
 			$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
