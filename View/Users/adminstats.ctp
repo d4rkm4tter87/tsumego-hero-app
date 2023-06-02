@@ -11,7 +11,8 @@
 	echo '<div class="homeRight">';
 	?>
 	<?php
-	echo '<table class="statsTable">';
+	echo '<h1>File Uploads</h1>';
+	echo '<table border="0" class="statsTable">';
 	for($i=0; $i<count($aa1); $i++){	
 		echo '<tr>
 			<td>'.($i+1).'</td>
@@ -30,24 +31,26 @@
 	}
 	echo '</table>';
 	echo '</div>';
-	//echo '<pre>';print_r($aa1);echo '</pre>';
-	//echo '<pre>';print_r($aa2);echo '</pre>';
+	
 	echo '<div class="homeLeft">';
-	echo '<table class="statsTable">';
-	for($i=0; $i<count($aa2); $i++){
+	echo '<h1>Comments</h1>';
+	echo '<table border="0" class="statsTable">';
+	$iCounter = 1;
+	for($i=count($ca['tsumego_id'])-1; $i>=0; $i--){
 		echo '<tr>
-			<td>'.($i+1).'</td>
-			<td><a target="_blank" href="/tsumegos/play/'.$aa2[$i]['AdminActivity']['tsumego_id'].'">'.$aa2[$i]['AdminActivity']['tsumego'].'</a></td>
-			<td>'.$aa2[$i]['AdminActivity']['created'].'</td>
+			<td>'.($iCounter).'</td>
+			<td><a target="_blank" href="/tsumegos/play/'.$ca['tsumego_id'][$i].'">'.$ca['tsumego'][$i].'</a></td>
+			<td>'.$ca['created'][$i].'</td>
 		</tr>';
 		echo '<tr>
 			<td></td>
-			<td>'.$aa2[$i]['AdminActivity']['name'].': '.$aa2[$i]['AdminActivity']['answer'].'</td>
+			<td><b style="color:grey;">'.$ca['type'][$i].'</b><br>'.$ca['name'][$i].': '.$ca['answer'][$i].'</td>
 			<td></td>
 		</tr>';
 		echo '<tr><td>';
 		if(count($aa2)-1!=$i) echo '<hr>';
 		echo '</td></tr>';
+		$iCounter++;
 	}
 	echo '</table>';
 	

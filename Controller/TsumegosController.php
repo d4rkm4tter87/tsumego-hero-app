@@ -765,7 +765,6 @@ class TsumegosController extends AppController{
 					
 					if($u['User']['elo']-$_COOKIE['misplay'] < 100) $u['User']['elo'] = 100;
 					else $u['User']['elo'] -= $_COOKIE['misplay'];
-					$u['User']['damage']++;
 					if(isset($_COOKIE['preId'])){
 						$u = $this->compute_initial_user_rd($u);
 						//$this->compute_initial_user_rd($t);
@@ -1490,6 +1489,7 @@ class TsumegosController extends AppController{
 		
 		//echo '<pre>'; print_r(($crs/$stopParameter)*100); echo '</pre>';
 		//echo '<pre>'; print_r($masterArrayBW[0]); echo '</pre>';
+		//echo '<pre>'; print_r($id); echo '</pre>';
 		
 		$this->set('raName', $raName);
 		$this->set('crs', $crs);

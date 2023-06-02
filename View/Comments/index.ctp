@@ -108,7 +108,7 @@
 					if($j<100) $display = " ";
 					else $display = 'style="display:none;"';
 					echo '<div class="sandboxComment" id="comment'.$j.'" '.$display.'>';
-					if($comments[$j]['Comment']['solved']==1){
+					if($comments[$j]['Comment']['solved']==1 || $_SESSION['loggedInUser']['User']['isAdmin']>0){
 						$commentColor = 'commentBox1';
 						for($a=0; $a<count($admins); $a++){
 							if($comments[$j]['Comment']['user_name']==$admins[$a]['User']['name']) $commentColor = 'commentBox2';
@@ -127,7 +127,7 @@
 								'.$comments[$j]['Comment']['user_name'].':<br>
 								'.$comments[$j]['Comment']['message'].'</div>';
 								
-								if($comments[$j]['Comment']['status']!=0 && $comments[$j]['Comment']['status']!=97 && $comments[$j]['Comment']['status']!=98){
+								if($comments[$j]['Comment']['status']!=0 && $comments[$j]['Comment']['status']!=97 && $comments[$j]['Comment']['status']!=98 && $comments[$j]['Comment']['status']!=96){
 									echo '<div class="commentAnswer"><div style="padding-top:7px;"></div>'.$comments[$j]['Comment']['admin_name'].':<br>';
 									if($comments[$j]['Comment']['status']==1) echo 'Your moves have been added.<br>';
 									else if($comments[$j]['Comment']['status']==2) echo 'Your file has been added.<br>';
@@ -301,7 +301,7 @@
 								'.$yourComments[$j]['Comment']['user_name'].':<br>
 								'.$yourComments[$j]['Comment']['message'].'</div>';
 								
-								if($yourComments[$j]['Comment']['status']!=0 && $yourComments[$j]['Comment']['status']!=97 && $yourComments[$j]['Comment']['status']!=98){
+								if($yourComments[$j]['Comment']['status']!=0 && $yourComments[$j]['Comment']['status']!=97 && $yourComments[$j]['Comment']['status']!=98 && $comments[$j]['Comment']['status']!=96){
 									echo '<div class="commentAnswer"><div style="padding-top:7px;"></div>'.$yourComments[$j]['Comment']['admin_name'].':<br>';
 									if($yourComments[$j]['Comment']['status']==1) echo 'Your moves have been added.<br>';
 									else if($yourComments[$j]['Comment']['status']==2) echo 'Your file has been added.<br>';

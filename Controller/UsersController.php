@@ -747,31 +747,87 @@ Joschka Zimdars';
 		$this->LoadModel('Set');
 		$this->LoadModel('AdminActivity');
 		
-		$aa = $this->AdminActivity->find('all', array('limit' => 300, 'order' => 'created DESC'));
+		$u = $this->User->find('all', array('conditions' => array('isAdmin >' => 0)));
+		
+		$uArray = array();
+		for($i=0; $i<count($u); $i++){
+			array_push($uArray, $u[$i]['User']['id']);
+		}
+		//echo '<pre>'; print_r($uArray); echo '</pre>'; 
+		
+		
+		$aa = $this->AdminActivity->find('all', array('limit' => 500, 'order' => 'created DESC'));
 		$aa1 = array();
 		$aa2 = array();
 		$b1 = array();
+		$ca = array();
+		$ca['tsumego_id'] = array();
+		$ca['tsumego'] = array();
+		$ca['created'] = array();
+		$ca['name'] = array();
+		$ca['answer'] = array();
+		$ca['type'] = array();
 		
 		for($i=0; $i<count($aa); $i++){
-			$at = $this->Tsumego->find('first', array('conditions' =>  array('id' => $aa[$i]['AdminActivity']['tsumego_id'])));
-			$as = $this->Set->find('first', array('conditions' =>  array('id' => $at['Tsumego']['set_id'])));
-			$au = $this->User->find('first', array('conditions' =>  array('id' => $aa[$i]['AdminActivity']['user_id'])));
+			$at = $this->Tsumego->find('first', array('conditions' => array('id' => $aa[$i]['AdminActivity']['tsumego_id'])));
+			$as = $this->Set->find('first', array('conditions' => array('id' => $at['Tsumego']['set_id'])));
+			$au = $this->User->find('first', array('conditions' => array('id' => $aa[$i]['AdminActivity']['user_id'])));
 			$aa[$i]['AdminActivity']['name'] = $au['User']['name'];
 			$aa[$i]['AdminActivity']['tsumego'] = $as['Set']['title'].' '.$at['Tsumego']['num'];
+			if($aa[$i]['AdminActivity']['answer']==96) $aa[$i]['AdminActivity']['answer'] = 'Approved.';
+			if($aa[$i]['AdminActivity']['answer']==97) $aa[$i]['AdminActivity']['answer'] = 'No answer necessary.';
+			if($aa[$i]['AdminActivity']['answer']==98) $aa[$i]['AdminActivity']['answer'] = 'Can\'t resolve this.';
+			if($aa[$i]['AdminActivity']['answer']==99) $aa[$i]['AdminActivity']['answer'] = 'Deleted.';
 			if(strpos($aa[$i]['AdminActivity']['answer'], '.sgf')){
 				array_push($b1, $aa[$i]['AdminActivity']['name']);
 				array_push($aa1, $aa[$i]);
+			}else{
+				array_push($aa2, $aa[$i]);
+				array_push($ca['tsumego_id'], $aa[$i]['AdminActivity']['tsumego_id']);
+				array_push($ca['tsumego'], $aa[$i]['AdminActivity']['tsumego']);
+				array_push($ca['created'], $aa[$i]['AdminActivity']['created']);
+				array_push($ca['name'], $aa[$i]['AdminActivity']['name']);
+				array_push($ca['answer'], $aa[$i]['AdminActivity']['answer']);
+				array_push($ca['type'], 'Answer');
 			}
-			else array_push($aa2, $aa[$i]);
 		}
 		
 		$b2 = array_count_values($b1);
-		//echo '<pre>'; print_r($b2); echo '</pre>'; 
-		//echo '<pre>'; print_r($b1); echo '</pre>'; 
+		
+		$adminComments = $this->Comment->find('all', array('order' => 'created DESC', 'conditions' => array(
+			'created >' => $aa[count($aa)-1]['AdminActivity']['created'],
+			'user_id' => $uArray,
+			'NOT' => array(
+				'status' => array(99)
+			)
+		)));
+		
+		for($i=0; $i<count($adminComments); $i++){
+			$at = $this->Tsumego->find('first', array('conditions' => array('id' => $adminComments[$i]['Comment']['tsumego_id'])));
+			$as = $this->Set->find('first', array('conditions' => array('id' => $at['Tsumego']['set_id'])));
+			$au = $this->User->find('first', array('conditions' => array('id' => $adminComments[$i]['Comment']['user_id'])));
+			array_push($ca['tsumego_id'], $adminComments[$i]['Comment']['tsumego_id']);
+			array_push($ca['tsumego'], $as['Set']['title'].' '.$at['Tsumego']['num']);
+			array_push($ca['created'], $adminComments[$i]['Comment']['created']);
+			array_push($ca['name'], $au['User']['name']);
+			array_push($ca['answer'], $adminComments[$i]['Comment']['message']);
+			array_push($ca['type'], 'Comment');
+		}
+		
+		for($i=0; $i<count($ca['tsumego_id']); $i++){
+			array_multisort($ca['created'], $ca['tsumego_id'], $ca['tsumego'], $ca['name'], $ca['answer'], $ca['type']);
+		}
+		
+		//echo '<pre>'; print_r($aa[count($aa)-1]['AdminActivity']['created']); echo '</pre>'; 
+		//echo '<pre>'; print_r($adminComments); echo '</pre>'; 
+		//echo '<pre>'; print_r($aa2); echo '</pre>'; 
+		//echo '<pre>';print_r($aa1);echo '</pre>';
+		//echo '<pre>';print_r($aa2);echo '</pre>';
 		
 		$this->set('aa', $aa);
 		$this->set('aa1', $aa1);
 		$this->set('aa2', $aa2);
+		$this->set('ca', $ca);
 	}
 	
 	public function removePlayer($id=null){

@@ -1402,7 +1402,7 @@
 					echo '<table class="sandboxTable2" width="100%" border="0"><tr><td>';
 					echo '<div class="'.$commentColor.'">'.$showComment[$i]['Comment']['user'].':<br>';
 					echo $showComment[$i]['Comment']['message'].'</div>';
-					if($showComment[$i]['Comment']['status']!=0 && $showComment[$i]['Comment']['status']!=97 && $showComment[$i]['Comment']['status']!=98){
+					if($showComment[$i]['Comment']['status']!=0 && $showComment[$i]['Comment']['status']!=97 && $showComment[$i]['Comment']['status']!=98 && $showComment[$i]['Comment']['status']!=96){
 						echo '<div class="commentAnswer">';
 							echo '<div style="padding-top:7px;"></div>'.$showComment[$i]['Comment']['admin'].':<br>';
 							if($showComment[$i]['Comment']['status']==1) echo 'Your move(s) have been added.<br>';
@@ -1432,7 +1432,11 @@
 						if($showComment[$i]['Comment']['status']==0){
 							//echo '<br><a class="deleteComment" href="/tsumegos/play/'.$t['Tsumego']['id'].'?deleteComment='.$showComment[$i]['Comment']['id'].'&changeComment=2">Can\'t Resolve This</a>';
 							echo '<br>';
-							echo '<a class="deleteComment" href="/tsumegos/play/'.$t['Tsumego']['id'].'?deleteComment='.$showComment[$i]['Comment']['id'].'&changeComment=3"><img class="thumbs-small" title="approve this comment" width="20px" src="/img/thumbs-small.png"></a>';
+							if($_SESSION['loggedInUser']['User']['id'] != $showComment[$i]['Comment']['user_id']){
+								echo '<a class="deleteComment" href="/tsumegos/play/'.$t['Tsumego']['id'].'?deleteComment='.$showComment[$i]['Comment']['id'].'&changeComment=3">
+									<img class="thumbs-small" title="approve this comment" width="20px" src="/img/thumbs-small.png">
+								</a>';
+							}
 							echo '&nbsp;<a id="adminComment'.$i.'" class="adminComment" href="">Answer</a>';
 							
 						}else{
@@ -1525,7 +1529,7 @@
 					echo '<table class="sandboxTable2" width="100%" border="0"><tr><td>';
 					echo $showComment[$i]['Comment']['user'].':<br>';
 					echo $showComment[$i]['Comment']['message'].'<br>';
-					if($showComment[$i]['Comment']['status']!=0 && $showComment[$i]['Comment']['status']!=97 && $showComment[$i]['Comment']['status']!=98){
+					if($showComment[$i]['Comment']['status']!=0 && $showComment[$i]['Comment']['status']!=97 && $showComment[$i]['Comment']['status']!=98  && $showComment[$i]['Comment']['status']!=96){
 						echo '<div style="color:#113cd4" class="commentAnswer">';
 							echo '<div style="padding-top:7px;"></div>'.$showComment[$i]['Comment']['admin'].':<br>';
 							if($showComment[$i]['Comment']['status']==1) echo 'Your move(s) have been added.<br>';
@@ -2339,7 +2343,7 @@
 														if(document.getElementById("refreshLinkToDiscuss")) document.getElementById("refreshLinkToDiscuss").href = "/tsumegos/play/'.$lv.'?refresh=5";
 														if(document.getElementById("refreshLinkToSandbox")) document.getElementById("refreshLinkToSandbox").href = "/tsumegos/play/'.$lv.'?refresh=6";
 														if(mode==1) updateHealth();
-														if(mode==1) secondsy = seconds;
+														if(mode==1 || mode==2) secondsy = seconds;
 														if(mode==3) secondsy = seconds*10*'.$t['Tsumego']['id'].';
 														document.cookie = "seconds="+secondsy;
 														'.$m2.'
@@ -2430,7 +2434,7 @@
 													xpReward = ('.$t['Tsumego']['difficulty'].'*x3) + '.$user['User']['xp'].';
 													userNextlvl = '.$user['User']['nextlvl'].';
 													ulvl = '.$user['User']['level'].';
-													if(mode==1) secondsy = seconds;
+													if(mode==1 || mode==2) secondsy = seconds;
 													if(mode==3) secondsy = seconds*10*'.$t['Tsumego']['id'].';
 													document.cookie = "seconds="+secondsy;
 													if(xpReward>userNextlvl){
@@ -2526,7 +2530,7 @@
 											if(!freePlayMode && !authorProblem){
 												misplays++;
 												document.cookie = "misplay="+misplays;
-												if(mode==1) secondsy = seconds;
+												if(mode==1 || mode==2) secondsy = seconds;
 												if(mode==3) secondsy = seconds*10*'.$t['Tsumego']['id'].';
 												document.cookie = "seconds="+secondsy;
 												if(document.getElementById("playTitleA")) document.getElementById("playTitleA").href = "/tsumegos/play/'.$lv.'?refresh=3";
@@ -2565,7 +2569,6 @@
 											playedWrong = true; 
 											runXPBar(false);
 											$("#skipButton").text("Next");
-											misplays++;
 											document.cookie = "misplay='.$eloScore.'";
 											document.cookie = "seconds="+seconds;
 											if(document.getElementById("playTitleA")) document.getElementById("playTitleA").href = "/tsumegos/play/'.$lv.'?refresh=3";
@@ -2577,7 +2580,6 @@
 											hoverLocked = false;
 											tryAgainTomorrow = true;
 											locked = true;
-											if(!freePlayMode) updateHealth();
 											freePlayMode = true;
 											if('.$health.' - misplays<0){
 												document.getElementById("currentElement").style.backgroundColor = "#e03c4b";

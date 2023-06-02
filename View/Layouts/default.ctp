@@ -171,7 +171,9 @@
 				else echo '<li><a class="menuLi" '.$playA.' href="/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2">Play</a></li>';
 				echo '<li><a '.$refreshLinkToHighscore.' class="menuLi" '.$highscoreA.' id="highscoreInMenu" '.$leaderboard.' href="/users/'.$highscoreLink.'">Highscore</a></li>';
 				if(isset($_SESSION['loggedInUser'])){
-					echo '<li><a '.$refreshLinkToDiscuss.' class="menuLi" '.$discussA.' href="/comments">Discuss</a></li>'; 
+					if($_SESSION['loggedInUser']['User']['isAdmin']==0) $discussFilter = '';
+					else $discussFilter = '?filter=false';
+					echo '<li><a '.$refreshLinkToDiscuss.' class="menuLi" '.$discussA.' href="/comments'.$discussFilter.'">Discuss</a></li>'; 
 				}else{
 					$refreshLinkToDiscussBackup = '<a id="refreshLinkToDiscuss"></a>';
 				}					
