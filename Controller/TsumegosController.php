@@ -1017,6 +1017,21 @@ class TsumegosController extends AppController{
 			unset($_COOKIE['transition']);
 			unset($_COOKIE['sequence']);
 		}
+		
+		if(isset($_COOKIE['correctNoPoints']) && $_COOKIE['correctNoPoints'] != '0'){
+			$this->UserRecord->create();
+			$ur = array();
+			if(isset($_SESSION['loggedInUser']['User']['id'])) $ur['UserRecord']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+			else $ur['UserRecord']['user_id'] = 33;
+			$ur['UserRecord']['tsumego_id'] = $_COOKIE['preId'];
+			$ur['UserRecord']['level'] = $u['User']['level'];
+			$ur['UserRecord']['xp'] = $u['User']['xp'];
+			$ur['UserRecord']['gain'] = 0;
+			$ur['UserRecord']['seconds'] = $_COOKIE['seconds'];
+			$ur['UserRecord']['status'] = 'S';
+			$this->UserRecord->save($ur);
+		}
+		
 		if(isset($_COOKIE['doublexp']) && $_COOKIE['doublexp'] != '0'){
 			if($u['User']['usedSprint']==0){
 				$doublexp = $_COOKIE['doublexp'];
@@ -1486,6 +1501,11 @@ class TsumegosController extends AppController{
 		
 		if(isset($this->params['url']['rank'])) $raName = $this->params['url']['rank'];
 		else $raName = $ranks[0]['Rank']['rank'];
+		
+		
+		if($mode==1) $_SESSION['page'] = 'level mode';
+		elseif($mode==2) $_SESSION['page'] = 'rating mode';
+		elseif($mode==3) $_SESSION['page'] = 'time mode';
 		
 		//echo '<pre>'; print_r(($crs/$stopParameter)*100); echo '</pre>';
 		//echo '<pre>'; print_r($masterArrayBW[0]); echo '</pre>';

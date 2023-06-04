@@ -1350,6 +1350,7 @@
 			if($t['Tsumego']['set_id']!=42){
 				echo '<div id="msg1">Leave a <a id="show">message<img id="greyArrow1" src="/img/greyArrow1.png"></a></div>';
 			}
+			echo '<br>';
 			echo '<div id="msg2">';
 			echo $this->Form->create('Comment');
 			echo $this->Form->input('tsumego_id', array('type' => 'hidden', 'value' => $t['Tsumego']['id']));
@@ -1433,7 +1434,7 @@
 							//echo '<br><a class="deleteComment" href="/tsumegos/play/'.$t['Tsumego']['id'].'?deleteComment='.$showComment[$i]['Comment']['id'].'&changeComment=2">Can\'t Resolve This</a>';
 							echo '<br>';
 							if($_SESSION['loggedInUser']['User']['id'] != $showComment[$i]['Comment']['user_id']){
-								echo '<a class="deleteComment" href="/tsumegos/play/'.$t['Tsumego']['id'].'?deleteComment='.$showComment[$i]['Comment']['id'].'&changeComment=3">
+								echo '<a class="deleteComment" style="text-decoration:none;" href="/tsumegos/play/'.$t['Tsumego']['id'].'?deleteComment='.$showComment[$i]['Comment']['id'].'&changeComment=3">
 									<img class="thumbs-small" title="approve this comment" width="20px" src="/img/thumbs-small.png">
 								</a>';
 							}
@@ -2446,6 +2447,12 @@
 													noXP = true;
 													$("#reviewButton").show();
 													reviewEnabled = true;
+												}else{
+													if(mode==1){
+														secondsy = seconds;
+														document.cookie = "correctNoPoints=1";
+														document.cookie = "seconds="+secondsy;
+													}
 												}
 											}else ';
 										}elseif($mode==2 && $eloScore!=0){

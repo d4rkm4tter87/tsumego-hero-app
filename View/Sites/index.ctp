@@ -23,7 +23,7 @@
 		?>
 		<p class="title4">Problems of the Day</p>
 		
-		
+		<div class="new1">
 		<?php
 			//echo '<pre>';print_r($scheduleTsumego);echo '</pre>';
 		if(count($scheduleTsumego)!=0){	
@@ -81,7 +81,6 @@
 			*/
 		?>		
 			
-			
 		<?php if(count($scheduleTsumego)!=0) echo '<br>'; ?>
 		<br><br>
 		<font color="#444">Most popular today:</font><br>
@@ -89,9 +88,10 @@
 			<li class="set<?php echo $totd['Tsumego']['status']; ?>1" style="margin-top:4px;">
 				<a href="/tsumegos/play/<?php echo $totd['Tsumego']['id']; ?>"><?php echo $totd['Tsumego']['num']; ?></a>
 			</li>
-		<br><br><br>
-		<p class="title4">Update 22.05.2023</p>
 			<br>
+		</div>
+		<p class="title4">Update 22.05.2023</p>
+		<div class="new1">
 			<b>New: Collection accuracy and time scoring</b><br><br>
 			• The collections store data about the time spent and about the solved/failed attempts for each problem. 
 			This is shown by an accuracy (0% all fails, 100% all solves) and an average time (in seconds). 
@@ -102,9 +102,9 @@
 			<br><br>
 			<p style="font-weight:800;text-align:left;">The first places in Slow/Fast/Blitz (Time Mode) by the end of May 2023 each get a reward.</p>
 			<br>
-		
+		</div>
 		<p class="title4">New Collection: 5x5 Endgame Problems</p>
-			<br>
+		<div class="new1">
 			Go problems in the world of 5x5. 
 			<br><br>
 			<div align="center">
@@ -113,10 +113,11 @@
 				<a class="new-button main-page" style="font-size:14px;" href="/sets/view/181">Play</a>
 				<!-- <a class="new-button-inactive" style="font-size:14px;">Play</a>  -->
 			</div>
-			<br><br>
+			<br>
+		</div>
 		
 		<p class="title4">Recent Donations and Upgrades</p>
-			<br>
+		<div class="new1">
 			<table class="newx">
 		<tr><td width="50%"><h1>Salata</h1></td><td><h1>10,00 €</h1></td></tr>
 		<tr><td><h1>Edward Feustel</h1></td><td><h1>10,00 €</h1></td></tr>
@@ -126,9 +127,9 @@
 		
 		</table>	
 		<br>
-			
-			<p class="title4">Tsumego Hero Videos</p>
-			
+		</div>	
+		<p class="title4">Tsumego Hero Videos</p>
+		<div class="new1">	
 			<br>
 			<div align="center">
 			<iframe width="560" height="315" src="https://www.youtube.com/embed/OMIfyzXS9Vo" frameborder="0" allow="accelerometer; 
@@ -144,6 +145,7 @@
 			E2: <a href="https://www.youtube.com/watch?v=rZBmLnzSWWI" target="_blank">Tsumego Hero 2 : Extra Life</a><br>
 			E3: <a href="https://www.youtube.com/watch?v=OMIfyzXS9Vo" target="_blank">Tsumego Hero 3 : Hero Rising</a><br>
 			<br>
+		</div>
 			<?php
 			if(isset($_SESSION['loggedInUser'])){
 			
@@ -255,7 +257,7 @@
 			?>
 			<?php } ?>
 			<p class="title4">Your last Activities</p>
-			<br>
+			<div class="new1">
 			<?php 
 				echo '<a style="color:#000;" href="/sets/view/'.$visit1['Set']['id'].'">
 					<b>'.$visit1['Set']['title'];
@@ -275,6 +277,7 @@
 				}
 			?>
 			<br>
+			</div>
 			<?php		
 		}	
 			
@@ -283,22 +286,16 @@
 	</div>
 	
 	<div class="homeLeft">
-		<p class="title4 title4x">Message of the Day</p>
-		<p class="title4date">
+		<p class="title4">Message of the Day | <?php echo $d1; ?></p>
 		<?php
-			echo $d1;
+			
 			if(!isset($_SESSION['lastVisit'])) $_SESSION['lastVisit'] = 15352;
 			$modeActions = '';
 			$modeActions2 = 'class="modeboxes"';
 			if(isset($_SESSION['loggedInUser']) && $ac) $modeActions = 'class="modeboxes" onmouseover="mode2hover()" onmouseout="modeNoHover()" onclick="goMode2()"';
 			if($ac) $modeActions2 = 'class="modeboxes"';
-			else $modeActions2 = 'class="modeboxes modeboxes2"';
-		?>
-		</p>
-		<br>
+			else $modeActions2 = 'class="modeboxes"';
 		
-		<br>
-		<?php
 			if(isset($_SESSION['loggedInUser'])){
 				$url1 = '';
 				$url2 = '';
@@ -334,7 +331,7 @@
 				echo '<a id="time-mode-play-button" class="new-button main-page" style="font-size:14px;" href="/ranks/overview">Play</a>';
 				echo '<div class="time-mode-play-box" onmouseover="mode3hover()" onmouseout="mode3NoHover()" onclick="goMode3()"></div>';
 			}else{
-				echo '<a class="new-button-inactive main-page" style="font-size:14px;">Sign In</a>';
+				echo '<a class="new-button-inactive main-page" style="font-size:14px;position:relative;left:-7px">Sign In</a>';
 			}
 			echo '</div>';
 		?>
@@ -452,39 +449,40 @@
 				
 			//}
 		?>
-		<br>
 		
 		
-		<p class="title4" style="margin-bottom:7px;">User of the Day </p>
 		
+		<p class="title4">User of the Day </p>
+		<div class="new1">
 		<div class="uotd mid uotd<?php echo $uotdbg; ?> mid<?php echo $uotdbg; ?> ">
 		  <h2 <?php if(strlen($userOfTheDay)>=10) echo 'class="midLongName1"'; ?>><?php echo $userOfTheDay; ?></h2>
 		</div>
 		<p class="uotdmargin">&nbsp;</p><br>
-		<?php //§ ?>
+		</div>
 		
 	
 		
 		<?php 
 			if(isset($loggedInUser)){
 				echo '
-					<p class="title4xx">Restoration Countdown</p>
+					<p class="title4">Restoration Countdown</p>
+					<div class="new1">
 					<br>
 					<font size="5px">
 						<div id="homeCountdown"></div>
 					<br>
 					</font>
-				';
+				</div>';
 				
 				$asdf = '';
 			}else{
-				$asdf = 'xx';
+				$asdf = '';
 			}
 		?>
 		
-		<p class="title4<?php echo $asdf; ?>">Hero Powers</p>
-		<br>
-		<table class="sitesTable">
+		<p class="title4">Hero Powers</p>
+		<div class="new1">
+		<table class="sitesTable" >
 		<tr>
 			<td>
 				<img id="sprint" title="Sprint: Double XP for 2 minutes." alt="Sprint" src="/img/hp1.png">
@@ -533,9 +531,9 @@
 		
 		</table>
 		<br>
-		
+		</div>
 		<p class="title4">Problem Colors</p>
-		<br>
+		<div class="new1">
 		<table class="sitesTable">
 		<tr>
 			<td>
@@ -593,22 +591,28 @@
 		</tr>
 		</table>
 		<br>
+		</div>
 		<?php if(isset($_SESSION['loggedInUser'])){ ?>
 		<?php if($_SESSION['loggedInUser']['User']['premium']==0 && $user['User']['id']!=1165){ ?>
-			<p class="title4">Donations</p><br>
+			<p class="title4">Donations</p>
+			<div class="new1">
 			<div align="center"><a href="/users/donate"><img id="donateH" onmouseover="donateHover()" onmouseout="donateNoHover()" width="180px" src="/img/donateButton1.png"></a><br>
 			Get access to <a href="/users/donate">Tsumego Hero Premium</a>.<br><br>
+			</div>
 			</div>
 		<?php }else{ ?>
 			
 		<?php } ?>
 		<?php }else{ ?>
-			<p class="title4xx">Donations</p><br>
+			<p class="title4">Donations</p>
+			<div class="new1">
 			<div align="center"><a href="/users/donate"><img id="donateH" onmouseover="donateHover()" onmouseout="donateNoHover()" width="180px" src="/img/donateButton1.png"></a><br>
 			Get access to <a href="/users/donate">Tsumego Hero Premium</a>.<br><br>
 			</div>
+			</div>
 		<?php } ?>
 		<p class="title4">Problem Database Size </p>
+		<div class="new1">
 		<?php
 		$tsumegoDates = array();
 		for($j=0; $j<count($tsumegos); $j++){
@@ -722,23 +726,26 @@
 		<div id="chartContainer" style="height: 400px; width: 100%;"></div>
 		<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 		<br>
-		
+		</div>
 		<p class="title4">Contributors</p>
-		<br>
+		<div class="new1">
 		Tsumego Hero is only in constant good shape, because there were users who helped creating the files for the problems.
 		If you want to do some tsumego training and at the same time help the website by creating files, please message me. Help is much appreciated.<br><br>
 		All contributors are listed here: <a href="/users/authors">Authors</a>
-		<br><br>
+		<br>
+		</div>
 		
 		<p class="title4">Admins</p>
-		<br>
+		<div class="new1">
 		We are looking for more admins who can confidently answer comments in the discuss area.
 		Ideally, there is a small group of active or semi-active admins that is interested in discussion, uploading problems or creating new collections.
 		Let me know if you would like to be on the productive side of Tsumego Hero. (<a href="mailto:me@joschkazimdars.com">me@joschkazimdars.com</a>)
 		
-		<br><br>
+		<br>
+		</div>
 		
 		<p class="title4">Guide To Become Strong </p>
+		<div class="new1">
 		<p class="titleBy">&nbsp;by Benjamin Teuber 6 Dan</p>
 		
 		<table border="0" class="newstable1">
@@ -773,8 +780,9 @@
 		</table>
 		<br>
 		<font size="4px"><b>
-		<a href="/sites/view/0">Read more >></a>
+		<a href="/sites/view/0">Read more >></a><br><br>
 		</b></font>
+		</div>
 		<br><br><br>
 		
 		<!--
@@ -829,7 +837,6 @@
 		</table>
 		-->
 		</font>
-		<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 		
 		<?php if(!isset($loggedInUser)) echo '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>'; ?>
 	</div>

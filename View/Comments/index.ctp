@@ -39,7 +39,7 @@
 	<tr>
 	<td width="50%">
 		<p class="title4">Comments</p>
-		<div width="100%">
+		<div class="new1" width="100%" style="margin-bottom:15px;">
 			<div align="center">
 				<br>
 				<?php 
@@ -254,11 +254,10 @@
 	?>
 	<td width="50%">
 		<p class="title4">Your Comments</p>
-		<div width="100%">
+		<div class="new1" width="100%" style="margin-bottom:15px;">
 			<div align="center">
 				<br>
 				<?php 
-				
 					if(!$yourempty){
 						if($yourfirstPage && count($yourComments)<11) ;
 						else{

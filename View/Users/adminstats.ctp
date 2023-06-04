@@ -32,7 +32,7 @@
 	echo '</table>';
 	echo '</div>';
 	
-	echo '<div class="homeLeft">';
+	echo '<div class="homeLeft" style="border-right:1px solid #a0a0a0;">';
 	echo '<h1>Comments</h1>';
 	echo '<table border="0" class="statsTable">';
 	$iCounter = 1;

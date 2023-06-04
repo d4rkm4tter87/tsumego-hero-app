@@ -226,8 +226,18 @@ class SitesController extends AppController{
 	}
 	
 	public function impressum(){
-		$_SESSION['page'] = 'home';
+		$_SESSION['page'] = 'about';
 		$_SESSION['title'] = 'Tsumego Hero - Legal Notice';
+	}
+	
+	public function websitefunctions(){
+		$_SESSION['page'] = 'websitefunctions';
+		$_SESSION['title'] = 'Tsumego Hero - Website Functions';
+	}
+	
+	public function gotutorial(){
+		$_SESSION['page'] = 'gotutorial';
+		$_SESSION['title'] = 'Tsumego Hero - Go Tutorial';
 	}
 	
 	public function ugco5ujc(){

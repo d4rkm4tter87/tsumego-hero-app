@@ -97,23 +97,12 @@
 				<?php 
 					$logo = 'tsumegoHero1';
 					$logoH = 'tsumegoHero2';
-					if(isset($_SESSION['loggedInUser'])){
-						if($_SESSION['loggedInUser']['User']['premium']>=1){
-							$logo = 'tsumegoHero1p';
-							$logoH = 'tsumegoHero2p';
-						}
-					}
 				?>
-				<img id ="logo1" alt="Tsumego Hero" title="Tsumego Hero" src="/img/<?php echo $logo; ?>.png" height="70px" onmouseover="logoHover(this)" onmouseout="logoNoHover(this)">
+				<img id="logo1" alt="Tsumego Hero" title="Tsumego Hero" src="/img/tsumegoHero1.png" onmouseover="logoHover(this)" onmouseout="logoNoHover(this)" height="55px">
 			</a>
 		</div>
-		
-		<?php 
-		$outerMenu1style = '';
-		if(!isset($_SESSION['loggedInUser'])) $outerMenu1style = 'outerMenu1adjust1';
-		else $outerMenu1style = 'outerMenu1adjust2';
-		?>
-		<div class="outerMenu1 <?php echo $outerMenu1style; if($_SESSION['loggedInUser']['User']['premium']>0) echo ' outerMenu1adjust3'; ?>">
+	
+		<div class="outerMenu1">
 			<?php 
 				if(isset($_SESSION['lastVisit'])) $lv = $_SESSION['lastVisit'];
 				else $lv = '15352';
@@ -147,38 +136,48 @@
 				$refreshLinkToSandboxBackup = '';
 				$refreshLinkToDiscussBackup = '';
 				
-				if($_SESSION['page'] == 'home')$homeA = 'style="color:#74d14c;"';
+				if($_SESSION['page'] == 'home') $homeA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'set') $collectionsA = 'style="color:#74d14c;"';
-				else if($_SESSION['page'] == 'play'){
-					$playA = 'style="color:#74d14c;"';
+				else if($_SESSION['page']=='play' || $_SESSION['page']=='level mode' || $_SESSION['page']=='rating mode' || $_SESSION['page']=='time mode'){
+					//$playA = 'style="color:#74d14c;"';
 					$refreshLinkToStart = 'id="refreshLinkToStart"';
 					$refreshLinkToSets = 'id="refreshLinkToSets"';
 					$refreshLinkToHighscore = 'id="refreshLinkToHighscore"';
 					$refreshLinkToLeaderboard = 'id="refreshLinkToLeaderboard"';
 					$refreshLinkToSandbox = 'id="refreshLinkToSandbox"';
 					$refreshLinkToDiscuss = 'id="refreshLinkToDiscuss"';
+					if($_SESSION['page'] == 'level mode') $levelModeA = 'style="color:#74d14c;"';
+					else if($_SESSION['page'] == 'rating mode') $ratingModeA = 'style="color:#74d14c;"';
+					else if($_SESSION['page'] == 'time mode') $timeModeA = 'style="color:#74d14c;"';
 				}					
 				else if($_SESSION['page'] == 'highscore') $highscoreA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'discuss') $discussA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'sandbox') $sandboxA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'leaderboard') $leaderboardA = 'style="color:#74d14c;"';
+				else if($_SESSION['page'] == 'websitefunctions') $websitefunctionsA = 'style="color:#74d14c;"';
+				else if($_SESSION['page'] == 'gotutorial') $gotutorialA = 'style="color:#74d14c;"';
+				else if($_SESSION['page'] == 'about') $aboutA = 'style="color:#74d14c;"';
+				else if($_SESSION['page'] == 'levelHighscore') $levelHighscoreA = 'style="color:#74d14c;"';
+				else if($_SESSION['page'] == 'ratingHighscore') $ratingHighscoreA = 'style="color:#74d14c;"';
+				else if($_SESSION['page'] == 'timeHighscore') $timeHighscoreA = 'style="color:#74d14c;"';
+				else if($_SESSION['page'] == 'dailyHighscore') $dailyHighscoreA = 'style="color:#74d14c;"';
 				
 				if($nextMode['Tsumego']['id']==null) $nextMode['Tsumego']['id'] = 15352;
-				
-				echo '<li><a '.$refreshLinkToStart.' class="menuLi" '.$homeA.' href="/">Home</a></li>';
-				echo '<li><a '.$refreshLinkToSets.' class="menuLi" '.$collectionsA.' id="collectionsInMenu" '.$sand.' href="/sets">Collections</a></li>';
-				if(true)/*if(!$ac)*/ echo '<li><a class="menuLi" '.$playA.' href="/tsumegos/play/'.$lv.'">Play</a></li>';	
-				else echo '<li><a class="menuLi" '.$playA.' href="/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2">Play</a></li>';
-				echo '<li><a '.$refreshLinkToHighscore.' class="menuLi" '.$highscoreA.' id="highscoreInMenu" '.$leaderboard.' href="/users/'.$highscoreLink.'">Highscore</a></li>';
+				//echo $_SESSION['page'];
+				//echo '<li><a '.$refreshLinkToStart.' class="menuLi" '.$homeA.' href="/">Home</a></li>';
+				//echo '<li><a '.$refreshLinkToSets.' class="menuLi" '.$collectionsA.' id="collectionsInMenu" '.$sand.' href="/sets">Collections</a></li>';
+				//if(true)/*if(!$ac)*/ echo '<li><a class="menuLi" '.$playA.' href="/tsumegos/play/'.$lv.'">Play</a></li>';	
+				//else echo '<li><a class="menuLi" '.$playA.' href="/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2">Play</a></li>';
+				//echo '<li><a '.$refreshLinkToHighscore.' class="menuLi" '.$highscoreA.' id="highscoreInMenu" '.$leaderboard.' href="/users/'.$highscoreLink.'">Highscore</a></li>';
 				if(isset($_SESSION['loggedInUser'])){
 					if($_SESSION['loggedInUser']['User']['isAdmin']==0) $discussFilter = '';
 					else $discussFilter = '?filter=false';
-					echo '<li><a '.$refreshLinkToDiscuss.' class="menuLi" '.$discussA.' href="/comments'.$discussFilter.'">Discuss</a></li>'; 
+					//echo '<li><a '.$refreshLinkToDiscuss.' class="menuLi" '.$discussA.' href="/comments'.$discussFilter.'">Discuss</a></li>'; 
 				}else{
 					$refreshLinkToDiscussBackup = '<a id="refreshLinkToDiscuss"></a>';
 				}					
 				if($_SESSION['loggedInUser']['User']['completed']==1 || $_SESSION['loggedInUser']['User']['premium']>=1){
-					echo '<li><a '.$refreshLinkToSandbox.' class="menuLi" id="sandbox-menu" '.$sandboxA.' href="/sets/beta">Sandbox</a></li>';
+					//echo '<li><a '.$refreshLinkToSandbox.' class="menuLi" id="sandbox-menu" '.$sandboxA.' href="/sets/beta">Sandbox</a></li>';
 				}else{
 					$refreshLinkToSandboxBackup = '<a id="refreshLinkToSandbox"></a>';
 				}
@@ -187,50 +186,88 @@
 				}else{
 					$refreshLinkToLeaderboardBackup = '<a id="refreshLinkToLeaderboard"></a>';
 				}
-				//print_r($_SESSION['loggedInUser']['User']['mode']);
 			?> 
-			<div class="dropdown <?php if(!isset($_SESSION['loggedInUser'])) echo'dropdown-adjust1'; else echo 'dropdown-adjust2';?>">
-				<label for="dropdown-1" id="boardsInMenu" class="dropdown-button" onmouseover="boardsHover()" onmouseout="boardsNoHover()">Boards</label>
-				<input class="dropdown-open" type="checkbox" id="dropdown-1" style="display:none;" onchange="check1(); return false;">
-				<label for="dropdown-1" class="dropdown-overlay"></label>
-				<div class="dropdown-inner">
-					<table id="dropdowntable" border="0">
-						<tr>
-						<?php
-							$tr = 1;
-							for($i=1;$i<=54;$i++){
-								if(isset($boardNames[$i])){
-								echo '
-									<td width="19px" align="right" style="position:relative;top:1px;padding:4px;">
-										<input type="checkbox" class="newCheck" id="newCheck'.$i.'" onchange="check2();" '.$enabledBoards[$i].'>
-									</td>
-									<td width="19px" align="center" style="position:relative;top:3px;padding:2px;">
-										
-										<div class="img-'.$boardPositions[$i].'small"></div>
-									</td>
-									<td width="115px" style="padding:0px;">
-										'.$boardNames[$i].'
-									</td>
-								';
-								}
-								if($tr%4==0 && $tr>0) echo '</tr><tr>';
-								$tr++;
-							}
-						?>	
-						</tr>
-					</table>
-					<br>
-					<div id="dropdowntable2" align="center">
-						<?php
-							echo '<a class="new-button" href="'.$_SERVER['REQUEST_URI'].'">Save</a>';
-						?>
-						<br><br>
-					</div>
-				</div>
-				<div class="sound">
-					<a href="#" id="soundButton" onclick="changeSound(); return false;">Sound: ON</a>
-				</div>
-			</div>
+			<div id="newMenu">
+			<nav>
+				<ul>
+					<?php echo '<li><a class="homeMenuLink" href="/" '.$refreshLinkToStart.' '.$homeA.'>Home</a>'; 
+					echo '<ul class="newMenuLi1">';
+						echo '<li><a id="tutorialLink" href="/sites/websitefunctions" '.$websitefunctionsA.'>Website Functions</a></li>';
+						echo '<li><a id="tutorialLink" href="/sites/gotutorial" '.$gotutorialA.'>Go Tutorial</a></li>';
+						echo '<li><a href="/users/authors" '.$aboutA.'>About</a></li>';
+					echo '</ul>';       
+					echo '</li>';
+					echo '<li><a '.$refreshLinkToSets.' '.$collectionsA.' href="/sets">Collections</a>';
+					if($_SESSION['loggedInUser']['User']['premium']>=1 || $_SESSION['loggedInUser']['User']['level']>=60){
+					echo '<ul class="newMenuLi2">';
+						echo '<li><a '.$refreshLinkToSandbox.' '.$sandboxA.' href="/sets/beta">Sandbox</a></li>';
+					echo '</ul>';
+					}
+					echo '</li>';
+					echo '<li><a class="homeMenuLink" '.$playA.' href="/tsumegos/play/'.$lv.'">Play</a>';
+					echo '<ul class="newMenuLi3">';
+						echo '<li><a href="/tsumegos/play/'.$_SESSION['lastVisit'].'?mode=1" '.$levelModeA.'>Level</a></li>';
+						echo '<li><a href="/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2" '.$ratingModeA.'>Rating</a></li>';
+						echo '<li><a href="/ranks/overview" '.$timeModeA.'>Time</a></li>';
+					echo '</ul>'; 
+					echo '<li><a '.$refreshLinkToHighscore.' '.$highscoreA.' href="/users/'.$highscoreLink.'">Highscore</a>';
+					echo '<ul class="newMenuLi4">';
+						echo '<li><a href="/users/highscore" '.$levelHighscoreA.'>Level</a></li>';
+						echo '<li><a href="/users/rating" '.$ratingHighscoreA.'>Rating</a></li>';
+						echo '<li><a href="/users/highscore3" '.$timeHighscoreA.'>Time</a></li>';
+						echo '<li><a href="/users/leaderboard" '.$dailyHighscoreA.'>Daily</a></li>';
+					echo '</ul>';
+					if(isset($_SESSION['loggedInUser'])) echo '<li><a  '.$refreshLinkToDiscuss.'  '.$discussA.'href="/comments'.$discussFilter.'">Discuss</a></li>';
+					else echo '<li><a style="color:#aaa;">Discuss</a></li>';
+					echo '<li class="menuIcons1"><a href="#" id="soundButton" onclick="changeSound(); return false;"><img id="soundButtonImage" src="/img/sound-icon1.png" width="25px"></a></li>';
+					?>
+					<li class="menuIcons1">
+							<div class="dropdown">
+								<label for="dropdown-1" id="boardsInMenu" class="dropdown-button">
+									<img id="boardsButtonImage" src="/img/boards-icon1.png" width="25px">
+								</label>
+								<input class="dropdown-open" type="checkbox" id="dropdown-1" style="display:none;" onchange="check1(); return false;">
+								<label for="dropdown-1" class="dropdown-overlay"></label>
+								<div class="dropdown-inner">
+									<table id="dropdowntable" border="0">
+										<tr>
+										<?php
+											$tr = 1;
+											for($i=1;$i<=54;$i++){
+												if(isset($boardNames[$i])){
+												echo '
+													<td width="19px" align="right" style="position:relative;top:1px;padding:4px;">
+														<input type="checkbox" class="newCheck" id="newCheck'.$i.'" onchange="check2();" '.$enabledBoards[$i].'>
+													</td>
+													<td width="19px" align="center" style="position:relative;top:3px;padding:2px;">
+														
+														<div class="img-'.$boardPositions[$i].'small"></div>
+													</td>
+													<td width="115px" style="padding:0px;text-align:left;">
+														'.$boardNames[$i].'
+													</td>
+												';
+												}
+												if($tr%4==0 && $tr>0) echo '</tr><tr>';
+												$tr++;
+											}
+										?>	
+										</tr>
+									</table>
+									<br>
+									<div id="dropdowntable2" align="center">
+										<?php
+											echo '<a class="new-button" href="'.$_SERVER['REQUEST_URI'].'">Save</a>';
+										?>
+										<br><br>
+									</div>
+								</div>
+							</div>
+						
+					</li>
+				</ul>
+			</nav>
+		</div>
 		</div>
 		<div class="outerMenu2">
 			<li><a></a></li>
@@ -242,6 +279,7 @@
 				if(!isset($loggedInUser)) echo '<li><a class="menuLi" id="signInMenu" '.$currentPage.'href="/users/login">Sign In</a></li>';
 			?>
 		</div>
+		
 	</div>
 	<?php
 		if(isset($_SESSION['loggedInUser'])){
@@ -299,6 +337,9 @@
 	</div>
 	</div>
 	<div id="footer" class="footerLinks"><br>
+	
+	
+	
 	<?php if(isset($_SESSION['loggedInUser'])){ ?>
 	<?php if($_SESSION['loggedInUser']['User']['premium']==0 && $user['User']['id']!=1165){ ?>
 		<div align="center"><a href="/users/donate"><img id="donateH2" onmouseover="donateHover2()" onmouseout="donateNoHover2()" width="180px" src="/img/donateButton1.png"></a><br></div><br>	
@@ -332,6 +373,7 @@
 		document.cookie = "rank=0";
 		document.cookie = "lastMode=0";
 		document.cookie = "sound=0";
+		document.cookie = "correctNoPoints=0";
 		
 		<?php 
 			if(isset($textureCookies)){
@@ -357,12 +399,12 @@
 		$(document).ready(function(){
 			loadBar();
 			if(soundValue=="off"){
-				document.getElementById("soundButton").innerHTML = "Sound: OFF";
+				document.getElementById("soundButtonImage").src="/img/sound-icon2.png";
 				document.cookie = "sound=off";
 				soundsEnabled = false;
 			}
 			if(soundValue=="on"){
-				document.getElementById("soundButton").innerHTML = "Sound: ON";
+				document.getElementById("soundButtonImage").src="/img/sound-icon1.png";
 				document.cookie = "sound=on";
 				soundsEnabled = true;
 			}
@@ -479,14 +521,12 @@
 			if(document.getElementById("dropdown-1").checked == true){
 				document.getElementById("dropdowntable").style.display = "inline-block"; 
 				document.getElementById("dropdowntable2").style.display = "inline-block"; 
-				document.getElementById("boardsInMenu").style.color = "#74D14C"; 
-				document.getElementById("boardsInMenu").style.backgroundColor = "grey"; 
+				$(".dropdown-inner").css("opacity", "1");
 			}
 			if(document.getElementById("dropdown-1").checked == false){
 				document.getElementById("dropdowntable").style.display = "none"; 
 				document.getElementById("dropdowntable2").style.display = "none";
-				document.getElementById("boardsInMenu").style.color = "#d19fe4"; 
-				document.getElementById("boardsInMenu").style.backgroundColor = "transparent";
+				$(".dropdown-inner").css("opacity", "0");
 			}
 		}
 		function test1(){
@@ -559,15 +599,15 @@
 		
 		function changeSound(){
 			if(getCookie("sound")=="off"){
-				document.getElementById("soundButton").innerHTML = "Sound: ON";
+				document.getElementById("soundButtonImage").src="/img/sound-icon1.png";
 				document.cookie = "sound=on";
 				soundsEnabled = true;
 			}else if(getCookie("sound")=="on"){
-				document.getElementById("soundButton").innerHTML = "Sound: OFF";
+				document.getElementById("soundButtonImage").src="/img/sound-icon2.png";
 				document.cookie = "sound=off";
 				soundsEnabled = false;
 			}else{
-				document.getElementById("soundButton").innerHTML = "Sound: OFF";
+				document.getElementById("soundButtonImage").src="/img/sound-icon2.png";
 				document.cookie = "sound=off";
 				soundsEnabled = false;
 			}

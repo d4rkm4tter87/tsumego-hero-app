@@ -148,7 +148,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		font-size:100%;
 		margin: 0;
 		text-align:justify;
-		background: linear-gradient(#1b1b1b, #6a6a6a);
+		background: linear-gradient(#282828, #424141);
 		background-repeat:no-repeat;
 		background-position:center center;
 		background-attachment:fixed;
@@ -156,12 +156,6 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		-moz-background-size: 100% 100%, auto;
 		-webkit-background-size: 100% 100%, auto;
 		background-size: 100% 100%, auto;
-	}
-	@media screen and (max-width: 500px){
-	   body{
-			background-image:url('');
-			background-color:#3a3a3a;
-		}
 	}
 	#container{
 		position:relative;
@@ -171,11 +165,6 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		min-width:1100px;
 		max-width:1300px;
 	}
-	@media screen and (max-width: 1110px){
-	   #board{
-			width:1070px;
-		}
-	}
 	.accessList{
 		color:grey;
 		font-size:14px;
@@ -183,17 +172,17 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.whitebox1{
 		position:relative;
 		margin:auto;
-		padding: 0 11px 23px 11px;
 		color:white;
 		font-weight:bold;
 	}
 	.whitebox2{
-		max-width:1280px;
-		min-width:1100px;
+		width:1280px;
 		position:relative;
 		margin:auto;
-		padding: 11px;
+		padding: 5px 6px;
 		background-color: #fff;
+		border: 2px solid black;
+		box-shadow: 10px 10px 15px black;
 		-moz-border-radius-bottomleft: 20px;
 		-moz-border-radius-bottomright: 20px;
 		border-radius-bottomleft: 20px;
@@ -482,20 +471,20 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		cursor: pointer;
 	}
 	.outerMenu1{
-		display:table;   
-		margin:0 auto;
+		display:table;
+		margin:18px;
 		position:absolute;
-		left:347px;
-		top:-7px;
-		z-index:5;
-		width:700px;
+		left: 241px;
+		top: -8px;
+		z-index:50;
+		width:850px;
 	}
 	.outerMenu1adjust1{
-		left:336px;
+		left:281px;
 		width:800px;
 	}
 	.outerMenu1adjust2{
-		left:362px;
+		left:283px;
 	}
 	.outerMenu2{
 		display: table;   
@@ -540,9 +529,16 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		background-color:grey;
 		color:#74d14c;
 	}
+	#modeboxes2{
+		width: 85px;
+		display: inline-block;
+		position: relative;
+		left: -11px;
+		top: -13px;
+	}
 	#signInMenu{
 		padding:7px 9px 10px 9px;
-		margin-top:14px;
+		margin-top:22px;
 		width:115px;
 	}
 	.signin input{
@@ -874,23 +870,23 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		vertical-align:top;
 	}
 	.setViewCompleted{
-		float:left;
 		color:#45ac6e;
 		margin: 2px 9px;
 		border: 1px solid #45ac6e;
 		padding: 3px;
+		display: inline-block;
 	}
 	.setViewAccuracy{
-		float:left;
 		color:#722394;
 		margin: 2px 9px;
 		padding: 3px;
+		display: inline-block;
 	}
 	.setViewTime{
-		float:left;
 		color:#b34717;
 		margin: 2px 9px;
 		padding: 3px;
+		display: inline-block;
 	}
 	#msg1x{
 		color:#717171;
@@ -1059,6 +1055,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		cursor:context-menu;
 	}
 	#dropdowntable2 .new-button{
+		display: inline-block;
 		color:#74d13f;
 		border-left:1px solid #222;
 		border-top:1px solid #222;
@@ -1426,8 +1423,8 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	}
 	#account-bar-wrapper{
 		position:absolute;
-		top:-13px;
-		left:1131px;
+		top:-31px;
+		left:1130px;
 		width:140px;
 		cursor:context-menu;
 		background-color:white;
@@ -1498,10 +1495,10 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		font-family: "Arial Black",verdana,helvetica,arial,sans-serif;
 		letter-spacing: 1px;
 		position:absolute;
-		top:30px;
+		top:36px;
 		left:15px;
 		display:inline-block;
-		font-size: 19px;
+		font-size: 17px;
 		font-weight: 700;
 		font-style: normal;
 		font-variant: normal;
@@ -1606,17 +1603,18 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		-webkit-filter:blur(2px);
 	}
 	.modeboxes{
-		padding:206px 29.2% 2px 29.2%;
-		width:100%;
+		padding: 235px 29.2% 2px 29.2%;
+		width: 100%;
+		margin-left: 5px;
 	}
 	.modeBox1{
 		cursor:pointer;
 		float:left;
 		position:absolute;
-		top:139px;
-		left:777px;
-		width:12.9%;
-		height:240px;
+		top: 144px;
+		left: 713px;
+		width: 190px;
+		height: 275px;
 		border-radius: 26px 26px 26px 26px;
 		-moz-border-radius: 26px 26px 26px 26px;
 		-webkit-border-radius: 26px 26px 26px 26px;
@@ -1624,10 +1622,10 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.modeBox2{
 		float:left;
 		position:absolute;
-		top:139px;
-		left:1035px;
-		width:12.9%;
-		height:240px;
+		top: 145px;
+		left: 1006px;
+		width: 188px;
+		height: 272px;
 		border-radius: 26px 26px 26px 26px;
 		-moz-border-radius: 26px 26px 26px 26px;
 		-webkit-border-radius: 26px 26px 26px 26px;
@@ -1915,15 +1913,14 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.homeLeft{
 		text-align:justify;
 		padding:0 6px;
-		min-width:510px;
-		max-width:694px;
+		width:50%;
 		overflow: hidden;
 	}
 	.homeRight{
 		float:right;
 		text-align:justify;
 		padding:0 6px;
-		width:560px;
+		width:50%;
 	}
 	.homeLeft2{
 		width:50%;
@@ -2050,7 +2047,9 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		font-weight: 400;
 		line-height: 20px;
 		text-decoration:none;
-		background:lightgrey;
+		background: linear-gradient(#e1e1e1, #bdbdbd);
+		border-radius: 4px 4px 0 0;
+		border: 1px solid #777;
 	}
 	.title4x{
 		float:left;
@@ -2152,9 +2151,17 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		right:0;
 		top:0;
 	}
+	.new1{
+		background: linear-gradient(#fff, #f2f2f2);
+		border-radius: 0 0 4px 4px;
+		border-bottom: 1px solid #777;
+		border-left: 1px solid #777;
+		border-right: 1px solid #777;
+		padding: 8px;
+	}
 	#logo1{
 		position:absolute;
-		top:7px;
+		top:0px;
 		left:6px;
 		display:inline;
 		padding:4px;
@@ -2165,20 +2172,17 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	#content{
 		
 	}
-	.dropdown-button{
-		padding:6px 9px;
-	}
 	.dropdown{
 		display:inline-block;
 		font-family: Georgia;
 		letter-spacing: 1px;
 		color:#d19fe4;
-		padding: 8px 15px 15px 7px;
 		font-size: 16px;
 		font-style: normal;
 		font-variant: normal;
 		font-weight: 600;
 		line-height: 23px;
+		padding: 8px 15px 0px;
 	}
 	.dropdown-overlay{
 		display: none;
@@ -2194,14 +2198,9 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		border-radius: 3px;
 		position: absolute;
 		width:700px;
-		opacity: 0;
+		opacity:0;
 		transition: opacity .3s, visibility .3s;
-		left:5px;
-	}
-	.dropdown-button:hover{
-		color:#74d14c;
-		background-color:grey;
-		cursor:pointer;
+		left:114px;
 	}
 	
 	.dropdown-hover:hover .dropdown-inner,
@@ -2212,9 +2211,6 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.dropdown-hover:hover .dropdown-overlay,
 	.dropdown-open:checked ~ .dropdown-overlay{
 		display: block;
-	}
-	.dropdown-adjust1{
-		padding-top:21px!important;
 	}
 	.sound{
 		display:inline;
@@ -2259,11 +2255,11 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	#heroProfile{
 		color:#74d14c;
 		position:absolute;
-		left:1146px;
+		left:1145px;
 		width:144px;
-		top:74px;	
+		top:55px;	
 		display:none;
-		background-color:grey;
+		background: linear-gradient(#808080, #464646);
 		padding:1px 40px 1px 36px;
 		font-family:Georgia;
 		letter-spacing:1px;
@@ -2271,6 +2267,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		font-weight: 600;
 		z-index:5;
 		cursor:pointer;
+		border-radius: 4px 4px 0 0;
 	}
 	#heroProfile li a{
 		color:#74d14c;
@@ -2278,11 +2275,11 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	#heroLogout{
 		color:#74d14c;
 		position:absolute;
-		left:1146px;
+		left:1145px;
 		width:144px;
-		top:102px;	
+		top:83px;	
 		display:none;
-		background-color:grey;
+		background: linear-gradient(#808080, #464646);
 		padding:1px 40px 1px 36px;
 		font-family:Georgia;
 		letter-spacing:1px;
@@ -2292,6 +2289,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		cursor:pointer;
 		border-top:1px solid #222;
 		white-space:nowrap;
+		border-radius: 0 0 4px 4px;
 	}
 	#heroLogout li a{
 		color:#74d14c;
@@ -2651,19 +2649,19 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	}
 	.time-mode-play{
 		position:absolute;
-		top: 460px;
-		left: 324px;
-		z-index:999;
+		top: 419px;
+		left: 291px;
+		z-index: 1001;
 	}
 	#time-mode-play-button{
 		
 	}
 	.time-mode-play-box{
 		position:absolute;
-		top: -294px;
-		left: -86px;
-		width: 236px;
-		height: 341px;
+		top: -267px;
+		left: -77px;
+		width: 217px;
+		height: 308px;
 		cursor:pointer;
 		z-index:5;
 	}
@@ -2793,10 +2791,84 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		top:4px;
 	}
 	
-	
-	
-	
-	
+	#newMenu {
+	 display: inline-block;
+	 font-family: Verdana;
+	}
+	nav ul {
+	  padding: 0;
+	  margin: 0;
+	  list-style: none;
+	  position: relative;
+	}
+	nav ul li {
+	    text-decoration:none;
+		display: block;
+		padding:0;
+		background: linear-gradient(#5e5e5e, #3c3c3c);
+		color:#d6a2ec;
+		float:left;
+		font-weight:800;
+		text-align:center;
+		border-top: 2px solid #a2a2a2;
+		border-right: 2px solid #000;
+		border-bottom: 2px solid #000;
+		border-left: 2px solid #a2a2a2;
+	}
+	nav a {
+		display:block;
+		font-size: 22px;
+		padding: 5px 16px;
+		color: #d6a2ec;
+		text-align: center;
+		text-decoration: none;
+	}
+	nav ul ul {
+	  display: none;
+	  position: absolute; 
+	  z-index:1000;
+	}
+	nav ul li:hover > ul {
+	  display:inherit;
+	}
+	#newMenu li:hover{
+		background: linear-gradient(#8a8a8a, #595959);
+	}
+	nav ul ul li {
+	  width:170px;
+	  float:none;
+	  display:list-item;
+	  position: relative;
+	  top: 2px;
+	  left: -2px;
+	}
+	nav ul ul ul li {
+	  position: relative;
+	  top:-60px; 
+	  left:170px;
+	}
+	.newMenuLi1 li{
+		width:118px;
+	}
+	.newMenuLi2 li{
+		width:169px;
+	} 
+	.newMenuLi3 li{
+		width:118px;
+	}
+	.newMenuLi4 li{
+		width:159px;
+	}
+	#tutorialLink {
+		font-weight:400;
+		font-size:19px;
+	}
+	.homeMenuLink{
+		width:115px;
+	}
+	#soundButton, #boardsButton{
+		padding:8px 14px 1px 14px;
+	}
 	
 	
 	
@@ -3348,83 +3420,31 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 .img-8small { background-position: -57px -133px; width: 19px; height: 19px; }
 .img-9small { background-position: -76px -133px; width: 19px; height: 19px; }
 	
+@media screen and (max-width: 1110px){
+   #board{
+		width:1070px;
+	}
+}	
+	
 @media screen and (max-width: 1300px){
-	#account-bar-wrapper{left:820px;}
-	#signInMenu{position:absolute;left:-220px;z-index:500;}
-	#account-bar-wrapper{left:920px;}
-	.dropdown-adjust1{padding-top:5px!important;padding-left:7px!important;}
-	.dropdown-adjust2{width:auto!important;padding:8px 15px 15px 7px!important;}
-	.dropdown{width:500px;padding:0;}
-	.outerMenu1adjust2{left:256px;}
-	.outerMenu1adjust3{left:241px!important;}
 	#heroProfile{left:935px;}
 	#heroLogout{left:935px;}
-	/*.dropdown-inner{left:0;}*/
 	#boardsInMenu{padding-top:3px;padding-bottom:3px;}
 	.sound{padding:0;}
-	/*#soundButton{padding-top:3px;padding-bottom:3px;}*/
-	/*.whitebox1{padding-bottom:20px;}*/
 	li a.menuLi{padding-bottom:9px;padding-top:9px;}
 	#sandboxLink{top:68px;}
 	.box{width:348px;height:244px;margin-top:15px;}
 	.scontainer{padding-left:0;padding-right:0;}
-	.whitebox2{padding-left:0;padding-right:0;}
-	
 }
 
 @media screen and (max-width: 1230px){
-	.time-mode-play{
-		top: 415px;
-		left: 275px;
-	}
-	.time-mode-play-box{
-		top: -259px;
-		left: -69px;
-		width: 211px;
-		height: 304px;
-	}
-	.modeBox1{
-		left:690px;
-	}
-	.modeBox2{
-		left:950px;
-	}
+	
 }
 @media screen and (max-width: 1160px){
-	.time-mode-play{
-		top: 388px;
-		left: 250px;
-	}
-	.time-mode-play-box{
-		top: -241px;
-		left: -62px;
-		width: 195px;
-		height: 277px;
-	}
-	.modeBox1{
-		left:640px;
-	}
-	.modeBox2{
-		left:900px;
-	}
+	
 }
 @media screen and (max-width: 1130px){
-	.time-mode-play{
-		top: 366px;
-		left: 236px;
-	}
-	.time-mode-play-box{
-		top: -224px;
-		left: -58px;
-		width: 182px;
-		height: 264px;
-	}
-	.modeBox1{
-		left:610px;
-	}
-	.modeBox2{
-		left:867px;
-	}
+	
 }
 
 

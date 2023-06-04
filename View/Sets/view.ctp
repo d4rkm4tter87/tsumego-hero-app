@@ -104,9 +104,8 @@
 	<div class="homeLeft">
 		<?php 
 		if($set['Set']['title2']==null) $set['Set']['title2'] = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo '<p class="title4 title4x">'.$set['Set']['title'].'</p>';?>
-		<p class="title4date"><?php echo $set['Set']['title2']; ?></p>
-		<?php echo '<p class="titleBy">&nbsp;&nbsp;by '.$set['Set']['author'].'</p>';?>
+		echo '<p class="title4">'.$set['Set']['title'].'</p>';?>
+		<div class="new1">
 		<table border="0" width="100%">
 		<tr>
 			<td style="vertical-align:top;">
@@ -218,17 +217,16 @@
 		<tr>
 		<td>
 		<br>
+		<div align="center">
 		<?php if(isset($_SESSION['loggedInUser'])){ ?>
 		<?php
 		if($set['Set']['solved']>100) $set['Set']['solved'] = 100;
-		echo '<div class="setViewCompleted"><b>Completed: '.$set['Set']['solved'].'%</b></div>';
-		echo '<div class="setViewAccuracy"><b>Accuracy: '.$accuracy.'%</b></div>';
+		echo '<div class="setViewCompleted"><b>Completed: '.$set['Set']['solved'].'%</b></div><br>';
+		echo '<div class="setViewAccuracy"><b>Accuracy: '.$accuracy.'%</b></div><br>';
 		echo '<div class="setViewTime"><b>Avg. Time: '.$avgTime.'s</b></div>';
 		
-		?>
-		<br>
-		<?php } ?>
-		
+		} ?>
+		</div>
 		</td>
 		
 		<td>
@@ -336,6 +334,8 @@
 		}		
 		?>
 		</table>
+		</div>
+		
 		<?php if(!$isFav) echo '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>'; ?>
 		<br><br>
 	</div>

@@ -18,9 +18,6 @@ class UsersController extends AppController{
 		$this->loadModel('Rank');
 		$this->loadModel('RankOverview');
 		
-		
-		
-		
 		/*
 		$num = 601;
 		while($num<=792){
@@ -960,7 +957,7 @@ Joschka Zimdars';
 	}
 	
 	public function highscore(){
-		$_SESSION['page'] = 'highscore';
+		$_SESSION['page'] = 'levelHighscore';
 		$_SESSION['title'] = 'Tsumego Hero - Highscore';
 		
 		$this->LoadModel('UserTsumego');
@@ -1064,7 +1061,7 @@ Joschka Zimdars';
 	}
 	
 	public function rating(){
-		$_SESSION['page'] = 'highscore';
+		$_SESSION['page'] = 'ratingHighscore';
 		$_SESSION['title'] = 'Tsumego Hero - Rating';
 		
 		$this->LoadModel('UserTsumego');
@@ -1095,7 +1092,7 @@ Joschka Zimdars';
 	}
 	
 	public function highscore3(){
-		$_SESSION['page'] = 'highscore';
+		$_SESSION['page'] = 'timeHighscore';
 		$_SESSION['title'] = 'Tsumego Hero - Time Highscore';
 		
 		$this->LoadModel('UserTsumego');
@@ -1222,8 +1219,8 @@ Joschka Zimdars';
 	}
 	
 	public function leaderboard(){
-		$_SESSION['page'] = 'leaderboard';
-		$_SESSION['title'] = 'Tsumego Hero - Leaderboard';
+		$_SESSION['page'] = 'dailyHighscore';
+		$_SESSION['title'] = 'Tsumego Hero - Daily Highscore';
 		
 		$this->LoadModel('UserTsumego');
 		$this->LoadModel('Tsumego');
@@ -1576,7 +1573,7 @@ Joschka Zimdars';
 		$this->loadModel('Tsumego');
 		$this->loadModel('Set');
 		
-		$_SESSION['page'] = 'home';
+		$_SESSION['page'] = 'about';
 		$_SESSION['title'] = 'Tsumego Hero - Authors';
 		/*
 		$comments = $this->Comment->find('all');

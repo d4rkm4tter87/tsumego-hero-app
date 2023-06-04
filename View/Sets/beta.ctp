@@ -14,7 +14,7 @@
 	}else echo '<script src="/js/demos/adding-removing00.js"></script>';
 	
 	
-		if(isset($_SESSION['loggedInUser'])){	
+		if(isset($_SESSION['loggedInUser'])){
 		}else{
 			echo '<script type="text/javascript">window.location.href = "/";</script>';
 		}
@@ -92,15 +92,15 @@
 			</tr>
 			<tr>
 			<td>
-				<a href="/users/publish">Publish Schedule</a>
+				<a href="https://kovarex.github.io/besogo/testing.html">Editor</a>
 			</td>
 			<td>
-				<a href="/users/likesview">Likes/Dislikes</a>
+				<a href="/users/publish">Publish Schedule</a>
 			</td>
 			</tr>
 			<tr>
 			<td>
-				<br>
+				<a href="/users/likesview">Likes/Dislikes</a>
 			</td>
 			<td>
 			

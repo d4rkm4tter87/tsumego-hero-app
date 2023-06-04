@@ -8,6 +8,7 @@ class RanksController extends AppController {
 		$this->loadModel('RankSetting');
 		$this->loadModel('Set');
 		$_SESSION['title'] = 'Time Mode - Select';
+		$_SESSION['page'] = 'time mode';
 		
 		$lastMode = 3;
 		$tsumegos = array();
@@ -294,6 +295,7 @@ class RanksController extends AppController {
 		$this->loadModel('Set');
 		$this->loadModel('RankOverview');
 		$_SESSION['title'] = 'Time Mode - Result';
+		$_SESSION['page'] = 'time mode';
 		$sess = $_SESSION['loggedInUser']['User']['activeRank'];
 		$_SESSION['loggedInUser']['User']['activeRank'] = 0;
 		$_SESSION['loggedInUser']['User']['mode'] = 1;
