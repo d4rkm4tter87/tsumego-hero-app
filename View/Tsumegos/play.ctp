@@ -1395,10 +1395,12 @@
 			if(count($showComment)>0) echo '<div id="msg1x"><a id="show2">Comments<img id="greyArrow" src="/img/greyArrow2.png"></a></div><br>';
 				echo '<div id="msg2x">';
 			for($i=count($showComment)-1; $i>=0; $i--){
-					$commentColor = 'commentBox1';
+					$commentColorCheck = false;
 					for($a=0; $a<count($admins); $a++){
-						if($showComment[$i]['Comment']['user']==$admins[$a]['User']['name']) $commentColor = 'commentBox2';
+						if($showComment[$i]['Comment']['user']==$admins[$a]['User']['name']) $commentColorCheck = true;
 					}
+					if($commentColorCheck) $commentColor = 'commentBox2';
+					else $commentColor = 'commentBox1';
 					echo '<div class="sandboxComment">';
 					echo '<table class="sandboxTable2" width="100%" border="0"><tr><td>';
 					echo '<div class="'.$commentColor.'">'.$showComment[$i]['Comment']['user'].':<br>';
@@ -1433,7 +1435,7 @@
 						if($showComment[$i]['Comment']['status']==0){
 							//echo '<br><a class="deleteComment" href="/tsumegos/play/'.$t['Tsumego']['id'].'?deleteComment='.$showComment[$i]['Comment']['id'].'&changeComment=2">Can\'t Resolve This</a>';
 							echo '<br>';
-							if($_SESSION['loggedInUser']['User']['id'] != $showComment[$i]['Comment']['user_id']){
+							if($_SESSION['loggedInUser']['User']['id']!=$showComment[$i]['Comment']['user_id'] && $commentColorCheck){
 								echo '<a class="deleteComment" style="text-decoration:none;" href="/tsumegos/play/'.$t['Tsumego']['id'].'?deleteComment='.$showComment[$i]['Comment']['id'].'&changeComment=3">
 									<img class="thumbs-small" title="approve this comment" width="20px" src="/img/thumbs-small.png">
 								</a>';

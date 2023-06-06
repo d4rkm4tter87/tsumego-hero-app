@@ -2199,6 +2199,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		position: absolute;
 		width:700px;
 		opacity:0;
+		display:none;
 		transition: opacity .3s, visibility .3s;
 		left:114px;
 	}
@@ -2476,8 +2477,8 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	  border-radius: 50%;
 	}
 	.uotd{
-	  width: 686px;
-	  height: 187px;
+	  width: 610px;
+	  height: 164px;
 	  margin: 0;
 	  position: relative;
 	  float: left;

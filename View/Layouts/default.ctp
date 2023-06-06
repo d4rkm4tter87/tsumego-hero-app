@@ -31,7 +31,7 @@
 	<meta name="keywords" content="tsumego, problems, puzzles, baduk, weiqi, tesuji, life and death, solve, solving, hero, go, in-seong, level" >	
 	<meta name="Author" content="Joschka Zimdars">
 	<meta property="og:title" content="Tsumego Hero">
-	<link rel="stylesheet" type="text/css" href="/css/default.css?ver=1.7">
+	<link rel="stylesheet" type="text/css" href="/css/default.css?v=2.0">
 	<?php
 		//echo $_SERVER['REMOTE_ADDR'];
 		echo $this->Html->meta('icon');
@@ -192,8 +192,8 @@
 				<ul>
 					<?php echo '<li><a class="homeMenuLink" href="/" '.$refreshLinkToStart.' '.$homeA.'>Home</a>'; 
 					echo '<ul class="newMenuLi1">';
-						echo '<li><a id="tutorialLink" href="/sites/websitefunctions" '.$websitefunctionsA.'>Website Functions</a></li>';
-						echo '<li><a id="tutorialLink" href="/sites/gotutorial" '.$gotutorialA.'>Go Tutorial</a></li>';
+						//echo '<li><a id="tutorialLink" href="/sites/websitefunctions" '.$websitefunctionsA.'>Website Functions</a></li>';
+						//echo '<li><a id="tutorialLink" href="/sites/gotutorial" '.$gotutorialA.'>Go Tutorial</a></li>';
 						echo '<li><a href="/users/authors" '.$aboutA.'>About</a></li>';
 					echo '</ul>';       
 					echo '</li>';
@@ -522,11 +522,13 @@
 				document.getElementById("dropdowntable").style.display = "inline-block"; 
 				document.getElementById("dropdowntable2").style.display = "inline-block"; 
 				$(".dropdown-inner").css("opacity", "1");
+				$(".dropdown-inner").css("display", "inline-block");
 			}
 			if(document.getElementById("dropdown-1").checked == false){
 				document.getElementById("dropdowntable").style.display = "none"; 
 				document.getElementById("dropdowntable2").style.display = "none";
 				$(".dropdown-inner").css("opacity", "0");
+				$(".dropdown-inner").css("display", "none");
 			}
 		}
 		function test1(){

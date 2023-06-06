@@ -582,7 +582,7 @@ class AppController extends Controller{
 			
 			$ac = true;
 			if($ac){
-				if($_SESSION['page']!='play'){
+				if($_SESSION['page']!='play' && $_SESSION['page']!='level mode' && $_SESSION['page']!='rating mode' && $_SESSION['page']!='time mode'){
 					$trs = $this->TsumegoRecord->find('all', array('order' => 'created DESC', 'conditions' => array(
 						'user_id' => $_SESSION['loggedInUser']['User']['id'],
 						'OR' => array(
@@ -866,7 +866,8 @@ class AppController extends Controller{
 	function afterFilter(){
 		$this->loadModel('Rank');
 		
-		if($_SESSION['page']!='play' && $_SESSION['loggedInUser']['User']['mode'] == 3 || $_SESSION['page']!='play' && strlen($_SESSION['loggedInUser']['User']['activeRank'])==15){
+		
+		if($_SESSION['page']!='time mode' && $_SESSION['loggedInUser']['User']['mode'] == 3 || $_SESSION['page']!='time mode' && strlen($_SESSION['loggedInUser']['User']['activeRank'])==15){
 			$ranks = $this->Rank->find('all', array('conditions' => array('session' => $_SESSION['loggedInUser']['User']['activeRank'])));
 			for($i=0;$i<count($ranks);$i++){
 				$this->Rank->delete($ranks[$i]['Rank']['id']);

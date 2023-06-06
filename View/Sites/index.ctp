@@ -27,7 +27,7 @@
 		<?php
 			//echo '<pre>';print_r($scheduleTsumego);echo '</pre>';
 		if(count($scheduleTsumego)!=0){	
-			echo '<br><font color="#444">Added today:</font><br>';
+			echo '<font color="#444">Added today:</font><br>';
 			if(count($scheduleTsumego)<=1){
 				echo '<a style="color:#000;" href="/sets/view/'.$newT['Tsumego']['set_id'].'"><b>
 				'.$newT['Tsumego']['set'].' '.$newT['Tsumego']['set2'].'</b> - '.$newT['Tsumego']['num'].'</a><br>
@@ -88,6 +88,24 @@
 			<li class="set<?php echo $totd['Tsumego']['status']; ?>1" style="margin-top:4px;">
 				<a href="/tsumegos/play/<?php echo $totd['Tsumego']['id']; ?>"><?php echo $totd['Tsumego']['num']; ?></a>
 			</li>
+			<br><br>
+		</div>
+		<p class="title4">Update 05.06.2023</p>
+		<div class="new1">
+			<b>Design improvements</b><br><br>
+			The new menu takes away less space at the top. It also has more navigation options in a drowpdown. Other improvements involve spacing and colors on all pages.<br><br>
+			<img width="100%" src="/img/newMenu1.PNG"><br><br>
+			The Sandbox is now accessible for all premium users and users that reach level 60.<br>
+			<br>
+		</div>
+		<p class="title4">Winners of the Time Mode in May '23 </p>
+		<div class="new1">
+			<b>Winners: darkgeass, posetcay, Fupfv, iryumika, bliviu</b><br><br>
+			The winners get a premium upgrade and the achievement Time Master. Achievements will be visible later this year.<br><br>
+			<div align="center">
+			<img src="/img/time-master.png" width="75%"><br>
+			</div>
+			
 			<br>
 		</div>
 		<p class="title4">Update 22.05.2023</p>
@@ -119,11 +137,11 @@
 		<p class="title4">Recent Donations and Upgrades</p>
 		<div class="new1">
 			<table class="newx">
-		<tr><td width="50%"><h1>Salata</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td width="50%"><h1>yonur</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>Kirasan</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>Salata</h1></td><td><h1>10,00 €</h1></td></tr>
 		<tr><td><h1>Edward Feustel</h1></td><td><h1>10,00 €</h1></td></tr>
 		<tr><td><h1>Scotty Reed</h1></td><td><h1>2,17 € <i>subscription</i></h1></td></tr>
-		<tr><td><h1>Grassgrow</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>Amarantz</h1></td><td><h1>15,00 €</h1></td></tr>
 		
 		</table>	
 		<br>
@@ -457,7 +475,7 @@
 		<div class="uotd mid uotd<?php echo $uotdbg; ?> mid<?php echo $uotdbg; ?> ">
 		  <h2 <?php if(strlen($userOfTheDay)>=10) echo 'class="midLongName1"'; ?>><?php echo $userOfTheDay; ?></h2>
 		</div>
-		<p class="uotdmargin">&nbsp;</p><br>
+		<p class="uotdmargin">&nbsp;</p>
 		</div>
 		
 	
@@ -467,10 +485,10 @@
 				echo '
 					<p class="title4">Restoration Countdown</p>
 					<div class="new1">
-					<br>
+					
 					<font size="5px">
 						<div id="homeCountdown"></div>
-					<br>
+					
 					</font>
 				</div>';
 				
@@ -480,118 +498,15 @@
 			}
 		?>
 		
-		<p class="title4">Hero Powers</p>
+		<p class="title4">Info Pages</p>
 		<div class="new1">
-		<table class="sitesTable" >
-		<tr>
-			<td>
-				<img id="sprint" title="Sprint: Double XP for 2 minutes." alt="Sprint" src="/img/hp1.png">
-			</td>
-			<td>
-				<b>Sprint (Level 20)</b><br>
-				Double XP for 2 minutes on all solved problems.<br><br>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<img id="sprint" title="Intuition: Shows the first correct move." alt="Intuition" src="/img/hp2.png">
-			</td>
-			<td>
-				<b>Intuition (Level 30)</b><br>
-				Shows the first correct move.<br><br>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<img id="sprint" title="Rejuvenation: Restores health, Intuition and locks." alt="Rejuvenation" src="/img/hp3.png">
-			</td>
-			<td>
-				<b>Rejuvenation (Level 40)</b><br>
-				Restores health, Intuition and locks.<br><br>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<img id="sprint" title="Potion: If you misplay and have no hearts left, you have a small chance to restore your health." alt="Potion" src="/img/hp5.png">
-			</td>
-			<td>
-				<b>Potion (Level 50 or Premium)</b><br>
-				If you misplay and have no hearts left, you have a small chance to restore your health.<br><br>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<img id="sprint" title="Refinement: Gives you a chance to solve a golden tsumego." alt="Refinement" src="/img/hp4.png">
-			</td>
-			<td>
-				<b>Refinement (Level 100 or Premium)</b><br>
-				Gives you a chance to solve a golden tsumego.<br><br>
-			</td>
-		</tr>
+			There are new info pages about the functions on the website and in the three different modes. 
+			<a href="/sites/websitefunctions">Website Functions</a><br><br>
+			Another info pages shows guidelines about go rules and what they mean on Tsumego Hero in regards of solving or failing a problem.
+			<a href="/sites/gotutorial">Go Tutorial</a><br><br>
 		
-		</table>
-		<br>
 		</div>
-		<p class="title4">Problem Colors</p>
-		<div class="new1">
-		<table class="sitesTable">
-		<tr>
-			<td>
-				<img title="Not visited" alt="Not visited" src="/img/xN.PNG">
-			</td>
-			<td>
-				<b>Not visited</b><br>
-				You haven't seen this problem.<br><br>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<img title="Visited" alt="Visited" src="/img/xV.PNG">
-			</td>
-			<td>
-				<b>Visited</b><br>
-				You have seen this problem, but not solved.<br><br>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<img title="Solved" alt="Solved" src="/img/xS.PNG">
-			</td>
-			<td>
-				<b>Solved</b><br>
-				You solved this problem.<br><br>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<img title="Locked" alt="Locked" src="/img/xF.PNG">
-			</td>
-			<td>
-				<b>Locked</b><br>
-				This problem is locked for today. Problems get locked when a player misplays and has no more hearts left.<br><br>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<img title="Half XP" alt="Half XP" src="/img/xW.PNG">
-			</td>
-			<td>
-				<b>Half XP</b><br>
-				This problem gives half XP. It becomes available one week after the first solution.<br><br>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<img title="Golden" alt="Golden" src="/img/xG.PNG">
-			</td>
-			<td>
-				<b>Golden</b><br>
-				This is a golden tsumego. It gives eight times more XP than usual. If you fail, it disappears.<br><br>
-			</td>
-		</tr>
-		</table>
-		<br>
-		</div>
+		
 		<?php if(isset($_SESSION['loggedInUser'])){ ?>
 		<?php if($_SESSION['loggedInUser']['User']['premium']==0 && $user['User']['id']!=1165){ ?>
 			<p class="title4">Donations</p>
@@ -783,7 +698,7 @@
 		<a href="/sites/view/0">Read more >></a><br><br>
 		</b></font>
 		</div>
-		<br><br><br>
+		<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 		
 		<!--
 		<p class="title4 ">Contributors</p>
