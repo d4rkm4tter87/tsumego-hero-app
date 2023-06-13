@@ -432,7 +432,9 @@
 	
 	<!-- BOARD -->
 	<div id="board" align="center"></div>
-	
+	<div id="errorMessageOuter" align="center">
+		<div id="errorMessage"></div>
+	</div>
 	<?php
 		//SEMEAI START
 		if($isSemeai && !$dailyMaximum){
@@ -2225,7 +2227,7 @@
 			msg4selected = !msg4selected;
 		});
 	});
-	
+	<?php if($sgfErrorMessage===''){ ?>
 	jsetup.create("board", function(canvas){
 		canvas.addListener("click", function(coord, ev){
 			noLastMark = false;
@@ -2611,14 +2613,17 @@
 									$whoPlays2 = 0;
 									if($firstPlayer=='w') $whoPlays2 = 1;
 							?>
-							if(whiteMoveAfterCorrect) c2 = new JGO.Coordinate(whiteMoveAfterCorrectI, whiteMoveAfterCorrectJ);
-							
-							var play = jboard.playMove(c2, <?php echo 'JGO.'.$playerColor[$whoPlays1]; ?>, ko);
-							node = jrecord.createNode(true);
-							jboard.setType(c2, <?php echo 'JGO.'.$playerColor[$whoPlays1]; ?>);
-							node.setType(play.captures, JGO.CLEAR); 
-							if(!noLastMark) node.setMark(c2, JGO.MARK.CIRCLE); 
-							node.setMark(coord, JGO.MARK.NONE);
+							if(whiteMoveAfterCorrect){
+								c2 = new JGO.Coordinate(whiteMoveAfterCorrectI, whiteMoveAfterCorrectJ);
+								
+								
+							}
+								var play = jboard.playMove(c2, <?php echo 'JGO.'.$playerColor[$whoPlays1]; ?>, ko);
+								node = jrecord.createNode(true);
+								jboard.setType(c2, <?php echo 'JGO.'.$playerColor[$whoPlays1]; ?>);
+								node.setType(play.captures, JGO.CLEAR); 
+								if(!noLastMark) node.setMark(c2, JGO.MARK.CIRCLE); 
+								node.setMark(coord, JGO.MARK.NONE);
 							
 							if(josekiHero && move==0){
 								<?php for($i=0; $i<count($visual); $i++){ 
@@ -2776,7 +2781,6 @@
 						}
 					echo '}rwSwitcher=(rwSwitcher==1)?2:1;';
 					?>
-					
 				}
 			}else{
 				if(!safetyLock){
@@ -2816,6 +2820,11 @@
 			}
 		});
 	});
+	<?php }else{ ?>
+		$("#errorMessageOuter").show();
+		$("#errorMessage").show();
+		$("#errorMessage").text("<?php echo $sgfErrorMessage; ?>");
+	<?php } ?>
 	
 	function reset(){
 		if(!tryAgainTomorrow) locked = false;
@@ -3064,6 +3073,7 @@
 		}
 	}
 	
+	<?php if($sgfErrorMessage===''){ ?>
 	function intuition(){
 		if(intuitionEnabled){
 			<?php echo 'jboard.setMark(new JGO.Coordinate('.$intuitionMove[0].', '.$intuitionMove[1].'), JGO.MARK.CORRECT);'; ?>
@@ -3073,6 +3083,7 @@
 			intuitionEnabled = false;
 		}
 	}
+	<?php } ?>
 	
 	function rejuvenation(){
 		if(rejuvenationEnabled){

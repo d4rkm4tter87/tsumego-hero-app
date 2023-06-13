@@ -84,10 +84,10 @@
 			<table width="100%">
 			<tr>
 			<td>
-				<a href="/users/userstats">User Activities</a>
+				<a href="/users/adminstats">Admin Activities</a>
 			</td>
 			<td>
-				<a href="/users/adminstats">Admin Activities</a>
+				<a href="/users/userstats">User Activities</a>
 			</td>
 			</tr>
 			<tr>

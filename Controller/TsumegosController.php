@@ -1502,14 +1502,14 @@ class TsumegosController extends AppController{
 		if(isset($this->params['url']['rank'])) $raName = $this->params['url']['rank'];
 		else $raName = $ranks[0]['Rank']['rank'];
 		
-		
 		if($mode==1) $_SESSION['page'] = 'level mode';
 		elseif($mode==2) $_SESSION['page'] = 'rating mode';
 		elseif($mode==3) $_SESSION['page'] = 'time mode';
 		
 		//echo '<pre>'; print_r(($crs/$stopParameter)*100); echo '</pre>';
 		//echo '<pre>'; print_r($masterArrayBW[0]); echo '</pre>';
-		//echo '<pre>'; print_r($id); echo '</pre>';
+		//echo '<pre>'; print_r($masterArrayBW); echo '</pre>';
+		//echo '<pre>'; print_r($masterArrayBW[3]); echo '</pre>';
 		
 		$this->set('raName', $raName);
 		$this->set('crs', $crs);
@@ -1586,6 +1586,7 @@ class TsumegosController extends AppController{
 		$this->set('stopParameter2', $stopParameter2);
 		$this->set('mode3ScoreArray', $mode3ScoreArray);
 		$this->set('potionAlert', $potionAlert);
+		$this->set('sgfErrorMessage', $masterArrayBW[16]);
     }
 	
 	private function sendResult($uid=null, $tid=null, $success=null){
@@ -1696,37 +1697,16 @@ class TsumegosController extends AppController{
 		$alphabet1 = array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
 		$alphabet2 = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
 		
-		if(!file_exists($file)) $file = '6473k339312/Gokyo-Shumyo-4/153.sgf';
-		$sgf = file_get_contents($file);
-		$aw = strpos($sgf, 'AW');
-		$ab = strpos($sgf, 'AB');
-		$tr = strpos($sgf, 'TR');
-		$sq = strpos($sgf, 'SQ');
-		$modifiedBSize = false;
-		if($checkBSize!=19) $modifiedBSize = true;
-		//fängt b oder w an
-		$seq1 = strpos($sgf, ';B');
-		$seq2 = strpos($sgf, ';W');
-		if($setID==161){
-		if($seq1<$seq2){
-			if(strpos($sgf, ';B')-1 != strpos($sgf, '(;B')){
-				$sgf = substr_replace($sgf, '(', strpos($sgf, ';B'), 0);
-				$sgf .= ')';
-			}
-		}
-		if($seq2<$seq1){
-			if(strpos($sgf, ';W')-1 != strpos($sgf, '(;W')){
-				$sgf = substr_replace($sgf, '(', strpos($sgf, ';W'), 0);
-				$sgf .= ')';
-			}
-		}
-		}
-		if($seq1<$seq2) $firstPlayer = 'b';
-		else $firstPlayer = 'w';
-		if($seq1==null) $firstPlayer = 'w';
-		if($seq2==null) $firstPlayer = 'b';
-		//semeai
-		$sequencesSign = strpos($sgf, ';B');
+		$black = array();
+		$white = array();
+		$cornerShuffle = array('tl', 'tr', 'bl', 'br');
+		$cornerShuffle2 = array('t', 'b');
+		$corner = array();
+		$correctBranch;
+		$correctMove = array();
+		$visual = array();
+		$vCorrect = array();
+		$visuals = array();
 		$blackLiberties = null;
 		$whiteLiberties = null;
 		$bMinus = '';
@@ -1734,6 +1714,65 @@ class TsumegosController extends AppController{
 		$sT = array();
 		$semeai = false;
 		$setIDfullGame = false;
+		$bMinus = '';
+		$wMinus = '';
+		$firstPlayer = '';
+		$playerNames = array();
+		$lastPlayed = array();
+		$triangleMarker = array();
+		$squareMarker = array();
+		$additionalInfo = array();
+		$saveText = array();
+		$stIndex = 0;
+		$playerNamesText = 0;
+		$sgfErrorMessage = '';
+		
+		if(!file_exists($file)){
+			$file = '6473k339312/Gokyo-Shumyo-4/153.sgf';
+			$sgfErrorMessage = 'Error: File not found.';
+		}
+		//$sgfErrorMessage = 'Error: File not found.';
+		
+		$sgf = file_get_contents($file);
+		$aw = strpos($sgf, 'AW');
+		$ab = strpos($sgf, 'AB');
+		$tr = strpos($sgf, 'TR');
+		$sq = strpos($sgf, 'SQ');
+		$seq1 = strpos($sgf, ';B');
+		$seq2 = strpos($sgf, ';W');
+		
+		
+		if($seq1==null) $sgfErrorMessage = 'Error: File conversion error.';
+		//elseif(strpos($sgf, 'C[')<$seq1 && strpos($sgf, 'C[')!==0) $sgfErrorMessage = 'Error: File conversion error.';
+		elseif($aw===0 || $ab===0) $sgfErrorMessage = 'Error: File conversion error.';
+		
+		if($sgfErrorMessage===''){
+		
+		$modifiedBSize = false;
+		if($checkBSize!=19) $modifiedBSize = true;
+		//fängt b oder w an
+		
+		if($setID==161){
+			if($seq1<$seq2){
+				if(strpos($sgf, ';B')-1 != strpos($sgf, '(;B')){
+					$sgf = substr_replace($sgf, '(', strpos($sgf, ';B'), 0);
+					$sgf .= ')';
+				}
+			}
+			if($seq2<$seq1){
+				if(strpos($sgf, ';W')-1 != strpos($sgf, '(;W')){
+					$sgf = substr_replace($sgf, '(', strpos($sgf, ';W'), 0);
+					$sgf .= ')';
+				}
+			}
+		}
+		if($seq1<$seq2) $firstPlayer = 'b';
+		else $firstPlayer = 'w';
+		if($seq1==null) $firstPlayer = 'w';
+		if($seq2==null) $firstPlayer = 'b';
+		//semeai
+		$sequencesSign = strpos($sgf, ';B');
+		
 		if($setID==159 || $setID==161) $setIDfullGame = true;
 		if(strpos($sgf, '#')) $semeai = true;
 		if($semeai){
@@ -1808,22 +1847,10 @@ class TsumegosController extends AppController{
 		}
 		
 		$sgfArr = str_split($sgf);
-		$black = array();
-		$white = array();
 		
 		//remove comments + markers
-		$playerNames = array();
-		$lastPlayed = array();
-		$triangleMarker = array();
-		$squareMarker = array();
-		$additionalInfo = array();
+		/*kommentare aus dem sgfArr schreiben*/
 		
-		/*kommentare aus dem sgfArr schreiben
-		
-		*/
-		$saveText = array();
-		$stIndex = 0;
-		$playerNamesText = 0;
 		//echo '<pre>';print_r($sgfArr);echo '</pre>';
 		//echo '<pre>';print_r(implode($sgfArr));echo '</pre>';
 		
@@ -2292,9 +2319,6 @@ class TsumegosController extends AppController{
 		//echo '<pre>';print_r($white);echo '</pre>';
 		
 		//Corner
-		$cornerShuffle = array('tl', 'tr', 'bl', 'br');
-		$cornerShuffle2 = array('t', 'b');
-		
 		if($modifiedBSize) $orientation='topleft';
 		
 		if($orientation=='topleft') $c=0;
@@ -2506,11 +2530,6 @@ class TsumegosController extends AppController{
 			}
 		}
 		
-		$correctBranch;
-		$correctMove = array();
-		$visual = array();
-		$vCorrect = array();
-		$visuals = array();
 		for($i=0; $i<count($masterArray); $i++){
 			//intuition
 			if($masterArray[$i][8]==='+') $correctBranch = $masterArray[$i][6];
@@ -2532,14 +2551,18 @@ class TsumegosController extends AppController{
 				}
 			}
 		}
+		
+		$noCorrectFound = true;
 		//intuition move
 		for($i=0; $i<count($masterArray); $i++){
 			if($masterArray[$i][6]===$correctBranch && $masterArray[$i][2]===0){
 				array_push($correctMove, $masterArray[$i][0]);
 				array_push($correctMove, $masterArray[$i][1]);
 			}
+			if($masterArray[$i][4]===')' || $masterArray[$i][5]===')') $sgfErrorMessage= 'Error: Ending branch not set correctly.';
+			if($masterArray[$i][8]==='+') $noCorrectFound = false;
 		}
-		
+		if($noCorrectFound) $sgfErrorMessage= 'Error: There is no solution.';
 		//echo '<pre>';print_r($saveText2);echo '</pre>';
 		
 		for($n=0; $n<count($saveText2[0]); $n++){
@@ -2623,7 +2646,9 @@ class TsumegosController extends AppController{
 		//echo '<pre>';print_r($visuals);echo '</pre>';
 		
 		if($modifiedBSize) $corner='full board';
-		//$corner='full board';
+		
+		}
+		
 		$masterArrayBW = array();
 		array_push($masterArrayBW, $masterArray);
 		array_push($masterArrayBW, $black);
@@ -2641,6 +2666,7 @@ class TsumegosController extends AppController{
 		array_push($masterArrayBW, $coordMarkers);
 		array_push($masterArrayBW, $coordPlaces);
 		array_push($masterArrayBW, $sT);
+		array_push($masterArrayBW, $sgfErrorMessage);
 		return $masterArrayBW;
 	}
 	

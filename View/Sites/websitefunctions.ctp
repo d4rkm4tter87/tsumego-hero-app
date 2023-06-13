@@ -1,39 +1,64 @@
-
+	<div align="center">
+	<h2>Functions and Modes</h2>
+	</div>
 	<div class="homeRight">
-		<br>
-		<p class="title4">Rating Mode</p>
-		<div class="new1">
-			Your profile has a rating that increases or decreases by playing problems in the rating mode. 
-			The problem you get are according to your rating. <br><br>
-
-			The regulator that reaches from very easy to very difficult influences the difficulty or the problems that you get. 
-			Very easy gives you problems that are below your rating, very difficult gives you problems that have higher rating.
-			<br><br>
-		</div>
+		
 		<p class="title4">Time Mode</p>
 		<div class="new1">
+			In the time mode, you are challenged with 10 problems of a selected rank. If you solve enough of them correctly,
+			you unlock the next rank. All problems are categorized into ranks from 15 kyu to 5 dan. You start at problems of the 
+			rank 15 kyu and unlock a stronger rank upon passing the current rank.<br><br>
+			<b>Select page</b><br><br>
+			<img src="/img/mf-time3.PNG" width="100%">
+			<br><br>
+			The icon on the bottom left shows your best attempt. It shows your best score and if you passed or failed. 
+			The icon on the right shows how many problems on that rank are in the database.
+			<br><br>
 			Select between 3 categories:<br>
 			• Slow: 4 Minutes per problem, 8/10 to pass<br>
 			• Fast: 1 Minute per problem, 8/10 to pass<br>
 			• Blitz: 30 Seconds per problem, 8/10 to pass<br>
 			<br>
-			You are challenged with a set of 10 problems. You need to solve 8 of the correctly to unlock the next rank.
+			<b>Problem page</b><br><br>
+			After a category is selected, it is time to solve the problems. 
 			<br><br>
-			All problems on the website are categorized into ranks from 15 kyu to 5 dan. You start at problems of the rank 15 kyu and unlock a stronger rank upson passing the current rank.
+			
+			<img src="/img/mf-time2.PNG" width="100%">
 			<br><br>
-			The icon on the bottom left shows your best attempt. It shows your best score and if you passed or failed. The icon on the right shows how many problems on that rank are in the database.
+			
+			<b>(1) Number of problems in current session</b><br><br>
+			The numbers show how many problems you solved in this session and how many problems are overall in this session.<br><br>
+			
+			<b>(2) Countdown</b><br><br>
+			A countdown is shown on the upper left. When it runs out before solving, 
+			you failed the problem.
+			
 			<br><br>
-			When you enter the problem pages, a countdown is shown on the upper left. When it runs out before solving, you failed the problem.
+			<b>Results page</b><br><br>
+			<img src="/img/mf-time4.PNG" width="100%">
 			<br><br>
-			On the results page, you have your attempts listed. For each rank in each category, your best attempt is shown. The possible range of points for each problem is 0 to 100. A faster solving time gets more points and a failed attempt always gives 0 points.
+			
+			On the results page, you have your attempts listed. For each rank in each category, your best 
+			attempt is shown. The possible range of points for each problem is 0 to 100. A faster solving time gets more points and a failed attempt always gives 0 points.
 			<br><br>
 		</div>
 	</div>
 	
 	<div class="homeLeft">
-		[under construction]
-		<p class="title4">Hero Powers</p>
+		<p class="title4">Level Mode</p>
 		<div class="new1">
+		The level mode is the default mode for selecting collections and problems. Based on the difficulty of the problem, a certain amount of
+		expierience points (XP) is the reward. The users start at level 1 and reach higher levels by gaining XP. There are several rewards upon reaching 
+		higher levels. The number of hearts increase. Hero powers, secret areas and the sandbox can be unlocked. 
+		<br><br>
+			<b>Problem page</b><br><br>
+			<img src="/img/mf-level2.PNG" width="100%">
+			<br><br>
+			
+			<b>(1) Hearts</b><br><br>
+			The hearts are your lifes that you have for trying to solve the problems. Each time you fail at solving a problem, you lose a heart.
+			When you have no hearts left and fail at a problem, the problem is locked until the next day. Hearts increase with your level.<br><br>
+			<b>(2) Hero Powers</b><br><br>	
 		<table class="sitesTable" >
 		<tr>
 			<td>
@@ -81,11 +106,21 @@
 			</td>
 		</tr>
 		
-		</table>
+		</table>	
 		<br>
+
+		<b>(3) PLayer color and board orientation</b><br><br>
+		The icons show the current player color and board orientation. You can also select your preferrec color and orientation.
+		<br><br>
+		<b>(4) Mark as favorite</b><br><br>
+		By selecting the gray circle, the problem is marked as favorite. It can be found in the favorite collection that shows up at the beginning
+		of the collections page.
+		<br><br>
+		<div align="center">
+		<img src="/img/mf-level3.PNG" width="50%">
 		</div>
-		<p class="title4">Problem Colors</p>
-		<div class="new1">
+			<br>
+			<b>(5) Problem colors</b><br><br>	
 		<table class="sitesTable">
 		<tr>
 			<td>
@@ -141,12 +176,38 @@
 				This is a golden tsumego. It gives eight times more XP than usual. If you fail, it disappears.<br><br>
 			</td>
 		</tr>
-		</table>
-		<br>
+		</table>	
+			
 		</div>
 		
-		
-		
+		<p class="title4">Rating Mode</p>
+		<div class="new1">
+			In the rating mode, problems get chosen according to your rating. The rating is a number that corresponds to a problem difficulty and
+			starts at 20 kyu (100 rating). By solving or failing problems, the rating number increases or decreases.
+			
+			<br><br>
+			<b>Problem page</b><br><br>
+			<img src="/img/mf-rating3.PNG" width="100%">
+			<br><br>
+			
+			<b>(1) Horizintal bar</b><br><br>
+			The horizontal bar that reaches from very easy to very difficult influences the difficulty or the problems that you get. 
+			Very easy gives you problems that are below your rating, very difficult gives you problems that have higher rating.
+			<br><br>
+			<b>(2) History button</b><br><br>
+			The history button leads you to the page that shows your most recent attempts in the rating mode. 
+			<br><br>
+			<b>(3) Skip button</b><br><br>
+			The skip button lets you skip the problem 
+			without trying to solve them. It can be used 30 times per day.
+			<br><br>
+			<b>Rating mode history page</b><br><br>
+			<img src="/img/mf-rating4.PNG" width="100%">
+			<br><br>
+			The rating mode history page shows your most recent attempts in the rating mode. You can see how much rating you gained or lost and you
+			can go to the problem to try it again.<br><br>
+		</div>
+		<br><br><br>
 	</div>
 	
 	

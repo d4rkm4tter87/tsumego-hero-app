@@ -192,7 +192,7 @@
 				<ul>
 					<?php echo '<li><a class="homeMenuLink" href="/" '.$refreshLinkToStart.' '.$homeA.'>Home</a>'; 
 					echo '<ul class="newMenuLi1">';
-						//echo '<li><a id="tutorialLink" href="/sites/websitefunctions" '.$websitefunctionsA.'>Website Functions</a></li>';
+						echo '<li><a id="tutorialLink" href="/sites/websitefunctions" '.$websitefunctionsA.'>Functions & Modes</a></li>';
 						//echo '<li><a id="tutorialLink" href="/sites/gotutorial" '.$gotutorialA.'>Go Tutorial</a></li>';
 						echo '<li><a href="/users/authors" '.$aboutA.'>About</a></li>';
 					echo '</ul>';       
@@ -201,6 +201,13 @@
 					if($_SESSION['loggedInUser']['User']['premium']>=1 || $_SESSION['loggedInUser']['User']['level']>=60){
 					echo '<ul class="newMenuLi2">';
 						echo '<li><a '.$refreshLinkToSandbox.' '.$sandboxA.' href="/sets/beta">Sandbox</a></li>';
+						if($_SESSION['loggedInUser']['User']['isAdmin']>=1){
+							echo '<li><a class="adminLink" href="/users/adminstats">Admin Activities</a></li>';
+							echo '<li><a class="adminLink" href="/users/userstats">User Activities</a></li>';
+							echo '<li><a class="adminLink" href="https://kovarex.github.io/besogo/testing.html">Editor</a></li>';
+							echo '<li><a class="adminLink" href="/users/publish">Publish Schedule</a></li>';
+							echo '<li><a class="adminLink" href="/users/likesview">Likes/Dislikes</a></li>';
+						}
 					echo '</ul>';
 					}
 					echo '</li>';

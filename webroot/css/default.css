@@ -2864,11 +2864,31 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		font-weight:400;
 		font-size:19px;
 	}
+	.adminLink{
+		font-weight:400;
+		font-size:19px;
+		color: #f75959;
+	}
 	.homeMenuLink{
 		width:115px;
 	}
 	#soundButton, #boardsButton{
 		padding:8px 14px 1px 14px;
+	}
+	#errorMessage{
+		width: 304px;
+		padding: 40px;
+		margin: 120px;
+		color: #d90000;
+		font-weight: bold;
+		background-color: #eaeaea;
+		border-radius: 12px;
+		border: 1px solid #d90000;
+		display:none;
+	}
+	#errorMessageOuter{
+		width:100%;
+		display:none;
 	}
 	
 	
