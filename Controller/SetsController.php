@@ -1471,9 +1471,4 @@ class SetsController extends AppController{
 	}
 }
 
-
-
-
 ?>
-
-
