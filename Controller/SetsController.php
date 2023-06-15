@@ -100,8 +100,6 @@ class SetsController extends AppController{
 			if($_SESSION['loggedInUser']['User']['level'] >= 45){ $secretPoints++; }
 			if($_SESSION['loggedInUser']['User']['level'] >= 40){ $secretPoints++; }
 		
-			//$secretPoints += $_SESSION['loggedInUser']['User']['premium'];
-			
 			if($secretPoints>=7){ $u['User']['secretArea7'] = 1; $_SESSION['loggedInUser']['User']['secretArea7'] = 1; }
 			if($secretPoints>=6){ $u['User']['secretArea6'] = 1; $_SESSION['loggedInUser']['User']['secretArea6'] = 1; }
 			if($secretPoints>=5){ $u['User']['secretArea5'] = 1; $_SESSION['loggedInUser']['User']['secretArea5'] = 1; }
