@@ -1380,17 +1380,11 @@ class SetsController extends AppController{
 	}
 	
 	private function getDifficultyColor($difficulty = null){
-		$colors = array();
-		array_push($colors, '#33cc33');
-		array_push($colors, '#709533');
-		array_push($colors, '#2e3370');
-		array_push($colors, '#ac5d33');
-		array_push($colors, '#e02e33');
-		if($difficulty==1) return $colors[0];
-		if($difficulty==2) return $colors[1];
-		if($difficulty==3) return $colors[2];
-		if($difficulty==4) return $colors[3];
-		if($difficulty==5) return $colors[4];
+		if($difficulty==1) return '#33cc33';
+		if($difficulty==2) return '#709533';
+		if($difficulty==3) return '#2e3370';
+		if($difficulty==4) return '#ac5d33';
+		if($difficulty==5) return '#e02e33';
 		return 'white';
 	}
 	
