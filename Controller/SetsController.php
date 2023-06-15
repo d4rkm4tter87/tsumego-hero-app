@@ -1,6 +1,6 @@
 <?php
 class SetsController extends AppController{
-	
+
     public $helpers = array('Html', 'Form');
 	public $title = 'tsumego-hero.com';
 
@@ -24,7 +24,7 @@ class SetsController extends AppController{
 			}
 		}
 	}
-	
+
 	private function publishSet2($from=null, $to=null){
 		$this->LoadModel('Tsumego');
 		$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => $from)));
@@ -45,7 +45,7 @@ class SetsController extends AppController{
 			}
 		}
 	}
-	
+
 	private function publishSet3(){
 		$this->LoadModel('Tsumego');
 		$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => 126)));
@@ -54,7 +54,7 @@ class SetsController extends AppController{
 		$id += 1;
 		for($i=0; $i<count($ts); $i++){
 			if($ts[$i]['Tsumego']['id']>=16703){
-				
+
 				$this->Tsumego->delete($ts[$i]['Tsumego']['id']);
 			}
 		}
@@ -69,28 +69,28 @@ class SetsController extends AppController{
 		$this->LoadModel('Favorite');
 		$this->LoadModel('Comment');
 		$this->LoadModel('UserSaMap');
-		
+
 		$_SESSION['page'] = 'sandbox';
 		$_SESSION['title'] = 'Tsumego Hero - Collections';
-		
+
 		$sa = $this->UserSaMap->find('all');
-		
+
 		$setsX = $this->Set->find('all', array(
 			'fields' => array('Set.id', 'Set.title', 'Set.title2', 'Set.author', 'Set.description', 'Set.folder', 'Set.difficulty', 'Set.image', 'Set.order', 'Set.created', 'Set.color' ),
 			'order' => array('Set.order'),
 			'conditions' => array('public' => 0)
 		));
-		
+
 		$secretPoints = 0;
 		$removeMap = array();
-		
+
 		$removeMap[135] = 1;
-		
+
 		if(isset($_SESSION['loggedInUser'])){
 			if($_SESSION['loggedInUser']['User']['id']==72){
 				unset($removeMap[135]);
 			}
-			
+
 			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
 			if($_SESSION['loggedInUser']['User']['level'] >= 70){ $secretPoints++; }
 			if($_SESSION['loggedInUser']['User']['level'] >= 65){ $secretPoints++; }
@@ -99,7 +99,7 @@ class SetsController extends AppController{
 			if($_SESSION['loggedInUser']['User']['level'] >= 50){ $secretPoints++; }
 			if($_SESSION['loggedInUser']['User']['level'] >= 45){ $secretPoints++; }
 			if($_SESSION['loggedInUser']['User']['level'] >= 40){ $secretPoints++; }
-		
+
 			if($secretPoints>=7){ $u['User']['secretArea7'] = 1; $_SESSION['loggedInUser']['User']['secretArea7'] = 1; }
 			if($secretPoints>=6){ $u['User']['secretArea6'] = 1; $_SESSION['loggedInUser']['User']['secretArea6'] = 1; }
 			if($secretPoints>=5){ $u['User']['secretArea5'] = 1; $_SESSION['loggedInUser']['User']['secretArea5'] = 1; }
@@ -107,7 +107,7 @@ class SetsController extends AppController{
 			if($secretPoints>=3){ $u['User']['secretArea3'] = 1; $_SESSION['loggedInUser']['User']['secretArea3'] = 1; }
 			if($secretPoints>=2){ $u['User']['secretArea2'] = 1; $_SESSION['loggedInUser']['User']['secretArea2'] = 1; }
 			if($secretPoints>=1){ $u['User']['secretArea1'] = 1; $_SESSION['loggedInUser']['User']['secretArea1'] = 1; }
-		
+
 			if($_SESSION['loggedInUser']['User']['secretArea10']==0) $removeMap[88156] = 1;
 			if($_SESSION['loggedInUser']['User']['secretArea7']==0) $removeMap[81578] = 1;
 			if($_SESSION['loggedInUser']['User']['secretArea6']==0) $removeMap[74761] = 1;
@@ -126,22 +126,22 @@ class SetsController extends AppController{
 			$removeMap[81578] = 1;
 			$removeMap[88156] = 1;
 		}
-		
-		
-		
+
+
+
 		$sets = array();
 		for($i=0; $i<count($setsX); $i++){
 			if(!isset($removeMap[$setsX[$i]['Set']['id']])) array_push($sets, $setsX[$i]);
 		}
-		
+
 		if(isset($_SESSION['loggedInUser'])){
-			$vs = $this->Visit->find('all', 
+			$vs = $this->Visit->find('all',
 				array('order' => 'created',	'direction' => 'DESC', 'conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id']))
 			);
 		}
 		for($i=0; $i<count($sets); $i++){
 			if(!isset($_SESSION['loggedInUser'])){
-				$t = $this->Tsumego->find('first', 
+				$t = $this->Tsumego->find('first',
 					array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
 				);
 				$sets[$i]['Set']['t'] = $t['Tsumego']['id'];
@@ -153,7 +153,7 @@ class SetsController extends AppController{
 				if($hasVisit!=-1){
 					$sets[$i]['Set']['t'] = $hasVisit;
 				}else{
-					$t = $this->Tsumego->find('first', 
+					$t = $this->Tsumego->find('first',
 						array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
 					);
 					$sets[$i]['Set']['t'] = $t['Tsumego']['id'];
@@ -167,7 +167,7 @@ class SetsController extends AppController{
 				$utsMap[$uts[$l]['UserTsumego']['tsumego_id']] = $uts[$l]['UserTsumego']['status'];
 			}
 		}
-		
+
 		$globalSolvedCounter = 0;
 		$globalCounter = count($this->Tsumego->find('all'));
 		$invisibleSets = $this->getInvisibleSets();
@@ -175,15 +175,15 @@ class SetsController extends AppController{
 			$invisibleSet[$i] = count($this->Tsumego->find('all', array('conditions' =>  array('set_id' => $invisibleSets[$i]))));
 			$globalCounter-=$invisibleSet[$i];
 		}
-		
+
 		$overallCounter = 0;
 		for($i=0; $i<count($sets); $i++){
-			$ts = $this->Tsumego->find('all', 
+			$ts = $this->Tsumego->find('all',
 				array('conditions' =>  array('set_id' => $sets[$i]['Set']['id']))
 			);
 			$sets[$i]['Set']['anz'] = count($ts);
 			$counter = 0;
-			
+
 			if(isset($_SESSION['loggedInUser'])){
 				for($k=0; $k<count($ts); $k++){
 					if(isset($utsMap[$ts[$k]['Tsumego']['id']])){
@@ -209,7 +209,7 @@ class SetsController extends AppController{
 					}
 				}
 			}
-			
+
 			$date = new DateTime($sets[$i]['Set']['created']);
 			$month = date("F", strtotime($sets[$i]['Set']['created']));
 			$setday = $date->format('d. ');
@@ -217,7 +217,7 @@ class SetsController extends AppController{
 			if($setday[0]==0) $setday = substr($setday, -3);
 			$sets[$i]['Set']['created'] = $date->format('Ymd');
 			$sets[$i]['Set']['createdDisplay'] = $setday.$month.' '.$setyear;
-			
+
 			$percent = $counter/count($ts)*100;
 			$overallCounter += count($ts);
 			$sets[$i]['Set']['solvedNum'] = $counter;
@@ -227,12 +227,12 @@ class SetsController extends AppController{
 			$sets[$i]['Set']['difficultyColor'] = $this->getDifficultyColor($sets[$i]['Set']['difficulty']);
 			$sets[$i]['Set']['sizeColor'] = $this->getSizeColor($sets[$i]['Set']['anz']);
 			$sets[$i]['Set']['dateColor'] = $this->getDateColor($sets[$i]['Set']['created']);
-			
+
 		}
-		
+
 		$sortOrder = 'null';
 		$sortColor = 'null';
-		
+
 		if(isset($_SESSION['loggedInUser'])){
 			if($globalCounter==$globalSolvedCounter){
 				$u['User']['secretArea10'] = 1;
@@ -241,7 +241,7 @@ class SetsController extends AppController{
 				$firstGod['User']['secretArea10'] = 1;
 				$this->User->save($firstGod);
 			}
-			
+
 			if(isset($_COOKIE['sortOrder']) && $_COOKIE['sortOrder']!= 'null'){
 				$u['User']['sortOrder'] = $_COOKIE['sortOrder'];
 				$sortOrder = $_COOKIE['sortOrder'];
@@ -256,19 +256,19 @@ class SetsController extends AppController{
 			}
 			$this->User->save($u);
 		}
-		
+
 		$accessList = $this->User->find('all', array('conditions' =>  array('completed' => 1)));
 		$access = array();
 		for($i=0; $i<count($accessList); $i++){
 			array_push($access, $accessList[$i]['User']['name']);
 		}
-		
+
 		$adminsList = $this->User->find('all', array('order' => 'id ASC', 'conditions' =>  array('isAdmin >' => 0)));
 		$admins = array();
 		for($i=0; $i<count($adminsList); $i++){
 			array_push($admins, $adminsList[$i]['User']['name']);
 		}
-		
+
 		$this->set('sortOrder', $sortOrder);
 		$this->set('sortColor', $sortColor);
 		$this->set('admins', $admins);
@@ -276,26 +276,26 @@ class SetsController extends AppController{
         $this->set('sets', $sets);
         $this->set('overallCounter', $overallCounter);
     }
-	
+
 	public function create($tid){
 		$this->LoadModel('Tsumego');
 		$redirect = false;
-		
-		
+
+
 		if(isset($this->data['Set'])){
 			$s = $this->Set->find('all', array('order' => 'id DESC'));
 			$ss = array();
 			for($i=0;$i<count($s);$i++){
 				if($s[$i]['Set']['id']<6472) array_push($ss, $s[$i]);
 			}
-			
-			$seed = str_split('abcdefghijklmnopqrstuvwxyz0123456789'); 
-			shuffle($seed); 
+
+			$seed = str_split('abcdefghijklmnopqrstuvwxyz0123456789');
+			shuffle($seed);
 			$rand = '';
 			foreach (array_rand($seed, 6) as $k) $rand .= $seed[$k];
 			$hashName = '6473k339312/_'.$rand.'_'.$this->data['Set']['title'];
 			$hashName2 = '_'.$rand.'_'.$this->data['Set']['title'];
-			
+
 			$set = array();
 			$set['Set']['id'] = $ss[0]['Set']['id']+1;
 			$set['Set']['title'] = $this->data['Set']['title'];
@@ -305,12 +305,12 @@ class SetsController extends AppController{
 			$set['Set']['difficulty'] = 4;
 			$set['Set']['author'] = 'various creators';
 			$set['Set']['order'] = 999;
-			
+
 			$this->Set->create();
 			$this->Set->save($set);
-			
+
 			$tMax = $this->Tsumego->find('first', array('order' => 'id DESC'));
-			
+
 			$t = array();
 			$t['Tsumego']['id'] = $tMax['Tsumego']['id']+1;
 			$t['Tsumego']['num'] = 1;
@@ -321,30 +321,30 @@ class SetsController extends AppController{
 			$t['Tsumego']['author'] =  $_SESSION['loggedInUser']['User']['name'];
 			$this->Tsumego->create();
 			$this->Tsumego->save($t);
-			
+
 			mkdir($hashName, 0777);
 			copy('6473k339312/__new/1.sgf', $hashName.'/1.sgf');
-			
+
 			$redirect = true;
 		}
-		
-		
+
+
 		$this->set('t', $t);
 		$this->set('redirect', $redirect);
 	}
-	
+
 	public function remove($id){
 		$this->LoadModel('Tsumego');
 		$redirect = false;
-		
-		
+
+
 		if(isset($this->data['Set'])){
 			if(strpos(';'.$this->data['Set']['hash'], '6473k339312-')==1){
 				$set = str_replace('6473k339312-', '', $this->data['Set']['hash']);
-				
+
 				$s = $this->Set->findById($set);
 				if($s['Set']['public']==0 || $s['Set']['public']==-1) $this->Set->delete($set);
-				
+
 				$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => $set)));
 				if(count($ts)<50){
 					for($i=0;$i<count($ts);$i++){
@@ -354,15 +354,15 @@ class SetsController extends AppController{
 				$redirect = true;
 			}
 		}
-		
-		
+
+
 		$this->set('t', $t);
 		$this->set('redirect', $redirect);
 	}
-	
+
 	public function add($tid){
 		$this->LoadModel('Tsumego');
-		
+
 		if(isset($this->data['Tsumego'])){
 			$t = array();
 			$t['Tsumego']['num'] = $this->data['Tsumego']['num'];
@@ -372,11 +372,11 @@ class SetsController extends AppController{
 			$t['Tsumego']['description'] =  $this->data['Tsumego']['description'];
 			$this->Tsumego->save($t);
 		}
-		
+
 		$ts = $this->Tsumego->find('all', array('order' => 'num DESC', 'conditions' => array('set_id' => $tid)));
 		$this->set('t', $ts[0]);
 	}
-	
+
 	public function i(){
 		$this->LoadModel('Tsumego');
 		$index = $this->Tsumego->find('first', array('limit' => 1, 'order' => 'id DESC'));
@@ -386,11 +386,11 @@ class SetsController extends AppController{
 		$this->set('index', $index);
 		//$this->set('t', $t);
 	}
-	
+
 	private function newDate($date=null){
 		$this->LoadModel('Tsumego');
 		$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => 94)));
-		
+
 		for($i=0; $i<count($ts); $i++){
 			if($ts[$i]['Tsumego']['num']>200 && $ts[$i]['Tsumego']['num']<=300){
 				$ts[$i]['Tsumego']['created'] = $date;
@@ -398,28 +398,28 @@ class SetsController extends AppController{
 			}
 		}
 	}
-	
+
 	public function index(){
 		$this->LoadModel('User');
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('UserTsumego');
 		$this->LoadModel('Visit');
 		$this->LoadModel('Favorite');
-		
+
 		$_SESSION['page'] = 'set';
 		$_SESSION['title'] = 'Tsumego Hero - Collections';
-		
+
 		$setsX = $this->Set->find('all', array(
 			'order' => array('Set.order'),
 			'conditions' => array('public' => 1)
 		));
-		
+
 		$secretPoints = 0;
 		$removeMap = array();
 		$favorite = null;
-		
+
 		$removeMap[6473] = 1;
-		
+
 		if(isset($_SESSION['loggedInUser'])){
 			if(isset($_COOKIE['sandbox']) && $_COOKIE['sandbox']!='0'){
 				$ux = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
@@ -427,9 +427,9 @@ class SetsController extends AppController{
 				$_SESSION['loggedInUser']['User']['reuse1'] = $_COOKIE['sandbox'];
 				$this->User->save($ux);
 			}
-			
+
 			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
-			
+
 			if($_SESSION['loggedInUser']['User']['premium'] >= 1){
 				$_SESSION['loggedInUser']['User']['secretArea7']=1;
 				$_SESSION['loggedInUser']['User']['secretArea9']=1;
@@ -437,7 +437,7 @@ class SetsController extends AppController{
 				$u['User']['secretArea9']=1;
 				unset($removeMap[6473]);
 			}
-			
+
 			//if($_SESSION['loggedInUser']['User']['level'] >= 70){ $secretPoints++; }
 			if($_SESSION['loggedInUser']['User']['level'] >= 65){ $secretPoints++; }
 			if($_SESSION['loggedInUser']['User']['level'] >= 60){ $secretPoints++; }
@@ -445,9 +445,9 @@ class SetsController extends AppController{
 			if($_SESSION['loggedInUser']['User']['level'] >= 50){ $secretPoints++; }
 			if($_SESSION['loggedInUser']['User']['level'] >= 45){ $secretPoints++; }
 			if($_SESSION['loggedInUser']['User']['level'] >= 40){ $secretPoints++; }
-		
+
 			//$secretPoints += $_SESSION['loggedInUser']['User']['premium'];
-			
+
 			//if($secretPoints>=7){ $u['User']['secretArea7'] = 1; $_SESSION['loggedInUser']['User']['secretArea7'] = 1; }
 			if($secretPoints>=6){ $u['User']['secretArea6'] = 1; $_SESSION['loggedInUser']['User']['secretArea6'] = 1; }
 			if($secretPoints>=5){ $u['User']['secretArea5'] = 1; $_SESSION['loggedInUser']['User']['secretArea5'] = 1; }
@@ -455,7 +455,7 @@ class SetsController extends AppController{
 			if($secretPoints>=3){ $u['User']['secretArea3'] = 1; $_SESSION['loggedInUser']['User']['secretArea3'] = 1; }
 			if($secretPoints>=2){ $u['User']['secretArea2'] = 1; $_SESSION['loggedInUser']['User']['secretArea2'] = 1; }
 			if($secretPoints>=1){ $u['User']['secretArea1'] = 1; $_SESSION['loggedInUser']['User']['secretArea1'] = 1; }
-		
+
 			if($_SESSION['loggedInUser']['User']['secretArea10']==0) $removeMap[88156] = 1;
 			if($_SESSION['loggedInUser']['User']['secretArea7']==0) $removeMap[81578] = 1;
 			if($_SESSION['loggedInUser']['User']['secretArea6']==0) $removeMap[74761] = 1;
@@ -483,19 +483,19 @@ class SetsController extends AppController{
 		$removeMap[78] = 1;
 		$removeMap[79] = 1;
 		$removeMap[80] = 1;
-		
+
 		$sets = array();
 		for($i=0; $i<count($setsX); $i++){
 			if(!isset($removeMap[$setsX[$i]['Set']['id']])) array_push($sets, $setsX[$i]);
 		}
 		if(isset($_SESSION['loggedInUser'])){
-			$vs = $this->Visit->find('all', 
+			$vs = $this->Visit->find('all',
 				array('order' => 'created',	'direction' => 'DESC', 'conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id']))
 			);
 		}
 		for($i=0; $i<count($sets); $i++){
 			if(!isset($_SESSION['loggedInUser'])){
-				$t = $this->Tsumego->find('first', 
+				$t = $this->Tsumego->find('first',
 					array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
 				);
 				$sets[$i]['Set']['t'] = $t['Tsumego']['id'];
@@ -507,7 +507,7 @@ class SetsController extends AppController{
 				if($hasVisit!=-1){
 					$sets[$i]['Set']['t'] = $hasVisit;
 				}else{
-					$t = $this->Tsumego->find('first', 
+					$t = $this->Tsumego->find('first',
 						array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
 					);
 					$sets[$i]['Set']['t'] = $t['Tsumego']['id'];
@@ -527,7 +527,7 @@ class SetsController extends AppController{
 				$utsMap[$uts[$l]['UserTsumego']['tsumego_id']] = $uts[$l]['UserTsumego']['status'];
 			}
 		}
-		
+
 		$globalSolvedCounter = 0;
 		$globalCounter = count($this->Tsumego->find('all'));
 		$invisibleSets = $this->getInvisibleSets();
@@ -535,16 +535,16 @@ class SetsController extends AppController{
 			$invisibleSet[$i] = count($this->Tsumego->find('all', array('conditions' =>  array('set_id' => $invisibleSets[$i]))));
 			$globalCounter-=$invisibleSet[$i];
 		}
-		
+
 		$ts = $this->Tsumego->find('all', array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'])));
-		
+
 		for($i=0; $i<count($sets); $i++){
-			$ts = $this->Tsumego->find('all', 
+			$ts = $this->Tsumego->find('all',
 				array('conditions' =>  array('set_id' => $sets[$i]['Set']['id']))
 			);
 			$sets[$i]['Set']['anz'] = count($ts);
 			$counter = 0;
-			
+
 			if(isset($_SESSION['loggedInUser'])){
 				for($k=0; $k<count($ts); $k++){
 					if(isset($utsMap[$ts[$k]['Tsumego']['id']])){
@@ -570,7 +570,7 @@ class SetsController extends AppController{
 					}
 				}
 			}
-			
+
 			$date = new DateTime($sets[$i]['Set']['created']);
 			$month = date("F", strtotime($sets[$i]['Set']['created']));
 			$setday = $date->format('d. ');
@@ -578,7 +578,7 @@ class SetsController extends AppController{
 			if($setday[0]==0) $setday = substr($setday, -3);
 			$sets[$i]['Set']['created'] = $date->format('Ymd');
 			$sets[$i]['Set']['createdDisplay'] = $setday.$month.' '.$setyear;
-			
+
 			$percent = $counter/count($ts)*100;
 			$sets[$i]['Set']['solvedNum'] = $counter;
 			$sets[$i]['Set']['solved'] = round($percent, 1);
@@ -588,10 +588,10 @@ class SetsController extends AppController{
 			$sets[$i]['Set']['sizeColor'] = $this->getSizeColor($sets[$i]['Set']['anz']);
 			$sets[$i]['Set']['dateColor'] = $this->getDateColor($sets[$i]['Set']['created']);
 		}
-		
+
 		$sortOrder = 'null';
 		$sortColor = 'null';
-		
+
 		if(isset($_SESSION['loggedInUser'])){
 			if($globalCounter==$globalSolvedCounter){
 				$u['User']['secretArea10'] = 1;
@@ -600,7 +600,7 @@ class SetsController extends AppController{
 				$firstGod['User']['secretArea10'] = 1;
 				$this->User->save($firstGod);
 			}
-			
+
 			if(isset($_COOKIE['sortOrder']) && $_COOKIE['sortOrder']!= 'null'){
 				$u['User']['sortOrder'] = $_COOKIE['sortOrder'];
 				$sortOrder = $_COOKIE['sortOrder'];
@@ -614,7 +614,7 @@ class SetsController extends AppController{
 				unset($_COOKIE['sortColor']);
 			}
 			$this->User->save($u);
-			
+
 			$favorite = $this->Favorite->find('all', array('conditions' => array('user_id' => $u['User']['id'])));
 		}
 		//debug($sets);
@@ -636,15 +636,15 @@ class SetsController extends AppController{
 			else if($difficultyCount>3 && $difficultyCount<=4) $difficultyCount = 3;
 			else if($difficultyCount>4 && $difficultyCount<=6) $difficultyCount = 4;
 			else if($difficultyCount>6) $difficultyCount = 5;
-		
-			
+
+
 			$percent = $solvedCount/$sizeCount*100;
 			$fav[0]['Set']['solvedNum'] = $sizeCount;
 			$fav[0]['Set']['solved'] = round($percent, 1);
 			$fav[0]['Set']['solvedColor'] = '#eee';
 			$fav[0]['Set']['difficultyColor'] = '#eee';
 			$fav[0]['Set']['sizeColor'] = $this->getSizeColor($sizeCount);
-			
+
 			$fav[0]['Set']['id'] = 1;
 			$fav[0]['Set']['title'] = 'Favorites';
 			$fav[0]['Set']['title2'] = null;
@@ -661,11 +661,11 @@ class SetsController extends AppController{
 			$fav[0]['Set']['createdDisplay'] = '7. May 2019';
 			$fav[0]['Set']['topicColor'] = '#eee';
 			$fav[0]['Set']['dateColor'] = '#eee';
-			
+
 			$sets = array_merge($fav, $sets);
 			//debug($sets);
 		}
-		
+
 		$this->set('sortOrder', $sortOrder);
 		$this->set('sortColor', $sortColor);
         $this->set('sets', $sets);
@@ -673,7 +673,7 @@ class SetsController extends AppController{
 	public function ui($id=null){
 		$s = $this->Set->findById($id);
 		$redirect = false;
-		
+
 		if(isset($_FILES['adminUpload'])){
 			$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 			$randstring = 'set_';
@@ -681,8 +681,8 @@ class SetsController extends AppController{
 				$randstring .= $characters[rand(0,strlen($characters))];
 			}
 			$filename = $randstring.'_'.$_FILES['adminUpload']['name'];
-			//echo '<pre>'; print_r($filename); echo '</pre>'; 
-			
+			//echo '<pre>'; print_r($filename); echo '</pre>';
+
 			$errors= array();
 			$file_name = $_FILES['adminUpload']['name'];
 			$file_size =$_FILES['adminUpload']['size'];
@@ -690,28 +690,28 @@ class SetsController extends AppController{
 			$file_type=$_FILES['adminUpload']['type'];
 			$file_ext=strtolower(end(explode('.',$_FILES['adminUpload']['name'])));
 			$extensions= array("png", "jpg");
-			
+
 			if(in_array($file_ext,$extensions)=== false) $errors[]="png/jpg allowed.";
 			if($file_size > 2097152) $errors[]='The file is too large.';
-			
+
 			if(empty($errors)==true){
 				$uploadfile = $_SERVER['DOCUMENT_ROOT'].'/app/webroot/img/'.$filename;
 				move_uploaded_file($file_tmp, $uploadfile);
 			}else{
 				print_r($errors);
 			}
-			
+
 			$s['Set']['image'] = $filename;
 			$this->Set->save($s);
-			
+
 			$redirect = true;
 		}
-		
+
 		$this->set('id', $id);
 		$this->set('s', $s);
 		$this->set('redirect', $redirect);
 	}
-	
+
     public function view($id=null){
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('UserTsumego');
@@ -721,13 +721,13 @@ class SetsController extends AppController{
 		$this->LoadModel('UserRecord');
 		$this->LoadModel('ProgressDeletion');
 		$_SESSION['page'] = 'set';
-		
+
 		$josekiOrder = 0;
 		$tsIds = array();
 		$refreshView = false;
 		$avgTime = 0;
 		$accuracy = 0;
-		
+
 		if($id==161){
 			$x = 1;
 			$jo = $this->Joseki->find('all');
@@ -736,10 +736,10 @@ class SetsController extends AppController{
 				$t = $this->Tsumego->findById($jo[$i]['Joseki']['tsumego_id']);
 				$jo[$i]['Joseki']['num'] = $t['Tsumego']['num'];
 			}
-			
-			
+
+
 		}
-		
+
 		if(isset($this->data['Tsumego'])){
 			$tf = array();
 			$tf['Tsumego']['num'] = $this->data['Tsumego']['num'];
@@ -765,7 +765,7 @@ class SetsController extends AppController{
 				$this->Joseki->save($js);
 			}
 		}
-		
+
 		if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['isAdmin']>0){
 			$aad = $this->AdminActivity->find('first', array('order' => 'id DESC'));
 			if($aad['AdminActivity']['file'] == '/delete'){
@@ -774,7 +774,7 @@ class SetsController extends AppController{
 				$this->AdminActivity->save($aad);
 			}
 		}}
-		
+
 		if(isset($this->params['url']['add'])){
 			$overallCount = $this->Tsumego->find('first', array('order' => 'id DESC'));
 			$setCount = $this->Tsumego->find('first', array('order' => 'num DESC', 'conditions' => array('set_id' => $id)));
@@ -786,7 +786,7 @@ class SetsController extends AppController{
 			elseif($_SESSION['loggedInUser']['User']['id'] == 3745) $setCount['Tsumego']['author'] = 'Dennis Olevanov';
 			else $setCount['Tsumego']['author'] = $_SESSION['loggedInUser']['User']['name'];
 			$this->Tsumego->save($setCount);
-			
+
 			$adminActivity = array();
 			$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
 			$adminActivity['AdminActivity']['tsumego_id'] = 0;
@@ -794,23 +794,23 @@ class SetsController extends AppController{
 			$adminActivity['AdminActivity']['answer'] = 'Added problem for '.$set['Set']['title'];
 			$this->AdminActivity->save($adminActivity);
 		}
-		
+
 		if(isset($this->params['url']['show'])){
 			if($this->params['url']['show']=='order') $josekiOrder = 1;
 			if($this->params['url']['show']=='num') $josekiOrder = 0;
 		}
-		
+
 		if($id!=1){
 			$set = $this->Set->find('first', array('conditions' =>  array('id' => $id)));
 			$ts = $this->Tsumego->find('all', array('order' => 'num',	'direction' => 'DESC', 'conditions' =>  array('set_id' => $id)));
-			
+
 			for($i=0; $i<count($ts); $i++){
 				array_push($tsIds, $ts[$i]['Tsumego']['id']);
 			}
-			
+
 			if($set['Set']['public']==0) $_SESSION['page'] = 'sandbox';
 			$this->set('isFav', false);
-			
+
 			if($id==161){
 				for($i=0; $i<count($ts); $i++){
 					$j = $this->Joseki->find('first', array('conditions' =>  array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
@@ -831,7 +831,7 @@ class SetsController extends AppController{
 						array_push($tsOrder, $ts[$i]['Tsumego']['order']);
 					}
 					array_multisort($tsOrder, $tsId, $tsNum);
-					
+
 					$nr = 1;
 					for($i=0; $i<count($tsId); $i++){
 						$tsu = $this->Tsumego->findById($tsId[$i]);
@@ -877,7 +877,7 @@ class SetsController extends AppController{
 			}
 			if(isset($this->params['url']['b'])){
 				if($this->params['url']['b']==1){
-					
+
 				}
 			}
 			if(isset($this->data['Set']['title'])){
@@ -927,16 +927,16 @@ class SetsController extends AppController{
 				$sizeCount++;
 				array_push($ts, $tx);
 			}
-			
+
 			$difficultyCount /= $sizeCount;
 			if($difficultyCount<=2) $difficultyCount = 1;
 			else if($difficultyCount>2 && $difficultyCount<=3) $difficultyCount = 2;
 			else if($difficultyCount>3 && $difficultyCount<=4) $difficultyCount = 3;
 			else if($difficultyCount>4 && $difficultyCount<=6) $difficultyCount = 4;
 			else if($difficultyCount>6) $difficultyCount = 5;
-			
+
 			$percent = $solvedCount/$sizeCount*100;
-			
+
 			$set = array();
 			$set['Set']['id'] = 1;
 			$set['Set']['title'] = 'Favorites';
@@ -959,15 +959,15 @@ class SetsController extends AppController{
 			$set['Set']['difficultyColor'] = '#eee';
 			$set['Set']['sizeColor'] = '#eee';
 			$set['Set']['dateColor'] = '#eee';
-			
+
 			$this->set('isFav', true);
 		}
-		
-		
+
+
 
 		$_SESSION['title'] = $set['Set']['title'].' on Tsumego Hero';
-		$set['Set']['anz'] = count($ts); 
-		
+		$set['Set']['anz'] = count($ts);
+
 		if(isset($_SESSION['loggedInUser'])){
 			$uts = $this->UserTsumego->find('all', array('conditions' =>  array(
 				'user_id' => $_SESSION['loggedInUser']['User']['id'],
@@ -977,7 +977,7 @@ class SetsController extends AppController{
 				'user_id' => $_SESSION['loggedInUser']['User']['id'],
 				'tsumego_id' => $tsIds
 			)));
-			
+
 			for($i=0; $i<count($uts); $i++){
 				for($j=0; $j<count($ts); $j++){
 					if($uts[$i]['UserTsumego']['tsumego_id'] == $ts[$j]['Tsumego']['id']){
@@ -1010,8 +1010,8 @@ class SetsController extends AppController{
 				}
 				$ts[$i]['Tsumego']['performance'] = $urSum;
 			}
-			
-			
+
+
 			$counter = 0;
 			for($j=0; $j<count($uts); $j++){
 				for($k=0; $k<count($ts); $k++){
@@ -1023,7 +1023,7 @@ class SetsController extends AppController{
 			$percent = $counter/count($ts)*100;
 			$set['Set']['solved'] = round($percent, 1);
 		}
-		
+
 		if(!isset($_SESSION['loggedInUser'])){
 			$counter = 0;
 			if(isset($_SESSION['noLogin'])){
@@ -1043,18 +1043,18 @@ class SetsController extends AppController{
 			$percent = $counter/count($ts)*100;
 			$set['Set']['solved'] = round($percent, 1);
 		}
-		
-		$t = $this->Tsumego->find('first', 
+
+		$t = $this->Tsumego->find('first',
 			array('conditions' =>  array('set_id' => $set['Set']['id'], 'num' => '1'))
 		);
 		if($t==null) $t = $ts[0];
 		$set['Set']['t'] = $t['Tsumego']['id'];
-		
+
 		$tfs = $this->Tsumego->find('all', array('order' => 'num DESC', 'conditions' => array('set_id' => $id)));
-		
+
 		$delNum = 0;
 		$scoring = true;
-		
+
 		if(isset($_SESSION['loggedInUser'])){
 			if(isset($this->data['Comment']['reset'])){
 				if($this->data['Comment']['reset']=='reset'){
@@ -1072,20 +1072,20 @@ class SetsController extends AppController{
 					$refreshView = true;
 				}
 			}
-			
+
 			$pd = $this->ProgressDeletion->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
-			//echo '<pre>'; print_r($pd); echo '</pre>'; 
+			//echo '<pre>'; print_r($pd); echo '</pre>';
 			$pdCounter = 0;
 			for($i=0; $i<count($pd); $i++){
 				$date = date_create($pd[$i]['ProgressDeletion']['created']);
 				$pd[$i]['ProgressDeletion']['d'] = $date->format('Y').'-'.$date->format('m');
 				if(date('Y-m')==$pd[$i]['ProgressDeletion']['d']) $pdCounter++;
 			}
-			//echo '<pre>'; print_r($pd); echo '</pre>'; 
+			//echo '<pre>'; print_r($pd); echo '</pre>';
 			//echo $pdCounter;
-			
+
 			$delNum = $pdCounter;
-			
+
 			$urSecCounter = 0;
 			$urSecAvg = 0;
 			$pSsum = 0;
@@ -1095,9 +1095,9 @@ class SetsController extends AppController{
 				if($ts[$i]['Tsumego']['seconds']!=''){
 					$tss = $ts[$i]['Tsumego']['seconds'];
 					$urSecAvg += $ts[$i]['Tsumego']['seconds'];
-				}	
+				}
 				if($tss!=0) $urSecCounter++;
-				
+
 				$pS = substr_count($ts[$i]['Tsumego']['performance'], 'S');
 				$pF = substr_count($ts[$i]['Tsumego']['performance'], 'F');
 				$pSsum += $pS;
@@ -1105,7 +1105,7 @@ class SetsController extends AppController{
 			}
 			$avgTime = round($urSecAvg/$urSecCounter, 2);
 			$accuracy = round($pSsum/($pSsum+$pFsum)*100, 2);
-			
+
 			//echo '<pre>'; print_r($urSecAvg); echo '</pre>';
 			//echo '<pre>'; print_r($urSecCounter); echo '</pre>';
 			//echo '<pre>'; print_r($pSsum); echo '</pre>';
@@ -1120,11 +1120,11 @@ class SetsController extends AppController{
 					if($tsIds[$i]==$ur[$j]['UserRecord']['tsumego_id']) array_push($temp, $ur[$j]);
 				}
 				//echo '<pre>'; print_r($temp); echo '</pre>';
-				
+
 				$temp = $temp[0];
 				if(count($temp)>0) array_push($newUr, $temp);
 			}
-			
+
 			$urSecCounter = 0;
 			$urSecAvg = 0;
 			for($i=0; $i<count($newUr); $i++){
@@ -1133,7 +1133,7 @@ class SetsController extends AppController{
 			}
 			*/
 			//echo round($urSecAvg/$urSecCounter, 2);
-			
+
 			//echo '<pre>'; print_r(count($ur)); echo '</pre>';
 			//echo '<pre>'; print_r($tsIds); echo '</pre>';
 			//echo '<pre>'; print_r(count($ur)); echo '</pre>';
@@ -1147,15 +1147,15 @@ class SetsController extends AppController{
 			//for($i=0; $i<count($ts); $i++){
 				//echo '<pre>'; print_r($ts[$i]['Tsumego']['num'].'|'.$ts[$i]['Tsumego']['performance'].'|'.$ts[$i]['Tsumego']['seconds']); echo '</pre>';
 			//}
-			
+
 		}else{
 			$delNum = 5;
 			$scoring = false;
 		}
-		
-		
-		
-		
+
+
+
+
 		$this->set('tfs', $tfs[0]);
 		$this->set('ts', $ts);
 		$this->set('set', $set);
@@ -1166,25 +1166,25 @@ class SetsController extends AppController{
 		$this->set('delNum', $delNum);
 		$this->set('scoring', $scoring);
     }
-	
+
 	public function beta2(){
 		$this->LoadModel('User');
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('UserTsumego');
 		$this->LoadModel('Visit');
-		
+
 		$_SESSION['page'] = 'set';
 		$_SESSION['title'] = 'Tsumego Hero - Collections';
-		
+
 		$setsX = $this->Set->find('all', array(
 			'fields' => array('Set.id', 'Set.title', 'Set.title2', 'Set.author', 'Set.description', 'Set.folder', 'Set.difficulty', 'Set.image', 'Set.order', 'Set.created', 'Set.color' ),
 			'order' => array('Set.order'),
 			'conditions' => array('public' => -1)
 		));
-		
+
 		$secretPoints = 0;
 		$removeMap = array();
-		
+
 		if(isset($_SESSION['loggedInUser'])){
 			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
 			if($_SESSION['loggedInUser']['User']['level'] >= 70){ $secretPoints++; }
@@ -1194,9 +1194,9 @@ class SetsController extends AppController{
 			if($_SESSION['loggedInUser']['User']['level'] >= 50){ $secretPoints++; }
 			if($_SESSION['loggedInUser']['User']['level'] >= 45){ $secretPoints++; }
 			if($_SESSION['loggedInUser']['User']['level'] >= 40){ $secretPoints++; }
-		
+
 			//$secretPoints += $_SESSION['loggedInUser']['User']['premium'];
-			
+
 			if($secretPoints>=7){ $u['User']['secretArea7'] = 1; $_SESSION['loggedInUser']['User']['secretArea7'] = 1; }
 			if($secretPoints>=6){ $u['User']['secretArea6'] = 1; $_SESSION['loggedInUser']['User']['secretArea6'] = 1; }
 			if($secretPoints>=5){ $u['User']['secretArea5'] = 1; $_SESSION['loggedInUser']['User']['secretArea5'] = 1; }
@@ -1204,7 +1204,7 @@ class SetsController extends AppController{
 			if($secretPoints>=3){ $u['User']['secretArea3'] = 1; $_SESSION['loggedInUser']['User']['secretArea3'] = 1; }
 			if($secretPoints>=2){ $u['User']['secretArea2'] = 1; $_SESSION['loggedInUser']['User']['secretArea2'] = 1; }
 			if($secretPoints>=1){ $u['User']['secretArea1'] = 1; $_SESSION['loggedInUser']['User']['secretArea1'] = 1; }
-		
+
 			if($_SESSION['loggedInUser']['User']['secretArea10']==0) $removeMap[88156] = 1;
 			if($_SESSION['loggedInUser']['User']['secretArea7']==0) $removeMap[81578] = 1;
 			if($_SESSION['loggedInUser']['User']['secretArea6']==0) $removeMap[74761] = 1;
@@ -1223,20 +1223,20 @@ class SetsController extends AppController{
 			$removeMap[81578] = 1;
 			$removeMap[88156] = 1;
 		}
-		
+
 		$sets = array();
 		for($i=0; $i<count($setsX); $i++){
 			if(!isset($removeMap[$setsX[$i]['Set']['id']])) array_push($sets, $setsX[$i]);
 		}
-		
+
 		if(isset($_SESSION['loggedInUser'])){
-			$vs = $this->Visit->find('all', 
+			$vs = $this->Visit->find('all',
 				array('order' => 'created',	'direction' => 'DESC', 'conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id']))
 			);
 		}
 		for($i=0; $i<count($sets); $i++){
 			if(!isset($_SESSION['loggedInUser'])){
-				$t = $this->Tsumego->find('first', 
+				$t = $this->Tsumego->find('first',
 					array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
 				);
 				$sets[$i]['Set']['t'] = $t['Tsumego']['id'];
@@ -1248,7 +1248,7 @@ class SetsController extends AppController{
 				if($hasVisit!=-1){
 					$sets[$i]['Set']['t'] = $hasVisit;
 				}else{
-					$t = $this->Tsumego->find('first', 
+					$t = $this->Tsumego->find('first',
 						array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
 					);
 					$sets[$i]['Set']['t'] = $t['Tsumego']['id'];
@@ -1262,7 +1262,7 @@ class SetsController extends AppController{
 				$utsMap[$uts[$l]['UserTsumego']['tsumego_id']] = $uts[$l]['UserTsumego']['status'];
 			}
 		}
-		
+
 		$globalSolvedCounter = 0;
 		$globalCounter = count($this->Tsumego->find('all'));
 		$invisibleSets = $this->getInvisibleSets();
@@ -1270,15 +1270,15 @@ class SetsController extends AppController{
 			$invisibleSet[$i] = count($this->Tsumego->find('all', array('conditions' =>  array('set_id' => $invisibleSets[$i]))));
 			$globalCounter-=$invisibleSet[$i];
 		}
-		
-		
+
+
 		for($i=0; $i<count($sets); $i++){
-			$ts = $this->Tsumego->find('all', 
+			$ts = $this->Tsumego->find('all',
 				array('conditions' =>  array('set_id' => $sets[$i]['Set']['id']))
 			);
 			$sets[$i]['Set']['anz'] = count($ts);
 			$counter = 0;
-			
+
 			if(isset($_SESSION['loggedInUser'])){
 				for($k=0; $k<count($ts); $k++){
 					if(isset($utsMap[$ts[$k]['Tsumego']['id']])){
@@ -1304,7 +1304,7 @@ class SetsController extends AppController{
 					}
 				}
 			}
-			
+
 			$date = new DateTime($sets[$i]['Set']['created']);
 			$month = date("F", strtotime($sets[$i]['Set']['created']));
 			$setday = $date->format('d. ');
@@ -1312,7 +1312,7 @@ class SetsController extends AppController{
 			if($setday[0]==0) $setday = substr($setday, -3);
 			$sets[$i]['Set']['created'] = $date->format('Ymd');
 			$sets[$i]['Set']['createdDisplay'] = $setday.$month.' '.$setyear;
-			
+
 			$percent = $counter/count($ts)*100;
 			$sets[$i]['Set']['solvedNum'] = $counter;
 			$sets[$i]['Set']['solved'] = round($percent, 1);
@@ -1321,12 +1321,12 @@ class SetsController extends AppController{
 			$sets[$i]['Set']['difficultyColor'] = $this->getDifficultyColor($sets[$i]['Set']['difficulty']);
 			$sets[$i]['Set']['sizeColor'] = $this->getSizeColor($sets[$i]['Set']['anz']);
 			$sets[$i]['Set']['dateColor'] = $this->getDateColor($sets[$i]['Set']['created']);
-			
+
 		}
-		
+
 		$sortOrder = 'null';
 		$sortColor = 'null';
-		
+
 		if(isset($_SESSION['loggedInUser'])){
 			if($globalCounter==$globalSolvedCounter){
 				$u['User']['secretArea10'] = 1;
@@ -1335,7 +1335,7 @@ class SetsController extends AppController{
 				$firstGod['User']['secretArea10'] = 1;
 				$this->User->save($firstGod);
 			}
-			
+
 			if(isset($_COOKIE['sortOrder']) && $_COOKIE['sortOrder']!= 'null'){
 				$u['User']['sortOrder'] = $_COOKIE['sortOrder'];
 				$sortOrder = $_COOKIE['sortOrder'];
@@ -1354,19 +1354,19 @@ class SetsController extends AppController{
 		$this->set('sortColor', $sortColor);
         $this->set('sets', $sets);
     }
-	
+
 	private function findUt($id=null, $allUts=null, $map=null){
 		$currentUt = array_search($id, $map);
 		$ut = $allUts[$currentUt];
 		if($currentUt==0) if($id!=$map[0]) $ut = null;
 		return $ut;
 	}
-	
+
 	private function getHealth($lvl = null)
   {
     return ($lvl / 5) + 10;
   }
-	
+
 	private function getXPJump($lvl = null){
 		$j = 10;
 		if($lvl>=12) $j = 25;
@@ -1378,7 +1378,7 @@ class SetsController extends AppController{
 		if($lvl>=102) $j = 0;
 		return $j;
 	}
-	
+
 	private function getDifficultyColor($difficulty = null){
 		if($difficulty==1) return '#33cc33';
 		if($difficulty==2) return '#709533';
@@ -1387,7 +1387,7 @@ class SetsController extends AppController{
 		if($difficulty==5) return '#e02e33';
 		return 'white';
 	}
-	
+
 	private function getSizeColor($size = null){
 		$colors = array();
 		array_push($colors, '#cc6600');
@@ -1401,35 +1401,24 @@ class SetsController extends AppController{
 		else if($size<202) return $colors[3];
 		else return $colors[4];
 	}
-	
+
 	private function getDateColor($date = null){
 		$current = '20180705';
 		$dist = $current - $date;
-	
-		$colors = array();
-		array_push($colors, '#0033cc');
-		array_push($colors, '#0f33ad');
-		array_push($colors, '#1f338f');
-		array_push($colors, '#2e3370');
-		array_push($colors, '#3d3352');
-		array_push($colors, '#4c3333');
-		array_push($colors, '#57331f');
-		array_push($colors, '#663300');
-		
-		if($dist<7) return $colors[0];
-		else if($dist<100) return $colors[1];
-		else if($dist<150) return $colors[2];
-		else if($dist<200) return $colors[3];
-		else if($dist<300) return $colors[4];
-		else if($dist<400) return $colors[5];
-		else if($dist<500) return $colors[6];
-		else return $colors[7];
+
+		if($dist<7) return '#0033cc';
+		if($dist<100) return '#0f33ad';
+		if($dist<150) return '#1f338f';
+		if($dist<200) return '#2e3370';
+		if($dist<300) return '#3d3352';
+		if($dist<400) return '#4c3333';
+		if($dist<500) return '#57331f';
+		return '#663300';
 	}
-	
-	
+
 	private function getSolvedColor($percent = null){
 		$colors = array();
-		
+
 		array_push($colors, '#333333');
 		array_push($colors, '#2e3d47');
 		array_push($colors, '#2b4252');
@@ -1440,7 +1429,7 @@ class SetsController extends AppController{
 		array_push($colors, '#1f5c85');
 		array_push($colors, '#1c618f');
 		array_push($colors, '#1a6699');
-		
+
 		array_push($colors, '#176ba3');
 		array_push($colors, '#1470ad');
 		array_push($colors, '#1275b8');
@@ -1451,7 +1440,7 @@ class SetsController extends AppController{
 		array_push($colors, '#058feb');
 		array_push($colors, '#0394f5');
 		array_push($colors, '#0099ff');
-		
+
 		array_push($colors, '#039cf8');
 		array_push($colors, '#069ef2');
 		array_push($colors, '#09a1eb');
@@ -1462,7 +1451,7 @@ class SetsController extends AppController{
 		array_push($colors, '#19afc9');
 		array_push($colors, '#1cb1c2');
 		array_push($colors, '#1fb4bc');
-		
+
 		array_push($colors, '#22b7b5');
 		array_push($colors, '#25b9ae');
 		array_push($colors, '#28bca7');
