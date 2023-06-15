@@ -1362,31 +1362,10 @@ class SetsController extends AppController{
 		return $ut;
 	}
 	
-	private function getHealth($lvl = null){
-		$hp = 10;
-		if($lvl>=2) $hp = 10;
-		if($lvl>=4) $hp = 11;
-		if($lvl>=10)$hp = 12;
-		if($lvl>=15)$hp = 13;
-		if($lvl>=20)$hp = 14;
-		if($lvl>=25)$hp = 15;
-		if($lvl>=30)$hp = 16;
-		if($lvl>=35)$hp = 17;
-		if($lvl>=40)$hp = 18;
-		if($lvl>=45)$hp = 19;
-		if($lvl>=50)$hp = 20;
-		if($lvl>=55)$hp = 21;
-		if($lvl>=60)$hp = 22;
-		if($lvl>=65)$hp = 23;
-		if($lvl>=70)$hp = 24;
-		if($lvl>=75)$hp = 25;
-		if($lvl>=80)$hp = 26;
-		if($lvl>=85)$hp = 27;
-		if($lvl>=90)$hp = 28;
-		if($lvl>=95)$hp = 29;
-		if($lvl>=100)$hp = 30;
-		return $hp;
-    }
+	private function getHealth($lvl = null)
+  {
+    return ($lvl / 5) + 10;
+  }
 	
 	private function getXPJump($lvl = null){
 		$j = 10;
