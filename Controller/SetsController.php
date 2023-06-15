@@ -89,68 +89,6 @@ class SetsController extends AppController{
 		if(isset($_SESSION['loggedInUser'])){
 			if($_SESSION['loggedInUser']['User']['id']==72){
 				unset($removeMap[135]);
-				//$this->publishSet(144, 145, '2021-07-04 22:00:00');
-				//$this->publishSet(142, 143, '2021-04-21 22:00:00');
-				/*	
-				$x = $this->Comment->find('all', array('order' => 'id ASC'));
-				for($i=0; $i<count($x); $i++){
-					$xx = $this->Tsumego->findById($x[$i]['Comment']['tsumego_id']);
-					$xxx = $this->Set->findById($xx['Tsumego']['set_id']);
-					if($xxx['Set']['id']==51 || $xxx['Set']['id']==56 || $xxx['Set']['id']==57 || $xxx['Set']['id']==119) $this->Comment->delete($x[$i]['Comment']['id']);
-				}
-			
-				
-			
-				
-				$author = $this->Tsumego->find('all', array('conditions' => array(
-					'OR' => array(
-						array('set_id' => 109,)
-					)
-				)));
-				
-				for($i=0; $i<count($author); $i++){
-						$author[$i]['Tsumego']['author'] = 'Alexandre Dinerchtein';
-						$this->Tsumego->save($author[$i]);
-					
-				}
-				
-				//PUBLISH
-				//$this->publishSet(116, 117, '2020-02-02 22:00:00', 15521);
-				//$this->publishSet2();
-				//$this->publishSet3();
-				//$this->newDate('2019-04-28 22:00:00');
-				
-				
-				$adv = $this->Tsumego->find('all', array('conditions' => array('set_id' => 56)));
-				for($i=0; $i<count($adv); $i++){
-					$adv[$i]['Tsumego']['description'] = 'b to play.';
-					$this->Tsumego->save($adv[$i]);
-				}
-				
-				$m = $this->Tsumego->find('all', array('conditions' =>  array('set_id' => 40)));
-				for($i=0; $i<count($m); $i++){
-					$m[$i]['Tsumego']['description'] = 'b to capture.';
-					$this->Tsumego->save($m[$i]);
-				}
-				
-				$tsu = $this->Tsumego->findById(1738);
-				$tsu['Tsumego']['description'] = 'b to play.';
-				$tsu['Tsumego']['difficulty'] = '7';
-				$this->Tsumego->save($tsu);
-				
-				$c = $this->Comment->find('all');
-				for($i=0; $i<count($c); $i++){
-					if(!is_numeric($c[$i]['Comment']['status'])){
-						$c[$i]['Comment']['admin_id'] = 73;
-						$this->Comment->save($c[$i]);
-					}else{
-						if($c[$i]['Comment']['status']!=0){
-							$c[$i]['Comment']['admin_id'] = 73;
-							$this->Comment->save($c[$i]);
-						}
-					}
-				}
-				*/
 			}
 			
 			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
