@@ -510,7 +510,7 @@ class SetsController extends AppController{
 					$t = $this->Tsumego->find('first',
 						array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
 					);
-					$sets[$i]['Set']['t'] = $t['Tsumego']['id'];
+					if(isset($t['Tsumego']['id'])) $sets[$i]['Set']['t'] = $t['Tsumego']['id'];
 				}
 			}
 		}

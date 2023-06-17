@@ -2,7 +2,7 @@
 App::uses('Controller', 'Controller');
 
 define('INITIAL_RATING', 1000.0);
-define('INITIAL_RD, 300.0');
+define('INITIAL_RD', 300.0);
 define('C', 30.0);
 define('Q', 0.0057564);
 
