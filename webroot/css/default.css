@@ -2516,10 +2516,14 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	  line-height:42px;
 	}
 	
+	.besogo-board{
+		margin: 0 315px;
+	}
+	
 	.modeSwitcher {
 	  float: left;
 	  margin: 0;
-	  width: 117px;
+	  width: 87px;
 	  height: 41px;
 	  position: relative;
 	}
@@ -2546,7 +2550,6 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		border-right: 1px solid #333333;
 		border-bottom: 1px solid #333333;
 		border-left: 1px solid #CCCCCC;
-		text-transform: uppercase;
 		-moz-border-radius-bottomleft: 9px;
 		-moz-border-radius-bottomright: 9px;
 		border-radius-bottomleft: 9px;
@@ -2586,10 +2589,10 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		background: #54b97c;
 	}
 	#modeSwitcher2 input[type="radio"]:checked + label{
-		background: #60167d;
+		background: #ca6658;
 	}
 	#modeSwitcher3 input[type="radio"]:checked + label{
-		background: #ca6658;
+		background: #60167d;
 	}
 	.modeSwitcher label {
 	  cursor: pointer;

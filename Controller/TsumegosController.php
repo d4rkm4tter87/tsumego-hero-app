@@ -61,9 +61,19 @@ class TsumegosController extends AppController{
 		$stopParameter2 = 0;
 		$mode3ScoreArray = array();
 		$potionAlert = false;
+		$ui = 1;
 		
 		if(isset($this->params['url']['potionAlert'])){
 			$potionAlert = true;
+		}
+		
+		if(isset($this->params['url']['ui'])){
+			if($this->params['url']['ui']==2) $ui = 2;
+			else $ui = 1;
+		}
+		if(isset($_COOKIE['ui']) && $_COOKIE['ui'] != '0'){
+			$ui = $_COOKIE['ui'];
+			unset($_COOKIE['ui']);
 		}
 		
 		if(isset($this->params['url']['modelink'])){
@@ -474,7 +484,6 @@ class TsumegosController extends AppController{
 		$t['Tsumego']['difficulty'] = ceil($t['Tsumego']['difficulty']*$fSet['Set']['multiplier']);
 		
 		if(isset($_SESSION['loggedInUser'])){
-			
 			unset($_SESSION['noUser']);
 			unset($_SESSION['noLogin']);
 			unset($_SESSION['noLoginStatus']);
@@ -1508,8 +1517,7 @@ class TsumegosController extends AppController{
 		
 		//echo '<pre>'; print_r(($crs/$stopParameter)*100); echo '</pre>';
 		//echo '<pre>'; print_r($masterArrayBW[0]); echo '</pre>';
-		//echo '<pre>'; print_r($masterArrayBW); echo '</pre>';
-		//echo '<pre>'; print_r($masterArrayBW[3]); echo '</pre>';
+		//echo '<pre>'; print_r($_SERVER['HTTP_HOST']); echo '</pre>';
 		
 		$this->set('raName', $raName);
 		$this->set('crs', $crs);
@@ -1587,6 +1595,8 @@ class TsumegosController extends AppController{
 		$this->set('mode3ScoreArray', $mode3ScoreArray);
 		$this->set('potionAlert', $potionAlert);
 		$this->set('sgfErrorMessage', $masterArrayBW[16]);
+		$this->set('file', $file);
+		$this->set('ui', $ui);
     }
 	
 	private function sendResult($uid=null, $tid=null, $success=null){

@@ -1,3 +1,28 @@
+
+<?php if($ui==2){ ?>
+<link rel="stylesheet" type="text/css" href="/besogo/css/besogo.css">
+<link rel="stylesheet" type="text/css" href="/besogo/css/besogo-fill.css">
+<link rel="stylesheet" type="text/css" href="/besogo/css/board-flat.css">
+
+<script src="/besogo/js/besogo.js"></script>
+<script src="/besogo/js/transformation.js"></script>
+<script src="/besogo/js/treeProblemUpdater.js"></script>
+<script src="/besogo/js/nodeHashTable.js"></script>
+<script src="/besogo/js/editor.js"></script>
+<script src="/besogo/js/gameRoot.js"></script>
+<script src="/besogo/js/status.js"></script>
+<script src="/besogo/js/svgUtil.js"></script>
+<script src="/besogo/js/parseSgf.js"></script>
+<script src="/besogo/js/loadSgf.js"></script>
+<script src="/besogo/js/saveSgf.js"></script>
+<script src="/besogo/js/boardDisplay.js"></script>
+<script src="/besogo/js/coord.js"></script>
+<script src="/besogo/js/toolPanel.js"></script>
+<script src="/besogo/js/filePanel.js"></script>
+<script src="/besogo/js/controlPanel.js"></script>
+<script src="/besogo/js/commentPanel.js"></script>
+<script src="/besogo/js/treePanel.js"></script>
+<?php } ?>
 <?php
 	$choice = array();
 	for($i=1;$i<=count($enabledBoards);$i++){
@@ -11,9 +36,6 @@
 	$authorx = $t['Tsumego']['author'];
 	if($authorx=='Joschka Zimdars') $authorx = 'd4rkm4tter';
 	if($authorx=='Jérôme Hubert') $authorx = 'jhubert';
-	
-	
-	
 	
 	$heroPower1 = 'hp1x';
 	$heroPower2 = 'hp2x';
@@ -431,7 +453,13 @@
 	</div>
 	
 	<!-- BOARD -->
-	<div id="board" align="center"></div>
+	<?php if($ui==2){ ?>
+		<br>
+		<div id="target"></div>
+		<br>
+	<?php }else{ ?>
+		<div id="board" align="center"></div>
+	<?php } ?>
 	<div id="errorMessageOuter" align="center">
 		<div id="errorMessage"></div>
 	</div>
@@ -1239,32 +1267,27 @@
 	<div align="center">
 	<?php if($activate){ 
 	if(isset($_SESSION['loggedInUser'])){
+	if($_SESSION['loggedInUser']['User']['isAdmin']>0){
 	?>
+	
 	<div class="mode1">
 		<table>
 		<tr>
 		<td>
 		<div class="modeSwitcher" id="modeSwitcher1" onmouseover="m1hover()" onmouseout="m1noHover()">
 			<input type="radio" id="ms1" name="ms" value="1" onchange="modeCheckbox(1);">
-			<label for="ms1">Level Mode</label>
+			<label for="ms1">jGoBoard</label>
 		</div>
 		<div class="modeSwitcher" id="modeSwitcher2" onmouseover="m2hover()" onmouseout="m2noHover()">
 			<input type="radio" id="ms2" name="ms" value="2" onchange="modeCheckbox(2);">
-			<label for="ms2">Rating Mode</label>
+			<label for="ms2">BesoGo</label>
 		</div>
-		<?php 
-			if($mode==3) $mode3var = 'onclick="goMode3x()"';
-			else $mode3var = '';
-		?>
-			<div class="modeSwitcher" id="modeSwitcher3" onmouseover="m3hover()" onmouseout="m3noHover()">
-				<input type="radio" id="ms3" name="ms" value="3" onchange="modeCheckbox(3);">
-				<label for="ms3" <?php echo $mode3var; ?>>Time Mode</label>
-			</div>
 		</td>
 		</tr>
 		</table>
 	</div>
 	<?php 
+	}
 	}
 	}
 	//echo $corner;
@@ -1371,9 +1394,10 @@
 				</form>
 			</div>
 		</div>
-		<?php } 
+		<?php }
 		if($firstRanks==0){
 		?>
+		
 		
 		<table class="sandboxTable" width="62%">
 		<tr>
@@ -1662,6 +1686,43 @@
 	if($corner=='full board') $boardSize='medium';
 	else $boardSize='large';
 	?>
+	
+	<?php if($ui==2){ ?>
+	<script type="text/javascript">
+	(function() {
+	  var options = { },
+		  searchString = location.search.substring(1), // Drop question mark
+		  params = searchString.split("&"),
+		  div = document.getElementById('target'), // Target div
+		  i, value; // Scratch iteration variables
+
+	  for (i = 0; i < params.length; i++)
+	  {
+		value = params[i].split("="); // Splits on all "=" symbols
+		options[value.shift()] = value.join("="); // First "=" separates value from name, rest are part of value
+	  }
+	  options.realstones = true;
+	  options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/'+'<?php echo $file; ?>';
+	  if (options.theme) // Board style theme (overrides std theme if set)
+		addStyleLink('css/board-' + options.theme + '.css');
+	  if (options.height && options.width && options.resize === 'fixed')
+	  {
+		div.style.height = options.height + 'px';
+		div.style.width = options.width + 'px';
+	  }
+	  besogo.create(div, options);
+
+	  function addStyleLink(cssURL)
+	  {
+		var element = document.createElement('link');
+		element.href = cssURL;
+		element.type = 'text/css';
+		element.rel = 'stylesheet';
+		document.head.appendChild(element);
+	  }
+	})();
+	</script>
+	<?php } ?>
 	<script type="text/javascript">
 	var jrecordValue = 19;
 	<?php if($checkBSize!=19) echo 'jrecordValue = '.$checkBSize.';'; ?>
@@ -1725,8 +1786,11 @@
 	var whiteMoveAfterCorrect = false;
 	var whiteMoveAfterCorrectI = 0;
 	var whiteMoveAfterCorrectJ = 0;
-	
+	var reviewEnabled2 = true;
+	var ui = <?php echo $ui; ?>;
+	var userXP = <?php echo $user['User']['xp']; ?>;
 	<?php 
+	
 	if($authorx==$_SESSION['loggedInUser']['User']['name'] && $isSandbox) echo 'authorProblem = true;';
 	if($firstRanks!=0) echo 'document.cookie = "mode=3";';
 	if($mode==3){
@@ -1748,9 +1812,8 @@
 			echo '$("#plus2").css("left", "340px");';
 		}
 	
-		if($mode==2) echo '$("#ms2").prop("checked", true);';
-		elseif($mode==3) echo '$("#ms3").prop("checked", true);';
-		else echo '$("#ms1").prop("checked", true);';
+		if($ui==1) echo '$("#ms1").prop("checked", true);';
+		else echo '$("#ms2").prop("checked", true);';
 	?>
 	
 	<?php if($mode!=3){ ?>
@@ -1770,7 +1833,9 @@
 	$(".tsumegoNavi-middle2").hide();
 	$(".tsumegoNavi-middle2").hide();
 	$(".reviewNavi").hide();
+	<?php if($ui==1){ ?>
 	$("#reviewButton").hide();
+	<?php } ?>
 	$("#reviewButton2").hide();
 	<?php if(($t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161) && $isSemeai){
 			echo 'document.getElementById("multipleChoice1").innerHTML ="'.$partArray[0].'";';
@@ -1992,7 +2057,11 @@
 ?>
 
 	$(document).ready(function(){
+		$(".besogo-panels").css("display","none");
 		<?php 
+			if($ui==1) echo 'document.cookie = "ui=1";';
+			elseif($ui==2) echo 'document.cookie = "ui=2";';
+		
 			if($mode==1) echo 'document.cookie = "mode=1";';
 			if($mode==2) echo 'document.cookie = "mode=2";';
 			if($mode==3) echo 'document.cookie = "mode=3";';
@@ -2178,7 +2247,14 @@
 			}
 		}, tcounter);
 		
-		
+		$('#target').click(function(e){
+			if(locked==true){
+				<?php 
+				if($mode==1 || $mode==3) if($next!='0' && !$isSemeai) echo 'window.location = "/tsumegos/play/'.$next.'";'; 
+				if($mode==2) echo 'window.location = "/tsumegos/play/'.$nextMode['Tsumego']['id'].'";'; 
+				?>
+			}
+		});
 		
 		if(!showCommentSpace) $("#commentSpace").hide();
 		<?php //if($_SESSION['loggedInUser']['User']['id']==72) echo '$("#commentSpace").show();'; ?>
@@ -2227,6 +2303,8 @@
 			msg4selected = !msg4selected;
 		});
 	});
+	
+	<?php if($ui==1){ ?>
 	<?php if($sgfErrorMessage===''){ ?>
 	jsetup.create("board", function(canvas){
 		canvas.addListener("click", function(coord, ev){
@@ -2447,7 +2525,7 @@
 														ulvl = ulvl + 1;
 													}
 													if(mode==1) runXPBar(true);
-													if(mode==1) runXPNumber("account-bar-xp", '.$user['User']['xp'].', xpReward, 1000, ulvl);
+													if(mode==1) runXPNumber("account-bar-xp", userXP, xpReward, 1000, ulvl);
 													noXP = true;
 													$("#reviewButton").show();
 													reviewEnabled = true;
@@ -2824,12 +2902,13 @@
 		$("#errorMessageOuter").show();
 		$("#errorMessage").show();
 		$("#errorMessage").text("<?php echo $sgfErrorMessage; ?>");
+		
+	<?php } ?>
 	<?php } ?>
 	
 	function reset(){
 		if(!tryAgainTomorrow) locked = false;
 		hoverLocked = false;
-		
 		player = <?php echo 'JGO.'.$playerColor[$whoPlays2]; ?> 
 		opponent = (player == JGO.BLACK) ? JGO.WHITE : JGO.BLACK;
 		ko = false, lastMove = false; 
@@ -3160,29 +3239,13 @@
 		});
 	}
 	
-	function modeCheckbox(mode){
-		if(mode==1){
-			usedModeSwitch = true;
-			mode = 1;
-			document.cookie = "mode=1";
-			$("#playTitle").fadeIn();
-			$(".selectable-text").fadeIn();
-			$("#commentSpace").fadeIn();
-			$("#msg1").fadeIn();
-			$("#xp-bar-fill").addClass("xp-bar-fill-c1");
-			$("#xp-bar-fill").removeClass("xp-bar-fill-c2");
-			$("#titleDescription").addClass("titleDescription1");
-			$("#titleDescription").removeClass("titleDescription2");
-			$("#account-bar-user > a").css({color:"#74d14c"});
-			<?php echo '$("#account-bar-xp").innerHTML = "'.$user['User']['level'].'";'; ?>
-			window.location = "/tsumegos/play/"+<?php echo $nextMode['Tsumego']['id']; ?>+"?mode=1";
-		}else if(mode==2){
-			document.cookie = "mode=2";
-			document.cookie = "transition=1";
-			window.location = "/tsumegos/play/"+<?php echo $nextMode['Tsumego']['id']; ?>;
-		}else if(mode==3){
-			document.cookie = "mode=3";
-			window.location = "/ranks/overview";
+	function modeCheckbox(v){
+		if(v==1){
+			document.cookie = "ui=1";
+			window.location = "/tsumegos/play/"+<?php echo $nextMode['Tsumego']['id']; ?>+"?ui=1";
+		}else if(v==2){
+			document.cookie = "ui=2";
+			window.location = "/tsumegos/play/"+<?php echo $nextMode['Tsumego']['id']; ?>+"?ui=2";
 		}
 	}
 	
@@ -3247,6 +3310,7 @@
 		thumbsUpSelected = false;
 		thumbsUpSelected2 = false;
 	}
+	
 	function selectA(){
 		if(!multipleChoiceSelected){
 			<?php
@@ -3291,6 +3355,7 @@
 	function selectFav(){
 		document.getElementById("ans2").innerHTML = "";
 	}
+	
 	/*
 	$(document).keydown(function(event){
 		var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -3303,22 +3368,15 @@
 		$("#modeSwitcher1 label").css("background-color", "#5dcb89");
 	}
 	function m1noHover(){
-		if(mode==1) $("#modeSwitcher1 label").css("background-color", "#54b97c");
+		if(ui==1) $("#modeSwitcher1 label").css("background-color", "#54b97c");
 		else $("#modeSwitcher1 label").css("background-color", "#5b5d60");
 	}
 	function m2hover(){
-		$("#modeSwitcher2 label").css("background-color", "#812da0");
+		$("#modeSwitcher2 label").css("background-color", "#ca7a6f");
 	}
 	function m2noHover(){
-		if(mode==2) $("#modeSwitcher2 label").css("background-color", "#60167d");
-		else $("#modeSwitcher2 label").css("background-color", "#5b5d60"); 
-	}
-	function m3hover(){
-		$("#modeSwitcher3 label").css("background-color", "#ca7a6f");
-	}
-	function m3noHover(){
-		if(mode==3) $("#modeSwitcher3 label").css("background-color", "#ca6658");
-		else $("#modeSwitcher3 label").css("background-color", "#5b5d60");
+		if(ui==2) $("#modeSwitcher2 label").css("background-color", "#ca6658");
+		else $("#modeSwitcher2 label").css("background-color", "#5b5d60");
 	}
 	function goMode3x(){
 		<?php echo 'window.location.href = "/ranks/overview";'; ?>
@@ -3326,6 +3384,14 @@
 	
 	
 	function review(){
+		if(reviewEnabled2){ 
+			$(".besogo-panels").css("display","inline-block");
+			$(".besogo-board").css("margin","0");
+		}else{
+			$(".besogo-panels").css("display","none");
+			$(".besogo-board").css("margin","0 315px");
+		}
+		reviewEnabled2 = !reviewEnabled2;
 		if(reviewEnabled){
 			hoverLocked = true;
 			rw = true;
