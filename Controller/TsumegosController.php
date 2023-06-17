@@ -625,9 +625,6 @@ class TsumegosController extends AppController{
 				$this->TsumegoRecord->save($tr);
 				$noTr = true;
 			}
-			
-			//echo $eloScore.'<br>';
-			//
 		}elseif($mode==3){
 			$allUts1 = $this->UserTsumego->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'tsumego_id' => $t['Tsumego']['id'])));
 			$allUts = array();
@@ -740,19 +737,20 @@ class TsumegosController extends AppController{
 					$rejuvenation = true;
 				}					
 			}else{
-				if($mode==1){
-					$this->UserRecord->create();
-					$ur1 = array();
-					if(isset($_SESSION['loggedInUser']['User']['id'])) $ur1['UserRecord']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-					else $ur1['UserRecord']['user_id'] = 33;
-					$ur1['UserRecord']['tsumego_id'] = $_COOKIE['preId'];
-					$ur1['UserRecord']['level'] = $u['User']['level'];
-					$ur1['UserRecord']['xp'] = $u['User']['xp'];
-					$ur1['UserRecord']['gain'] = 0;
-					$ur1['UserRecord']['seconds'] = $_COOKIE['seconds'];
-					$ur1['UserRecord']['status'] = 'F';
-					$ur1['UserRecord']['misplays'] = $_COOKIE['misplay'];
-					$this->UserRecord->save($ur1);
+				if($mode==1 && $u['User']['id']!=33){
+					if(isset($_SESSION['loggedInUser']['User']['id'])){
+						$this->UserRecord->create();
+						$ur1 = array();
+						$ur1['UserRecord']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+						$ur1['UserRecord']['tsumego_id'] = $_COOKIE['preId'];
+						$ur1['UserRecord']['level'] = $u['User']['level'];
+						$ur1['UserRecord']['xp'] = $u['User']['xp'];
+						$ur1['UserRecord']['gain'] = 0;
+						$ur1['UserRecord']['seconds'] = $_COOKIE['seconds'];
+						$ur1['UserRecord']['status'] = 'F';
+						$ur1['UserRecord']['misplays'] = $_COOKIE['misplay'];
+						$this->UserRecord->save($ur1);
+					}
 				}
 				if($mode==1 || $mode==3){
 					if($mode==1) $u['User']['damage'] += $_COOKIE['misplay'];
@@ -771,7 +769,6 @@ class TsumegosController extends AppController{
 				}elseif($mode==2){
 					$userEloBefore = $u['User']['elo'];
 					$tsumegoEloBefore = $preTsumego['Tsumego']['elo'];
-					
 					$newV = 1;
 					
 					if($u['User']['elo']-$_COOKIE['misplay'] < 100) $u['User']['elo'] = 100;
@@ -786,10 +783,8 @@ class TsumegosController extends AppController{
 						$old_t['old_r'] = $preTsumego['Tsumego']['elo'];
 						$old_t['old_rd'] = $preTsumego['Tsumego']['rd'];
 						$ratingDeviationArray = $this->compute_rating($old_u, $old_t, 0);
-						
 						$u['User']['rd'] = round($ratingDeviationArray[0][1]);
 						$preTsumego['Tsumego']['elo'] += round($ratingDeviationArray[1][1]);
-						
 						$trFail = $this->TsumegoRecord->find('first', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'], 'tsumego_id' => $t['Tsumego']['id'])));
 						$trFail['TsumegoRecord']['status'] = 'F';
 						$trFail['TsumegoRecord']['user_id'] = $u['User']['id'];
@@ -817,7 +812,6 @@ class TsumegosController extends AppController{
 				else if($utPre['UserTsumego']['status']=='V') $utPre['UserTsumego']['status'] = 'F';// V => F
 				else if($utPre['UserTsumego']['status']=='G') $utPre['UserTsumego']['status'] = 'F';// G => F
 				else if($utPre['UserTsumego']['status']=='S') $utPre['UserTsumego']['status'] = 'S';//S => S
-				
 				
 				$utPre['UserTsumego']['created'] = date('Y-m-d H:i:s');
 				
@@ -847,7 +841,6 @@ class TsumegosController extends AppController{
 						}
 					}
 				}
-				
 				$u['User']['damage'] = $u['User']['health'];
 				if(!isset($_SESSION['loggedInUser'])){
 					for($i=0; $i<count($noLogin); $i++){
@@ -921,18 +914,19 @@ class TsumegosController extends AppController{
 								$noUser['xp'] = $u['User']['xp'];
 							}
 						}
-						if($mode==1){
-						$this->UserRecord->create();
-						$ur = array();
-						if(isset($_SESSION['loggedInUser']['User']['id'])) $ur['UserRecord']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-						else $ur['UserRecord']['user_id'] = 33;
-						$ur['UserRecord']['tsumego_id'] = $_COOKIE['preId'];
-						$ur['UserRecord']['level'] = $u['User']['level'];
-						$ur['UserRecord']['xp'] = $u['User']['xp'];
-						$ur['UserRecord']['gain'] = $_COOKIE['score'];
-						$ur['UserRecord']['seconds'] = $_COOKIE['seconds'];
-						$ur['UserRecord']['status'] = 'S';
-						$this->UserRecord->save($ur);
+						if($mode==1 && $u['User']['id']!=33){
+							if(isset($_SESSION['loggedInUser']['User']['id'])){
+								$this->UserRecord->create();
+								$ur = array();
+								$ur['UserRecord']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+								$ur['UserRecord']['tsumego_id'] = $_COOKIE['preId'];
+								$ur['UserRecord']['level'] = $u['User']['level'];
+								$ur['UserRecord']['xp'] = $u['User']['xp'];
+								$ur['UserRecord']['gain'] = $_COOKIE['score'];
+								$ur['UserRecord']['seconds'] = $_COOKIE['seconds'];
+								$ur['UserRecord']['status'] = 'S';
+								$this->UserRecord->save($ur);
+							}
 						}
 						if(isset($_COOKIE['rank']) && $_COOKIE['rank'] != '0'){
 							$ranks = $this->Rank->find('all', array('conditions' =>  array('session' => $_SESSION['loggedInUser']['User']['activeRank'])));
@@ -995,7 +989,6 @@ class TsumegosController extends AppController{
 					$old_t['old_r'] = $preTsumego['Tsumego']['elo'];
 					$old_t['old_rd'] = $preTsumego['Tsumego']['rd'];
 					$ratingDeviationArray = $this->compute_rating($old_u, $old_t, 1);
-					
 					$u['User']['rd'] = round($ratingDeviationArray[0][1]);
 					
 					if(intval($_COOKIE['score']>100)) $_COOKIE['score'] = 100;
@@ -1030,17 +1023,19 @@ class TsumegosController extends AppController{
 		}
 		
 		if(isset($_COOKIE['correctNoPoints']) && $_COOKIE['correctNoPoints'] != '0'){
-			$this->UserRecord->create();
-			$ur = array();
-			if(isset($_SESSION['loggedInUser']['User']['id'])) $ur['UserRecord']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-			else $ur['UserRecord']['user_id'] = 33;
-			$ur['UserRecord']['tsumego_id'] = $_COOKIE['preId'];
-			$ur['UserRecord']['level'] = $u['User']['level'];
-			$ur['UserRecord']['xp'] = $u['User']['xp'];
-			$ur['UserRecord']['gain'] = 0;
-			$ur['UserRecord']['seconds'] = $_COOKIE['seconds'];
-			$ur['UserRecord']['status'] = 'S';
-			$this->UserRecord->save($ur);
+			if($u['User']['id']!=33){
+				$this->UserRecord->create();
+				$ur = array();
+				if(isset($_SESSION['loggedInUser']['User']['id'])) $ur['UserRecord']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+				else $ur['UserRecord']['user_id'] = 33;
+				$ur['UserRecord']['tsumego_id'] = $_COOKIE['preId'];
+				$ur['UserRecord']['level'] = $u['User']['level'];
+				$ur['UserRecord']['xp'] = $u['User']['xp'];
+				$ur['UserRecord']['gain'] = 0;
+				$ur['UserRecord']['seconds'] = $_COOKIE['seconds'];
+				$ur['UserRecord']['status'] = 'S';
+				$this->UserRecord->save($ur);
+			}
 		}
 		
 		if(isset($_COOKIE['doublexp']) && $_COOKIE['doublexp'] != '0'){

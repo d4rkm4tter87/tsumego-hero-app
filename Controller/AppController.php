@@ -580,45 +580,6 @@ class AppController extends Controller{
 				$this->User->save($u);
 			}
 			
-			$ac = true;
-			if($ac){
-				if($_SESSION['page']!='play' && $_SESSION['page']!='level mode' && $_SESSION['page']!='rating mode' && $_SESSION['page']!='time mode'){
-					$trs = $this->TsumegoRecord->find('all', array('order' => 'created DESC', 'conditions' => array(
-						'user_id' => $_SESSION['loggedInUser']['User']['id'],
-						'OR' => array(
-							array('status' => 'S'),
-							array('status' => 'F')
-						)
-					)));
-					$or = array();
-					$publicSets = $this->Set->find('all', array('conditions' => array('public' => 1)));
-					for($i=0; $i<count($publicSets); $i++) array_push($or, $publicSets[$i]['Set']['id']);
-					$recentlyPlayed = array();
-					for($i=0; $i<count($trs); $i++) array_push($recentlyPlayed, $trs[$i]['TsumegoRecord']['tsumego_id']);
-					
-					$range = array();
-					$rangeIncrement = 50;
-					if($_SESSION['loggedInUser']['User']['elo']>2700 || $_SESSION['loggedInUser']['User']['elo']<900) $rangeMin = 300;
-					else $rangeMin = 101;
-					while(count($range)<$rangeMin){
-						$range = $this->Tsumego->find('all', array('order' => 'elo ASC', 'conditions' => array(
-							'elo >=' => $_SESSION['loggedInUser']['User']['elo']-$rangeIncrement,
-							'elo <=' => $_SESSION['loggedInUser']['User']['elo']+$rangeIncrement,
-							'OR' => array('set_id' => $or),
-							'NOT' => array(
-								'id' => $recentlyPlayed,
-								'set_id' => array(42, 109, 113, 114, 115, 11969, 29156, 31813, 33007, 71790, 74761, 81578, 88156)
-							)
-						)));
-						$rangeIncrement+=50;
-					}
-					
-					shuffle($range);
-					$nextMode = $range[0];
-					$this->set('nextMode', $nextMode);
-				}
-			}
-			
 			if(isset($_COOKIE['sound']) && $_COOKIE['sound'] != '0'){
 				$_SESSION['loggedInUser']['User']['sound'] = $_COOKIE['sound'];
 				$u['User']['sound'] = $_COOKIE['sound'];
@@ -751,41 +712,41 @@ class AppController extends Controller{
 			$boardPositions[22] = 21;
 			$boardPositions[23] = 22;
 			$count = 24;
-			
-			if($_SESSION['loggedInUser']['User']['premium']>=1){
-				$boardPositions[24] = 34;
-				$boardPositions[25] = 35;
-				$boardPositions[26] = 36;
-				$boardPositions[27] = 37;
-				$boardPositions[28] = 38;
-				$boardPositions[29] = 39;
-				$boardPositions[30] = 40;
-				$boardPositions[31] = 41;
-				$boardPositions[32] = 42;
-				$boardPositions[33] = 43;
-				$boardPositions[34] = 44;
-				$boardPositions[35] = 45;
+			if(isset($_SESSION['loggedInUser'])){
+				if($_SESSION['loggedInUser']['User']['premium']>=1){
+					$boardPositions[24] = 34;
+					$boardPositions[25] = 35;
+					$boardPositions[26] = 36;
+					$boardPositions[27] = 37;
+					$boardPositions[28] = 38;
+					$boardPositions[29] = 39;
+					$boardPositions[30] = 40;
+					$boardPositions[31] = 41;
+					$boardPositions[32] = 42;
+					$boardPositions[33] = 43;
+					$boardPositions[34] = 44;
+					$boardPositions[35] = 45;
+					
+					$boardPositions[36] = 47;
+					$boardPositions[37] = 48;
+					$boardPositions[38] = 49;
+					$boardPositions[39] = 50;
+					$boardPositions[40] = 51;
+					$boardPositions[41] = 52;
+					$boardPositions[42] = 53;
+					$boardPositions[43] = 54;
+					$count = 44;
+				}
 				
-				$boardPositions[36] = 47;
-				$boardPositions[37] = 48;
-				$boardPositions[38] = 49;
-				$boardPositions[39] = 50;
-				$boardPositions[40] = 51;
-				$boardPositions[41] = 52;
-				$boardPositions[42] = 53;
-				$boardPositions[43] = 54;
-				$count = 44;
+				if($_SESSION['loggedInUser']['User']['secretArea1']==1) $boardPositions[$count] = 23;
+				if($_SESSION['loggedInUser']['User']['secretArea2']==1) $boardPositions[$count+1] = 24;
+				if($_SESSION['loggedInUser']['User']['secretArea3']==1) $boardPositions[$count+2] = 25;
+				if($_SESSION['loggedInUser']['User']['secretArea4']==1) $boardPositions[$count+3] = 26;
+				if($_SESSION['loggedInUser']['User']['secretArea5']==1) $boardPositions[$count+4] = 27;
+				if($_SESSION['loggedInUser']['User']['secretArea6']==1) $boardPositions[$count+5] = 28;
+				if($_SESSION['loggedInUser']['User']['secretArea7']==1) $boardPositions[$count+6] = 29;
+				if($_SESSION['loggedInUser']['User']['secretArea10']==1) $boardPositions[$count+7] = 30;
 			}
-			
-			if($_SESSION['loggedInUser']['User']['secretArea1']==1) $boardPositions[$count] = 23;
-			if($_SESSION['loggedInUser']['User']['secretArea2']==1) $boardPositions[$count+1] = 24;
-			if($_SESSION['loggedInUser']['User']['secretArea3']==1) $boardPositions[$count+2] = 25;
-			if($_SESSION['loggedInUser']['User']['secretArea4']==1) $boardPositions[$count+3] = 26;
-			if($_SESSION['loggedInUser']['User']['secretArea5']==1) $boardPositions[$count+4] = 27;
-			if($_SESSION['loggedInUser']['User']['secretArea6']==1) $boardPositions[$count+5] = 28;
-			if($_SESSION['loggedInUser']['User']['secretArea7']==1) $boardPositions[$count+6] = 29;
-			if($_SESSION['loggedInUser']['User']['secretArea10']==1) $boardPositions[$count+7] = 30;
-			
 		}else{
 			$enabledBoards[1] = 'checked';
 			$enabledBoards[2] = 'checked';
@@ -865,16 +826,15 @@ class AppController extends Controller{
 	
 	function afterFilter(){
 		$this->loadModel('Rank');
-		
-		
-		if($_SESSION['page']!='time mode' && $_SESSION['loggedInUser']['User']['mode'] == 3 || $_SESSION['page']!='time mode' && strlen($_SESSION['loggedInUser']['User']['activeRank'])==15){
-			$ranks = $this->Rank->find('all', array('conditions' => array('session' => $_SESSION['loggedInUser']['User']['activeRank'])));
-			for($i=0;$i<count($ranks);$i++){
-				$this->Rank->delete($ranks[$i]['Rank']['id']);
+		if(isset($_SESSION['loggedInUser'])){
+			if($_SESSION['page']!='time mode' && $_SESSION['loggedInUser']['User']['mode'] == 3 || $_SESSION['page']!='time mode' && strlen($_SESSION['loggedInUser']['User']['activeRank'])==15){
+				$ranks = $this->Rank->find('all', array('conditions' => array('session' => $_SESSION['loggedInUser']['User']['activeRank'])));
+				for($i=0;$i<count($ranks);$i++){
+					$this->Rank->delete($ranks[$i]['Rank']['id']);
+				}
+				$_SESSION['loggedInUser']['User']['activeRank'] = 0;
+				$_SESSION['loggedInUser']['User']['mode'] = 1;
 			}
-			$_SESSION['loggedInUser']['User']['activeRank'] = 0;
-			$_SESSION['loggedInUser']['User']['mode'] = 1;
-			
 		}
 	}
 	

@@ -47,7 +47,8 @@
 	<?php
 		
 		if($mode==1){ 
-			$levelNum = 'Level '.$user['User']['level'];
+			if(isset($user['User']['level'])) $levelNum = 'Level '.$user['User']['level'];
+			else $levelNum = 1;
 			$xpBarFill = 'xp-bar-fill-c1';
 		}elseif($mode==2){
 			$xpBarFill = 'xp-bar-fill-c2';
@@ -185,20 +186,20 @@
 				if(isset($_SESSION['loggedInUser'])){
 					if($_SESSION['loggedInUser']['User']['isAdmin']==0) $discussFilter = '';
 					else $discussFilter = '?filter=false';
-					//echo '<li><a '.$refreshLinkToDiscuss.' class="menuLi" '.$discussA.' href="/comments'.$discussFilter.'">Discuss</a></li>'; 
+					if($_SESSION['loggedInUser']['User']['completed']==1 || $_SESSION['loggedInUser']['User']['premium']>=1){
+					//echo '<li><a '.$refreshLinkToSandbox.' class="menuLi" id="sandbox-menu" '.$sandboxA.' href="/sets/beta">Sandbox</a></li>';
+					}else{
+						$refreshLinkToSandboxBackup = '<a id="refreshLinkToSandbox"></a>';
+					}
+					if($_SESSION['loggedInUser']['User']['premium']>=1){
+					//echo '<li><a '.$refreshLinkToLeaderboard.' class="menuLi" id="leaderboard-menu" '.$leaderboardA.' href="/users/leaderboard">Leaderboard</a></li>';
+					}else{
+						$refreshLinkToLeaderboardBackup = '<a id="refreshLinkToLeaderboard"></a>';
+					}
 				}else{
 					$refreshLinkToDiscussBackup = '<a id="refreshLinkToDiscuss"></a>';
-				}					
-				if($_SESSION['loggedInUser']['User']['completed']==1 || $_SESSION['loggedInUser']['User']['premium']>=1){
-					//echo '<li><a '.$refreshLinkToSandbox.' class="menuLi" id="sandbox-menu" '.$sandboxA.' href="/sets/beta">Sandbox</a></li>';
-				}else{
-					$refreshLinkToSandboxBackup = '<a id="refreshLinkToSandbox"></a>';
-				}
-				if($_SESSION['loggedInUser']['User']['premium']>=1){
-					//echo '<li><a '.$refreshLinkToLeaderboard.' class="menuLi" id="leaderboard-menu" '.$leaderboardA.' href="/users/leaderboard">Leaderboard</a></li>';
-				}else{
-					$refreshLinkToLeaderboardBackup = '<a id="refreshLinkToLeaderboard"></a>';
-				}
+				}	
+				
 			?> 
 			<div id="newMenu">
 			<nav>
@@ -211,17 +212,19 @@
 					echo '</ul>';       
 					echo '</li>';
 					echo '<li><a '.$refreshLinkToSets.' '.$collectionsA.' href="/sets">Collections</a>';
-					if($_SESSION['loggedInUser']['User']['premium']>=1 || $_SESSION['loggedInUser']['User']['level']>=60){
-					echo '<ul class="newMenuLi2">';
-						echo '<li><a '.$refreshLinkToSandbox.' '.$sandboxA.' href="/sets/beta">Sandbox</a></li>';
-						if($_SESSION['loggedInUser']['User']['isAdmin']>=1){
-							echo '<li><a class="adminLink" href="/users/adminstats">Admin Activities</a></li>';
-							echo '<li><a class="adminLink" href="/users/userstats">User Activities</a></li>';
-							echo '<li><a class="adminLink" href="https://kovarex.github.io/besogo/testing.html">Editor</a></li>';
-							echo '<li><a class="adminLink" href="/users/publish">Publish Schedule</a></li>';
-							echo '<li><a class="adminLink" href="/users/likesview">Likes/Dislikes</a></li>';
+					if(isset($_SESSION['loggedInUser'])){
+						if($_SESSION['loggedInUser']['User']['premium']>=1 || $_SESSION['loggedInUser']['User']['level']>=60){
+							echo '<ul class="newMenuLi2">';
+								echo '<li><a '.$refreshLinkToSandbox.' '.$sandboxA.' href="/sets/beta">Sandbox</a></li>';
+								if($_SESSION['loggedInUser']['User']['isAdmin']>=1){
+									echo '<li><a class="adminLink" href="/users/adminstats">Admin Activities</a></li>';
+									echo '<li><a class="adminLink" href="/users/userstats">User Activities</a></li>';
+									echo '<li><a class="adminLink" href="https://kovarex.github.io/besogo/testing.html">Editor</a></li>';
+									echo '<li><a class="adminLink" href="/users/publish">Publish Schedule</a></li>';
+									echo '<li><a class="adminLink" href="/users/likesview">Likes/Dislikes</a></li>';
+								}
+							echo '</ul>';
 						}
-					echo '</ul>';
 					}
 					echo '</li>';
 					echo '<li><a class="homeMenuLink" '.$playA.' href="/tsumegos/play/'.$lv.'">Play</a>';
