@@ -363,7 +363,12 @@
 			<div <?php echo $modeActions2 ?>>
 				<?php 
 				if(isset($_SESSION['loggedInUser']) && $ac){
-					if($nextMode['Tsumego']['id']==null) $nextMode['Tsumego']['id'] = 15352;
+					if(isset($nextMode['Tsumego']['id'])){
+						if($nextMode['Tsumego']['id']==null) $nextMode['Tsumego']['id'] = 15352;
+					}else{
+						$nextMode['Tsumego']['id'] = 15352;
+					}
+					
 					echo '<a class="new-button main-page" style="font-size:14px;" href="/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2'.'">play</a>'; 
 				}else echo '<a id="modeboxes2" class="new-button-inactive main-page" style="font-size:14px;">sign in</a>'; 
 				?>

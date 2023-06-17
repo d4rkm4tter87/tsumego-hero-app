@@ -135,6 +135,15 @@
 				$refreshLinkToLeaderboardBackup = '';
 				$refreshLinkToSandboxBackup = '';
 				$refreshLinkToDiscussBackup = '';
+				$levelHighscoreA = '';
+				$ratingHighscoreA = '';
+				$timeHighscoreA = '';
+				$dailyHighscoreA = '';
+				$levelModeA = '';
+				$ratingModeA = '';
+				$timeModeA = '';
+				$websitefunctionsA = '';
+				$aboutA = '';
 				
 				if($_SESSION['page'] == 'home') $homeA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'set') $collectionsA = 'style="color:#74d14c;"';
@@ -162,7 +171,11 @@
 				else if($_SESSION['page'] == 'timeHighscore') $timeHighscoreA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'dailyHighscore') $dailyHighscoreA = 'style="color:#74d14c;"';
 				
-				if($nextMode['Tsumego']['id']==null) $nextMode['Tsumego']['id'] = 15352;
+				if(isset($nextMode['Tsumego']['id'])){
+					if($nextMode['Tsumego']['id']==null) $nextMode['Tsumego']['id'] = 15352;
+				}else{
+					$nextMode['Tsumego']['id'] = 15352;
+				}
 				//echo $_SESSION['page'];
 				//echo '<li><a '.$refreshLinkToStart.' class="menuLi" '.$homeA.' href="/">Home</a></li>';
 				//echo '<li><a '.$refreshLinkToSets.' class="menuLi" '.$collectionsA.' id="collectionsInMenu" '.$sand.' href="/sets">Collections</a></li>';

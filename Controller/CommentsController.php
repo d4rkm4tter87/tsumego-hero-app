@@ -227,6 +227,7 @@ class CommentsController extends AppController{
 		for($i=0; $i<count($yourComments); $i++){
 			if($yourcounter<11){
 				$t = $this->Tsumego->findById($yourComments[$i]['Comment']['tsumego_id']);
+				if(!isset($t['Tsumego']['id']) $t['Tsumego']['id'] = 0;
 				if(in_array($t['Tsumego']['id'], $keyList)){
 					$u = $this->User->findById($yourComments[$i]['Comment']['user_id']);
 					$s = $this->Set->findById($t['Tsumego']['set_id']);

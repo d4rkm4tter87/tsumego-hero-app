@@ -60,8 +60,11 @@ class TsumegosController extends AppController{
 		$stopParameter = 0;
 		$stopParameter2 = 0;
 		$mode3ScoreArray = array();
+		$trs = array();
 		$potionAlert = false;
 		$ui = 1;
+		$eloScore = 0;
+		$range2 = array();
 		
 		if(isset($this->params['url']['potionAlert'])){
 			$potionAlert = true;
@@ -317,7 +320,6 @@ class TsumegosController extends AppController{
 					$rangeIncrement+=50;
 				}
 				
-				$range2 = array();
 				for($i=0; $i<count($range); $i++){
 					array_push($range2, $range[$i]['Tsumego']['elo']);
 				}
@@ -1509,7 +1511,10 @@ class TsumegosController extends AppController{
 		}
 		
 		if(isset($this->params['url']['rank'])) $raName = $this->params['url']['rank'];
-		else $raName = $ranks[0]['Rank']['rank'];
+		else{
+			if(!isset($ranks[0]['Rank']['rank'])) $ranks[0]['Rank']['rank'] = '';
+			$raName = $ranks[0]['Rank']['rank'];
+		}
 		
 		if($mode==1) $_SESSION['page'] = 'level mode';
 		elseif($mode==2) $_SESSION['page'] = 'rating mode';
@@ -2583,6 +2588,7 @@ class TsumegosController extends AppController{
 			$lowestPos = 0;
 			for($m=0; $m<count($masterArray); $m++){
 				$t = explode('-', $masterArray[$m][7]);
+				if(!isset($t[1])) $t[1] = '';
 				$distance[$m] = $t[0].'-'.$saveText2[0][$n].'|'.$t[1].'-'.$saveText2[1][$n];
 				$distance2[$m] = $t[0]-$saveText2[0][$n];
 				$distance3[$m] = $t[1]-$saveText2[1][$n];

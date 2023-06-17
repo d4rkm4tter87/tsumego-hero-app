@@ -217,8 +217,8 @@ class SetsController extends AppController{
 			if($setday[0]==0) $setday = substr($setday, -3);
 			$sets[$i]['Set']['created'] = $date->format('Ymd');
 			$sets[$i]['Set']['createdDisplay'] = $setday.$month.' '.$setyear;
-
-			$percent = $counter/count($ts)*100;
+			$percent = 0;
+			if(count($ts)>0 $percent = $counter/count($ts)*100;
 			$overallCounter += count($ts);
 			$sets[$i]['Set']['solvedNum'] = $counter;
 			$sets[$i]['Set']['solved'] = round($percent, 1);
@@ -989,6 +989,7 @@ class SetsController extends AppController{
 				$urTemp = array();
 				$urSum = '';
 				$secondsUsed = false;
+				$ts[$i]['Tsumego']['seconds'] = '';
 				for($j=0; $j<count($ur); $j++){
 					if($ts[$i]['Tsumego']['id'] == $ur[$j]['UserRecord']['tsumego_id']){
 						array_push($urTemp, $ur[$j]);
