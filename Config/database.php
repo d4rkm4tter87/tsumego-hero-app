@@ -83,7 +83,7 @@ class DATABASE_CONFIG {
 		'host' => 'localhost',
 		'login' => 'root',
 		'password' => '',
-		'database' => 'gostrats',
+		'database' => 'tsumegohero_tests',
 		'prefix' => '',
 		//'encoding' => 'utf8',
 	);

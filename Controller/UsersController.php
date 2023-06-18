@@ -17,8 +17,19 @@ class UsersController extends AppController{
 		$this->loadModel('TsumegoRecord');
 		$this->loadModel('Rank');
 		$this->loadModel('RankOverview');
+		$this->loadModel('Comment');
+		
 		
 		/*
+		$c = $this->Comment->find('all');
+		$x = array();
+		for($i=0; $i<count($c); $i++){
+			if(strpos($c[$i]['Comment']['message'], 'Super')===0){
+				array_push($x, $c[$i]);
+			}
+		}
+		echo '<pre>'; print_r(count($x)); echo '</pre>';
+		echo '<pre>'; print_r($vs); echo '</pre>'; 
 		$num = 601;
 		while($num<=792){
 			$t = array();
@@ -867,11 +878,8 @@ Joschka Zimdars';
 			$u = $this->User->findByName($this->data['User']['name']);
 			if($u){
 				if($this->validateLogin($this->data)){
-					$this->LoadModel('Visit');
-					$vs = $this->Visit->find('all', 
-						array('order' => 'created',	'direction' => 'DESC', 'conditions' =>  array('user_id' => $u['User']['id']))
-					);
-					if($vs!=null) $_SESSION['lastVisit'] = $vs[count($vs)-1]['Visit']['tsumego_id'];
+					$vs = $this->UserTsumego->find('first', array('order' => 'created DESC', 'conditions' => array('user_id' => $u['User']['id'])));
+					if($vs!=null) $_SESSION['lastVisit'] = $vs['UserTsumego']['tsumego_id'];
 					for($i=1;$i<=54;$i++){
 						if($u['User']['texture'.$i] == '1') $u['User']['texture'.$i] = 'checked';
 						$_SESSION['texture'.$i] = $u['User']['texture'.$i];
@@ -899,11 +907,8 @@ Joschka Zimdars';
 			//$u = $this->User->find('first', array('conditions' =>  array('email' => $this->data['User']['email'])));
 			if($u){
 				if($this->validateLogin2($this->data)){
-					$this->LoadModel('Visit');
-					$vs = $this->Visit->find('all', 
-						array('order' => 'created',	'direction' => 'DESC', 'conditions' =>  array('user_id' => $u['User']['id']))
-					);
-					if($vs!=null) $_SESSION['lastVisit'] = $vs[count($vs)-1]['Visit']['tsumego_id'];
+					$vs = $this->UserTsumego->find('first', array('order' => 'created DESC', 'conditions' => array('user_id' => $u['User']['id'])));
+					if($vs!=null) $_SESSION['lastVisit'] = $vs['UserTsumego']['tsumego_id'];
 					for($i=1;$i<=54;$i++){
 						if($u['User']['texture'.$i] == '1') $u['User']['texture'.$i] = 'checked';
 						$_SESSION['texture'.$i] = $u['User']['texture'.$i];

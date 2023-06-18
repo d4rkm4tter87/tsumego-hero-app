@@ -64,7 +64,6 @@ class SetsController extends AppController{
 		$this->LoadModel('User');
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('UserTsumego');
-		$this->LoadModel('Visit');
 		$this->LoadModel('Comment');
 		$this->LoadModel('Favorite');
 		$this->LoadModel('Comment');
@@ -127,38 +126,14 @@ class SetsController extends AppController{
 			$removeMap[88156] = 1;
 		}
 
-
-
 		$sets = array();
 		for($i=0; $i<count($setsX); $i++){
 			if(!isset($removeMap[$setsX[$i]['Set']['id']])) array_push($sets, $setsX[$i]);
 		}
-
-		if(isset($_SESSION['loggedInUser'])){
-			$vs = $this->Visit->find('all',
-				array('order' => 'created',	'direction' => 'DESC', 'conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id']))
-			);
-		}
 		for($i=0; $i<count($sets); $i++){
-			if(!isset($_SESSION['loggedInUser'])){
-				$t = $this->Tsumego->find('first',
-					array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
-				);
-				$sets[$i]['Set']['t'] = $t['Tsumego']['id'];
-			}else{
-				$hasVisit = -1;
-				for($j=0; $j<count($vs); $j++){
-					if($vs[$j]['Visit']['set_id'] == $sets[$i]['Set']['id']) $hasVisit = $vs[$j]['Visit']['tsumego_id'];
-				}
-				if($hasVisit!=-1){
-					$sets[$i]['Set']['t'] = $hasVisit;
-				}else{
-					$t = $this->Tsumego->find('first',
-						array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
-					);
-					$sets[$i]['Set']['t'] = $t['Tsumego']['id'];
-				}
-			}
+			$t = $this->Tsumego->find('first',
+				array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
+			);
 		}
 		if(isset($_SESSION['loggedInUser'])){
 			$uts = $this->UserTsumego->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
@@ -218,7 +193,7 @@ class SetsController extends AppController{
 			$sets[$i]['Set']['created'] = $date->format('Ymd');
 			$sets[$i]['Set']['createdDisplay'] = $setday.$month.' '.$setyear;
 			$percent = 0;
-			if(count($ts)>0 $percent = $counter/count($ts)*100;
+			if(count($ts)>0) $percent = $counter/count($ts)*100;
 			$overallCounter += count($ts);
 			$sets[$i]['Set']['solvedNum'] = $counter;
 			$sets[$i]['Set']['solved'] = round($percent, 1);
@@ -227,7 +202,6 @@ class SetsController extends AppController{
 			$sets[$i]['Set']['difficultyColor'] = $this->getDifficultyColor($sets[$i]['Set']['difficulty']);
 			$sets[$i]['Set']['sizeColor'] = $this->getSizeColor($sets[$i]['Set']['anz']);
 			$sets[$i]['Set']['dateColor'] = $this->getDateColor($sets[$i]['Set']['created']);
-
 		}
 
 		$sortOrder = 'null';
@@ -403,7 +377,6 @@ class SetsController extends AppController{
 		$this->LoadModel('User');
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('UserTsumego');
-		$this->LoadModel('Visit');
 		$this->LoadModel('Favorite');
 
 		$_SESSION['page'] = 'set';
@@ -488,30 +461,15 @@ class SetsController extends AppController{
 		for($i=0; $i<count($setsX); $i++){
 			if(!isset($removeMap[$setsX[$i]['Set']['id']])) array_push($sets, $setsX[$i]);
 		}
-		if(isset($_SESSION['loggedInUser'])){
-			$vs = $this->Visit->find('all',
-				array('order' => 'created',	'direction' => 'DESC', 'conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id']))
-			);
-		}
 		for($i=0; $i<count($sets); $i++){
 			if(!isset($_SESSION['loggedInUser'])){
 				$t = $this->Tsumego->find('first',
 					array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
 				);
-				$sets[$i]['Set']['t'] = $t['Tsumego']['id'];
 			}else{
-				$hasVisit = -1;
-				for($j=0; $j<count($vs); $j++){
-					if($vs[$j]['Visit']['set_id'] == $sets[$i]['Set']['id']) $hasVisit = $vs[$j]['Visit']['tsumego_id'];
-				}
-				if($hasVisit!=-1){
-					$sets[$i]['Set']['t'] = $hasVisit;
-				}else{
-					$t = $this->Tsumego->find('first',
-						array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
-					);
-					if(isset($t['Tsumego']['id'])) $sets[$i]['Set']['t'] = $t['Tsumego']['id'];
-				}
+				$t = $this->Tsumego->find('first',
+					array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
+				);
 			}
 		}
 		if(isset($_SESSION['loggedInUser'])){
@@ -989,7 +947,7 @@ class SetsController extends AppController{
 				$urTemp = array();
 				$urSum = '';
 				$secondsUsed = false;
-				$ts[$i]['Tsumego']['seconds'] = '';
+				$ts[$i]['Tsumego']['seconds'] = 0;
 				for($j=0; $j<count($ur); $j++){
 					if($ts[$i]['Tsumego']['id'] == $ur[$j]['UserRecord']['tsumego_id']){
 						array_push($urTemp, $ur[$j]);
@@ -1172,7 +1130,6 @@ class SetsController extends AppController{
 		$this->LoadModel('User');
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('UserTsumego');
-		$this->LoadModel('Visit');
 
 		$_SESSION['page'] = 'set';
 		$_SESSION['title'] = 'Tsumego Hero - Collections';
@@ -1229,32 +1186,10 @@ class SetsController extends AppController{
 		for($i=0; $i<count($setsX); $i++){
 			if(!isset($removeMap[$setsX[$i]['Set']['id']])) array_push($sets, $setsX[$i]);
 		}
-
-		if(isset($_SESSION['loggedInUser'])){
-			$vs = $this->Visit->find('all',
-				array('order' => 'created',	'direction' => 'DESC', 'conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id']))
-			);
-		}
 		for($i=0; $i<count($sets); $i++){
-			if(!isset($_SESSION['loggedInUser'])){
-				$t = $this->Tsumego->find('first',
-					array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
-				);
-				$sets[$i]['Set']['t'] = $t['Tsumego']['id'];
-			}else{
-				$hasVisit = -1;
-				for($j=0; $j<count($vs); $j++){
-					if($vs[$j]['Visit']['set_id'] == $sets[$i]['Set']['id']) $hasVisit = $vs[$j]['Visit']['tsumego_id'];
-				}
-				if($hasVisit!=-1){
-					$sets[$i]['Set']['t'] = $hasVisit;
-				}else{
-					$t = $this->Tsumego->find('first',
-						array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
-					);
-					$sets[$i]['Set']['t'] = $t['Tsumego']['id'];
-				}
-			}
+			$t = $this->Tsumego->find('first',
+				array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
+			);
 		}
 		if(isset($_SESSION['loggedInUser'])){
 			$uts = $this->UserTsumego->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));

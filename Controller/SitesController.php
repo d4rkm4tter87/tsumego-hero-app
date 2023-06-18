@@ -11,7 +11,6 @@ class SitesController extends AppController{
 		$this->LoadModel('OldUserTsumego');
 		$this->LoadModel('User');
 		$this->LoadModel('DayRecord');
-		$this->LoadModel('Visit');
 		$this->LoadModel('UserBoard');
 		$this->LoadModel('UserRecord');
 		$this->LoadModel('Schedule');
@@ -173,7 +172,7 @@ class SitesController extends AppController{
 		$this->set('uotdbg', $dateUser['DayRecord']['userbg']);
 		
 		//recently visited
-		if(isset($_SESSION['loggedInUser'])){
+		/*if(isset($_SESSION['loggedInUser'])){
 			$currentUser = $this->User->find('first', array('conditions' =>  array('id' => $_SESSION['loggedInUser']['User']['id'])));
 			$currentUser['User']['created'] = date('Y-m-d H:i:s');
 			$this->User->save($currentUser);
@@ -192,7 +191,7 @@ class SitesController extends AppController{
 					$this->set('visit3', $setVisit3);
 				}
 			}
-		}
+		}*/
 		
 		$tsumegoDates = array();
 		
@@ -201,14 +200,6 @@ class SitesController extends AppController{
 			if(!in_array($ts[$j]['Tsumego']['set_id'], $invisibleSets) && $ts[$j]['Tsumego']['set_id']!=null) array_push($tsumegoDates, $ts[$j]['Tsumego']['created']);
 		}
 		
-		$rox = $this->RankOverview->find('all', array('conditions' =>  array(
-			'user_id' => $_SESSION['loggedInUser']['User']['id'], 
-			'rank' => '4k'
-		)));
-		
-		
-		
-		$this->set('rox', count($rox));
 		$this->set('tsumegos', $tsumegoDates);
 		$this->set('quote', $currentQuote);
 		$this->set('d1', $d1);

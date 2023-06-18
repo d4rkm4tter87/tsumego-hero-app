@@ -9,7 +9,6 @@ class TsumegosController extends AppController{
 		$this->LoadModel('Set');
 		$this->LoadModel('UserTsumego');
 		$this->LoadModel('Comment');
-		$this->LoadModel('Visit');
 		$this->LoadModel('UserBoard');
 		$this->LoadModel('UserRecord');
 		$this->LoadModel('Favorite');
@@ -641,17 +640,6 @@ class TsumegosController extends AppController{
 		
 		if(isset($ut['UserTsumego']['status'])){
 			if($ut['UserTsumego']['status']=='G') $goldenTsumego = true;
-		}
-		if(isset($_SESSION['loggedInUser'])){
-			$v = $this->Visit->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'set_id' => $t['Tsumego']['set_id'])));
-			if(empty($v)){
-				$v['Visit'] = array();
-				$v['Visit']['user_id'] = $u['User']['id'];
-				$v['Visit']['set_id'] = $t['Tsumego']['set_id'];
-			}
-			$v['Visit']['tsumego_id'] = $t['Tsumego']['id'];
-			$v['Visit']['created'] = date('Y-m-d H:i:s');
-			if($u['User']['id']!=null) $this->Visit->save($v);
 		}
 		if(isset($_COOKIE['preId'])){
 			$preTsumego = $this->Tsumego->findById($_COOKIE['preId']);
@@ -1598,65 +1586,6 @@ class TsumegosController extends AppController{
 		$this->set('file', $file);
 		$this->set('ui', $ui);
     }
-	
-	private function sendResult($uid=null, $tid=null, $success=null){
-		$this->LoadModel('Curl');
-		$url = 'http://vps817170.ovh.net:8080/sHPpI57cdoqlwzJ_MiU8mA/result/'.$uid.'/'.$tid.'/'.$success;
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-		$contents = curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); //do not show in browser the response
-		curl_exec($ch);
-		curl_close($ch);
-		
-		$this->Curl->create();
-		$curl = array();
-		$curl['Curl']['type'] = 'POST';
-		$curl['Curl']['url'] = $url;
-		$curl['Curl']['user_id'] = $uid;
-		$curl['Curl']['tsumego_id'] = $tid;
-		$this->Curl->save($curl);
-	}
-	
-	private function getRecommendation($uid=null){
-		$this->LoadModel('Curl');
-		$url = 'http://vps817170.ovh.net:8080/sHPpI57cdoqlwzJ_MiU8mA/recommend/'.$_SESSION['loggedInUser']['User']['id'];
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_URL,$url);
-		$result = curl_exec($ch);
-		curl_close($ch);
-		
-		$this->Curl->create();
-		$curl = array();
-		$curl['Curl']['type'] = 'GET';
-		$curl['Curl']['url'] = $url;
-		$curl['Curl']['user_id'] = $uid;
-		$curl['Curl']['response'] = $result;
-		$this->Curl->save($curl);
-		
-		return ($result);
-	}
-	
-	private function getRating($uid=null){
-		$this->LoadModel('Curl');
-		$url = 'http://vps817170.ovh.net:8080/sHPpI57cdoqlwzJ_MiU8mA/user_rating/'.$_SESSION['loggedInUser']['User']['id'];
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_URL,$url);
-		$result = curl_exec($ch);
-		curl_close($ch);
-		
-		$this->Curl->create();
-		$curl = array();
-		$curl['Curl']['type'] = 'GET';
-		$curl['Curl']['url'] = $url;
-		$curl['Curl']['user_id'] = $uid;
-		$curl['Curl']['response'] = $result;
-		$this->Curl->save($curl);
-		
-		return ($result);
-	}
 	
 	private function findUt($id=null, $allUts=null, $map=null){
 		$currentUt = array_search($id, $map);

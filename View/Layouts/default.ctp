@@ -31,7 +31,7 @@
 	<meta name="keywords" content="tsumego, problems, puzzles, baduk, weiqi, tesuji, life and death, solve, solving, hero, go, in-seong, level" >	
 	<meta name="Author" content="Joschka Zimdars">
 	<meta property="og:title" content="Tsumego Hero">
-	<link rel="stylesheet" type="text/css" href="/css/default.css?v=2.0">
+	<link rel="stylesheet" type="text/css" href="/css/default.css?v=2.1">
 	<?php
 		//echo $_SERVER['REMOTE_ADDR'];
 		echo $this->Html->meta('icon');
@@ -144,6 +144,7 @@
 				$ratingModeA = '';
 				$timeModeA = '';
 				$websitefunctionsA = '';
+				$gotutorialA = '';
 				$aboutA = '';
 				
 				if($_SESSION['page'] == 'home') $homeA = 'style="color:#74d14c;"';
@@ -207,6 +208,7 @@
 					<?php echo '<li><a class="homeMenuLink" href="/" '.$refreshLinkToStart.' '.$homeA.'>Home</a>'; 
 					echo '<ul class="newMenuLi1">';
 						echo '<li><a id="tutorialLink" href="/sites/websitefunctions" '.$websitefunctionsA.'>Functions & Modes</a></li>';
+						echo '<li><a id="tutorialLink" href="/sites/gotutorial" '.$gotutorialA.'>Go Rules</a></li>';
 						//echo '<li><a id="tutorialLink" href="/sites/gotutorial" '.$gotutorialA.'>Go Tutorial</a></li>';
 						echo '<li><a href="/users/authors" '.$aboutA.'>About</a></li>';
 					echo '</ul>';       

@@ -587,7 +587,7 @@ class AppController extends Controller{
 				unset($_COOKIE['sound']);
 			}
 			
-			$this->set('ac', $ac);
+			$this->set('ac', true);
 			$this->set('user', $u);
 		}
 		

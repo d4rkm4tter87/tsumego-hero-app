@@ -1267,26 +1267,25 @@
 	<div align="center">
 	<?php if($activate){ 
 	if(isset($_SESSION['loggedInUser'])){
-	if($_SESSION['loggedInUser']['User']['isAdmin']>0){
-	?>
-	
-	<div class="mode1">
-		<table>
-		<tr>
-		<td>
-		<div class="modeSwitcher" id="modeSwitcher1" onmouseover="m1hover()" onmouseout="m1noHover()">
-			<input type="radio" id="ms1" name="ms" value="1" onchange="modeCheckbox(1);">
-			<label for="ms1">jGoBoard</label>
+	if($_SESSION['loggedInUser']['User']['id']==72 || $_SESSION['loggedInUser']['User']['id']==13282){
+		?>
+		<div class="mode1">
+			<table>
+			<tr>
+			<td>
+			<div class="modeSwitcher" id="modeSwitcher1" onmouseover="m1hover()" onmouseout="m1noHover()">
+				<input type="radio" id="ms1" name="ms" value="1" onchange="modeCheckbox(1);">
+				<label for="ms1">jGoBoard</label>
+			</div>
+			<div class="modeSwitcher" id="modeSwitcher2" onmouseover="m2hover()" onmouseout="m2noHover()">
+				<input type="radio" id="ms2" name="ms" value="2" onchange="modeCheckbox(2);">
+				<label for="ms2">BesoGo</label>
+			</div>
+			</td>
+			</tr>
+			</table>
 		</div>
-		<div class="modeSwitcher" id="modeSwitcher2" onmouseover="m2hover()" onmouseout="m2noHover()">
-			<input type="radio" id="ms2" name="ms" value="2" onchange="modeCheckbox(2);">
-			<label for="ms2">BesoGo</label>
-		</div>
-		</td>
-		</tr>
-		</table>
-	</div>
-	<?php 
+		<?php 
 	}
 	}
 	}

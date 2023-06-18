@@ -90,6 +90,14 @@
 			</li>
 			<br><br>
 		</div>
+		<p class="title4">Update 18.06.2023</p>
+		<div class="new1">
+			<b>The website is faster now!</b><br><br>
+			We're working on database and code improvements. The loading time on all pages has been drastically improved. On the most problematic page,
+			the loading time was reduced from 4.4 to 0.6 seconds!<br><br>
+			<div align="center"><img width="60%" src="/img/d-performance.PNG"></div>
+			<br>
+		</div>
 		<p class="title4">Update 05.06.2023</p>
 		<div class="new1">
 			<b>Design improvements</b><br><br>
@@ -121,49 +129,8 @@
 			<p style="font-weight:800;text-align:left;">The first places in Slow/Fast/Blitz (Time Mode) by the end of May 2023 each get a reward.</p>
 			<br>
 		</div>
-		<p class="title4">New Collection: 5x5 Endgame Problems</p>
-		<div class="new1">
-			Go problems in the world of 5x5. 
-			<br><br>
-			<div align="center">
-				<img width="210px" src="/img/set_pjZR59_5x5 Endgame Problems.PNG" width="90%" alt="5x5 Endgame Problems" title="5x5 Endgame Problems">
-				<br><br>
-				<a class="new-button main-page" style="font-size:14px;" href="/sets/view/181">Play</a>
-				<!-- <a class="new-button-inactive" style="font-size:14px;">Play</a>  -->
-			</div>
-			<br>
-		</div>
 		
-		<p class="title4">Recent Donations and Upgrades</p>
-		<div class="new1">
-			<table class="newx">
-		<tr><td width="50%"><h1>yonur</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>Kirasan</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>Salata</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>Edward Feustel</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>Scotty Reed</h1></td><td><h1>2,17 € <i>subscription</i></h1></td></tr>
 		
-		</table>	
-		<br>
-		</div>	
-		<p class="title4">Tsumego Hero Videos</p>
-		<div class="new1">	
-			<br>
-			<div align="center">
-			<iframe width="560" height="315" src="https://www.youtube.com/embed/OMIfyzXS9Vo" frameborder="0" allow="accelerometer; 
-			autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-			</div>
-			<br>
-			<b>Video by Daniel ML</b><br>
-			Twitch: <a href="https://www.twitch.tv/danielml001" target="_blank">https://www.twitch.tv/danielml001</a><br>
-			Youtube: <a href="https://www.youtube.com/channel/UCc4gkScb1PJAiDDtZ00eAjA" target="_blank">Daniel ML</a><br>
-			<br>
-			<b>All Episodes</b><br>
-			E1: <a href="https://www.youtube.com/watch?v=t4dR3JrP_x8" target="_blank">Tsumego Hero 1 : Hard Mode</a><br>
-			E2: <a href="https://www.youtube.com/watch?v=rZBmLnzSWWI" target="_blank">Tsumego Hero 2 : Extra Life</a><br>
-			E3: <a href="https://www.youtube.com/watch?v=OMIfyzXS9Vo" target="_blank">Tsumego Hero 3 : Hero Rising</a><br>
-			<br>
-		</div>
 			<?php
 			if(isset($_SESSION['loggedInUser'])){
 			
@@ -270,13 +237,10 @@
 			<?php
 			}
 			}*/
-			
+			/*
 			if(isset($_SESSION['loggedInUser'])){
-			?>
-			<?php } ?>
-			<p class="title4">Your last Activities</p>
-			<div class="new1">
-			<?php 
+			} 
+				echo '<p class="title4">Your last Activities</p><div class="new1">';
 				echo '<a style="color:#000;" href="/sets/view/'.$visit1['Set']['id'].'">
 					<b>'.$visit1['Set']['title'];
 					if($visit1['Set']['title2']!=null) echo ', '.$visit1['Set']['title2'];
@@ -293,10 +257,8 @@
 						echo '</b></a><br>'; 
 					}
 				}
-			?>
-			<br>
-			</div>
-			<?php		
+			echo '<br></div>';
+			*/	
 		}	
 			
 		?>
@@ -506,9 +468,9 @@
 		<p class="title4">Info Pages</p>
 		<div class="new1">
 			There are new info pages about the functions on the website and in the three different modes. 
-			<a href="/sites/websitefunctions">Website Functions</a><br><br>
+			<a href="/sites/websitefunctions">Functions & Modes</a><br><br>
 			Another info pages shows guidelines about go rules and what they mean on Tsumego Hero in regards of solving or failing a problem.
-			<a href="/sites/gotutorial">Go Tutorial</a><br><br>
+			<a href="/sites/gotutorial">Go Rules</a><br><br>
 		
 		</div>
 		
@@ -647,6 +609,36 @@
 		<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 		<br>
 		</div>
+		<p class="title4">Recent Donations and Upgrades</p>
+		<div class="new1">
+			<table class="newx">
+		<tr><td width="50%"><h1>yonur</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>Kirasan</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>Salata</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>Edward Feustel</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>Scotty Reed</h1></td><td><h1>2,17 € <i>subscription</i></h1></td></tr>
+		
+		</table>	
+		<br>
+		</div>	
+		<p class="title4">Tsumego Hero Videos</p>
+		<div class="new1">	
+			<br>
+			<div align="center">
+			<iframe width="560" height="315" src="https://www.youtube.com/embed/OMIfyzXS9Vo" frameborder="0" allow="accelerometer; 
+			autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			</div>
+			<br>
+			<b>Video by Daniel ML</b><br>
+			Twitch: <a href="https://www.twitch.tv/danielml001" target="_blank">https://www.twitch.tv/danielml001</a><br>
+			Youtube: <a href="https://www.youtube.com/channel/UCc4gkScb1PJAiDDtZ00eAjA" target="_blank">Daniel ML</a><br>
+			<br>
+			<b>All Episodes</b><br>
+			E1: <a href="https://www.youtube.com/watch?v=t4dR3JrP_x8" target="_blank">Tsumego Hero 1 : Hard Mode</a><br>
+			E2: <a href="https://www.youtube.com/watch?v=rZBmLnzSWWI" target="_blank">Tsumego Hero 2 : Extra Life</a><br>
+			E3: <a href="https://www.youtube.com/watch?v=OMIfyzXS9Vo" target="_blank">Tsumego Hero 3 : Hero Rising</a><br>
+			<br>
+		</div>
 		<p class="title4">Contributors</p>
 		<div class="new1">
 		Tsumego Hero is only in constant good shape, because there were users who helped creating the files for the problems.
@@ -657,53 +649,14 @@
 		
 		<p class="title4">Admins</p>
 		<div class="new1">
-		We are looking for more admins who can confidently answer comments in the discuss area.
+		We are looking for more admins who can confidently answer comments in the discuss area and create new problems.
 		Ideally, there is a small group of active or semi-active admins that is interested in discussion, uploading problems or creating new collections.
 		Let me know if you would like to be on the productive side of Tsumego Hero. (<a href="mailto:me@joschkazimdars.com">me@joschkazimdars.com</a>)
 		
 		<br>
 		</div>
 		
-		<p class="title4">Guide To Become Strong </p>
-		<div class="new1">
-		<p class="titleBy">&nbsp;by Benjamin Teuber 6 Dan</p>
-		
-		<table border="0" class="newstable1">
-		<tr>
-			<td colspan="2">
-			Many times I hear questions and requests like "How can I become strong?" or "My Go lacks this or that. 
-			Please teach me how to be better at it!". In general, I think many people overestimate the role of 
-			a Go-Teacher. Of course, it's very important to play and analyze with stronger players too, but still 
-			the teacher is not everything. Most of the learning consists of exploring Go for yourself, and not by 
-			having every single move explained.
-			Actually, most part of my study in Japan did not consist of being taught by pros, but of studying by myself. 
-			One big point of being next to professionals was that they explained how to do this.
-			<br><br>
-			For you, these lines mean that you don't have to go to Japan or find a 6-Dan teacher to become incredibly strong!!!
-			 Instead, if you are ambitious, you just have to know what to do by yourself. This is why I decided to write this small tutorial.
-			</td>
-		</tr>
-		</table><br>
-		<h4>How to become strong (in order of importance)</h4>
-		<table >
-		<tr><td style="vertical-align:top;">1.</td><td>Play, play, play - the stronger your opponent the better for you</td></tr>
-		<tr><td style="vertical-align:top;">2.</td><td> Do Tsumego in the right way continuously. Maybe this seems to be boring for you at first, but you'll see how much fun it is 
-		once you start. It's very important how to do so!</td></tr>
-		<tr><td style="vertical-align:top;">3.</td><td>Analyze your games with other players (as above, the stronger the better) - best would be to found a private study group 
-		(ten eyes will find more than two or four...) </td></tr>
-		<tr><td style="vertical-align:top;">4.</td><td>Do Tsumego</td></tr>
-		<tr><td style="vertical-align:top;">5.</td><td>If you like, repeat and learn some pro games</td></tr>
-		<tr><td style="vertical-align:top;">6.</td><td>More Tsumego</td></tr>
-		<tr><td style="vertical-align:top;">7.</td><td>If you have some interesting book about fuseki, joseki, shape, endgame or whatever, read it if you enjoy - but don't spend too much time with it</td></tr>
-		<tr><td style="vertical-align:top;">8.</td><td>If you still have time left, how about a few tsumego-problems?</td></tr>
-		
-		</table>
-		<br>
-		<font size="4px"><b>
-		<a href="/sites/view/0">Read more >></a><br><br>
-		</b></font>
-		</div>
-		<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+		<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 		
 		<!--
 		<p class="title4 ">Contributors</p>
