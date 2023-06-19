@@ -10,7 +10,6 @@ class UsersController extends AppController{
 		$this->loadModel('OldUser');
 		$this->loadModel('Tsumego');
 		$this->loadModel('UserRecord');
-		$this->loadModel('OldUserTsumego');
 		$this->loadModel('Answer');
 		$this->loadModel('Purge');
 		$this->loadModel('Set');
@@ -19,6 +18,16 @@ class UsersController extends AppController{
 		$this->loadModel('RankOverview');
 		$this->loadModel('Comment');
 		
+		$ut = $this->UserTsumego->find('all', array('limit' => 10000, 'order' => 'created ASC', 'conditions' => array(
+			'created <' => '2022-05-09 19:19:09'
+		)));
+		echo '<pre>'; print_r(count($ut)); echo '</pre>';
+		echo '<pre>'; print_r($ut[0]); echo '</pre>';
+		echo '<pre>'; print_r($ut[count($ut)-1]); echo '</pre>';
+		
+		for($i=0; $i<count($ut); $i++){
+			$this->UserTsumego->delete($ut[$i]['UserTsumego']['id']);
+		}
 		
 		/*
 		$c = $this->Comment->find('all');
@@ -400,7 +409,6 @@ Joschka Zimdars';
 	
 	public function routine4x(){//0:20 remove inactive players 2
 		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
 		$ux = $this->User->find('all', array('limit' => 1000, 'order' => 'created DESC'));
 		$u = array();
 		$d1 = date('Y-m-d', strtotime('-7 days'));
@@ -408,7 +416,6 @@ Joschka Zimdars';
 			$date = new DateTime($ux[$i]['User']['created']);
 			$date = $date->format('Y-m-d');
 			if($date==$d1){
-				$this->removePlayer($ux[$i]['User']['id']);
 			}
 		}
 		$this->set('u', $d1);
@@ -416,7 +423,6 @@ Joschka Zimdars';
 	
 	public function routine5(){//0:25 update user solved field
 		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
 		
 		$users = $this->User->find('all', array('limit' => 100, 'order' => 'created DESC'));
 		for($i=0; $i<count($users); $i++){
@@ -429,14 +435,14 @@ Joschka Zimdars';
 					array_push($solvedUts, $uts[$j]);
 				}			
 			}
-			$uts = $this->OldUserTsumego->find('all', array('conditions' =>  array('user_id' => $uid)));
+			/*$uts = $this->OldUserTsumego->find('all', array('conditions' =>  array('user_id' => $uid)));
 			$solvedUts2 = array();
 			for($j=0; $j<count($uts); $j++){
 				if($uts[$j]['OldUserTsumego']['status']=='S' || $uts[$j]['OldUserTsumego']['status']=='W' || $uts[$j]['OldUserTsumego']['status']=='C'){
 					array_push($solvedUts2, $uts[$j]);
 				}			
-			}
-			$ux['User']['solved'] = count($solvedUts) + count($solvedUts2);
+			}*/
+			$ux['User']['solved'] = count($solvedUts);
 			$this->User->save($ux);
 		}
 		
@@ -446,7 +452,6 @@ Joschka Zimdars';
 	public function routine6(){//0:30 update user solved field
 		$this->loadModel('Answer');
 		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
 		$a = $this->Answer->findById(1);
 		$u = $this->User->find('all', array('order' => 'id ASC', 'conditions' =>  array(
 			'id >' => $a['Answer']['message'],
@@ -461,15 +466,7 @@ Joschka Zimdars';
 					array('status' => 'C')
 				)
 			)));
-			$solvedUts2 = $this->OldUserTsumego->find('all', array('conditions' =>  array(
-				'user_id' => $u[$i]['User']['id'],
-				'OR' => array(
-					array('status' => 'S'),
-					array('status' => 'W'),
-					array('status' => 'C')
-				)
-			)));
-			$u[$i]['User']['solved'] = count($solvedUts)+count($solvedUts2);
+			$u[$i]['User']['solved'] = count($solvedUts);
 			$this->User->save($u);
 		}
 		$uLast = $this->User->find('first', array('order' => 'id DESC'));
@@ -838,38 +835,6 @@ Joschka Zimdars';
 		$this->set('ca', $ca);
 	}
 	
-	public function removePlayer($id=null){
-		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
-		$u = $this->User->findById($id);
-		$u['User']['dbstorage'] = 2;
-		$this->User->save($u);
-		
-		$uts = $this->UserTsumego->find('all', array('conditions' => array('user_id' => $id)));
-		$outs = array();
-		for($i=0; $i<count($uts); $i++){
-			$outs[$i]['OldUserTsumego'] = $uts[$i]['UserTsumego'];
-			$this->OldUserTsumego->save($outs[$i]);
-			$this->UserTsumego->delete($uts[$i]['UserTsumego']['id']);
-		}
-	}
-	
-	public function addPlayer($id=null){
-		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
-		$u = $this->User->findById($id);
-		$u['User']['dbstorage'] = 1;
-		$this->User->save($u);
-		
-		$outs = $this->OldUserTsumego->find('all', array('conditions' => array('user_id' => $id)));
-		$uts = array();
-		for($i=0; $i<count($outs); $i++){
-			$uts[$i]['UserTsumego'] = $outs[$i]['OldUserTsumego'];
-			$this->UserTsumego->save($uts[$i]);
-			$this->OldUserTsumego->delete($outs[$i]['OldUserTsumego']['id']);
-		}
-	}
-	
 	public function login(){
 		$this->loadModel('UserTsumego');
 		$_SESSION['page'] = 'user';
@@ -930,11 +895,6 @@ Joschka Zimdars';
 	public function loading(){
 	}
 	
-	public function loading2($sum=null){
-		if($sum=='8571380'){
-			$this->addPlayer($_SESSION['loggedInUser']['User']['id']);
-		}
-	}
 	
 	public function add(){
 		$_SESSION['page'] = 'user';
@@ -1815,20 +1775,14 @@ Joschka Zimdars';
 	
 	public function listplayers(){ //list players in ut database
 		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
 		$ux = $this->User->find('all', array('limit' => 300, 'order' => 'created DESC'));
 		$u = array();
 		for($i=0; $i<count($ux); $i++){
 			$uts1 = $this->UserTsumego->find('first', array('conditions' => array('user_id' => $ux[$i]['User']['id'])));
-			$uts2 = $this->OldUserTsumego->find('first', array('conditions' => array('user_id' => $ux[$i]['User']['id'])));
 			$date = new DateTime($ux[$i]['User']['created']);
 			$date = $date->format('Y-m-d');
 			$u[$i][0] = $ux[$i]['User']['id'];
 			$u[$i][1] = $date;					
-			if(count($uts1)==1 && count($uts2)==0) $u[$i][2] = 1;
-			if(count($uts1)==0 && count($uts2)==1) $u[$i][2] = 2;
-			if(count($uts1)==1 && count($uts2)==1) $u[$i][2] = 3;
-			if(count($uts1)==0 && count($uts2)==0) $u[$i][2] = 4;
 		}
 		$this->set('u', $u);
 	}
@@ -2326,7 +2280,6 @@ Joschka Zimdars';
 	
 	public function activeuts(){ //count active uts
 		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
 		$ux = $this->User->find('all', array('order' => 'created DESC'));
 		$u = array();
 		for($i=0; $i<count($ux); $i++){
@@ -2341,7 +2294,6 @@ Joschka Zimdars';
 	public function cleanuts(){
 		$this->loadModel('User');
 		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
 		$this->loadModel('Answer');
 		
 		$dbToken = $this->Answer->findById(1);
@@ -2356,14 +2308,6 @@ Joschka Zimdars';
 		$all = $this->User->find('all', array('order' => 'id ASC'));
 		for($i=$start; $i<$end; $i++){
 			$uts = $this->UserTsumego->find('first', array('conditions' => array('user_id' => $all[$i]['User']['id'])));
-			$outs = $this->OldUserTsumego->find('first', array('conditions' => array('user_id' => $all[$i]['User']['id'])));
-			if(count($uts)!=0 && count($outs)==0) $all[$i]['User']['x'] = 1;
-			else if(count($uts)==0 && count($outs)!=0) $all[$i]['User']['x'] = 2;
-			else if(count($uts)==0 && count($outs)==0) $all[$i]['User']['x'] = 3;
-			else if(count($uts)!=0 && count($outs)!=0) $all[$i]['User']['x'] = 4;
-			
-			if($all[$i]['User']['x'] == 4) $this->addPlayer($all[$i]['User']['id']);
-			
 			array_push($u, $all[$i]);
 		}
 		
@@ -2373,7 +2317,6 @@ Joschka Zimdars';
 	public function cleanuts2(){
 		$this->loadModel('User');
 		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
 		$this->loadModel('Answer');
 		
 		$dbToken = $this->Answer->findById(1);
@@ -2443,7 +2386,6 @@ Joschka Zimdars';
 	
 	public function playerdb6(){ //update solved
 		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
 		$this->loadModel('Answer');
 		
 		$dbToken = $this->Answer->findById(1);
@@ -2466,19 +2408,11 @@ Joschka Zimdars';
 					array('status' => 'C')
 				)
 			)));
-			$out = $this->OldUserTsumego->find('all', array('conditions' => array(
-				'user_id' => $ux[$i]['User']['id'],
-				'OR' => array(
-					array('status' => 'S'),
-					array('status' => 'W'),
-					array('status' => 'C')
-				)
-			)));
 			$c = array();
 			$c['id'] = $ux[$i]['User']['id'];
 			$c['name'] = $ux[$i]['User']['name'];
 			$c['old'] = $ux[$i]['User']['solved'];
-			$u['User']['solved'] = count($ut)+count($out);
+			$u['User']['solved'] = count($ut);
 			$c['new'] = $ux[$i]['User']['solved'];
 			$this->User->save($u);
 			
@@ -2550,24 +2484,16 @@ Joschka Zimdars';
 	private function countsingle($id){
 		$this->loadModel('Purge');
 		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
 		$this->loadModel('UserRecord');
 		$u = $this->User->findById($id);
 		$ut = $this->UserTsumego->find('all', array('conditions' => array('user_id' => $id)));
-		$out = $this->OldUserTsumego->find('all', array('conditions' => array('user_id' => $id)));
 		$correctCounter1 = 0;
 		for($j=0; $j<count($ut); $j++){
 			if($ut[$j]['UserTsumego']['status']=='S' || $ut[$j]['UserTsumego']['status']=='W' || $ut[$j]['UserTsumego']['status']=='C'){
 				$correctCounter1++;
 			}	
 		}
-		$correctCounter2 = 0;
-		for($j=0; $j<count($out); $j++){
-			if($out[$j]['OldUserTsumego']['status']=='S' || $out[$j]['OldUserTsumego']['status']=='W' || $out[$j]['OldUserTsumego']['status']=='C'){
-				$correctCounter2++;
-			}	
-		}
-		$sum = $correctCounter1 + $correctCounter2;
+		$sum = $correctCounter1;
 		$u['User']['solved'] = $sum;
 		//$u['User']['elo'] = 100;
 		$u['User']['readingTrial'] = 30;
@@ -2583,7 +2509,6 @@ Joschka Zimdars';
 	
 	public function archivesingle($id){
 		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
 		$this->loadModel('UserRecord');
 		$this->loadModel('Purge');
 		$ux = $this->User->findById($id);
@@ -2602,7 +2527,6 @@ Joschka Zimdars';
 				$c = count($this->UserTsumego->find('all', array('conditions' => array('user_id' => $ux['User']['id']))));
 				if($c==0) $c = '';
 				$p['Purge']['duplicates'] = '-'.$c;
-				$this->removePlayer($ux['User']['id']);
 			}else{
 				$ux['User']['d2'] = 'ok';
 				$p['Purge']['duplicates'] = '+';
@@ -2616,7 +2540,6 @@ Joschka Zimdars';
 	public function purgelist(){
 		$this->loadModel('Purge');
 		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
 		$this->loadModel('UserRecord');
 		$this->loadModel('PurgeList');
 		
@@ -2642,7 +2565,6 @@ Joschka Zimdars';
 	public function countlist(){
 		$this->loadModel('Purge');
 		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
 		$this->loadModel('UserRecord');
 		$this->loadModel('PurgeList');
 		
@@ -2668,7 +2590,6 @@ Joschka Zimdars';
 	public function archivelist(){
 		$this->loadModel('Purge');
 		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
 		$this->loadModel('UserRecord');
 		$this->loadModel('PurgeList');
 		
@@ -2720,7 +2641,6 @@ Joschka Zimdars';
 	public function likesview(){
 		$this->loadModel('Purge');
 		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
 		$this->loadModel('UserRecord');
 		$this->loadModel('Set');
 		$this->loadModel('Answer');
@@ -2962,7 +2882,6 @@ Joschka Zimdars';
 	public function purge(){
 		$this->loadModel('Purge');
 		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
 		$this->loadModel('UserRecord');
 		$this->loadModel('Set');
 		$this->loadModel('Answer');

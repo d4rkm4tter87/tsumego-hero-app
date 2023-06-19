@@ -612,11 +612,11 @@
 		<p class="title4">Recent Donations and Upgrades</p>
 		<div class="new1">
 			<table class="newx">
-		<tr><td width="50%"><h1>yonur</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>Kirasan</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>Salata</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>Edward Feustel</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td width="50%"><h1>Kyriaas</h1></td><td><h1>50,00 €</h1></td></tr>
 		<tr><td><h1>Scotty Reed</h1></td><td><h1>2,17 € <i>subscription</i></h1></td></tr>
+		<tr><td><h1>Jerome Hubert</h1></td><td><h1>60,00 €</h1></td></tr>
+		<tr><td><h1>yonur</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>Kirasan</h1></td><td><h1>10,00 €</h1></td></tr>
 		
 		</table>	
 		<br>

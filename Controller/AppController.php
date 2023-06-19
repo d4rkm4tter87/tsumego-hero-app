@@ -460,40 +460,6 @@ class AppController extends Controller{
 		return $newBest[$hid][0]['tid'];
 	}
 	
-	public function removePlayer($id=null){
-		$this->loadModel('User');
-		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
-		$u = $this->User->findById($id);
-		$u['User']['dbstorage'] = 2;
-		$this->User->save($u);
-		
-		$uts = $this->UserTsumego->find('all', array('conditions' => array('user_id' => $id)));
-		$outs = array();
-		for($i=0; $i<count($uts); $i++){
-			$outs[$i]['OldUserTsumego'] = $uts[$i]['UserTsumego'];
-			$this->OldUserTsumego->save($outs[$i]);
-			$this->UserTsumego->delete($uts[$i]['UserTsumego']['id']);
-		}
-	}
-	
-	public function addPlayer($id=null){
-		$this->loadModel('User');
-		$this->loadModel('UserTsumego');
-		$this->loadModel('OldUserTsumego');
-		$u = $this->User->findById($id);
-		$u['User']['dbstorage'] = 1;
-		$this->User->save($u);
-		
-		$outs = $this->OldUserTsumego->find('all', array('conditions' => array('user_id' => $id)));
-		$uts = array();
-		for($i=0; $i<count($outs); $i++){
-			$uts[$i]['UserTsumego'] = $outs[$i]['OldUserTsumego'];
-			$this->UserTsumego->save($uts[$i]);
-			$this->OldUserTsumego->delete($outs[$i]['OldUserTsumego']['id']);
-		}
-	}
-	
 	public function ratingMatch($elo){
 		if($elo>=3000) $td = 10;//10d
 		elseif($elo>=2900) $td = 10;//9d

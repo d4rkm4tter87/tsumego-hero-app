@@ -8,7 +8,6 @@ class SitesController extends AppController{
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('Set');
 		$this->LoadModel('UserTsumego');
-		$this->LoadModel('OldUserTsumego');
 		$this->LoadModel('User');
 		$this->LoadModel('DayRecord');
 		$this->LoadModel('UserBoard');
@@ -90,9 +89,6 @@ class SitesController extends AppController{
 				'user_id' => $_SESSION['loggedInUser']['User']['id'],
 				'tsumego_id' => $idArray
 			)));
-			
-			$outs = $this->OldUserTsumego->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
-			if(count($outs)!=0) $this->addPlayer($_SESSION['loggedInUser']['User']['id']);
 			
 			for($i=0; $i<count($uts); $i++){
 				for($j=0; $j<count($newTS); $j++){
