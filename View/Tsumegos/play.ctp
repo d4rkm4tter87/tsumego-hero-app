@@ -22,8 +22,7 @@
 <script src="/besogo/js/controlPanel.js"></script>
 <script src="/besogo/js/commentPanel.js"></script>
 <script src="/besogo/js/treePanel.js"></script>
-<?php } ?>
-<?php
+<?php } 
 	$choice = array();
 	for($i=1;$i<=count($enabledBoards);$i++){
 		if($enabledBoards[$i]=='checked') array_push($choice, $boardPositions[$i]);
@@ -31,7 +30,6 @@
 	if($corner=='full board') $boardSize = 'medium';
 	else $boardSize = 'large';
 	shuffle($choice);
-	
 	
 	$authorx = $t['Tsumego']['author'];
 	if($authorx=='Joschka Zimdars') $authorx = 'd4rkm4tter';
@@ -2423,7 +2421,6 @@
 														if(document.getElementById("playTitleA")) document.getElementById("playTitleA").href = "/tsumegos/play/'.$lv.'?refresh=3";
 														if(document.getElementById("refreshLinkToHighscore")) document.getElementById("refreshLinkToHighscore").href = "/tsumegos/play/'.$lv.'?refresh=4";
 														if(document.getElementById("refreshLinkToDiscuss")) document.getElementById("refreshLinkToDiscuss").href = "/tsumegos/play/'.$lv.'?refresh=5";
-														if(document.getElementById("refreshLinkToSandbox")) document.getElementById("refreshLinkToSandbox").href = "/tsumegos/play/'.$lv.'?refresh=6";
 														if(mode==1) updateHealth();
 														if(mode==1 || mode==2) secondsy = seconds;
 														if(mode==3) secondsy = seconds*10*'.$t['Tsumego']['id'].';
@@ -2512,7 +2509,6 @@
 													if(document.getElementById("playTitleA")) document.getElementById("playTitleA").href = "/tsumegos/play/'.$lv.'?refresh=3";
 													document.getElementById("refreshLinkToHighscore").href = "/tsumegos/play/'.$lv.'?refresh=4";
 													document.getElementById("refreshLinkToDiscuss").href = "/tsumegos/play/'.$lv.'?refresh=5";
-													document.getElementById("refreshLinkToSandbox").href = "/tsumegos/play/'.$lv.'?refresh=6";
 													xpReward = ('.$t['Tsumego']['difficulty'].'*x3) + '.$user['User']['xp'].';
 													userNextlvl = '.$user['User']['nextlvl'].';
 													ulvl = '.$user['User']['level'].';
@@ -2581,7 +2577,6 @@
 													if(document.getElementById("playTitleA")) document.getElementById("playTitleA").href = "/tsumegos/play/'.$lv.'?refresh=3";
 													document.getElementById("refreshLinkToHighscore").href = "/tsumegos/play/'.$lv.'?refresh=4";
 													document.getElementById("refreshLinkToDiscuss").href = "/tsumegos/play/'.$lv.'?refresh=5";
-													document.getElementById("refreshLinkToSandbox").href = "/tsumegos/play/'.$lv.'?refresh=6";
 													xpReward = ('.$t['Tsumego']['difficulty'].'*x3) + '.$user['User']['xp'].';
 													userNextlvl = '.$user['User']['nextlvl'].';
 													ulvl = '.$user['User']['level'].';
@@ -2626,7 +2621,6 @@
 												document.getElementById("refreshLinkToSets").href = "/tsumegos/play/'.$lv.'?refresh=2";
 												document.getElementById("refreshLinkToHighscore").href = "/tsumegos/play/'.$lv.'?refresh=4";
 												document.getElementById("refreshLinkToDiscuss").href = "/tsumegos/play/'.$lv.'?refresh=5";
-												document.getElementById("refreshLinkToSandbox").href = "/tsumegos/play/'.$lv.'?refresh=6";
 												hoverLocked = false;
 												if(mode==1) updateHealth();
 											}
@@ -2664,7 +2658,6 @@
 											document.getElementById("refreshLinkToSets").href = "/tsumegos/play/'.$lv.'?refresh=2";
 											document.getElementById("refreshLinkToHighscore").href = "/tsumegos/play/'.$lv.'?refresh=4";
 											document.getElementById("refreshLinkToDiscuss").href = "/tsumegos/play/'.$lv.'?refresh=5";
-											document.getElementById("refreshLinkToSandbox").href = "/tsumegos/play/'.$lv.'?refresh=6";
 											hoverLocked = false;
 											tryAgainTomorrow = true;
 											locked = true;
