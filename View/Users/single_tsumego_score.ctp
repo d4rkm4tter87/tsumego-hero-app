@@ -1,7 +1,7 @@
 <br>
 <font size="5">
 <table>
-<tr><td>Tsumego:</td><td><?php echo '<a href="/tsumegos/play/'.$ur[0]['UserRecord']['tsumego_id'].'" target="_blank">'.$ur[0]['UserRecord']['tsumego_id'].'</a>' ?></td></tr>
+<tr><td>Tsumego:</td><td><?php echo '<a href="/tsumegos/play/'.$ur[0]['TsumegoAttempt']['tsumego_id'].'" target="_blank">'.$ur[0]['TsumegoAttempt']['tsumego_id'].'</a>' ?></td></tr>
 <tr><td>Difficulty:</td><td><?php echo $t['Tsumego']['difficulty'] ?></td></tr>
 <tr><td>Entries:</td><td><?php echo count($ur); ?></td></tr>
 <tr><td>Rate:</td><td><?php echo $ratio['s'].'/'.$ratio['count'] ?></td></tr>

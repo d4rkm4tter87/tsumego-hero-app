@@ -44,46 +44,46 @@ CSV Files:<br>
 	<?php
 	
 		for($i=0; $i<count($trs); $i++){
-			if($trs[$i]['TsumegoRecord']['status']=='F'){
-				$trs[$i]['TsumegoRecord']['user_deviation'] = '-'.$trs[$i]['TsumegoRecord']['user_deviation'];
-				$trs[$i]['TsumegoRecord']['tsumego_deviation'] = '+'.$trs[$i]['TsumegoRecord']['tsumego_deviation'];
-			}elseif($trs[$i]['TsumegoRecord']['status']=='S'){
-				$trs[$i]['TsumegoRecord']['user_deviation'] = '+'.$trs[$i]['TsumegoRecord']['user_deviation'];
-				$trs[$i]['TsumegoRecord']['tsumego_deviation'] = '-'.$trs[$i]['TsumegoRecord']['tsumego_deviation'];
+			if($trs[$i]['TsumegoRatingAttempt']['status']=='F'){
+				$trs[$i]['TsumegoRatingAttempt']['user_deviation'] = '-'.$trs[$i]['TsumegoRatingAttempt']['user_deviation'];
+				$trs[$i]['TsumegoRatingAttempt']['tsumego_deviation'] = '+'.$trs[$i]['TsumegoRatingAttempt']['tsumego_deviation'];
+			}elseif($trs[$i]['TsumegoRatingAttempt']['status']=='S'){
+				$trs[$i]['TsumegoRatingAttempt']['user_deviation'] = '+'.$trs[$i]['TsumegoRatingAttempt']['user_deviation'];
+				$trs[$i]['TsumegoRatingAttempt']['tsumego_deviation'] = '-'.$trs[$i]['TsumegoRatingAttempt']['tsumego_deviation'];
 			}
-			if($trs[$i]['TsumegoRecord']['user_deviation']==null) $trs[$i]['TsumegoRecord']['user_deviation'] = 0;
-			if($trs[$i]['TsumegoRecord']['tsumego_deviation']==null) $trs[$i]['TsumegoRecord']['tsumego_deviation'] = 0;
+			if($trs[$i]['TsumegoRatingAttempt']['user_deviation']==null) $trs[$i]['TsumegoRatingAttempt']['user_deviation'] = 0;
+			if($trs[$i]['TsumegoRatingAttempt']['tsumego_deviation']==null) $trs[$i]['TsumegoRatingAttempt']['tsumego_deviation'] = 0;
 			
 			echo '<tr>';
 				echo '<td>';
 					echo '<div align="center">'.($i+1).'</div>';
 				echo '</td>';
 				echo '<td>';
-					echo '<div align="center"><a href="/tsumego_records/index/'.$trs[$i]['TsumegoRecord']['user_id'].'">'.$trs[$i]['TsumegoRecord']['user_id'].'</a></div>';
+					echo '<div align="center"><a href="/tsumego_records/index/'.$trs[$i]['TsumegoRatingAttempt']['user_id'].'">'.$trs[$i]['TsumegoRatingAttempt']['user_id'].'</a></div>';
 				echo '</td>';
 				echo '<td>';
-					echo '<div align="center">'.$trs[$i]['TsumegoRecord']['user_elo'].'</div>';
+					echo '<div align="center">'.$trs[$i]['TsumegoRatingAttempt']['user_elo'].'</div>';
 				echo '</td>';
 				echo '<td>';
-					echo '<div align="center">'.$trs[$i]['TsumegoRecord']['user_deviation'].'</div>';
+					echo '<div align="center">'.$trs[$i]['TsumegoRatingAttempt']['user_deviation'].'</div>';
 				echo '</td>';
 				echo '<td>';
-					echo '<div align="center">'.$trs[$i]['TsumegoRecord']['tsumego_id'].'</div>';
+					echo '<div align="center">'.$trs[$i]['TsumegoRatingAttempt']['tsumego_id'].'</div>';
 				echo '</td>';
 				echo '<td>';
-					echo '<div align="center">'.$trs[$i]['TsumegoRecord']['tsumego_elo'].'</div>';
+					echo '<div align="center">'.$trs[$i]['TsumegoRatingAttempt']['tsumego_elo'].'</div>';
 				echo '</td>';
 				echo '<td>';
-					echo '<div align="center">'.$trs[$i]['TsumegoRecord']['tsumego_deviation'].'</div>';
+					echo '<div align="center">'.$trs[$i]['TsumegoRatingAttempt']['tsumego_deviation'].'</div>';
 				echo '</td>';
 				echo '<td>';
-					echo '<div align="center">'.$trs[$i]['TsumegoRecord']['status'].'</div>';
+					echo '<div align="center">'.$trs[$i]['TsumegoRatingAttempt']['status'].'</div>';
 				echo '</td>';
 				echo '<td>';
-					echo '<div align="center">'.$trs[$i]['TsumegoRecord']['seconds'].'</div>';
+					echo '<div align="center">'.$trs[$i]['TsumegoRatingAttempt']['seconds'].'</div>';
 				echo '</td>';
 				echo '<td>';
-					echo '<div align="center">'.$trs[$i]['TsumegoRecord']['created'].'</div>';
+					echo '<div align="center">'.$trs[$i]['TsumegoRatingAttempt']['created'].'</div>';
 				echo '</td>';
 			echo '</tr>';
 		}
