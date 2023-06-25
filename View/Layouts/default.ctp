@@ -285,13 +285,13 @@
 			<?php  
 				$currentPage = '';
 				if($_SESSION['page'] == 'user') $currentPage = 'style="color:#74d14c;" ';
-				if(!isset($loggedInUser)) echo '<li><a class="menuLi" id="signInMenu" '.$currentPage.'href="/users/login">Sign In</a></li>';
+				if(!isset($_SESSION['loggedInUser']['User']['id'])) echo '<li><a class="menuLi" id="signInMenu" '.$currentPage.'href="/users/login">Sign In</a></li>';
 			?>
 		</div>
 		
 	</div>
 	<?php
-		if(isset($_SESSION['loggedInUser'])){
+		if(isset($_SESSION['loggedInUser']) && isset($_SESSION['loggedInUser']['User']['id'])){
 			//if($_SESSION['loggedInUser']['User']['id']!=72){
 			//echo '<pre>';print_r($_SESSION['loggedInUser']);echo '</pre>';
 			echo '
