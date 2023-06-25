@@ -54,7 +54,7 @@ besogo.makeBoardDisplay = function(container, editor)
 
     svg.appendChild(stoneGroup); // Add placeholder group for stone layer
     svg.appendChild(markupGroup); // Add placeholder group for markup layer
-    svg.appendChild(nextMoveGroup);
+   svg.appendChild(nextMoveGroup);
 
     if (!TOUCH_FLAG) {
         hoverGroup = besogo.svgEl("g");
@@ -100,7 +100,7 @@ besogo.makeBoardDisplay = function(container, editor)
   function redrawAll(current) {
       redrawStones(current);
       redrawMarkup(current);
-      redrawNextMoves(current);
+      if(reviewEnabled2) redrawNextMoves(current);
       redrawHover(current);
   }
 
@@ -282,6 +282,11 @@ besogo.makeBoardDisplay = function(container, editor)
       editor.click(i, j, event.ctrlKey, event.shiftKey);
       if(!TOUCH_FLAG)
         (handleOver(i, j))(); // Ensures that any updated tool is visible
+		if(!reviewEnabled2){
+			setTimeout(function(){
+				if(isMutable) editor.nextNode(1);
+			}, 360);
+		}
     };
   }
   function handleOver(i, j) // Returns function for mouse over

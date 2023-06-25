@@ -2517,7 +2517,56 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	}
 	
 	.besogo-board{
+		width:50%;
 		margin: 0 315px;
+	}
+	
+	.besogo-tool2{
+		display: flex;
+		justify-content: center;
+		margin: 15px;
+	}
+	
+	.besogo-tool2 input[type="button"]{
+		font-family: Times New Roman,verdana,helvetica,arial,sans-serif;
+		font-size: 16px;
+		font-style: normal;
+		font-variant: normal;
+		font-weight: 800;
+		text-decoration: none;
+		background-color: #5b5d60!important;
+		color: #fff;
+		padding: 10px 13px;
+		margin: 5px;
+		border-top: 1px solid #CCCCCC;
+		border-right: 1px solid #333333;
+		border-bottom: 1px solid #333333;
+		border-left: 1px solid #CCCCCC;
+		border-color: #5b5d60!important;
+		text-transform: uppercase;
+		-moz-border-radius-bottomleft: 9px;
+		-moz-border-radius-bottomright: 9px;
+		border-radius-bottomleft: 9px;
+		border-radius-bottomright: 9px;
+		-moz-border-radius-bottomright: 9px;
+		-moz-border-radius-bottomleft: 9px;
+		border-bottom-right-radius: 9px;
+		border-bottom-left-radius: 9px;
+		-moz-border-radius-topright: 9px;
+		-moz-border-radius-topleft: 9px;
+		border-top-right-radius: 9px;
+		border-top-left-radius: 9px;
+		border-color: #8f9092!important;
+		cursor:pointer;
+	}
+	.besogo-tool2 input:nth-last-child(1){
+		background-color: #8f9092!important;
+		cursor:context-menu;
+		border-color: #8f9092!important;
+	}
+	#besogo-tool2-rButton{
+		background-color: #5b5d60!important;
+		cursor:pointer;
 	}
 	
 	.modeSwitcher {
@@ -2893,7 +2942,15 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		width:100%;
 		display:none;
 	}
-	
+	#targetLockOverlay{
+		position: absolute;
+		width: 0;
+		height: 0;
+		left: 320px;
+		top: 151px;
+		opacity: 0;
+		z-index: -1;
+	}
 	
 	
 	

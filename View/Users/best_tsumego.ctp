@@ -82,9 +82,8 @@
 				for($k=0; $k<count($t); $k++){
 					if($x['tid']==$t[$k]['Tsumego']['id']) $x['sid'] = $t[$k]['Tsumego']['set_id'];
 				}
-				$x['status'] = $out2[$i]['TsumegoAttempt']['status'];
+				$x['status'] = $out2[$i]['TsumegoAttempt']['solved'];
 				$x['seconds'] = $out2[$i]['TsumegoAttempt']['seconds'];
-				
 				array_push($newBest[$j], $x);
 			}
 		}

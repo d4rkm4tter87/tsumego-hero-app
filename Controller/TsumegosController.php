@@ -132,90 +132,90 @@ class TsumegosController extends AppController{
 			$mode = 1;
 		}
 		
-		
-		if(strlen($_SESSION['loggedInUser']['User']['activeRank'])>=15){
-			if(strlen($_SESSION['loggedInUser']['User']['activeRank'])==15){
-				$stopParameter = 10;
-				$stopParameter2 = 0;
-			}elseif(strlen($_SESSION['loggedInUser']['User']['activeRank'])==16){
-				$stopParameter = 10;
-				$stopParameter2 = 1;
-			}elseif(strlen($_SESSION['loggedInUser']['User']['activeRank'])==17){
-				$stopParameter = 10;
-				$stopParameter2 = 2;
-			}
-			$mode = 3;
-			$_SESSION['loggedInUser']['User']['mode'] = 3;
-			$ranks = $this->Rank->find('all', array('conditions' =>  array('session' => $_SESSION['loggedInUser']['User']['activeRank'])));
-			if(count($ranks)==0){
-				$r = $this->params['url']['rank'];
-				if($r=='5d'){ $r1=0.1; $r2=22; }
-				elseif($r=='4d'){ $r1=22; $r2=26.5; }
-				elseif($r=='3d'){ $r1=26.5; $r2=30; }
-				elseif($r=='2d'){ $r1=30; $r2=34; }
-				elseif($r=='1d'){ $r1=34; $r2=38; }
-				elseif($r=='1k'){ $r1=38; $r2=42; }
-				elseif($r=='2k'){ $r1=42; $r2=46; }
-				elseif($r=='3k'){ $r1=46; $r2=50; }
-				elseif($r=='4k'){ $r1=50; $r2=54.5; }
-				elseif($r=='5k'){ $r1=54.5; $r2=58.5; }
-				elseif($r=='6k'){ $r1=58.5; $r2=63; }
-				elseif($r=='7k'){ $r1=63; $r2=67; }
-				elseif($r=='8k'){ $r1=67; $r2=70.8; }
-				elseif($r=='9k'){ $r1=70.8; $r2=74.8; }
-				elseif($r=='10k'){ $r1=74.8; $r2=79; }
-				elseif($r=='11k'){ $r1=79; $r2=83.5; }
-				elseif($r=='12k'){ $r1=83.5; $r2=88; }
-				elseif($r=='13k'){ $r1=88; $r2=92; }
-				elseif($r=='14k'){ $r1=92; $r2=96; }
-				elseif($r=='15k'){ $r1=96; $r2=100; }
-				else{ $r1=96; $r2=100; }
-				
-				$rs = $this->RankSetting->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
-				$allowedRs = array();
-				for($i=0; $i<count($rs); $i++){
-					if($rs[$i]['RankSetting']['status']==1) array_push($allowedRs, $rs[$i]['RankSetting']['set_id']);
+		if(isset($_SESSION['loggedInUser'])){
+			if(strlen($_SESSION['loggedInUser']['User']['activeRank'])>=15){
+				if(strlen($_SESSION['loggedInUser']['User']['activeRank'])==15){
+					$stopParameter = 10;
+					$stopParameter2 = 0;
+				}elseif(strlen($_SESSION['loggedInUser']['User']['activeRank'])==16){
+					$stopParameter = 10;
+					$stopParameter2 = 1;
+				}elseif(strlen($_SESSION['loggedInUser']['User']['activeRank'])==17){
+					$stopParameter = 10;
+					$stopParameter2 = 2;
 				}
-				
-				$rankTs = $this->Tsumego->find('all', array('conditions' =>  array(
-					'set_id' => $allowedRs,
-					'userWin >' => $r1,
-					'userWin <=' => $r2
-				)));
-				
-				shuffle($rankTs);
-				for($i=0; $i<$stopParameter; $i++){
-					$rm = array();
-					$rm['Rank']['session'] = $_SESSION['loggedInUser']['User']['activeRank'];
-					$rm['Rank']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-					$rm['Rank']['tsumego_id'] = $rankTs[$i]['Tsumego']['id'];;
-					$rm['Rank']['rank'] = $r;
-					$rm['Rank']['num'] = $i+1;
-					$rm['Rank']['currentNum'] = 1;
-					$this->Rank->create();
-					$this->Rank->save($rm);
+				$mode = 3;
+				$_SESSION['loggedInUser']['User']['mode'] = 3;
+				$ranks = $this->Rank->find('all', array('conditions' =>  array('session' => $_SESSION['loggedInUser']['User']['activeRank'])));
+				if(count($ranks)==0){
+					$r = $this->params['url']['rank'];
+					if($r=='5d'){ $r1=0.1; $r2=22; }
+					elseif($r=='4d'){ $r1=22; $r2=26.5; }
+					elseif($r=='3d'){ $r1=26.5; $r2=30; }
+					elseif($r=='2d'){ $r1=30; $r2=34; }
+					elseif($r=='1d'){ $r1=34; $r2=38; }
+					elseif($r=='1k'){ $r1=38; $r2=42; }
+					elseif($r=='2k'){ $r1=42; $r2=46; }
+					elseif($r=='3k'){ $r1=46; $r2=50; }
+					elseif($r=='4k'){ $r1=50; $r2=54.5; }
+					elseif($r=='5k'){ $r1=54.5; $r2=58.5; }
+					elseif($r=='6k'){ $r1=58.5; $r2=63; }
+					elseif($r=='7k'){ $r1=63; $r2=67; }
+					elseif($r=='8k'){ $r1=67; $r2=70.8; }
+					elseif($r=='9k'){ $r1=70.8; $r2=74.8; }
+					elseif($r=='10k'){ $r1=74.8; $r2=79; }
+					elseif($r=='11k'){ $r1=79; $r2=83.5; }
+					elseif($r=='12k'){ $r1=83.5; $r2=88; }
+					elseif($r=='13k'){ $r1=88; $r2=92; }
+					elseif($r=='14k'){ $r1=92; $r2=96; }
+					elseif($r=='15k'){ $r1=96; $r2=100; }
+					else{ $r1=96; $r2=100; }
+					
+					$rs = $this->RankSetting->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+					$allowedRs = array();
+					for($i=0; $i<count($rs); $i++){
+						if($rs[$i]['RankSetting']['status']==1) array_push($allowedRs, $rs[$i]['RankSetting']['set_id']);
+					}
+					
+					$rankTs = $this->Tsumego->find('all', array('conditions' =>  array(
+						'set_id' => $allowedRs,
+						'userWin >' => $r1,
+						'userWin <=' => $r2
+					)));
+					
+					shuffle($rankTs);
+					for($i=0; $i<$stopParameter; $i++){
+						$rm = array();
+						$rm['Rank']['session'] = $_SESSION['loggedInUser']['User']['activeRank'];
+						$rm['Rank']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+						$rm['Rank']['tsumego_id'] = $rankTs[$i]['Tsumego']['id'];;
+						$rm['Rank']['rank'] = $r;
+						$rm['Rank']['num'] = $i+1;
+						$rm['Rank']['currentNum'] = 1;
+						$this->Rank->create();
+						$this->Rank->save($rm);
+					}
+					$currentRankNum = 1;
+					$firstRanks = 1;
+				}else{
+					for($i=0; $i<count($ranks); $i++){
+						$ranks[$i]['Rank']['currentNum']++;
+						$this->Rank->save($ranks[$i]);
+					}
+					$currentNum = $ranks[0]['Rank']['currentNum'];
+					$tsid = null;
+					for($i=0; $i<count($ranks); $i++){
+						if($ranks[$i]['Rank']['num'] == $currentNum) $tsid = $ranks[$i]['Rank']['tsumego_id'];
+					}
+					$currentRank = $this->Tsumego->findById($tsid);
+					$firstRanks = 2;
+					
+					if($currentNum==$stopParameter+1) $r10=1;
+					
+					$currentRankNum = $currentNum;
 				}
-				$currentRankNum = 1;
-				$firstRanks = 1;
-			}else{
-				for($i=0; $i<count($ranks); $i++){
-					$ranks[$i]['Rank']['currentNum']++;
-					$this->Rank->save($ranks[$i]);
-				}
-				$currentNum = $ranks[0]['Rank']['currentNum'];
-				$tsid = null;
-				for($i=0; $i<count($ranks); $i++){
-					if($ranks[$i]['Rank']['num'] == $currentNum) $tsid = $ranks[$i]['Rank']['tsumego_id'];
-				}
-				$currentRank = $this->Tsumego->findById($tsid);
-				$firstRanks = 2;
-				
-				if($currentNum==$stopParameter+1) $r10=1;
-				
-				$currentRankNum = $currentNum;
 			}
 		}
-		
 		if(isset($this->params['url']['refresh'])) $refresh = $this->params['url']['refresh'];
 		if(!is_numeric($id)) $id = 15352;
 		if(!empty($rankTs)){
@@ -732,13 +732,15 @@ class TsumegosController extends AppController{
 					if(isset($_SESSION['loggedInUser']['User']['id'])){
 						$this->TsumegoAttempt->create();
 						$ur1 = array();
+
 						$ur1['TsumegoAttempt']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
 						$ur1['TsumegoAttempt']['tsumego_id'] = $_COOKIE['preId'];
 						$ur1['TsumegoAttempt']['gain'] = 0;
 						$ur1['TsumegoAttempt']['seconds'] = $_COOKIE['seconds'];
-						$ur1['TsumegoAttempt']['status'] = 'F';
+						$ur1['TsumegoAttempt']['solved'] = '0';
 						$ur1['TsumegoAttempt']['misplays'] = $_COOKIE['misplay'];
 						$this->TsumegoAttempt->save($ur1);
+
 					}
 				}
 				if($mode==1 || $mode==3){
@@ -907,11 +909,12 @@ class TsumegosController extends AppController{
 							if(isset($_SESSION['loggedInUser']['User']['id'])){
 								$this->TsumegoAttempt->create();
 								$ur = array();
+								
 								$ur['TsumegoAttempt']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
 								$ur['TsumegoAttempt']['tsumego_id'] = $_COOKIE['preId'];
 								$ur['TsumegoAttempt']['gain'] = $_COOKIE['score'];
 								$ur['TsumegoAttempt']['seconds'] = $_COOKIE['seconds'];
-								$ur['TsumegoAttempt']['status'] = 'S';
+								$ur['TsumegoAttempt']['solved'] = '1';
 								$this->TsumegoAttempt->save($ur);
 							}
 						}
@@ -1011,7 +1014,7 @@ class TsumegosController extends AppController{
 				$ur['TsumegoAttempt']['tsumego_id'] = $_COOKIE['preId'];
 				$ur['TsumegoAttempt']['gain'] = 0;
 				$ur['TsumegoAttempt']['seconds'] = $_COOKIE['seconds'];
-				$ur['TsumegoAttempt']['status'] = 'S';
+				$ur['TsumegoAttempt']['solved'] = '1';
 				$this->TsumegoAttempt->save($ur);
 			}
 		}
@@ -1469,6 +1472,7 @@ class TsumegosController extends AppController{
 			if(!isset($_SESSION['loggedInUser']['User']['id']) && isset($_SESSION['loggedInUser']['User']['premium'])){
 				unset($_SESSION['loggedInUser']);
 			}
+			if($_SESSION['loggedInUser']['User']['isAdmin']<1) $ui = 1;
 		}
 		
 		$admins = $this->User->find('all', array('conditions' => array('isAdmin' => 1)));
@@ -1476,7 +1480,6 @@ class TsumegosController extends AppController{
 		if($isSandbox) $t['Tsumego']['userWin'] = 0;
 		
 		$crs = 0;
-		//echo '<pre>'; print_r($t['Tsumego']['status']); echo '</pre>'; 
 		if($mode==3){
 			$t['Tsumego']['status'] = 'setV2';
 			for($i=0;$i<count($ranks);$i++){
@@ -1496,6 +1499,8 @@ class TsumegosController extends AppController{
 		
 		//echo '<pre>'; print_r(($crs/$stopParameter)*100); echo '</pre>';
 		//echo '<pre>'; print_r($masterArrayBW[0]); echo '</pre>';
+		
+		
 		
 		$this->set('raName', $raName);
 		$this->set('crs', $crs);

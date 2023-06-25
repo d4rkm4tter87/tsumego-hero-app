@@ -82,7 +82,7 @@
 						echo $ur[$i]['TsumegoAttempt']['tsumego_xp'];
 					echo '</td>';
 					echo '<td>';
-						echo $ur[$i]['TsumegoAttempt']['status'];
+						echo $ur[$i]['TsumegoAttempt']['solved'];
 					echo '</td>';
 					echo '<td style="text-align:right">';
 						if(strlen($ur[$i]['TsumegoAttempt']['set_name'])>=30) $ur[$i]['TsumegoAttempt']['set_name'] = substr($ur[$i]['TsumegoAttempt']['set_name'], 0, 30);

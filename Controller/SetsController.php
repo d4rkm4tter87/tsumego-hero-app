@@ -939,19 +939,21 @@ class SetsController extends AppController{
 				for($j=0; $j<count($ur); $j++){
 					if($ts[$i]['Tsumego']['id'] == $ur[$j]['TsumegoAttempt']['tsumego_id']){
 						array_push($urTemp, $ur[$j]);
-						if($ur[$j]['TsumegoAttempt']['status']=='S' && !$secondsUsed){
+
+						if($ur[$j]['TsumegoAttempt']['solved']=='S' && !$secondsUsed || $ur[$j]['TsumegoAttempt']['solved']==1 && !$secondsUsed){
 							$ts[$i]['Tsumego']['seconds'] = $ur[$j]['TsumegoAttempt']['seconds'];
 							$secondsUsed = true;
 						}
-						if($ur[$j]['TsumegoAttempt']['status']=='F'){
+						if($ur[$j]['TsumegoAttempt']['solved']=='F' || $ur[$j]['TsumegoAttempt']['solved']==0){
 							$mis = $ur[$j]['TsumegoAttempt']['misplays'];
+
 							if($mis==0) $mis=1;
 							while($mis>0){
 								$urSum.='F';
 								$mis--;
 							}
 						}else{
-							$urSum.=$ur[$j]['TsumegoAttempt']['status'];
+							$urSum.=$ur[$j]['TsumegoAttempt']['solved'];
 						}
 					}
 				}

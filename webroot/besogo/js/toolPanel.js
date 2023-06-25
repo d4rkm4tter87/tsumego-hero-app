@@ -5,106 +5,159 @@ besogo.makeToolPanel = function(container, editor)
       svg, // Scratch for building SVG images
       labelText, // Text area for next label input
       selectors = {}; // Holds selection rects
+	var reviewMode = false;
+	console.log(container);
+  if(container.className!=='besogo-tool2'){  
+	  svg = makeButtonSVG('auto', 'Auto-play/navigate\n' +
+		  'crtl+click to force ko, suicide, overwrite\n' +
+		  'shift+click to jump to move'); // Auto-play/nav tool button
+	  svg.appendChild(makeYinYang(0, 0));
 
-  svg = makeButtonSVG('auto', 'Auto-play/navigate\n' +
-      'crtl+click to force ko, suicide, overwrite\n' +
-      'shift+click to jump to move'); // Auto-play/nav tool button
-  svg.appendChild(makeYinYang(0, 0));
+	  svg = makeButtonSVG('addB', 'Set black\nshift+click addWhite\nctrl+click to play'); // Add black button
+	  element = besogo.svgEl('g');
+	  element.appendChild(besogo.svgStone(-15, -15, -1, 15)); // Black stone
+	  element.appendChild(besogo.svgStone(15, -15, 1, 15)); // White stone
+	  element.appendChild(besogo.svgStone(-15, 15, 1, 15)); // White stone
+	  element.appendChild(besogo.svgStone(15, 15, -1, 15)); // Black stone
+	  svg.appendChild(element);
+	  
+	  svg = makeButtonSVG('circle', 'Circle'); // Circle markup button
+	  svg.appendChild(besogo.svgCircle(0, 0, 'black'));
+	  
+	  svg = makeButtonSVG('square', 'Square'); // Square markup button
+	  svg.appendChild(besogo.svgSquare(0, 0, 'black'));
+	  
+	  svg = makeButtonSVG('triangle', 'Triangle'); // Triangle markup button
+	  svg.appendChild(besogo.svgTriangle(0, 0, 'black'));
 
-  svg = makeButtonSVG('addB', 'Set black\nshift+click addWhite\nctrl+click to play'); // Add black button
-  element = besogo.svgEl('g');
-  element.appendChild(besogo.svgStone(-15, -15, -1, 15)); // Black stone
-  element.appendChild(besogo.svgStone(15, -15, 1, 15)); // White stone
-  element.appendChild(besogo.svgStone(-15, 15, 1, 15)); // White stone
-  element.appendChild(besogo.svgStone(15, 15, -1, 15)); // Black stone
-  svg.appendChild(element);
+	  svg = makeButtonSVG('cross', 'Cross'); // Cross markup button
+	  svg.appendChild(besogo.svgCross(0, 0, 'black'));
 
-  svg = makeButtonSVG('circle', 'Circle'); // Circle markup button
-  svg.appendChild(besogo.svgCircle(0, 0, 'black'));
+	  svg = makeButtonSVG('block', 'Block'); // Block markup button
+	  svg.appendChild(besogo.svgBlock(0, 0, 'black'));
 
-  svg = makeButtonSVG('square', 'Square'); // Square markup button
-  svg.appendChild(besogo.svgSquare(0, 0, 'black'));
+	  svg = makeButtonSVG('clrMark', 'Clear mark'); // Clear markup button
+	  element = besogo.svgEl('g');
+	  element.appendChild(besogo.svgTriangle(0, 0, besogo.GREY));
+	  element.appendChild(besogo.svgCross(0, 0, besogo.RED));
+	  svg.appendChild(element);
 
-  svg = makeButtonSVG('triangle', 'Triangle'); // Triangle markup button
-  svg.appendChild(besogo.svgTriangle(0, 0, 'black'));
+	  svg = makeButtonSVG('label', 'Label'); // Label markup button
+	  svg.appendChild(besogo.svgLabel(0, 0, 'black', 'A1'));
 
-  svg = makeButtonSVG('cross', 'Cross'); // Cross markup button
-  svg.appendChild(besogo.svgCross(0, 0, 'black'));
+	  labelText = document.createElement("input"); // Label entry text field
+	  labelText.type = "text";
+	  labelText.title = 'Next label';
+	  labelText.onblur = function() { editor.setLabel(labelText.value); };
+	  labelText.addEventListener('keydown', function(evt)
+	  {
+		evt = evt || window.event;
+		evt.stopPropagation(); // Stop keydown propagation when in focus
+	  });
+	  container.appendChild(labelText);
 
-  svg = makeButtonSVG('block', 'Block'); // Block markup button
-  svg.appendChild(besogo.svgBlock(0, 0, 'black'));
+	  makeButtonText('Pass', 'Pass move', function()
+	  {
+		var tool = editor.getTool();
+		if (tool !== 'navOnly' && tool !== 'auto')
+		  editor.setTool('auto'); // Ensures that a move tool is selected
+		editor.click(0, 0, false); // Clicking off the board signals a pass
+	  });
 
-  svg = makeButtonSVG('clrMark', 'Clear mark'); // Clear markup button
-  element = besogo.svgEl('g');
-  element.appendChild(besogo.svgTriangle(0, 0, besogo.GREY));
-  element.appendChild(besogo.svgCross(0, 0, besogo.RED));
-  svg.appendChild(element);
+	  makeButtonText('Raise', 'Raise variation', function() { editor.promote(); });
+	  makeButtonText('Lower', 'Lower variation', function() { editor.demote(); });
+	  makeButtonText('Cut', 'Remove branch', function() { editor.cutCurrent(); });
+	  makeButtonText('H Flip', 'Flip horizontally', function()
+	  {
+		let transformation = besogo.makeTransformation();
+		transformation.hFlip = true;
+		editor.applyTransformation(transformation);
+	  });
+	  makeButtonText('V Flip', 'Flip vertically', function()
+	  {
+		let transformation = besogo.makeTransformation();
+		transformation.vFlip = true;
+		editor.applyTransformation(transformation);
+	  });
 
-  svg = makeButtonSVG('label', 'Label'); // Label markup button
-  svg.appendChild(besogo.svgLabel(0, 0, 'black', 'A1'));
+	  makeButtonText('Rotate', 'Rotate the board clockwise', function()
+	  {
+		let transformation = besogo.makeTransformation();
+		transformation.rotate = true;
+		editor.applyTransformation(transformation);
+	  });
 
-  labelText = document.createElement("input"); // Label entry text field
-  labelText.type = "text";
-  labelText.title = 'Next label';
-  labelText.onblur = function() { editor.setLabel(labelText.value); };
-  labelText.addEventListener('keydown', function(evt)
-  {
-    evt = evt || window.event;
-    evt.stopPropagation(); // Stop keydown propagation when in focus
-  });
-  container.appendChild(labelText);
+	  makeButtonText('Invert', 'Invert colors of all stones and moves.', function()
+	  {
+		let transformation = besogo.makeTransformation();
+		transformation.invertColors = true;
+		editor.applyTransformation(transformation);
+	  });
+	  
+	  makeButtonText('Invert firstMove', 'Invert the color of the first move', function()
+	  {
+		let transformation = besogo.makeTransformation();
+		transformation.invertColors = true;
+		editor.getRoot().firstMove = transformation.applyOnColor(editor.getRoot().firstMove);
+		editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+		editor.edited = true;
+	  });
 
-  makeButtonText('Pass', 'Pass move', function()
-  {
-    var tool = editor.getTool();
-    if (tool !== 'navOnly' && tool !== 'auto')
-      editor.setTool('auto'); // Ensures that a move tool is selected
-    editor.click(0, 0, false); // Clicking off the board signals a pass
-  });
-
-  makeButtonText('Raise', 'Raise variation', function() { editor.promote(); });
-  makeButtonText('Lower', 'Lower variation', function() { editor.demote(); });
-  makeButtonText('Cut', 'Remove branch', function() { editor.cutCurrent(); });
-  makeButtonText('H Flip', 'Flip horizontally', function()
-  {
-    let transformation = besogo.makeTransformation();
-    transformation.hFlip = true;
-    editor.applyTransformation(transformation);
-  });
-  makeButtonText('V Flip', 'Flip vertically', function()
-  {
-    let transformation = besogo.makeTransformation();
-    transformation.vFlip = true;
-    editor.applyTransformation(transformation);
-  });
-
-  makeButtonText('Rotate', 'Rotate the board clockwise', function()
-  {
-    let transformation = besogo.makeTransformation();
-    transformation.rotate = true;
-    editor.applyTransformation(transformation);
-  });
-
-  makeButtonText('Invert', 'Invert colors of all stones and moves.', function()
-  {
-    let transformation = besogo.makeTransformation();
-    transformation.invertColors = true;
-    editor.applyTransformation(transformation);
-  });
   
-  makeButtonText('Invert firstMove', 'Invert the color of the first move', function()
-  {
-    let transformation = besogo.makeTransformation();
-    transformation.invertColors = true;
-    editor.getRoot().firstMove = transformation.applyOnColor(editor.getRoot().firstMove);
-    editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
-    editor.edited = true;
-  });
-
+  }else{
+	  makeButtonText('Invert', 'Invert colors of all stones and moves.', function()
+	  {
+		let transformation = besogo.makeTransformation();
+		transformation.invertColors = true;
+		editor.applyTransformation(transformation);
+		
+	  });
+	  makeButtonText('Rotate', 'Rotate the board clockwise', function()
+	  {
+		let transformation = besogo.makeTransformation();
+		transformation.rotate = true;
+		editor.applyTransformation(transformation);
+	  });
+	  makeButtonText('Back', 'Previous problem', function()
+	  {
+		window.location.href = "/tsumegos/play/"+prevButtonLink;
+	  });
+	  makeButtonText('Reset', 'Resets the problem', function()
+	  {
+		editor.prevNode(-1);
+		toggleBoardLock(false);
+		reviewEnabled2 = false;
+		document.getElementById("status").innerHTML = "";
+		document.getElementById("theComment").style.cssText = "display:none;";
+		$(".besogo-panels").css("display","none");
+		$(".besogo-board").css("margin","0 315px");
+	  });
+	  makeButtonText('Next', 'Next problem', function()
+	  {
+		window.location.href = "/tsumegos/play/"+nextButtonLink;
+	  });
+	  makeButtonText('Review', 'Review mode', function()
+	  {
+		if(reviewEnabled){
+			if(!reviewMode){
+				$(".besogo-panels").css("display","flex");
+				$(".besogo-board").css("margin","0");
+				toggleBoardLock(false);
+				deleteNextMoveGroup = true;
+			}else{
+				$(".besogo-panels").css("display","none");
+				$(".besogo-board").css("margin","0 315px");
+				deleteNextMoveGroup = false;
+			}
+			reviewMode = !reviewMode;
+			reviewEnabled2 = !reviewEnabled2;
+			editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+		}
+	  });
+  }
+  
   editor.addListener(toolStateUpdate); // Set up listener for tool state updates
-  toolStateUpdate({ label: editor.getLabel(), tool: editor.getTool() }); // Initialize
-
-
+  toolStateUpdate({ label: editor.getLabel(), tool: editor.getTool(), tool2: editor.getTool() }); // Initialize
   // Creates a button holding an SVG image
   function makeButtonSVG(tool, tooltip)
   {
