@@ -2,9 +2,7 @@ besogo.updateTreeAsProblem = function(root)
 {
   root.prunnedMoveCount = 0;
   besogo.pruneTree(root, root);
-  if (root.prunnedMoveCount)
-    window.alert("Pruned move count: " + root.prunnedMoveCount +
-                 " (out of original " + (root.prunnedMoveCount + root.treeSize()) + ")");
+  //if (root.prunnedMoveCount) window.alert("Pruned move count: " + root.prunnedMoveCount + " (out of original " + (root.prunnedMoveCount + root.treeSize()) + ")");
   besogo.addRelevantMoves(root, root)
   var test = 0;
   for (let i = 0; i < root.relevantMoves.length; ++i)
@@ -158,7 +156,7 @@ besogo.updateCorrectValuesInternal = function(root, node)
     if (!node.correctSource)
     {
       node.correctSource = true;
-      node.comment = node.comment.substr(1);
+      //node.comment = node.comment.substr(1);
     }
     node.correct = true;
     return true;
@@ -200,8 +198,7 @@ besogo.updateCorrectValuesInternal = function(root, node)
 besogo.updateCorrectValuesBasedOnStatus = function(node, goal, parentStatus, isCorrectBranch)
 {
   // lets just remove the extra + when we only care about status when determining correct variants (to avoid the + being accumulated)
-  if (node.comment.startsWith("+"))
-    node.comment = node.comment.substr(1);
+  //if (node.comment.startsWith("+")) node.comment = node.comment.substr(1);
 
   if (node.hasOwnProperty("correct"))
     return;

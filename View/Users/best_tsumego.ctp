@@ -82,8 +82,13 @@
 				for($k=0; $k<count($t); $k++){
 					if($x['tid']==$t[$k]['Tsumego']['id']) $x['sid'] = $t[$k]['Tsumego']['set_id'];
 				}
+<<<<<<< Updated upstream
 				$x['status'] = $out2[$i]['UserRecord']['status'];
 				$x['seconds'] = $out2[$i]['UserRecord']['seconds'];
+=======
+				$x['status'] = $out2[$i]['TsumegoAttempt']['solved'];
+				$x['seconds'] = $out2[$i]['TsumegoAttempt']['seconds'];
+>>>>>>> Stashed changes
 				
 				array_push($newBest[$j], $x);
 			}

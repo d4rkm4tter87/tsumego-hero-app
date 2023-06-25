@@ -568,6 +568,7 @@ Joschka Zimdars';
 			$s = $this->Set->findById($t['Tsumego']['set_id']);
 			$ur[$i]['UserRecord']['set_name'] = $s['Set']['title'];
 			
+<<<<<<< Updated upstream
 			if($ur[$i]['UserRecord']['status']!='S' && $ur[$i]['UserRecord']['status']!='F') $performance['pX']++;
 			
 			if($ur[$i]['UserRecord']['tsumego_xp']==10){
@@ -605,6 +606,45 @@ Joschka Zimdars';
 			}elseif($ur[$i]['UserRecord']['tsumego_xp']==90){
 				if($ur[$i]['UserRecord']['status']=='S') $performance['p90S']++;
 				elseif($ur[$i]['UserRecord']['status']=='F') $performance['p90F']++;
+=======
+			if($ur[$i]['TsumegoAttempt']['solved']!='S' && $ur[$i]['TsumegoAttempt']['solved']!='F') $performance['pX']++;
+			
+			if($ur[$i]['TsumegoAttempt']['tsumego_xp']==10){
+				if($ur[$i]['TsumegoAttempt']['solved']=='S') $performance['p10S']++;
+				elseif($ur[$i]['TsumegoAttempt']['solved']=='F') $performance['p10F']++;
+				$performance['p10']++;
+			}elseif($ur[$i]['TsumegoAttempt']['tsumego_xp']==20){
+				if($ur[$i]['TsumegoAttempt']['solved']=='S') $performance['p20S']++;
+				elseif($ur[$i]['TsumegoAttempt']['solved']=='F') $performance['p20F']++;
+				$performance['p20']++;
+			}elseif($ur[$i]['TsumegoAttempt']['tsumego_xp']==30){
+				if($ur[$i]['TsumegoAttempt']['solved']=='S') $performance['p30S']++;
+				elseif($ur[$i]['TsumegoAttempt']['solved']=='F') $performance['p30F']++;
+				$performance['p30']++;
+			}elseif($ur[$i]['TsumegoAttempt']['tsumego_xp']==40){
+				if($ur[$i]['TsumegoAttempt']['solved']=='S') $performance['p40S']++;
+				elseif($ur[$i]['TsumegoAttempt']['solved']=='F') $performance['p40F']++;
+				$performance['p40']++;
+			}elseif($ur[$i]['TsumegoAttempt']['tsumego_xp']==50){
+				if($ur[$i]['TsumegoAttempt']['solved']=='S') $performance['p50S']++;
+				elseif($ur[$i]['TsumegoAttempt']['solved']=='F') $performance['p50F']++;
+				$performance['p50']++;
+			}elseif($ur[$i]['TsumegoAttempt']['tsumego_xp']==60){
+				if($ur[$i]['TsumegoAttempt']['solved']=='S') $performance['p60S']++;
+				elseif($ur[$i]['TsumegoAttempt']['solved']=='F') $performance['p60F']++;
+				$performance['p60']++;
+			}elseif($ur[$i]['TsumegoAttempt']['tsumego_xp']==70){
+				if($ur[$i]['TsumegoAttempt']['solved']=='S') $performance['p70S']++;
+				elseif($ur[$i]['TsumegoAttempt']['solved']=='F') $performance['p70F']++;
+				$performance['p70']++;
+			}elseif($ur[$i]['TsumegoAttempt']['tsumego_xp']==80){
+				if($ur[$i]['TsumegoAttempt']['solved']=='S') $performance['p80S']++;
+				elseif($ur[$i]['TsumegoAttempt']['solved']=='F') $performance['p80F']++;
+				$performance['p80']++;
+			}elseif($ur[$i]['TsumegoAttempt']['tsumego_xp']==90){
+				if($ur[$i]['TsumegoAttempt']['solved']=='S') $performance['p90S']++;
+				elseif($ur[$i]['TsumegoAttempt']['solved']=='F') $performance['p90F']++;
+>>>>>>> Stashed changes
 				$performance['p90']++;
 			}
 		}
@@ -1976,8 +2016,13 @@ Joschka Zimdars';
 		$ratio['s'] = 0;
 		$ratio['f'] = 0;
 		for($i=0; $i<count($ur); $i++){
+<<<<<<< Updated upstream
 			if($ur[$i]['UserRecord']['status'] == 'S') $ratio['s']++;
 			elseif($ur[$i]['UserRecord']['status'] == 'F') $ratio['f']++;
+=======
+			if($ur[$i]['TsumegoAttempt']['solved'] == 'S' || $ur[$i]['TsumegoAttempt']['solved'] == 1) $ratio['s']++;
+			elseif($ur[$i]['TsumegoAttempt']['solved'] == 'F' || $ur[$i]['TsumegoAttempt']['solved'] == 0) $ratio['f']++;
+>>>>>>> Stashed changes
 		}
 		$ratio['count'] = $ratio['s']+$ratio['f'];
 		
@@ -2131,8 +2176,13 @@ Joschka Zimdars';
 			$ratio['s'] = 0;
 			$ratio['f'] = 0;
 			for($j=0; $j<count($ur); $j++){
+<<<<<<< Updated upstream
 				if($ur[$j]['UserRecord']['status'] == 'S') $ratio['s']++;
 				elseif($ur[$j]['UserRecord']['status'] == 'F') $ratio['f']++;
+=======
+				if($ur[$j]['TsumegoAttempt']['solved'] == 'S' || $ur[$j]['TsumegoAttempt']['solved'] == 1) $ratio['s']++;
+				elseif($ur[$j]['TsumegoAttempt']['solved'] == 'F' || $ur[$j]['TsumegoAttempt']['solved'] == 0) $ratio['f']++;
+>>>>>>> Stashed changes
 			}
 			$ts[$i]['Tsumego']['solved'] = $ratio['s'];
 			$ts[$i]['Tsumego']['failed'] = $ratio['f'];
@@ -2196,8 +2246,13 @@ Joschka Zimdars';
 			$ratio['s'] = 0;
 			$ratio['f'] = 0;
 			for($j=0; $j<count($ur); $j++){
+<<<<<<< Updated upstream
 				if($ur[$j]['UserRecord']['status'] == 'S') $ratio['s']++;
 				elseif($ur[$j]['UserRecord']['status'] == 'F') $ratio['f']++;
+=======
+				if($ur[$j]['TsumegoAttempt']['status'] == 'S' || $ur[$j]['TsumegoAttempt']['solved'] == 1) $ratio['s']++;
+				elseif($ur[$j]['TsumegoAttempt']['status'] == 'F' || $ur[$j]['TsumegoAttempt']['solved'] == 0) $ratio['f']++;
+>>>>>>> Stashed changes
 			}
 			$ts[$i]['Tsumego']['solved'] = $ratio['s'];
 			$ts[$i]['Tsumego']['failed'] = $ratio['f'];

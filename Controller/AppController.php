@@ -33,11 +33,20 @@ class AppController extends Controller{
 		$this->LoadModel('UserRecord');
 		$today = date('Y-m-d');
 		
-		$ux = $this->User->find('first', array('order' => 'reuse3 DESC'));
+		$ux = $this->User->find('first', array('order' => 'reuse3 DESC', 'conditions' => array(
+			'NOT' => array(
+				'id' => array(33)
+			)
+		)));
+		
 		$lastUotd = $this->DayRecord->find('first', array('order' => 'id DESC'));
 		
 		if($lastUotd['DayRecord']['user_id']==$ux['User']['id']){
-			$ux2 = $this->User->find('all', array('limit' => 2, 'order' => 'reuse3 DESC'));
+			$ux2 = $this->User->find('all', array('limit' => 2, 'order' => 'reuse3 DESC', 'conditions' => array(
+				'NOT' => array(
+					'id' => array(33)
+				)
+			)));
 			$ux = $ux2[1];
 		}			
 		
@@ -368,8 +377,13 @@ class AppController extends Controller{
 					$x['tid'] = $out2[$i]['UserRecord']['tsumego_id'];
 					$tx = $this->Tsumego->findById($x['tid']);
 					$x['sid'] = $tx['Tsumego']['set_id'];
+<<<<<<< Updated upstream
 					$x['status'] = $out2[$i]['UserRecord']['status'];
 					$x['seconds'] = $out2[$i]['UserRecord']['seconds'];
+=======
+					$x['status'] = $out2[$i]['TsumegoAttempt']['solved'];
+					$x['seconds'] = $out2[$i]['TsumegoAttempt']['seconds'];
+>>>>>>> Stashed changes
 					array_push($newBest[$j], $x);
 				}
 			}

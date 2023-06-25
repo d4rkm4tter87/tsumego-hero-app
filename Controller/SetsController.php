@@ -951,19 +951,32 @@ class SetsController extends AppController{
 				for($j=0; $j<count($ur); $j++){
 					if($ts[$i]['Tsumego']['id'] == $ur[$j]['UserRecord']['tsumego_id']){
 						array_push($urTemp, $ur[$j]);
+<<<<<<< Updated upstream
 						if($ur[$j]['UserRecord']['status']=='S' && !$secondsUsed){
 							$ts[$i]['Tsumego']['seconds'] = $ur[$j]['UserRecord']['seconds'];
 							$secondsUsed = true;
 						}
 						if($ur[$j]['UserRecord']['status']=='F'){
 							$mis = $ur[$j]['UserRecord']['misplays'];
+=======
+						if($ur[$j]['TsumegoAttempt']['solved']=='S' && !$secondsUsed || $ur[$j]['TsumegoAttempt']['solved']==1 && !$secondsUsed){
+							$ts[$i]['Tsumego']['seconds'] = $ur[$j]['TsumegoAttempt']['seconds'];
+							$secondsUsed = true;
+						}
+						if($ur[$j]['TsumegoAttempt']['solved']=='F' || $ur[$j]['TsumegoAttempt']['solved']==0){
+							$mis = $ur[$j]['TsumegoAttempt']['misplays'];
+>>>>>>> Stashed changes
 							if($mis==0) $mis=1;
 							while($mis>0){
 								$urSum.='F';
 								$mis--;
 							}
 						}else{
+<<<<<<< Updated upstream
 							$urSum.=$ur[$j]['UserRecord']['status'];
+=======
+							$urSum.=$ur[$j]['TsumegoAttempt']['solved'];
+>>>>>>> Stashed changes
 						}
 					}
 				}

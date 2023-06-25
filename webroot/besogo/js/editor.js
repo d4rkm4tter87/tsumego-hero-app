@@ -213,6 +213,11 @@ besogo.makeEditor = function(sizeX, sizeY)
     }
     // Notify listeners of navigation (with no tree edits)
     notifyListeners({ navChange: true }, true); // Preserve history
+	
+	//console.log('w');
+	//console.log(current);
+	if(soundsEnabled && soundsEnabled2) document.getElementsByTagName("audio")[0].play();
+	if(current.correct==false && current.lastMove==1 && current.children.length<1) displayResult('F');
   }
 
   // Navigates backward num nodes (to the root if num === -1)
@@ -368,6 +373,15 @@ besogo.makeEditor = function(sizeX, sizeY)
         setMarkup(i, j, label);
         break;
     }
+	//console.log('b');
+	//console.log(current);
+	if(soundsEnabled && isMutable) document.getElementsByTagName("audio")[0].play();
+	if(current.comment=="+"){
+		soundsEnabled2 = false;
+		toggleBoardLock(true);
+		enableReviewButton();
+		displayResult('S');
+	}
   }
 
   // Navigates to child with move at (x, y), searching tree if shift key pressed
@@ -451,17 +465,22 @@ besogo.makeEditor = function(sizeX, sizeY)
         // Notify tree change, navigation, and stone change
         notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
         edited = true;
+		if(soundsEnabled && soundsEnabled2) document.getElementsByTagName("audio")[0].play();
+		soundsEnabled2 = false;
+		displayResult('F');
       }
     // Current node is mutable and not root
     }
     else if (current.playMove(i, j, color, allowAll))
     { // Play in current
         // Only need to update if move succeeds
+		
       current.registerInVirtualMoves();
       besogo.updateCorrectValues(current.getRoot());
       notifyListeners({ treeChange: true, stoneChange: true });
       edited = true;
     }
+	isMutable = current.isMutable('move');
   }
 
   // Places a setup stone at the given color and location

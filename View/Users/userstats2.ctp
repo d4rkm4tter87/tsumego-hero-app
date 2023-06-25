@@ -82,7 +82,11 @@
 						echo $ur[$i]['UserRecord']['tsumego_xp'];
 					echo '</td>';
 					echo '<td>';
+<<<<<<< Updated upstream
 						echo $ur[$i]['UserRecord']['status'];
+=======
+						echo $ur[$i]['TsumegoAttempt']['solved'];
+>>>>>>> Stashed changes
 					echo '</td>';
 					echo '<td style="text-align:right">';
 						if(strlen($ur[$i]['UserRecord']['set_name'])>=30) $ur[$i]['UserRecord']['set_name'] = substr($ur[$i]['UserRecord']['set_name'], 0, 30);
