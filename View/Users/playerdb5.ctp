@@ -11,7 +11,5 @@
 	//echo '<script type="text/javascript">window.location.href = "/users/playerdb5";</script>';
 ?>
 <script type="text/JavaScript">
-	<?php if($ut!=0){ ?>
-	//setTimeout(function () {window.location.href = "/users/playerdb5";}, 1000);
-	<?php } ?>
+	setTimeout(function () {window.location.href = "/users/playerdb5";}, 100);
 </script>

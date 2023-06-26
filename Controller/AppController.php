@@ -15,6 +15,40 @@ class AppController extends Controller{
 		for($i=0; $i<count($in); $i++){
 			array_push($invisibleSets, $in[$i]['Set']['id']);
 		}
+		/*
+		array_push($invisibleSets, 68);//Problems from Professional Games
+		array_push($invisibleSets, 83);//KPA 4 sandbox
+		array_push($invisibleSets, 85);//TD 1 sandbox
+		array_push($invisibleSets, 95);//TD 2 sandbox
+		array_push($invisibleSets, 96);//TD 2 sandbox
+		array_push($invisibleSets, 97);//TD 3 sandbox
+		array_push($invisibleSets, 98);//TD 3 sandbox
+		array_push($invisibleSets, 99);//TD 2 sandbox
+		array_push($invisibleSets, 100);//TD 3 sandbox
+		array_push($invisibleSets, 102);//intro
+		array_push($invisibleSets, 103);//intro
+		array_push($invisibleSets, 110);//Tesuji Sandbox
+		array_push($invisibleSets, 111);//Tesuji Sandbox
+		array_push($invisibleSets, 112);//Cho Int Sandbox
+		array_push($invisibleSets, 116);//easy capture Sandbox
+		array_push($invisibleSets, 118);//Cho Int Sandbox
+		array_push($invisibleSets, 119);//Cho Adv Sandbox
+		array_push($invisibleSets, 120);//Gokyo Shumyo Sandbox
+		array_push($invisibleSets, 121);//Endgame Sandbox
+		array_push($invisibleSets, 123);//Gokyo Shumyo Sandbox
+		array_push($invisibleSets, 125);//Gokyo Shumyo Sandbox
+		array_push($invisibleSets, 126);//Tsumego Master
+		array_push($invisibleSets, 128);
+		array_push($invisibleSets, 129);
+		array_push($invisibleSets, 130);
+		array_push($invisibleSets, 131);
+		array_push($invisibleSets, 132);
+		array_push($invisibleSets, 133);
+		array_push($invisibleSets, 134);
+		array_push($invisibleSets, 135);
+		array_push($invisibleSets, 136);
+		array_push($invisibleSets, 88156);//Hand of God
+		*/
 		return $invisibleSets;
 	}
 	
@@ -24,6 +58,27 @@ class AppController extends Controller{
 		for($i=0; $i<count($de); $i++){
 			array_push($dSets, $de[$i]['Set']['id']);
 		}
+		/*
+		array_push($dSets, 58);//Counting Liberties & Winning Capturing Races
+		array_push($dSets, 62);//Level Up 1
+		array_push($dSets, 63);//Endgame
+		array_push($dSets, 91);//Level Up 2
+		array_push($dSets, 51);//CC Advanced
+		array_push($dSets, 56);//CC Advanced
+		array_push($dSets, 57);//CC Advanced
+		
+		auch gelöscht:
+		72 1001L&D
+		73 1001L&D
+		74 1001L&D
+		75 1001L&D
+		76 1001L&D
+		77 1001L&D
+		78 tesuji
+		79 tesuji
+		80 tesuji
+		*/
+		
 		return $dSets;
 	}
 	
@@ -505,22 +560,17 @@ class AppController extends Controller{
 				$this->User->save($u);
 			}
 			
-			$this->set('ac', true);
-			$this->set('user', $u);
-		}
-		if(isset($_SESSION['loggedInUser'])){
 			if(isset($_COOKIE['sound']) && $_COOKIE['sound'] != '0'){
 				$_SESSION['loggedInUser']['User']['sound'] = $_COOKIE['sound'];
 				$u['User']['sound'] = $_COOKIE['sound'];
 				$this->User->save($u);
 				unset($_COOKIE['sound']);
 			}
-		}else{
-			if(isset($_COOKIE['sound']) && $_COOKIE['sound'] != '0'){
-				$_SESSION['noUser']['sound'] = $_COOKIE['sound'];
-				unset($_COOKIE['sound']);
-			}
+			
+			$this->set('ac', true);
+			$this->set('user', $u);
 		}
+		
 		$mode = 1;
 		if(isset($_COOKIE['mode']) && $_COOKIE['mode']!='0'){
 			if($_COOKIE['mode']==1) $mode = 1;

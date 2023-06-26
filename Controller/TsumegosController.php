@@ -65,8 +65,6 @@ class TsumegosController extends AppController{
 		$eloScore = 0;
 		$range2 = array();
 		
-		//echo '<pre>'; print_r($_COOKIE['preId']); echo '</pre>'; 
-		
 		if(isset($this->params['url']['potionAlert'])){
 			$potionAlert = true;
 		}
@@ -96,13 +94,13 @@ class TsumegosController extends AppController{
 			
 			$_SESSION['loggedInUser']['User']['activeRank'] = $trandomString;
 			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
-			$u['User']['activeRank'] = $trandomString;
+			$u['User']['activeRank'] =  $trandomString;
 			$this->User->save($u);
 		}
 		
 		if(isset($_SESSION['loggedInUser'])){
 			$_SESSION['loggedInUser']['User']['mode'] = 1;
-			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
+			$u =  $this->User->findById($_SESSION['loggedInUser']['User']['id']);
 		
 			if(isset($_COOKIE['mode']) && $_COOKIE['mode'] != '0'){
 				if(strlen($_SESSION['loggedInUser']['User']['activeRank'])>=15){
@@ -651,7 +649,6 @@ class TsumegosController extends AppController{
 			}				
 		}else $utPre = $this->findUt(15352, $allUts, $idMap);
 		
-		
 		if($mode==1 || $mode==3){
 			if(isset($_COOKIE['preId']) && $_COOKIE['preId']==$t['Tsumego']['id']){
 				if($_COOKIE['score']!=0){
@@ -1162,7 +1159,6 @@ class TsumegosController extends AppController{
 		if(isset($noUser)) $_SESSION['noUser'] = $noUser;
 		if(isset($_SESSION['loggedInUser'])){
 			$u['User']['mode'] = $_SESSION['loggedInUser']['User']['mode'];
-			$u['User']['created'] = date('Y-m-d H:i:s');
 			$this->User->save($u);
 		}		
 		
@@ -1537,6 +1533,7 @@ class TsumegosController extends AppController{
 		
 		//echo '<pre>'; print_r(($crs/$stopParameter)*100); echo '</pre>';
 		//echo '<pre>'; print_r($masterArrayBW[0]); echo '</pre>';
+		//echo '<pre>'; print_r($_SERVER['HTTP_HOST']); echo '</pre>';
 		
 		
 		

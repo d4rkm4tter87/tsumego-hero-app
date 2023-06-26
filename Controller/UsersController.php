@@ -17,9 +17,9 @@ class UsersController extends AppController{
 		$this->loadModel('Rank');
 		$this->loadModel('RankOverview');
 		$this->loadModel('Comment');
-		/*
+		
 		$ut = $this->UserTsumego->find('all', array('limit' => 10000, 'order' => 'created ASC', 'conditions' => array(
-			'created <' => '2022-09-15 00:00:00'
+			'created <' => '2022-05-09 19:19:09'
 		)));
 		echo '<pre>'; print_r(count($ut)); echo '</pre>';
 		echo '<pre>'; print_r($ut[0]); echo '</pre>';
@@ -29,7 +29,7 @@ class UsersController extends AppController{
 			$this->UserTsumego->delete($ut[$i]['UserTsumego']['id']);
 		}
 		
-		
+		/*
 		$c = $this->Comment->find('all');
 		$x = array();
 		for($i=0; $i<count($c); $i++){
@@ -122,7 +122,7 @@ class UsersController extends AppController{
 		$this->set('ou', $ou);
 		$this->set('ouc', $ouc);
 		$this->set('tr', $tr);
-		$this->set('ut', count($ut));
+		$this->set('ut', $ut);
 		$this->set('out', $out);
 		$this->set('ux', $ux);
 	}
@@ -1237,14 +1237,14 @@ Joschka Zimdars';
 		$tsumegos = $this->Tsumego->find('all');
 		$tsumegoNum = count($tsumegos);
 		
-		$activity = $this->User->find('all', array('order' => 'reuse3 DESC', 'conditions' => array(
-			'NOT' => array(
-				'id' => array(33)
-			)
-		)));
-		
+		$activity = $this->User->find('all', array('order' => array('User.reuse3 DESC')));
 		$this->set('a', $activity);
-		
+		for($i=0; $i<count($users); $i++){
+			if($users[$i]['User']['name']=='noUser'){
+				unset($users[$i]);
+				break;
+			}
+		}
 		$userP = array();
 		$stop = 1;
 		

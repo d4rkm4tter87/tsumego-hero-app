@@ -17,6 +17,7 @@
 			unset($_SESSION['redirect']);
 			echo '<script type="text/javascript">window.location.href = "/users/loading";</script>';
 		}
+		//if($_SERVER['REMOTE_ADDR'] != '188.104.244.212') echo '<script type="text/javascript">window.location.href = "https://tsumego-hero.com/";</script>';
 		echo $this->Html->charset(); 
 	?>
 	<title>
@@ -32,10 +33,13 @@
 	<meta property="og:title" content="Tsumego Hero">
 	<link rel="stylesheet" type="text/css" href="/css/default.css?v=2.1">
 	<?php
+		//echo $_SERVER['REMOTE_ADDR'];
 		echo $this->Html->meta('icon');
+		//echo $this->Html->css('default');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
+		
 	?>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -105,6 +109,8 @@
 				else $lv = '15352';
 				
 				if(isset($_SESSION['loggedInUser'])){
+					
+					
 					if($_SESSION['loggedInUser']['User']['premium']>=1) $sand = 'onmouseover="sandboxHover()" onmouseout="sandboxNoHover()"';
 					else $sand = '';
 					if($_SESSION['loggedInUser']['User']['premium']>=1) $leaderboard = 'onmouseover="leaderboardHover()" onmouseout="leaderboardNoHover()"';
@@ -144,6 +150,7 @@
 				if($_SESSION['page'] == 'home') $homeA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'set') $collectionsA = 'style="color:#74d14c;"';
 				else if($_SESSION['page']=='play' || $_SESSION['page']=='level mode' || $_SESSION['page']=='rating mode' || $_SESSION['page']=='time mode'){
+					//$playA = 'style="color:#74d14c;"';
 					$refreshLinkToStart = 'id="refreshLinkToStart"';
 					$refreshLinkToSets = 'id="refreshLinkToSets"';
 					$refreshLinkToHighscore = 'id="refreshLinkToHighscore"';
@@ -171,14 +178,22 @@
 				}else{
 					$nextMode['Tsumego']['id'] = 15352;
 				}
+				//echo $_SESSION['page'];
+				//echo '<li><a '.$refreshLinkToStart.' class="menuLi" '.$homeA.' href="/">Home</a></li>';
+				//echo '<li><a '.$refreshLinkToSets.' class="menuLi" '.$collectionsA.' id="collectionsInMenu" '.$sand.' href="/sets">Collections</a></li>';
+				//if(true)/*if(!$ac)*/ echo '<li><a class="menuLi" '.$playA.' href="/tsumegos/play/'.$lv.'">Play</a></li>';	
+				//else echo '<li><a class="menuLi" '.$playA.' href="/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2">Play</a></li>';
+				//echo '<li><a '.$refreshLinkToHighscore.' class="menuLi" '.$highscoreA.' id="highscoreInMenu" '.$leaderboard.' href="/users/'.$highscoreLink.'">Highscore</a></li>';
 				if(isset($_SESSION['loggedInUser'])){
 					if($_SESSION['loggedInUser']['User']['isAdmin']==0) $discussFilter = '';
 					else $discussFilter = '?filter=false';
 					if($_SESSION['loggedInUser']['User']['completed']==1 || $_SESSION['loggedInUser']['User']['premium']>=1){
+					//echo '<li><a '.$refreshLinkToSandbox.' class="menuLi" id="sandbox-menu" '.$sandboxA.' href="/sets/beta">Sandbox</a></li>';
 					}else{
 						$refreshLinkToSandboxBackup = '<a id="refreshLinkToSandbox"></a>';
 					}
 					if($_SESSION['loggedInUser']['User']['premium']>=1){
+					//echo '<li><a '.$refreshLinkToLeaderboard.' class="menuLi" id="leaderboard-menu" '.$leaderboardA.' href="/users/leaderboard">Leaderboard</a></li>';
 					}else{
 						$refreshLinkToLeaderboardBackup = '<a id="refreshLinkToLeaderboard"></a>';
 					}
@@ -194,6 +209,7 @@
 					echo '<ul class="newMenuLi1">';
 						echo '<li><a id="tutorialLink" href="/sites/websitefunctions" '.$websitefunctionsA.'>Functions & Modes</a></li>';
 						echo '<li><a id="tutorialLink" href="/sites/gotutorial" '.$gotutorialA.'>Go Rules</a></li>';
+						//echo '<li><a id="tutorialLink" href="/sites/gotutorial" '.$gotutorialA.'>Go Tutorial</a></li>';
 						echo '<li><a href="/users/authors" '.$aboutA.'>About</a></li>';
 					echo '</ul>';       
 					echo '</li>';
@@ -394,18 +410,17 @@
 		?>
 		var soundsEnabled = true;
 		var notMode3 = true;
-		var soundValue = "off";
+		
 		<?php if(isset($_SESSION['loggedInUser'])){ ?>
 		var userXP = <?php echo $user['User']['xp']; ?> ;
 		var userLevel = <?php echo $user['User']['level']; ?> ;
 		var userNextLvl = <?php echo $user['User']['nextlvl']; ?> ;
 		var userElo = <?php echo $user['User']['elo']; ?> ;
-		
+		var soundValue = 0;
 		<?php 
-		}
-		if(isset($_SESSION['loggedInUser'])) echo 'soundValue = "'.$_SESSION['loggedInUser']['User']['sound'].'";';
-		else echo 'soundValue = "'.$_SESSION['noUser']['sound'].'";';
-		 ?>
+		echo 'soundValue = "'.$_SESSION['loggedInUser']['User']['sound'].'";';
+		
+		} ?>
 		
 		$(document).ready(function(){
 			loadBar();
