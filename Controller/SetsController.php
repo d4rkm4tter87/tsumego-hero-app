@@ -676,7 +676,7 @@ class SetsController extends AppController{
 		$this->LoadModel('Favorite');
 		$this->LoadModel('AdminActivity');
 		$this->LoadModel('Joseki');
-		$this->LoadModel('UserRecord');
+		$this->LoadModel('TsumegoAttempt');
 		$this->LoadModel('ProgressDeletion');
 		$_SESSION['page'] = 'set';
 
@@ -694,8 +694,6 @@ class SetsController extends AppController{
 				$t = $this->Tsumego->findById($jo[$i]['Joseki']['tsumego_id']);
 				$jo[$i]['Joseki']['num'] = $t['Tsumego']['num'];
 			}
-
-
 		}
 
 		if(isset($this->data['Tsumego'])){
@@ -804,9 +802,6 @@ class SetsController extends AppController{
 							$tsu['Tsumego']['num'] = $nr;
 							$this->Tsumego->save($tsu);
 						}
-						//$tsu['Tsumego']['num'] = $nr;
-						//$this->Tsumego->save($tsu);
-						//echo $tsId[$i].'_'.$tsNum[$i].'_'.$tsOrder[$i].'<br>';
 						$nr++;
 					}
 				}
@@ -817,7 +812,6 @@ class SetsController extends AppController{
 					$tsNum = array();
 					$tsOrder = array();
 					for($i=0; $i<count($ts); $i++){
-						//echo $ts[$i]['Tsumego']['id'].'_'.$ts[$i]['Tsumego']['num'].'_'.$ts[$i]['Tsumego']['order'].'<br>';
 						array_push($tsId, $ts[$i]['Tsumego']['id']);
 						array_push($tsNum, $ts[$i]['Tsumego']['num']);
 						array_push($tsOrder, $ts[$i]['Tsumego']['order']);
@@ -825,7 +819,6 @@ class SetsController extends AppController{
 					array_multisort($tsOrder, $tsId, $tsNum);
 					$nr = 1;
 					for($i=0; $i<count($tsId); $i++){
-						//echo $tsId[$i].'_'.$tsNum[$i].'_'.$tsOrder[$i].'_'.$nr.'<br>';
 						$j = $this->Joseki->find('first', array('conditions' =>  array('tsumego_id' => $tsId[$i])));
 						$j['Joseki']['order'] = $nr;
 						$this->Joseki->save($j);
@@ -879,7 +872,6 @@ class SetsController extends AppController{
 			for($i=0; $i<count($fav); $i++){
 				$tx = $this->Tsumego->find('first', array('conditions' =>  array('id' => $fav[$i]['Favorite']['tsumego_id'])));
 				$difficultyCount += $tx['Tsumego']['difficulty'];
-				//$utx = $this->UserTsumego->find('first', array('conditions' =>  array('tsumego_id' => $fav[$i]['Favorite']['tsumego_id'], 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
 				$utx = $this->findUt($fav[$i]['Favorite']['tsumego_id'], $allUts, $idMap);
 				if($utx['UserTsumego']['status'] == 'S' || $utx['UserTsumego']['status'] == 'W' || $utx['UserTsumego']['status'] == 'C') $solvedCount++;
 				$sizeCount++;
@@ -920,9 +912,6 @@ class SetsController extends AppController{
 
 			$this->set('isFav', true);
 		}
-
-
-
 		$_SESSION['title'] = $set['Set']['title'].' on Tsumego Hero';
 		$set['Set']['anz'] = count($ts);
 
@@ -931,11 +920,10 @@ class SetsController extends AppController{
 				'user_id' => $_SESSION['loggedInUser']['User']['id'],
 				'tsumego_id' => $tsIds
 			)));
-			$ur = $this->UserRecord->find('all', array('order' => 'created DESC', 'conditions' => array(
+			$ur = $this->TsumegoAttempt->find('all', array('order' => 'created DESC', 'conditions' => array(
 				'user_id' => $_SESSION['loggedInUser']['User']['id'],
 				'tsumego_id' => $tsIds
 			)));
-
 			for($i=0; $i<count($uts); $i++){
 				for($j=0; $j<count($ts); $j++){
 					if($uts[$i]['UserTsumego']['tsumego_id'] == $ts[$j]['Tsumego']['id']){
@@ -949,40 +937,28 @@ class SetsController extends AppController{
 				$secondsUsed = false;
 				$ts[$i]['Tsumego']['seconds'] = 0;
 				for($j=0; $j<count($ur); $j++){
-					if($ts[$i]['Tsumego']['id'] == $ur[$j]['UserRecord']['tsumego_id']){
+					if($ts[$i]['Tsumego']['id'] == $ur[$j]['TsumegoAttempt']['tsumego_id']){
 						array_push($urTemp, $ur[$j]);
-<<<<<<< Updated upstream
-						if($ur[$j]['UserRecord']['status']=='S' && !$secondsUsed){
-							$ts[$i]['Tsumego']['seconds'] = $ur[$j]['UserRecord']['seconds'];
-							$secondsUsed = true;
-						}
-						if($ur[$j]['UserRecord']['status']=='F'){
-							$mis = $ur[$j]['UserRecord']['misplays'];
-=======
+
 						if($ur[$j]['TsumegoAttempt']['solved']=='S' && !$secondsUsed || $ur[$j]['TsumegoAttempt']['solved']==1 && !$secondsUsed){
 							$ts[$i]['Tsumego']['seconds'] = $ur[$j]['TsumegoAttempt']['seconds'];
 							$secondsUsed = true;
 						}
 						if($ur[$j]['TsumegoAttempt']['solved']=='F' || $ur[$j]['TsumegoAttempt']['solved']==0){
 							$mis = $ur[$j]['TsumegoAttempt']['misplays'];
->>>>>>> Stashed changes
+
 							if($mis==0) $mis=1;
 							while($mis>0){
 								$urSum.='F';
 								$mis--;
 							}
 						}else{
-<<<<<<< Updated upstream
-							$urSum.=$ur[$j]['UserRecord']['status'];
-=======
 							$urSum.=$ur[$j]['TsumegoAttempt']['solved'];
->>>>>>> Stashed changes
 						}
 					}
 				}
 				$ts[$i]['Tsumego']['performance'] = $urSum;
 			}
-
 
 			$counter = 0;
 			for($j=0; $j<count($uts); $j++){
@@ -1031,7 +1007,7 @@ class SetsController extends AppController{
 			if(isset($this->data['Comment']['reset'])){
 				if($this->data['Comment']['reset']=='reset'){
 					for($i=0; $i<count($ur); $i++){
-						$this->UserRecord->delete($ur[$i]['UserRecord']['id']);
+						$this->TsumegoAttempt->delete($ur[$i]['TsumegoAttempt']['id']);
 					}
 					for($i=0; $i<count($uts); $i++){
 						$this->UserTsumego->delete($uts[$i]['UserTsumego']['id']);
@@ -1078,55 +1054,10 @@ class SetsController extends AppController{
 			$avgTime = round($urSecAvg/$urSecCounter, 2);
 			$accuracy = round($pSsum/($pSsum+$pFsum)*100, 2);
 
-			//echo '<pre>'; print_r($urSecAvg); echo '</pre>';
-			//echo '<pre>'; print_r($urSecCounter); echo '</pre>';
-			//echo '<pre>'; print_r($pSsum); echo '</pre>';
-			//echo '<pre>'; print_r($pFsum); echo '</pre>';
-			//echo '<pre>'; print_r($sumBoth); echo '</pre>';
-			//echo '<pre>'; print_r(round($pSsum/$sumBoth*100, 2)); echo '</pre>';
-			/*
-			$newUr = array();
-			for($i=0; $i<count($tsIds); $i++){
-				$temp = array();
-				for($j=0; $j<count($ur); $j++){
-					if($tsIds[$i]==$ur[$j]['UserRecord']['tsumego_id']) array_push($temp, $ur[$j]);
-				}
-				//echo '<pre>'; print_r($temp); echo '</pre>';
-
-				$temp = $temp[0];
-				if(count($temp)>0) array_push($newUr, $temp);
-			}
-
-			$urSecCounter = 0;
-			$urSecAvg = 0;
-			for($i=0; $i<count($newUr); $i++){
-				$urSecCounter++;
-				$urSecAvg+=$newUr[$i]['UserRecord']['seconds'];
-			}
-			*/
-			//echo round($urSecAvg/$urSecCounter, 2);
-
-			//echo '<pre>'; print_r(count($ur)); echo '</pre>';
-			//echo '<pre>'; print_r($tsIds); echo '</pre>';
-			//echo '<pre>'; print_r(count($ur)); echo '</pre>';
-			//echo '<pre>'; print_r($urSec); echo '</pre>';
-			//echo '<pre>'; print_r(count($newUr)); echo '</pre>';
-			//echo '<pre>'; print_r(count($newUr)); echo '</pre>';
-			//echo '<pre>'; print_r(count($ur)); echo '</pre>';
-			//echo '<pre>'; print_r(count($uts)); echo '</pre>';
-			//echo '<pre>'; print_r($newUr); echo '</pre>';
-			//echo '<pre>'; print_r($ur); echo '</pre>';
-			//for($i=0; $i<count($ts); $i++){
-				//echo '<pre>'; print_r($ts[$i]['Tsumego']['num'].'|'.$ts[$i]['Tsumego']['performance'].'|'.$ts[$i]['Tsumego']['seconds']); echo '</pre>';
-			//}
-
 		}else{
 			$delNum = 5;
 			$scoring = false;
 		}
-
-
-
 
 		$this->set('tfs', $tfs[0]);
 		$this->set('ts', $ts);

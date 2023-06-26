@@ -24,16 +24,16 @@
 		$diabolical[9] = array();
 		$diabolical[10] = array();
 		for($i=0; $i<count($ur); $i++){
-			if($ur[$i]['UserRecord']['tsumego_id']==19752) array_push($diabolical[1], $ur[$i]['UserRecord']['gain']);
-			elseif($ur[$i]['UserRecord']['tsumego_id']==19753) array_push($diabolical[2], $ur[$i]['UserRecord']['gain']);
-			elseif($ur[$i]['UserRecord']['tsumego_id']==19758) array_push($diabolical[3], $ur[$i]['UserRecord']['gain']);
-			elseif($ur[$i]['UserRecord']['tsumego_id']==19759) array_push($diabolical[4], $ur[$i]['UserRecord']['gain']);
-			elseif($ur[$i]['UserRecord']['tsumego_id']==19760) array_push($diabolical[5], $ur[$i]['UserRecord']['gain']);
-			elseif($ur[$i]['UserRecord']['tsumego_id']==19761) array_push($diabolical[6], $ur[$i]['UserRecord']['gain']);
-			elseif($ur[$i]['UserRecord']['tsumego_id']==19754) array_push($diabolical[7], $ur[$i]['UserRecord']['gain']);
-			elseif($ur[$i]['UserRecord']['tsumego_id']==19755) array_push($diabolical[8], $ur[$i]['UserRecord']['gain']);
-			elseif($ur[$i]['UserRecord']['tsumego_id']==19756) array_push($diabolical[9], $ur[$i]['UserRecord']['gain']);
-			elseif($ur[$i]['UserRecord']['tsumego_id']==19757) array_push($diabolical[10], $ur[$i]['UserRecord']['gain']);
+			if($ur[$i]['TsumegoAttempt']['tsumego_id']==19752) array_push($diabolical[1], $ur[$i]['TsumegoAttempt']['gain']);
+			elseif($ur[$i]['TsumegoAttempt']['tsumego_id']==19753) array_push($diabolical[2], $ur[$i]['TsumegoAttempt']['gain']);
+			elseif($ur[$i]['TsumegoAttempt']['tsumego_id']==19758) array_push($diabolical[3], $ur[$i]['TsumegoAttempt']['gain']);
+			elseif($ur[$i]['TsumegoAttempt']['tsumego_id']==19759) array_push($diabolical[4], $ur[$i]['TsumegoAttempt']['gain']);
+			elseif($ur[$i]['TsumegoAttempt']['tsumego_id']==19760) array_push($diabolical[5], $ur[$i]['TsumegoAttempt']['gain']);
+			elseif($ur[$i]['TsumegoAttempt']['tsumego_id']==19761) array_push($diabolical[6], $ur[$i]['TsumegoAttempt']['gain']);
+			elseif($ur[$i]['TsumegoAttempt']['tsumego_id']==19754) array_push($diabolical[7], $ur[$i]['TsumegoAttempt']['gain']);
+			elseif($ur[$i]['TsumegoAttempt']['tsumego_id']==19755) array_push($diabolical[8], $ur[$i]['TsumegoAttempt']['gain']);
+			elseif($ur[$i]['TsumegoAttempt']['tsumego_id']==19756) array_push($diabolical[9], $ur[$i]['TsumegoAttempt']['gain']);
+			elseif($ur[$i]['TsumegoAttempt']['tsumego_id']==19757) array_push($diabolical[10], $ur[$i]['TsumegoAttempt']['gain']);
 		}
 		echo '<br><table border="0">';
 		for($i=1; $i<=10; $i++){
@@ -78,43 +78,43 @@
 					echo $i+1;
 				echo '</td>';
 				echo '<td>';
-					echo '<a style="color:black;" href="/users/userstats/'.$ur[$i]['UserRecord']['user_id'].'">'.$ur[$i]['UserRecord']['user_id'].'</a>';
+					echo '<a style="color:black;" href="/users/userstats/'.$ur[$i]['TsumegoAttempt']['user_id'].'">'.$ur[$i]['TsumegoAttempt']['user_id'].'</a>';
 				echo '</td>';
 				echo '<td style="text-align:center">';
-					echo '<a style="color:black;text-decoration:none;" href="/users/userstats/'.$ur[$i]['UserRecord']['user_id'].'">'.$ur[$i]['UserRecord']['user_name'].'</a>';
+					echo '<a style="color:black;text-decoration:none;" href="/users/userstats/'.$ur[$i]['TsumegoAttempt']['user_id'].'">'.$ur[$i]['TsumegoAttempt']['user_name'].'</a>';
 				echo '</td>';
 				echo '<td>';
-					echo 'lvl '. $ur[$i]['UserRecord']['level'];
+					echo 'lvl '. $ur[$i]['TsumegoAttempt']['level'];
 				echo '</td>';
 				echo '<td>';
-					echo $ur[$i]['UserRecord']['seconds'];
+					echo $ur[$i]['TsumegoAttempt']['seconds'];
 				echo '</td>';
 				echo '<td>';
-					echo '+'.$ur[$i]['UserRecord']['gain'].' ('.$ur[$i]['UserRecord']['tsumego_xp'].')';
+					echo '+'.$ur[$i]['TsumegoAttempt']['gain'].' ('.$ur[$i]['TsumegoAttempt']['tsumego_xp'].')';
 				echo '</td>';
 				echo '<td style="text-align:right">';
-					if(strlen($ur[$i]['UserRecord']['set_name'])>=30) $ur[$i]['UserRecord']['set_name'] = substr($ur[$i]['UserRecord']['set_name'], 0, 30);
-					echo $ur[$i]['UserRecord']['set_name'];
+					if(strlen($ur[$i]['TsumegoAttempt']['set_name'])>=30) $ur[$i]['TsumegoAttempt']['set_name'] = substr($ur[$i]['TsumegoAttempt']['set_name'], 0, 30);
+					echo $ur[$i]['TsumegoAttempt']['set_name'];
 				echo '</td>';
 				echo '<td>';
-					echo $ur[$i]['UserRecord']['tsumego_num'];
+					echo $ur[$i]['TsumegoAttempt']['tsumego_num'];
 				echo '</td>';
 				echo '<td>';
 					echo 'id <a style="color:black;" target="_blank"
-					href="/tsumegos/play/'.$ur[$i]['UserRecord']['tsumego_id'].'">
-					'. $ur[$i]['UserRecord']['tsumego_id'].'</a>';
+					href="/tsumegos/play/'.$ur[$i]['TsumegoAttempt']['tsumego_id'].'">
+					'. $ur[$i]['TsumegoAttempt']['tsumego_id'].'</a>';
 				echo '</td>';
 				echo '<td>';
-					echo $ur[$i]['UserRecord']['created'];
+					echo $ur[$i]['TsumegoAttempt']['created'];
 				echo '</td>';
 			echo '</tr>';
 		}
 	}else{
-		echo $ur[0]['UserRecord']['user_name'].'<br>';
+		echo $ur[0]['TsumegoAttempt']['user_name'].'<br>';
 		
 		$ids = array();
 		for($i=0; $i<count($ur); $i++){
-			array_push($ids, $ur[$i]['UserRecord']['tsumego_id']);
+			array_push($ids, $ur[$i]['TsumegoAttempt']['tsumego_id']);
 			
 		}
 		$vals = array_count_values($ids);
@@ -129,43 +129,43 @@
 				echo "$key => $value";
 				echo '<br>';
 				for($i=0; $i<count($ur); $i++){
-					if($ur[$i]['UserRecord']['tsumego_id'] == $key){
+					if($ur[$i]['TsumegoAttempt']['tsumego_id'] == $key){
 						echo '<table>';
 						echo '<tr>';
 						echo '<td>';
 							echo $i+1;
 						echo '</td>';
 						echo '<td>';
-							echo $ur[$i]['UserRecord']['user_id'];
+							echo $ur[$i]['TsumegoAttempt']['user_id'];
 						echo '</td>';
 						echo '<td style="text-align:center">';
 							echo '<a style="color:black;text-decoration:none;" 
-							href="/users/userstats/'.$ur[$i]['UserRecord']['user_id'].'">'.$ur[$i]['UserRecord']['user_name'].'</a>';
+							href="/users/userstats/'.$ur[$i]['TsumegoAttempt']['user_id'].'">'.$ur[$i]['TsumegoAttempt']['user_name'].'</a>';
 						echo '</td>';
 						echo '<td>';
-							echo 'lvl '. $ur[$i]['UserRecord']['level'];
+							echo 'lvl '. $ur[$i]['TsumegoAttempt']['level'];
 						echo '</td>';
 						echo '<td>';
-							echo $ur[$i]['UserRecord']['xp'].' xp';
+							echo $ur[$i]['TsumegoAttempt']['xp'].' xp';
 						echo '</td>';
 						echo '<td>';
-							echo '+'.$ur[$i]['UserRecord']['gain'].' ('.$ur[$i]['UserRecord']['tsumego_xp'].')';
-							$penalty += $ur[$i]['UserRecord']['gain'];
+							echo '+'.$ur[$i]['TsumegoAttempt']['gain'].' ('.$ur[$i]['TsumegoAttempt']['tsumego_xp'].')';
+							$penalty += $ur[$i]['TsumegoAttempt']['gain'];
 						echo '</td>';
 						echo '<td style="text-align:right">';
-							if(strlen($ur[$i]['UserRecord']['set_name'])>=30) $ur[$i]['UserRecord']['set_name'] = substr($ur[$i]['UserRecord']['set_name'], 0, 30);
-							echo $ur[$i]['UserRecord']['set_name'];
+							if(strlen($ur[$i]['TsumegoAttempt']['set_name'])>=30) $ur[$i]['TsumegoAttempt']['set_name'] = substr($ur[$i]['TsumegoAttempt']['set_name'], 0, 30);
+							echo $ur[$i]['TsumegoAttempt']['set_name'];
 						echo '</td>';
 						echo '<td>';
-							echo $ur[$i]['UserRecord']['tsumego_num'];
+							echo $ur[$i]['TsumegoAttempt']['tsumego_num'];
 						echo '</td>';
 						echo '<td>';
 							echo 'id <a style="color:black;text-decoration:none;" target="_blank"
-							href="/tsumegos/play/'.$ur[$i]['UserRecord']['tsumego_id'].'">
-							'. $ur[$i]['UserRecord']['tsumego_id'].'</a>';
+							href="/tsumegos/play/'.$ur[$i]['TsumegoAttempt']['tsumego_id'].'">
+							'. $ur[$i]['TsumegoAttempt']['tsumego_id'].'</a>';
 						echo '</td>';
 						echo '<td>';
-							echo $ur[$i]['UserRecord']['created'];
+							echo $ur[$i]['TsumegoAttempt']['created'];
 						echo '</td>';
 						echo '</tr>';
 						echo '</table>';

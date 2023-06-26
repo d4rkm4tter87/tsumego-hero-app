@@ -11,7 +11,6 @@ class SitesController extends AppController{
 		$this->LoadModel('User');
 		$this->LoadModel('DayRecord');
 		$this->LoadModel('UserBoard');
-		$this->LoadModel('UserRecord');
 		$this->LoadModel('Schedule');
 		$this->LoadModel('RankOverview');
 		

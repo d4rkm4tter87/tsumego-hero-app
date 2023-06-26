@@ -11,7 +11,7 @@ for($i=0; $i<count($ux); $i++){
 	</tr>';
 }/*
 for($i=0; $i<count($ux); $i++){
-	echo '<tr><td>'.$ux[$i]['UserRecord']['id'].'</td><td>'.$ux[$i]['UserRecord']['created'].'</td></tr>';
+	echo '<tr><td>'.$ux[$i]['TsumegoAttempt']['id'].'</td><td>'.$ux[$i]['TsumegoAttempt']['created'].'</td></tr>';
 }
 */
 //echo '<pre>';print_r($ux);echo '</pre>';

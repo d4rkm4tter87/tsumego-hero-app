@@ -10,10 +10,10 @@
 	$date = date('Y-m-d', strtotime('yesterday'));
 	$ids = array();
 	for($i=0; $i<count($ut); $i++){
-		$date2 = new DateTime($ut[$i]['TsumegoRecord']['created']);
+		$date2 = new DateTime($ut[$i]['TsumegoRatingAttempt']['created']);
 		$date2 = $date2->format('Y-m-d');
 		if($date===$date2){
-			array_push($ids, $ut[$i]['TsumegoRecord']['tsumego_id']);
+			array_push($ids, $ut[$i]['TsumegoRatingAttempt']['tsumego_id']);
 		}
 	}
 	$ids = array_count_values($ids);
@@ -38,10 +38,10 @@
 	$ids2 = array();
 	$out2 = array();
 	for($i=0; $i<count($out); $i++){
-		$date2 = new DateTime($out[$i]['UserRecord']['created']);
+		$date2 = new DateTime($out[$i]['TsumegoAttempt']['created']);
 		$date2 = $date2->format('Y-m-d');
 		if($date===$date2){
-			array_push($ids2, $out[$i]['UserRecord']['tsumego_id']);
+			array_push($ids2, $out[$i]['TsumegoAttempt']['tsumego_id']);
 			array_push($out2, $out[$i]);
 		}
 	}
@@ -76,20 +76,14 @@
 	for($j=0; $j<$findNum; $j++) $newBest[$j] = array();
 	for($i=0; $i<count($out2); $i++){
 		for($j=0; $j<$findNum; $j++){
-			if($out2[$i]['UserRecord']['tsumego_id']==$best2[$j]){
+			if($out2[$i]['TsumegoAttempt']['tsumego_id']==$best2[$j]){
 				$x = array();
-				$x['tid'] = $out2[$i]['UserRecord']['tsumego_id'];
+				$x['tid'] = $out2[$i]['TsumegoAttempt']['tsumego_id'];
 				for($k=0; $k<count($t); $k++){
 					if($x['tid']==$t[$k]['Tsumego']['id']) $x['sid'] = $t[$k]['Tsumego']['set_id'];
 				}
-<<<<<<< Updated upstream
-				$x['status'] = $out2[$i]['UserRecord']['status'];
-				$x['seconds'] = $out2[$i]['UserRecord']['seconds'];
-=======
 				$x['status'] = $out2[$i]['TsumegoAttempt']['solved'];
 				$x['seconds'] = $out2[$i]['TsumegoAttempt']['seconds'];
->>>>>>> Stashed changes
-				
 				array_push($newBest[$j], $x);
 			}
 		}

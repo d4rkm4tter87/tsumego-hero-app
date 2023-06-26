@@ -85,7 +85,7 @@ class AppController extends Controller{
 	public function uotd(){//routine1
 		$this->LoadModel('User');
 		$this->LoadModel('DayRecord');
-		$this->LoadModel('UserRecord');
+		$this->LoadModel('TsumegoAttempt');
 		$today = date('Y-m-d');
 		
 		$ux = $this->User->find('first', array('order' => 'reuse3 DESC', 'conditions' => array(
@@ -144,7 +144,7 @@ class AppController extends Controller{
 		}
 		//$dayUserRand = 37;
 		
-		$activity = $this->UserRecord->find('all', array('limit' => 40000, 'conditions' =>  array('DATE(UserRecord.created)' => date('Y-m-d', strtotime('yesterday')))));
+		$activity = $this->TsumegoAttempt->find('all', array('limit' => 40000, 'conditions' =>  array('DATE(TsumegoAttempt.created)' => date('Y-m-d', strtotime('yesterday')))));
 		$visitedProblems = count($activity);
 		
 		//how many users today
@@ -359,22 +359,22 @@ class AppController extends Controller{
 	}
 	
 	public function getTsumegoOfTheDay(){
-		$this->loadModel('UserRecord');
-		$this->loadModel('TsumegoRecord');
+		$this->loadModel('TsumegoAttempt');
+		$this->loadModel('TsumegoRatingAttempt');
 		$this->loadModel('Schedule');
 		$this->loadModel('Tsumego');
 		
-		$ut = $this->TsumegoRecord->find('all', array('limit' => 10000, 'order' => 'created DESC', 'conditions' => array('status' => 'S')));
-		$out = $this->UserRecord->find('all', array('limit' => 30000, 'order' => 'created DESC', 'conditions' => array('gain >=' => 40)));
+		$ut = $this->TsumegoRatingAttempt->find('all', array('limit' => 10000, 'order' => 'created DESC', 'conditions' => array('status' => 'S')));
+		$out = $this->TsumegoAttempt->find('all', array('limit' => 30000, 'order' => 'created DESC', 'conditions' => array('gain >=' => 40)));
 		
 		$date = date('Y-m-d', strtotime('yesterday'));
 		$s = $this->Schedule->find('all', array('conditions' =>  array('date' => $date)));
 		$ids = array();
 		for($i=0; $i<count($ut); $i++){
-			$date2 = new DateTime($ut[$i]['TsumegoRecord']['created']);
+			$date2 = new DateTime($ut[$i]['TsumegoRatingAttempt']['created']);
 			$date2 = $date2->format('Y-m-d');
 			if($date===$date2){
-				array_push($ids, $ut[$i]['TsumegoRecord']['tsumego_id']);
+				array_push($ids, $ut[$i]['TsumegoRatingAttempt']['tsumego_id']);
 			}
 		}
 		$ids = array_count_values($ids);
@@ -393,10 +393,10 @@ class AppController extends Controller{
 		$ids2 = array();
 		$out2 = array();
 		for($i=0; $i<count($out); $i++){
-			$date2 = new DateTime($out[$i]['UserRecord']['created']);
+			$date2 = new DateTime($out[$i]['TsumegoAttempt']['created']);
 			$date2 = $date2->format('Y-m-d');
 			if($date===$date2){
-				array_push($ids2, $out[$i]['UserRecord']['tsumego_id']);
+				array_push($ids2, $out[$i]['TsumegoAttempt']['tsumego_id']);
 				array_push($out2, $out[$i]);
 			}
 		}
@@ -427,18 +427,15 @@ class AppController extends Controller{
 		for($j=0; $j<$findNum; $j++) $newBest[$j] = array();
 		for($i=0; $i<count($out2); $i++){
 			for($j=0; $j<$findNum; $j++){
-				if($out2[$i]['UserRecord']['tsumego_id']==$best2[$j]){
+				if($out2[$i]['TsumegoAttempt']['tsumego_id']==$best2[$j]){
 					$x = array();
-					$x['tid'] = $out2[$i]['UserRecord']['tsumego_id'];
+					$x['tid'] = $out2[$i]['TsumegoAttempt']['tsumego_id'];
 					$tx = $this->Tsumego->findById($x['tid']);
 					$x['sid'] = $tx['Tsumego']['set_id'];
-<<<<<<< Updated upstream
-					$x['status'] = $out2[$i]['UserRecord']['status'];
-					$x['seconds'] = $out2[$i]['UserRecord']['seconds'];
-=======
+
 					$x['status'] = $out2[$i]['TsumegoAttempt']['solved'];
 					$x['seconds'] = $out2[$i]['TsumegoAttempt']['seconds'];
->>>>>>> Stashed changes
+
 					array_push($newBest[$j], $x);
 				}
 			}
@@ -528,7 +525,7 @@ class AppController extends Controller{
 		$this->loadModel('User');
 		$this->loadModel('Activate');
 		$this->loadModel('Tsumego');
-		$this->loadModel('TsumegoRecord');
+		$this->loadModel('TsumegoRatingAttempt');
 		$this->loadModel('Set');
 		$this->loadModel('Rank');
 		//200 hrs
