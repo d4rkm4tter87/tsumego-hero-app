@@ -214,10 +214,10 @@ besogo.makeEditor = function(sizeX, sizeY)
     // Notify listeners of navigation (with no tree edits)
     notifyListeners({ navChange: true }, true); // Preserve history
 	
-	//console.log('w');
-	//console.log(current);
-	if(soundsEnabled && soundsEnabled2) document.getElementsByTagName("audio")[0].play();
-	if(current.correct==false && current.lastMove==1 && current.children.length<1) displayResult('F');
+	  if(soundsEnabled && soundsEnabled2)
+      document.getElementsByTagName("audio")[0].play();
+	  if(!current.correct && current.lastMove == -root.firstMove && !current.hasChildIncludingVirtual())
+      displayResult('F');
   }
 
   // Navigates backward num nodes (to the root if num === -1)
