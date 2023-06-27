@@ -32,7 +32,10 @@ besogo.makeEditor = function(sizeX, sizeY)
       // Variant style: even/odd - children/siblings, <2 - show auto markup for variants
       variantStyle = 0, // 0-3, 0 is default
       edited = false,
-      shift = false;
+      shift = false,
+      autoPlay = false,
+      displayResult = null,
+      soundEnabled = false;
 
   return {
     addListener: addListener,
@@ -213,10 +216,10 @@ besogo.makeEditor = function(sizeX, sizeY)
     }
     // Notify listeners of navigation (with no tree edits)
     notifyListeners({ navChange: true }, true); // Preserve history
-	
-	  if(soundsEnabled && soundsEnabled2)
+  
+    if(soundEnabled)
       document.getElementsByTagName("audio")[0].play();
-	  if(!current.correct && current.lastMove == -root.firstMove && !current.hasChildIncludingVirtual())
+    if(displayResult && !current.correct && !current.hasChildIncludingVirtual())
       displayResult('F');
   }
 
@@ -373,15 +376,14 @@ besogo.makeEditor = function(sizeX, sizeY)
         setMarkup(i, j, label);
         break;
     }
-	//console.log('b');
-	//console.log(current);
-	if(soundsEnabled && isMutable) document.getElementsByTagName("audio")[0].play();
-	if(current.comment=="+"){
-		soundsEnabled2 = false;
-		toggleBoardLock(true);
-		enableReviewButton();
-		displayResult('S');
-	}
+    if (soundEnabled && isMutable)
+      document.getElementsByTagName("audio")[0].play();
+    if (displayResult && current.correct && !currect.hasChildIncludingVirtual())
+    {
+      toggleBoardLock(true);
+      enableReviewButton();
+      displayResult('S');
+    }
   }
 
   // Navigates to child with move at (x, y), searching tree if shift key pressed
@@ -465,22 +467,21 @@ besogo.makeEditor = function(sizeX, sizeY)
         // Notify tree change, navigation, and stone change
         notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
         edited = true;
-		if(soundsEnabled && soundsEnabled2) document.getElementsByTagName("audio")[0].play();
-		soundsEnabled2 = false;
-		displayResult('F');
+        if (soundEnabled)
+          document.getElementsByTagName("audio")[0].play();
+        if (displayResult)
+          displayResult('F');
       }
     // Current node is mutable and not root
     }
     else if (current.playMove(i, j, color, allowAll))
     { // Play in current
         // Only need to update if move succeeds
-		
       current.registerInVirtualMoves();
       besogo.updateCorrectValues(current.getRoot());
       notifyListeners({ treeChange: true, stoneChange: true });
       edited = true;
     }
-	isMutable = current.isMutable('move');
   }
 
   // Places a setup stone at the given color and location

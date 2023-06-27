@@ -1,11 +1,10 @@
 (function() {
-'use strict';
-var besogo = window.besogo = window.besogo || {}; // Establish our namespace
-besogo.VERSION = '0.0.2-alpha';
+  'use strict';
+  var besogo = window.besogo = window.besogo || {}; // Establish our namespace
+  besogo.VERSION = '0.0.2-alpha';
 
-besogo.create = function(container, options) {
-	
-	 
+  besogo.create = function(container, options)
+  {
     var editor, // Core editor object
         boardDisplay,
         resizer, // Auto-resizing function
@@ -23,7 +22,6 @@ besogo.create = function(container, options) {
         insideText = container.textContent || container.innerText || '',
         i, panelName; // Scratch iteration variables
 
-	//container.setAttribute('lang', 'xxx');
     container.className += ' besogo-container'; // Marks this div as initialized
     // Process options and set defaults
     options = options || {}; // Makes option checking simpler
@@ -34,12 +32,11 @@ besogo.create = function(container, options) {
     if (options.panels === '')
       options.panels = [];
   
-    options.panels = options.panels || 'tree+control';
-	//options.panels = options.panels || 'control+names+comment+tool+tree+file';
+    options.panels = options.panels || 'control+names+comment+tool+tree+file';
     if (typeof options.panels === 'string')
       options.panels = options.panels.split('+');
   
-	options.panels2 = options.panels2 || 'tool2';
+    options.panels2 = options.panels2 || 'tool2';
     if (typeof options.panels2 === 'string')
       options.panels2 = options.panels2.split('+');
   
@@ -62,7 +59,6 @@ besogo.create = function(container, options) {
     }
     else // SVG stones
       editor.SHADOWS = (options.shadows && options.shadows !== 'auto');
-
 
     if (options.sgf) // Load SGF file from URL or SGF string
     {
@@ -125,7 +121,7 @@ besogo.create = function(container, options) {
         panelsDiv = false; // Flags panels div as removed
       }
     }
-	if (options.panels2.length > 0) // Only create if there are panels to add
+  if (options.panels2.length > 0) // Only create if there are panels to add
     {
       panelsDiv = makeDiv('besogo-bottom-panels');
       for (i = 0; i < options.panels2.length; i++)
@@ -140,7 +136,7 @@ besogo.create = function(container, options) {
         panelsDiv = false; // Flags panels div as removed
       }
     }
-	
+  
 
     options.resize = options.resize || 'auto';
     if (options.resize === 'auto') { // Add auto-resizing unless resize option is truthy

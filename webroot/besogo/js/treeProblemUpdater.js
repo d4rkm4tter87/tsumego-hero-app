@@ -200,7 +200,7 @@ besogo.updateCorrectValuesBasedOnStatus = function(node, goal, parentStatus, isC
   // lets just remove the extra + when we only care about status when determining correct variants (to avoid the + being accumulated)
   //if (node.comment.startsWith("+")) node.comment = node.comment.substr(1);
 
-  if (node.hasOwnProperty("correct"))
+  if (node.hasOwnProperty('correct'))
     return;
   node.correct = isCorrectBranch && !parentStatus.better(node.status, goal);
 

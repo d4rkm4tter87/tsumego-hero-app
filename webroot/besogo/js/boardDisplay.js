@@ -19,7 +19,8 @@ besogo.makeBoardDisplay = function(container, editor)
 
       randIndex, // Random index for stone images
       lastHoverPosition = null,
-      TOUCH_FLAG = false; // Flag for touch interfaces
+      TOUCH_FLAG = false,  // Flag for touch interfaces
+      reviewMode = true;
 
   initializeBoard(editor.getCoordStyle()); // Initialize SVG element and draw the board
   container.appendChild(svg); // Add the SVG element to the document
@@ -54,7 +55,7 @@ besogo.makeBoardDisplay = function(container, editor)
 
     svg.appendChild(stoneGroup); // Add placeholder group for stone layer
     svg.appendChild(markupGroup); // Add placeholder group for markup layer
-   svg.appendChild(nextMoveGroup);
+    svg.appendChild(nextMoveGroup);
 
     if (!TOUCH_FLAG) {
         hoverGroup = besogo.svgEl("g");
@@ -95,13 +96,17 @@ besogo.makeBoardDisplay = function(container, editor)
     }
     else if (msg.tool || msg.label)
       redrawHover(current);
+    if (msg.hasOwnProperty('reviewMode'))
+      reviewMode = msg.reviewMode;
   }
 
-  function redrawAll(current) {
-      redrawStones(current);
-      redrawMarkup(current);
-      if(reviewEnabled2) redrawNextMoves(current);
-      redrawHover(current);
+  function redrawAll(current)
+  {
+    redrawStones(current);
+    redrawMarkup(current);
+    if(reviewMode)
+      redrawNextMoves(current);
+    redrawHover(current);
   }
 
   // Initializes the SVG element and draws the board
@@ -280,15 +285,13 @@ besogo.makeBoardDisplay = function(container, editor)
     {
       // Call click handler in editor
       editor.click(i, j, event.ctrlKey, event.shiftKey);
-      if(!TOUCH_FLAG)
+      if (!TOUCH_FLAG)
         (handleOver(i, j))(); // Ensures that any updated tool is visible
-		if(!reviewEnabled2){
-			setTimeout(function(){
-				if(isMutable) editor.nextNode(1);
-			}, 360);
-		}
+      if (!reviewMode)
+        setTimeout(function(){ if(isMutable) editor.nextNode(1); }, 360);
     };
   }
+
   function handleOver(i, j) // Returns function for mouse over
   {
     return function()
