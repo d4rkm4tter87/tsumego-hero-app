@@ -482,6 +482,9 @@ besogo.makeEditor = function(sizeX, sizeY)
       notifyListeners({ treeChange: true, stoneChange: true });
       edited = true;
     }
+    
+    if (autoPlay && !reviewMode && color == root.firstToPlay)
+      setTimeout(function(){ if(isMutable) nextNode(1); }, 360);
   }
 
   // Places a setup stone at the given color and location
