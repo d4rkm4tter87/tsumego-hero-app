@@ -121,7 +121,7 @@
         panelsDiv = false; // Flags panels div as removed
       }
     }
-  if (options.panels2.length > 0) // Only create if there are panels to add
+    if (options.panels2.length > 0) // Only create if there are panels to add
     {
       panelsDiv = makeDiv('besogo-bottom-panels');
       for (i = 0; i < options.panels2.length; i++)
@@ -136,140 +136,149 @@
         panelsDiv = false; // Flags panels div as removed
       }
     }
-  
 
     options.resize = options.resize || 'auto';
-    if (options.resize === 'auto') { // Add auto-resizing unless resize option is truthy
-        resizer = function() {
-            var windowHeight = window.innerHeight, // Viewport height
-                // Calculated width of parent element
-                parentWidth = parseFloat(getComputedStyle(container.parentElement).width),
-                maxWidth = +(options.maxwidth || -1),
-                orientation = options.orient || 'auto',
+    if (options.resize === 'auto') // Add auto-resizing unless resize option is truthy
+    {
+      resizer = function()
+      {
+        var windowHeight = window.innerHeight, // Viewport height
+            // Calculated width of parent element
+            parentWidth = parseFloat(getComputedStyle(container.parentElement).width),
+            maxWidth = +(options.maxwidth || -1),
+            orientation = options.orient || 'auto',
 
-                portraitRatio = +(options.portratio || 200) / 100,
-                landscapeRatio = +(options.landratio || 200) / 100,
-                minPanelsWidth = +(options.minpanelswidth || 350),
-                minPanelsHeight = +(options.minpanelsheight || 400),
-                minLandscapeWidth = +(options.transwidth || 600),
+            portraitRatio = +(options.portratio || 200) / 100,
+            landscapeRatio = +(options.landratio || 200) / 100,
+            minPanelsWidth = +(options.minpanelswidth || 350),
+            minPanelsHeight = +(options.minpanelsheight || 400),
+            minLandscapeWidth = +(options.transwidth || 600),
 
-                // Initial width parent
-                width = (maxWidth > 0 && maxWidth < parentWidth) ? maxWidth : parentWidth,
-                height; // Initial height is undefined
+            // Initial width parent
+            width = (maxWidth > 0 && maxWidth < parentWidth) ? maxWidth : parentWidth,
+            height; // Initial height is undefined
 
-            // Determine orientation if 'auto' or 'view'
-            if (orientation !== 'portrait' && orientation !== 'landscape') {
-                if (width < minLandscapeWidth || (orientation === 'view' && width < windowHeight)) {
-                    orientation = 'portrait';
-                } else {
-                    orientation = 'landscape';
-                }
-            }
+        // Determine orientation if 'auto' or 'view'
+        if (orientation !== 'portrait' && orientation !== 'landscape')
+          if (width < minLandscapeWidth || (orientation === 'view' && width < windowHeight))
+            orientation = 'portrait';
+          else
+            orientation = 'landscape';
 
-            if (orientation === 'portrait') { // Portrait mode
-                if (!isNaN(portraitRatio)) {
-                    height = portraitRatio * width;
-                    if (panelsDiv) {
-                        height = (height - width < minPanelsHeight) ? width + minPanelsHeight : height;
-                    }
-                } // Otherwise, leave height undefined
-            } else if (orientation === 'landscape') { // Landscape mode
-                if (!panelsDiv) { // No panels div
-                    height = width; // Square overall
-                } else if (isNaN(landscapeRatio)) {
-                    height = windowHeight;
-                } else { // Otherwise use ratio
-                    height = width / landscapeRatio;
-                }
+          if (orientation === 'portrait') // Portrait mode
+          {
+            if (!isNaN(portraitRatio))
+            {
+              height = portraitRatio * width;
+              if (panelsDiv)
+                height = (height - width < minPanelsHeight) ? width + minPanelsHeight : height;
+            } // Otherwise, leave height undefined
+          }
+          else if (orientation === 'landscape') // Landscape mode
+          {
+            if (!panelsDiv) // No panels div
+              height = width; // Square overall
+            else if (isNaN(landscapeRatio))
+              height = windowHeight;
+            else // Otherwise use ratio
+              height = width / landscapeRatio;
 
-                if (panelsDiv) {
-                    // Reduce height to ensure minimum width of panels div
-                    height = (width < height + minPanelsWidth) ? (width - minPanelsWidth) : height;
-                }
-            }
-
-            setDimensions(width, height);
-            container.style.width = width + 'px';
-        };
-        window.addEventListener("resize", resizer);
-        resizer(); // Initial div sizing
-    } else if (options.resize === 'fixed') {
-        setDimensions(container.clientWidth, container.clientHeight);
-    } else if (options.resize === 'fill') {
-        resizer = function() {
-            var // height = window.innerHeight, // Viewport height
-                height = parseFloat(getComputedStyle(container.parentElement).height),
-                // Calculated width of parent element
-                width = parseFloat(getComputedStyle(container.parentElement).width),
-
-                minPanelsWidth = +(options.minpanelswidth || 350),
-                minPanelsHeight = +(options.minpanelsheight || 300),
-
-                // Calculated dimensions for the panels div
-                panelsWidth = 0, // Will be set if needed
-                panelsHeight = 0;
-
-            if (width >= height) { // Landscape mode
-                container.style['flex-direction'] = 'row';
-                if (panelsDiv) {
-                    panelsWidth = (width - height >= minPanelsWidth) ? (width - height) : minPanelsWidth;
-                }
-                panelsDiv.style.height = height + 'px';
-                panelsDiv.style.width = panelsWidth + 'px';
-                boardDiv.style.height = height + 'px';
-                boardDiv.style.width = (width - panelsWidth) + 'px';
-            } else { // Portrait mode
-                container.style['flex-direction'] = 'column';
-                if (panelsDiv) {
-                    panelsHeight = (height - width >= minPanelsHeight) ? (height - width) : minPanelsHeight;
-                }
-                panelsDiv.style.height = panelsHeight + 'px';
-                panelsDiv.style.width = width + 'px';
-                boardDiv.style.height = (height - panelsHeight) + 'px';
-                boardDiv.style.width = width + 'px';
-            }
-        };
-        window.addEventListener("resize", resizer);
-        resizer(); // Initial div sizing
+            if (panelsDiv) // Reduce height to ensure minimum width of panels div
+              height = (width < height + minPanelsWidth) ? (width - minPanelsWidth) : height;
+          }
+        setDimensions(width, height);
+        container.style.width = width + 'px';
+      };
+      window.addEventListener("resize", resizer);
+      resizer(); // Initial div sizing
     }
+    else if (options.resize === 'fixed')
+      setDimensions(container.clientWidth, container.clientHeight);
+    else if (options.resize === 'fill')
+    {
+      resizer = function()
+      {
+        var // height = window.innerHeight, // Viewport height
+            height = parseFloat(getComputedStyle(container.parentElement).height),
+            // Calculated width of parent element
+            width = parseFloat(getComputedStyle(container.parentElement).width),
 
-    // Sets dimensions with optional height param
-    function setDimensions(width, height) {
-        if (height && width > height) { // Landscape mode
-            container.style['flex-direction'] = 'row';
-            boardDiv.style.height = height + 'px';
-            boardDiv.style.width = height + 'px';
-            if (panelsDiv) {
-                panelsDiv.style.height = height + 'px';
-                panelsDiv.style.width = (width - height) + 'px';
-            }
-        } else { // Portrait mode (implied if height is missing)
-            container.style['flex-direction'] = 'column';
-            boardDiv.style.height = width + 'px';
-            boardDiv.style.width = width + 'px';
-            if (panelsDiv) {
-                if (height) { // Only set height if param present
-                    panelsDiv.style.height = (height - width) + 'px';
-                }
-                panelsDiv.style.width = width + 'px';
-            }
+            minPanelsWidth = +(options.minpanelswidth || 350),
+            minPanelsHeight = +(options.minpanelsheight || 300),
+
+            // Calculated dimensions for the panels div
+            panelsWidth = 0, // Will be set if needed
+            panelsHeight = 0;
+
+        if (width >= height) // Landscape mode
+        {
+          container.style['flex-direction'] = 'row';
+          if (panelsDiv)
+              panelsWidth = (width - height >= minPanelsWidth) ? (width - height) : minPanelsWidth;
+          panelsDiv.style.height = height + 'px';
+          panelsDiv.style.width = panelsWidth + 'px';
+          boardDiv.style.height = height + 'px';
+          boardDiv.style.width = (width - panelsWidth) + 'px';
         }
+        else // Portrait mode
+        {
+          container.style['flex-direction'] = 'column';
+          if (panelsDiv)
+            panelsHeight = (height - width >= minPanelsHeight) ? (height - width) : minPanelsHeight;
+          panelsDiv.style.height = panelsHeight + 'px';
+          panelsDiv.style.width = width + 'px';
+          boardDiv.style.height = (height - panelsHeight) + 'px';
+          boardDiv.style.width = width + 'px';
+        }
+      };
+      window.addEventListener("resize", resizer);
+      resizer(); // Initial div sizing
     }
 
-    // Creates and adds divs to specified parent or container
-    function makeDiv(className, parent) {
-        var div = document.createElement("div");
-        if (className) {
-            div.className = className;
-        }
-        parent = parent || container;
-        parent.appendChild(div);
-        return div;
+  // Sets dimensions with optional height param
+  function setDimensions(width, height)
+  {
+    if (height && width > height)  // Landscape mode
+    {
+      container.style['flex-direction'] = 'row';
+      boardDiv.style.height = height + 'px';
+      boardDiv.style.width = height + 'px';
+      if (panelsDiv)
+      {
+        panelsDiv.style.height = height + 'px';
+        panelsDiv.style.width = (width - height) + 'px';
+      }
     }
+    else // Portrait mode (implied if height is missing)
+    {
+      container.style['flex-direction'] = 'column';
+      boardDiv.style.height = width + 'px';
+      boardDiv.style.width = width + 'px';
+      if (panelsDiv)
+      {
+        if (height) // Only set height if param present
+          panelsDiv.style.height = (height - width) + 'px';
+        panelsDiv.style.width = width + 'px';
+      }
+    }
+  }
+
+  // Creates and adds divs to specified parent or container
+  function makeDiv(className, parent)
+  {
+    var div = document.createElement("div");
+    if (className) {
+        div.className = className;
+    }
+    parent = parent || container;
+    parent.appendChild(div);
+    return div;
+  }
 }; // END function besogo.create
 
 // Parses size parameter from SGF format
-besogo.parseSize = function(input) {
+besogo.parseSize = function(input)
+{
     var matches,
         sizeX,
         sizeY;
@@ -277,18 +286,20 @@ besogo.parseSize = function(input) {
     input = (input + '').replace(/\s/g, ''); // Convert to string and remove whitespace
 
     matches = input.match(/^(\d+):(\d+)$/); // Check for #:# pattern
-    if (matches) { // Composed value pattern found
-        sizeX = +matches[1]; // Convert to numbers
-        sizeY = +matches[2];
-    } else if (input.match(/^\d+$/)) { // Check for # pattern
-        sizeX = +input; // Convert to numbers
-        sizeY = +input; // Implied square
-    } else { // Invalid input format
-        sizeX = sizeY = 19; // Default size value
+    if (matches) // Composed value pattern found
+    {
+      sizeX = +matches[1]; // Convert to numbers
+      sizeY = +matches[2];
     }
-    if (sizeX > 52 || sizeX < 1 || sizeY > 52 || sizeY < 1) {
-        sizeX = sizeY = 19; // Out of range, set to default
+    else if (input.match(/^\d+$/)) // Check for # pattern
+    {
+      sizeX = +input; // Convert to numbers
+      sizeY = +input; // Implied square
     }
+    else // Invalid input format
+      sizeX = sizeY = 19; // Default size value
+    if (sizeX > 52 || sizeX < 1 || sizeY > 52 || sizeY < 1)
+      sizeX = sizeY = 19; // Out of range, set to default
 
     return { x: sizeX, y: sizeY };
 };
