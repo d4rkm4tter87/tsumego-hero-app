@@ -198,7 +198,7 @@ class AppController extends Controller{
 	
 	public function userRefresh($range = null){
 		$this->LoadModel('User');
-		$this->LoadModel('UserTsumego');
+		$this->LoadModel('TsumegoStatus');
 		if($range==1){
 			$u = $this->User->find('all', array('order' => 'id DESC', 'conditions' =>  array(
 				'id <' => 1000
@@ -277,15 +277,15 @@ class AppController extends Controller{
 			$u[$i]['User']['lastRefresh'] = date('Y-m-d');
 			$this->User->save($u[$i]);
 		}
-		$uts = $this->UserTsumego->find('all', array('conditions' =>  array('status' => 'F')));
+		$uts = $this->TsumegoStatus->find('all', array('conditions' =>  array('status' => 'F')));
 		for($i=0; $i<count($uts); $i++){
-			$uts[$i]['UserTsumego']['status'] = 'V';
-			$this->UserTsumego->save($uts[$i]);
+			$uts[$i]['TsumegoStatus']['status'] = 'V';
+			$this->TsumegoStatus->save($uts[$i]);
 		}
-		$uts = $this->UserTsumego->find('all', array('conditions' =>  array('status' => 'X')));
+		$uts = $this->TsumegoStatus->find('all', array('conditions' =>  array('status' => 'X')));
 		for($i=0; $i<count($uts); $i++){
-			$uts[$i]['UserTsumego']['status'] = 'W';
-			$this->UserTsumego->save($uts[$i]);
+			$uts[$i]['TsumegoStatus']['status'] = 'W';
+			$this->TsumegoStatus->save($uts[$i]);
 		}
 	}
 	
@@ -295,20 +295,20 @@ class AppController extends Controller{
 	}
 	
 	public function halfXP(){
-		$this->LoadModel('UserTsumego');
+		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('DayRecord');
 		
 		//$dr = $this->DayRecord->find('first', array('conditions' =>  array('date' => '2022-11-21')));
 		//$dr['DayRecord']['tsumego'] = 21713;
 		//$this->DayRecord->save($dr);
 		
-		$week = $this->UserTsumego->find('all', array('order' => 'created DESC', 'conditions' => array('status' => 'S')));
+		$week = $this->TsumegoStatus->find('all', array('order' => 'created DESC', 'conditions' => array('status' => 'S')));
 		$oneWeek = date('Y-m-d H:i:s', strtotime("-7 days"));
 		for($i=0; $i<count($week); $i++){
-			if($week[$i]['UserTsumego']['created'] < $oneWeek){
-				if($week[$i]['UserTsumego']['status']=='S'){
-					$week[$i]['UserTsumego']['status'] = 'W';
-					$this->UserTsumego->save($week[$i]);
+			if($week[$i]['TsumegoStatus']['created'] < $oneWeek){
+				if($week[$i]['TsumegoStatus']['status']=='S'){
+					$week[$i]['TsumegoStatus']['status'] = 'W';
+					$this->TsumegoStatus->save($week[$i]);
 				}
 			}			
 		}

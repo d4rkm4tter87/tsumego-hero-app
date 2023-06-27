@@ -2,7 +2,7 @@
 class CommentsController extends AppController{
     public function index(){
 		$this->LoadModel('Tsumego');
-		$this->LoadModel('UserTsumego');
+		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Set');
 		$this->LoadModel('User');
 		$_SESSION['title'] = 'Tsumego Hero - Discuss';
@@ -27,7 +27,7 @@ class CommentsController extends AppController{
 		else $filter1 = $this->params['url']['filter'];
 		
 		if($filter1=='true'){
-			$userTsumegos = $this->UserTsumego->find('all', array('conditions' =>  array(
+			$userTsumegos = $this->TsumegoStatus->find('all', array('conditions' =>  array(
 				'user_id' => $_SESSION['loggedInUser']['User']['id'], 
 				'OR' => array(
 					array('status' => 'S'),
@@ -36,7 +36,7 @@ class CommentsController extends AppController{
 				)
 			)));
 		}else{
-			$userTsumegos = $this->UserTsumego->find('all', array('conditions' =>  array(
+			$userTsumegos = $this->TsumegoStatus->find('all', array('conditions' =>  array(
 				'user_id' => $_SESSION['loggedInUser']['User']['id']
 			)));
 		}
@@ -44,8 +44,8 @@ class CommentsController extends AppController{
 		$keyList = array();
 		$keyListStatus = array();
 		for($i=0; $i<count($userTsumegos); $i++){
-			$keyList[$i] = $userTsumegos[$i]['UserTsumego']['tsumego_id'];
-			$keyListStatus[$i] = $userTsumegos[$i]['UserTsumego']['status'];
+			$keyList[$i] = $userTsumegos[$i]['TsumegoStatus']['tsumego_id'];
+			$keyListStatus[$i] = $userTsumegos[$i]['TsumegoStatus']['status'];
 		}
 		if(!isset($this->params['url']['comment-id'])){
 			if($unresolved=='false'){

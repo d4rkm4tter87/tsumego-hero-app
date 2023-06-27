@@ -7,7 +7,7 @@ class SitesController extends AppController{
 		$_SESSION['title'] = 'Tsumego Hero';
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('Set');
-		$this->LoadModel('UserTsumego');
+		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('User');
 		$this->LoadModel('DayRecord');
 		$this->LoadModel('UserBoard');
@@ -80,33 +80,33 @@ class SitesController extends AppController{
 			}
 			//echo '<pre>'; print_r($idArray); echo '</pre>';
 			/*
-			$uts = $this->UserTsumego->find('all', array(
+			$uts = $this->TsumegoStatus->find('all', array(
 				'order' => 'created DESC', 'conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])
 			));
 			*/
-			$uts = $this->UserTsumego->find('all', array('order' => 'created DESC', 'conditions' => array(
+			$uts = $this->TsumegoStatus->find('all', array('order' => 'created DESC', 'conditions' => array(
 				'user_id' => $_SESSION['loggedInUser']['User']['id'],
 				'tsumego_id' => $idArray
 			)));
 			
 			for($i=0; $i<count($uts); $i++){
 				for($j=0; $j<count($newTS); $j++){
-					if($uts[$i]['UserTsumego']['tsumego_id'] == $newTS[$j]['Tsumego']['id']){
-						$newTS[$j]['Tsumego']['status'] = $uts[$i]['UserTsumego']['status'];
+					if($uts[$i]['TsumegoStatus']['tsumego_id'] == $newTS[$j]['Tsumego']['id']){
+						$newTS[$j]['Tsumego']['status'] = $uts[$i]['TsumegoStatus']['status'];
 					}
 				}
 				for($j=0; $j<count($scheduleTsumego); $j++){
-					if($uts[$i]['UserTsumego']['tsumego_id'] == $scheduleTsumego[$j]['Tsumego']['id']){
-						$scheduleTsumego[$j]['Tsumego']['status'] = $uts[$i]['UserTsumego']['status'];
+					if($uts[$i]['TsumegoStatus']['tsumego_id'] == $scheduleTsumego[$j]['Tsumego']['id']){
+						$scheduleTsumego[$j]['Tsumego']['status'] = $uts[$i]['TsumegoStatus']['status'];
 					}
 				}
 				
 				
 				
-				if($uts[$i]['UserTsumego']['tsumego_id'] == $totd['Tsumego']['id']) $totd['Tsumego']['status'] = $uts[$i]['UserTsumego']['status'];
+				if($uts[$i]['TsumegoStatus']['tsumego_id'] == $totd['Tsumego']['id']) $totd['Tsumego']['status'] = $uts[$i]['TsumegoStatus']['status'];
 				
 				
-				if($uts[$i]['UserTsumego']['tsumego_id'] == $newT['Tsumego']['id']) $newT['Tsumego']['status'] = $uts[$i]['UserTsumego']['status'];
+				if($uts[$i]['TsumegoStatus']['tsumego_id'] == $newT['Tsumego']['id']) $newT['Tsumego']['status'] = $uts[$i]['TsumegoStatus']['status'];
 			}
 			
 			//echo '<pre>'; print_r($scheduleTsumego); echo '</pre>';

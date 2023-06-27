@@ -5,7 +5,7 @@
 		<p class="title4">Modes</p>
 		
 		<?php
-			echo '<img id="title-image" src="/img/modeselect.png" width="100%" alt="Tsumego Hero Modes" title="Tsumego Hero Modes">';
+			echo '<img id="title-image" src="/img/new-modeselect.png" width="100%" alt="Tsumego Hero Modes" title="Tsumego Hero Modes">';
 		?>
 		<br>
 			<?php
@@ -89,6 +89,13 @@
 				<a href="/tsumegos/play/<?php echo $totd['Tsumego']['id']; ?>"><?php echo $totd['Tsumego']['num']; ?></a>
 			</li>
 			<br><br>
+		</div>
+		<div class="new1">
+			1000 Weiqi problems is a Chinese tsumego & tesuji book published in 2000. It is 385-pages in length with 1000-problems & solutions. The problems are 
+			categorized into two main sections: tsumego and tesuji; then further broken into 10 and 15 thematic subsections respectively.<br><br>
+			<div align="center"><img width="95%" src="/img/1001weiqi-home.png">
+			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/181">Play</a><br><br></div>
 		</div>
 		<p class="title4">Update 18.06.2023</p>
 		<div class="new1">
@@ -305,15 +312,6 @@
 				echo $url4;
 				echo '</div>';
 			}
-			
-			echo '<div class="time-mode-play">';
-			if(isset($_SESSION['loggedInUser'])){
-				echo '<a id="time-mode-play-button" class="new-button main-page" style="font-size:14px;" href="/ranks/overview">Play</a>';
-				echo '<div class="time-mode-play-box" onmouseover="mode3hover()" onmouseout="mode3NoHover()" onclick="goMode3()"></div>';
-			}else{
-				echo '<a class="new-button-inactive main-page" style="font-size:14px;position:relative;left:-7px">Sign In</a>';
-			}
-			echo '</div>';
 		?>
 		
 		<div class="modeBox1" onmouseover="mode1hover()" onmouseout="modeNoHover()" onclick="goMode1()">
@@ -336,13 +334,21 @@
 				?>
 			</div>
 		</div>
+		<?php 
+		if(isset($_SESSION['loggedInUser'])) $modeActions3 = 'onmouseover="mode3hover()" onmouseout="modeNoHover()" onclick="goMode3()" style="cursor:pointer;"';
+		else $modeActions3 = '';
+		?>
+		<div class="modeBox3" <?php echo $modeActions3; ?> >
+			<div class="modeboxes">
+				<?php if(isset($_SESSION['loggedInUser'])){ ?>
+					<a class="new-button main-page" style="font-size:14px;" href="<?php echo '/ranks/overview'; ?>">Play</a>
+				<?php }else{ ?>
+					<a id="modeboxes2" class="new-button-inactive main-page" style="font-size:14px;">sign in</a>
+				<?php } ?>
+			</div>
+		</div>
 		<?php
-			//$quote = '7000';
-			if(isset($_SESSION['loggedInUser'])){
-				echo '<img id="modeboxes3" src="/img/time-mode-hero2.png?v=1.456" width="100%" alt="Tsumego Hero Message of the Day" title="Tsumego Hero Message of the Day">';
-			}else{
-				echo '<img src="/img/time-mode-hero2.png?v=1.456" width="100%" alt="Tsumego Hero Message of the Day" title="Tsumego Hero Message of the Day">';
-			}
+			echo '<img src="/img/'.$quote.'.PNG" width="100%" alt="Tsumego Hero Message of the Day" title="Tsumego Hero Message of the Day">';
 		
 		/*
 		<div class="danielml-bg">
@@ -612,11 +618,11 @@
 		<p class="title4">Recent Donations and Upgrades</p>
 		<div class="new1">
 			<table class="newx">
-		<tr><td width="50%"><h1>Kyriaas</h1></td><td><h1>50,00 €</h1></td></tr>
+		<tr><td width="50%"><h1>meliache</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>Kyriaas</h1></td><td><h1>50,00 €</h1></td></tr>
 		<tr><td><h1>Scotty Reed</h1></td><td><h1>2,17 € <i>subscription</i></h1></td></tr>
 		<tr><td><h1>Jerome Hubert</h1></td><td><h1>60,00 €</h1></td></tr>
 		<tr><td><h1>yonur</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>Kirasan</h1></td><td><h1>10,00 €</h1></td></tr>
 		
 		</table>	
 		<br>
@@ -771,19 +777,16 @@
 			document.getElementById("sandboxVolunteers").style = "display:none;";
 		}
 		function mode1hover(){
-			 $("#title-image").attr("src", "/img/modeselect-1.png");
+			 $("#title-image").attr("src", "/img/new-modeselect1.png");
 		}
 		function mode2hover(){
-			 $("#title-image").attr("src", "/img/modeselect-2.png");
-		}
-		function modeNoHover(){
-			 $("#title-image").attr("src", "/img/modeselect.png");
+			 $("#title-image").attr("src", "/img/new-modeselect2.png");
 		}
 		function mode3hover(){
-			 $("#modeboxes3").attr("src", "/img/time-mode-hero2-hover.png");
+			 $("#title-image").attr("src", "/img/new-modeselect3.png");
 		}
-		function mode3NoHover(){
-			 $("#modeboxes3").attr("src", "/img/time-mode-hero2.png?v=1.456");
+		function modeNoHover(){
+			 $("#title-image").attr("src", "/img/new-modeselect.png");
 		}
 		function goMode1(){
 			<?php echo 'window.location.href = "/tsumegos/play/'.$_SESSION['lastVisit'].'?mode=1";'; ?>

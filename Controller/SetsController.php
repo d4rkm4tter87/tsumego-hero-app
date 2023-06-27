@@ -63,7 +63,7 @@ class SetsController extends AppController{
 	public function beta(){
 		$this->LoadModel('User');
 		$this->LoadModel('Tsumego');
-		$this->LoadModel('UserTsumego');
+		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Comment');
 		$this->LoadModel('Favorite');
 		$this->LoadModel('Comment');
@@ -136,10 +136,10 @@ class SetsController extends AppController{
 			);
 		}
 		if(isset($_SESSION['loggedInUser'])){
-			$uts = $this->UserTsumego->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+			$uts = $this->TsumegoStatus->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
 			$utsMap = array();
 			for($l=0; $l<count($uts); $l++){
-				$utsMap[$uts[$l]['UserTsumego']['tsumego_id']] = $uts[$l]['UserTsumego']['status'];
+				$utsMap[$uts[$l]['TsumegoStatus']['tsumego_id']] = $uts[$l]['TsumegoStatus']['status'];
 			}
 		}
 
@@ -376,7 +376,7 @@ class SetsController extends AppController{
 	public function index(){
 		$this->LoadModel('User');
 		$this->LoadModel('Tsumego');
-		$this->LoadModel('UserTsumego');
+		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Favorite');
 
 		$_SESSION['page'] = 'set';
@@ -473,16 +473,16 @@ class SetsController extends AppController{
 			}
 		}
 		if(isset($_SESSION['loggedInUser'])){
-			$uts = $this->UserTsumego->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+			$uts = $this->TsumegoStatus->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
 			$idMap = array();
 			$statusMap = array();
 			for($i=0; $i<count($uts); $i++){
-				array_push($idMap, $uts[$i]['UserTsumego']['tsumego_id']);
-				array_push($statusMap, $uts[$i]['UserTsumego']['status']);
+				array_push($idMap, $uts[$i]['TsumegoStatus']['tsumego_id']);
+				array_push($statusMap, $uts[$i]['TsumegoStatus']['status']);
 			}
 			$utsMap = array();
 			for($l=0; $l<count($uts); $l++){
-				$utsMap[$uts[$l]['UserTsumego']['tsumego_id']] = $uts[$l]['UserTsumego']['status'];
+				$utsMap[$uts[$l]['TsumegoStatus']['tsumego_id']] = $uts[$l]['TsumegoStatus']['status'];
 			}
 		}
 
@@ -583,9 +583,9 @@ class SetsController extends AppController{
 			for($i=0; $i<count($favorite); $i++){
 				$tx = $this->Tsumego->findById($favorite[$i]['Favorite']['tsumego_id']);
 				$difficultyCount += $tx['Tsumego']['difficulty'];
-				//$utx = $this->UserTsumego->find('first', array('conditions' =>  array('tsumego_id' => $favorite[$i]['Favorite']['tsumego_id'], 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
+				//$utx = $this->TsumegoStatus->find('first', array('conditions' =>  array('tsumego_id' => $favorite[$i]['Favorite']['tsumego_id'], 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
 				$utx = $this->findUt($favorite[$i]['Favorite']['tsumego_id'], $uts, $idMap);
-				if($utx['UserTsumego']['status'] == 'S' || $utx['UserTsumego']['status'] == 'W' || $utx['UserTsumego']['status'] == 'C') $solvedCount++;
+				if($utx['TsumegoStatus']['status'] == 'S' || $utx['TsumegoStatus']['status'] == 'W' || $utx['TsumegoStatus']['status'] == 'C') $solvedCount++;
 				$sizeCount++;
 			}
 			$difficultyCount /= $sizeCount;
@@ -672,7 +672,7 @@ class SetsController extends AppController{
 
     public function view($id=null){
 		$this->LoadModel('Tsumego');
-		$this->LoadModel('UserTsumego');
+		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Favorite');
 		$this->LoadModel('AdminActivity');
 		$this->LoadModel('Joseki');
@@ -857,12 +857,12 @@ class SetsController extends AppController{
 				$set = $this->Set->findById($id);
 			}
 		}else{
-			$allUts = $this->UserTsumego->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+			$allUts = $this->TsumegoStatus->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
 			$idMap = array();
 			$statusMap = array();
 			for($i=0; $i<count($allUts); $i++){
-				array_push($idMap, $allUts[$i]['UserTsumego']['tsumego_id']);
-				array_push($statusMap, $allUts[$i]['UserTsumego']['status']);
+				array_push($idMap, $allUts[$i]['TsumegoStatus']['tsumego_id']);
+				array_push($statusMap, $allUts[$i]['TsumegoStatus']['status']);
 			}
 			$fav = $this->Favorite->find('all', array('order' => 'created',	'direction' => 'DESC', 'conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
 			$ts = array();
@@ -873,7 +873,7 @@ class SetsController extends AppController{
 				$tx = $this->Tsumego->find('first', array('conditions' =>  array('id' => $fav[$i]['Favorite']['tsumego_id'])));
 				$difficultyCount += $tx['Tsumego']['difficulty'];
 				$utx = $this->findUt($fav[$i]['Favorite']['tsumego_id'], $allUts, $idMap);
-				if($utx['UserTsumego']['status'] == 'S' || $utx['UserTsumego']['status'] == 'W' || $utx['UserTsumego']['status'] == 'C') $solvedCount++;
+				if($utx['TsumegoStatus']['status'] == 'S' || $utx['TsumegoStatus']['status'] == 'W' || $utx['TsumegoStatus']['status'] == 'C') $solvedCount++;
 				$sizeCount++;
 				array_push($ts, $tx);
 			}
@@ -916,7 +916,7 @@ class SetsController extends AppController{
 		$set['Set']['anz'] = count($ts);
 
 		if(isset($_SESSION['loggedInUser'])){
-			$uts = $this->UserTsumego->find('all', array('conditions' =>  array(
+			$uts = $this->TsumegoStatus->find('all', array('conditions' =>  array(
 				'user_id' => $_SESSION['loggedInUser']['User']['id'],
 				'tsumego_id' => $tsIds
 			)));
@@ -926,8 +926,8 @@ class SetsController extends AppController{
 			)));
 			for($i=0; $i<count($uts); $i++){
 				for($j=0; $j<count($ts); $j++){
-					if($uts[$i]['UserTsumego']['tsumego_id'] == $ts[$j]['Tsumego']['id']){
-						$ts[$j]['Tsumego']['status'] = $uts[$i]['UserTsumego']['status'];
+					if($uts[$i]['TsumegoStatus']['tsumego_id'] == $ts[$j]['Tsumego']['id']){
+						$ts[$j]['Tsumego']['status'] = $uts[$i]['TsumegoStatus']['status'];
 					}
 				}
 			}
@@ -963,7 +963,7 @@ class SetsController extends AppController{
 			$counter = 0;
 			for($j=0; $j<count($uts); $j++){
 				for($k=0; $k<count($ts); $k++){
-					if($uts[$j]['UserTsumego']['tsumego_id']==$ts[$k]['Tsumego']['id'] && ($uts[$j]['UserTsumego']['status']=='S' || $uts[$j]['UserTsumego']['status']=='W' || $uts[$j]['UserTsumego']['status']=='C')){
+					if($uts[$j]['TsumegoStatus']['tsumego_id']==$ts[$k]['Tsumego']['id'] && ($uts[$j]['TsumegoStatus']['status']=='S' || $uts[$j]['TsumegoStatus']['status']=='W' || $uts[$j]['TsumegoStatus']['status']=='C')){
 						$counter++;
 					}
 				}
@@ -1010,7 +1010,7 @@ class SetsController extends AppController{
 						$this->TsumegoAttempt->delete($ur[$i]['TsumegoAttempt']['id']);
 					}
 					for($i=0; $i<count($uts); $i++){
-						$this->UserTsumego->delete($uts[$i]['UserTsumego']['id']);
+						$this->TsumegoStatus->delete($uts[$i]['TsumegoStatus']['id']);
 					}
 					$pr = array();
 					$pr['ProgressDeletion']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
@@ -1073,7 +1073,7 @@ class SetsController extends AppController{
 	public function beta2(){
 		$this->LoadModel('User');
 		$this->LoadModel('Tsumego');
-		$this->LoadModel('UserTsumego');
+		$this->LoadModel('TsumegoStatus');
 
 		$_SESSION['page'] = 'set';
 		$_SESSION['title'] = 'Tsumego Hero - Collections';
@@ -1136,10 +1136,10 @@ class SetsController extends AppController{
 			);
 		}
 		if(isset($_SESSION['loggedInUser'])){
-			$uts = $this->UserTsumego->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+			$uts = $this->TsumegoStatus->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
 			$utsMap = array();
 			for($l=0; $l<count($uts); $l++){
-				$utsMap[$uts[$l]['UserTsumego']['tsumego_id']] = $uts[$l]['UserTsumego']['status'];
+				$utsMap[$uts[$l]['TsumegoStatus']['tsumego_id']] = $uts[$l]['TsumegoStatus']['status'];
 			}
 		}
 

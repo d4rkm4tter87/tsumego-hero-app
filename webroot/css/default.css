@@ -1603,18 +1603,17 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		-webkit-filter:blur(2px);
 	}
 	.modeboxes{
-		padding: 235px 29.2% 2px 29.2%;
+		padding: 210px 29.2% 2px 29.2%;
 		width: 100%;
-		margin-left: 5px;
 	}
 	.modeBox1{
 		cursor:pointer;
 		float:left;
 		position:absolute;
-		top: 144px;
-		left: 713px;
-		width: 190px;
-		height: 275px;
+		top: 79px;
+		left: 674px;
+		width: 171px;
+		height: 246px;
 		border-radius: 26px 26px 26px 26px;
 		-moz-border-radius: 26px 26px 26px 26px;
 		-webkit-border-radius: 26px 26px 26px 26px;
@@ -1622,10 +1621,42 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.modeBox2{
 		float:left;
 		position:absolute;
-		top: 145px;
-		left: 1006px;
-		width: 188px;
-		height: 272px;
+		top: 79px;
+		left: 869px;
+		width: 171px;
+		height: 246px;
+		border-radius: 26px 26px 26px 26px;
+		-moz-border-radius: 26px 26px 26px 26px;
+		-webkit-border-radius: 26px 26px 26px 26px;
+	}
+	.modeBox3{
+		position:absolute;
+		top: 80px;
+		left: 1065px;
+		width: 167px;
+		height: 244px;
+		border-radius: 26px 26px 26px 26px;
+		-moz-border-radius: 26px 26px 26px 26px;
+		-webkit-border-radius: 26px 26px 26px 26px;
+	}
+	.time-mode-play{
+		position:absolute;
+		top: 419px;
+		left: 291px;
+		z-index: 1001;
+	}
+	#time-mode-play-button{
+		
+	}
+	.time-mode-play-box{
+		position:absolute;
+		top: -267px;
+		left: -77px;
+		width: 217px;
+		height: 308px;
+		background:tomato;
+		cursor:pointer;
+		z-index:5;
 		border-radius: 26px 26px 26px 26px;
 		-moz-border-radius: 26px 26px 26px 26px;
 		-webkit-border-radius: 26px 26px 26px 26px;
@@ -2699,24 +2730,6 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		-moz-border-radius-bottomleft:7px;-moz-border-radius-bottomright:7px;border-radius-bottomleft:7px;border-radius-bottomright:7px;
 		-moz-border-radius-bottomright:7px;-moz-border-radius-bottomleft:7px;border-bottom-right-radius:7px;border-bottom-left-radius:7px;
 		-moz-border-radius-topright:7px;-moz-border-radius-topleft:7px;border-top-right-radius:7px;border-top-left-radius:7px;
-	}
-	.time-mode-play{
-		position:absolute;
-		top: 419px;
-		left: 291px;
-		z-index: 1001;
-	}
-	#time-mode-play-button{
-		
-	}
-	.time-mode-play-box{
-		position:absolute;
-		top: -267px;
-		left: -77px;
-		width: 217px;
-		height: 308px;
-		cursor:pointer;
-		z-index:5;
 	}
 	.imageContainer1{
 		float:left;

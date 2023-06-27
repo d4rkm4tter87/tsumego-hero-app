@@ -31,7 +31,7 @@
 	<meta name="keywords" content="tsumego, problems, puzzles, baduk, weiqi, tesuji, life and death, solve, solving, hero, go, in-seong, level" >	
 	<meta name="Author" content="Joschka Zimdars">
 	<meta property="og:title" content="Tsumego Hero">
-	<link rel="stylesheet" type="text/css" href="/css/default.css?v=2.1">
+	<link rel="stylesheet" type="text/css" href="/css/default.css?v=2.2">
 	<?php
 		//echo $_SERVER['REMOTE_ADDR'];
 		echo $this->Html->meta('icon');
@@ -52,37 +52,37 @@
 			$xpBarFill = 'xp-bar-fill-c1';
 		}elseif($mode==2){
 			$xpBarFill = 'xp-bar-fill-c2';
-			if($user['User']['elo']>=2900) $td = '9d';
-			elseif($user['User']['elo']>=2800) $td = '8d';
-			elseif($user['User']['elo']>=2700) $td = '7d';
-			elseif($user['User']['elo']>=2600) $td = '6d';
-			elseif($user['User']['elo']>=2500) $td = '5d';
-			elseif($user['User']['elo']>=2400) $td = '4d'; 
-			elseif($user['User']['elo']>=2300) $td = '3d';
-			elseif($user['User']['elo']>=2200) $td = '2d'; 
-			elseif($user['User']['elo']>=2100) $td = '1d';
-			elseif($user['User']['elo']>=2000) $td = '1k'; 
-			elseif($user['User']['elo']>=1900) $td = '2k';
-			elseif($user['User']['elo']>=1800) $td = '3k'; 
-			elseif($user['User']['elo']>=1700) $td = '4k';
-			elseif($user['User']['elo']>=1600) $td = '5k';
-			elseif($user['User']['elo']>=1500) $td = '6k';
-			elseif($user['User']['elo']>=1400) $td = '7k'; 
-			elseif($user['User']['elo']>=1300) $td = '8k';
-			elseif($user['User']['elo']>=1200) $td = '9k';
-			elseif($user['User']['elo']>=1100) $td = '10k';
-			elseif($user['User']['elo']>=1000) $td = '11k';
-			elseif($user['User']['elo']>=900) $td = '12k';
-			elseif($user['User']['elo']>=800) $td = '13k';
-			elseif($user['User']['elo']>=700) $td = '14k';
-			elseif($user['User']['elo']>=600) $td = '15k';
-			elseif($user['User']['elo']>=500) $td = '16k';
-			elseif($user['User']['elo']>=400) $td = '17k';
-			elseif($user['User']['elo']>=300) $td = '18k';
-			elseif($user['User']['elo']>=200) $td = '19k';
-			elseif($user['User']['elo']>=100) $td = '20k';
+			if($user['User']['elo_rating_mode']>=2900) $td = '9d';
+			elseif($user['User']['elo_rating_mode']>=2800) $td = '8d';
+			elseif($user['User']['elo_rating_mode']>=2700) $td = '7d';
+			elseif($user['User']['elo_rating_mode']>=2600) $td = '6d';
+			elseif($user['User']['elo_rating_mode']>=2500) $td = '5d';
+			elseif($user['User']['elo_rating_mode']>=2400) $td = '4d'; 
+			elseif($user['User']['elo_rating_mode']>=2300) $td = '3d';
+			elseif($user['User']['elo_rating_mode']>=2200) $td = '2d'; 
+			elseif($user['User']['elo_rating_mode']>=2100) $td = '1d';
+			elseif($user['User']['elo_rating_mode']>=2000) $td = '1k'; 
+			elseif($user['User']['elo_rating_mode']>=1900) $td = '2k';
+			elseif($user['User']['elo_rating_mode']>=1800) $td = '3k'; 
+			elseif($user['User']['elo_rating_mode']>=1700) $td = '4k';
+			elseif($user['User']['elo_rating_mode']>=1600) $td = '5k';
+			elseif($user['User']['elo_rating_mode']>=1500) $td = '6k';
+			elseif($user['User']['elo_rating_mode']>=1400) $td = '7k'; 
+			elseif($user['User']['elo_rating_mode']>=1300) $td = '8k';
+			elseif($user['User']['elo_rating_mode']>=1200) $td = '9k';
+			elseif($user['User']['elo_rating_mode']>=1100) $td = '10k';
+			elseif($user['User']['elo_rating_mode']>=1000) $td = '11k';
+			elseif($user['User']['elo_rating_mode']>=900) $td = '12k';
+			elseif($user['User']['elo_rating_mode']>=800) $td = '13k';
+			elseif($user['User']['elo_rating_mode']>=700) $td = '14k';
+			elseif($user['User']['elo_rating_mode']>=600) $td = '15k';
+			elseif($user['User']['elo_rating_mode']>=500) $td = '16k';
+			elseif($user['User']['elo_rating_mode']>=400) $td = '17k';
+			elseif($user['User']['elo_rating_mode']>=300) $td = '18k';
+			elseif($user['User']['elo_rating_mode']>=200) $td = '19k';
+			elseif($user['User']['elo_rating_mode']>=100) $td = '20k';
 			else $td = '20k';
-			//$levelNum = '<p id="bar-0"></p><p id="bar-1">'.$td.'</p><p id="bar-2">&nbsp;(</p><p id="bar-3">'.$user['User']['elo'].'</p><p id="bar-2">)</p>';
+			//$levelNum = '<p id="bar-0"></p><p id="bar-1">'.$td.'</p><p id="bar-2">&nbsp;(</p><p id="bar-3">'.$user['User']['elo_rating_mode'].'</p><p id="bar-2">)</p>';
 			$levelNum = $td;
 		}elseif($mode==3){
 			$levelNum = '15k';
@@ -232,15 +232,17 @@
 					echo '<li><a class="homeMenuLink" '.$playA.' href="/tsumegos/play/'.$lv.'">Play</a>';
 					echo '<ul class="newMenuLi3">';
 						echo '<li><a href="/tsumegos/play/'.$_SESSION['lastVisit'].'?mode=1" '.$levelModeA.'>Level</a></li>';
-						echo '<li><a href="/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2" '.$ratingModeA.'>Rating</a></li>';
-						echo '<li><a href="/ranks/overview" '.$timeModeA.'>Time</a></li>';
+						if(isset($_SESSION['loggedInUser'])){
+							echo '<li><a href="/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2" '.$ratingModeA.'>Rating</a></li>';
+							echo '<li><a href="/ranks/overview" '.$timeModeA.'>Time</a></li>';
+						}
 					echo '</ul>'; 
 					echo '<li><a '.$refreshLinkToHighscore.' '.$highscoreA.' href="/users/'.$highscoreLink.'">Highscore</a>';
 					echo '<ul class="newMenuLi4">';
-						echo '<li><a href="/users/highscore" '.$levelHighscoreA.'>Level</a></li>';
-						echo '<li><a href="/users/rating" '.$ratingHighscoreA.'>Rating</a></li>';
-						echo '<li><a href="/users/highscore3" '.$timeHighscoreA.'>Time</a></li>';
-						echo '<li><a href="/users/leaderboard" '.$dailyHighscoreA.'>Daily</a></li>';
+						echo '<li><a id="tutorialLink" href="/users/highscore" '.$levelHighscoreA.'>Level Highscore</a></li>';
+						echo '<li><a id="tutorialLink" href="/users/rating" '.$ratingHighscoreA.'>Rating Highscore</a></li>';
+						echo '<li><a id="tutorialLink" href="/users/highscore3" '.$timeHighscoreA.'>Time Highscore</a></li>';
+						echo '<li><a id="tutorialLink" href="/users/leaderboard" '.$dailyHighscoreA.'>Daily Highscore</a></li>';
 					echo '</ul>';
 					if(isset($_SESSION['loggedInUser'])) echo '<li><a  '.$refreshLinkToDiscuss.'  '.$discussA.'href="/comments'.$discussFilter.'">Discuss</a></li>';
 					else echo '<li><a style="color:#aaa;">Discuss</a></li>';
@@ -415,7 +417,7 @@
 		var userXP = <?php echo $user['User']['xp']; ?> ;
 		var userLevel = <?php echo $user['User']['level']; ?> ;
 		var userNextLvl = <?php echo $user['User']['nextlvl']; ?> ;
-		var userElo = <?php echo $user['User']['elo']; ?> ;
+		var userElo = <?php echo $user['User']['elo_rating_mode']; ?> ;
 		var soundValue = 0;
 		<?php 
 		echo 'soundValue = "'.$_SESSION['loggedInUser']['User']['sound'].'";';
@@ -666,7 +668,7 @@
 				<?php echo '$("#xp-bar-fill").css("width","'.$barPercent.'%");'; ?>
 				$("#xp-increase-fx").fadeOut(0);$("#xp-bar-fill").css({"-webkit-transition":"all 0.5s ease","box-shadow":""});
 			<?php }elseif($mode==2){ ?>
-				<?php $barPercent = substr($user['User']['elo'], -2); ?>
+				<?php $barPercent = substr($user['User']['elo_rating_mode'], -2); ?>
 				$("#xp-increase-fx").css("display","inline-block");
 				$("#xp-bar-fill").css("box-shadow", "-5px 0px 10px #fff inset");
 				<?php echo '$("#xp-bar-fill").css("width","'.$barPercent.'%");'; ?>

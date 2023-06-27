@@ -6,7 +6,7 @@ class UsersController extends AppController{
 	public $helpers = array('Html', 'Form');
 	
 	public function playerdb5(){
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$this->loadModel('Tsumego');
 		$this->loadModel('TsumegoAttempt');
 		$this->loadModel('Answer');
@@ -16,13 +16,12 @@ class UsersController extends AppController{
 		$this->loadModel('Rank');
 		$this->loadModel('RankOverview');
 		$this->loadModel('Comment');
-		$this->loadModel('Status');
 		
 		//$s = $this->Status->find('all');
 		//echo '<pre>'; print_r(count($s)); echo '</pre>';
 		
 		/*
-		$ut = $this->UserTsumego->find('all', array('limit' => 10000, 'order' => 'created ASC', 'conditions' => array(
+		$ut = $this->TsumegoStatus->find('all', array('limit' => 10000, 'order' => 'created ASC', 'conditions' => array(
 			'created <' => '2022-05-09 19:19:09'
 		)));
 		echo '<pre>'; print_r(count($ut)); echo '</pre>';
@@ -30,7 +29,7 @@ class UsersController extends AppController{
 		echo '<pre>'; print_r($ut[count($ut)-1]); echo '</pre>';
 		
 		for($i=0; $i<count($ut); $i++){
-			$this->UserTsumego->delete($ut[$i]['UserTsumego']['id']);
+			$this->TsumegoStatus->delete($ut[$i]['TsumegoStatus']['id']);
 		}
 		
 		/*
@@ -51,15 +50,15 @@ class UsersController extends AppController{
 			$t['Tsumego']['difficulty'] = 70;
 			$t['Tsumego']['description'] = 'b to kill';
 			$t['Tsumego']['author'] = 'Farkas';
-			$t['Tsumego']['elo'] = '1500';
+			$t['Tsumego']['elo_rating_mode'] = '1500';
 			$this->Tsumego->create();
 			$this->Tsumego->save($t);
 			$num++;
 		}	
 		$u = $this->User->find('all');
 			for($i=0; $i<count($u); $i++){
-				if($u[$i]['User']['elo']!=100){
-					$u[$i]['User']['elo'] = 100;
+				if($u[$i]['User']['elo_rating_mode']!=100){
+					$u[$i]['User']['elo_rating_mode'] = 100;
 					$u[$i]['User']['rd'] = 200;
 					$u[$i]['User']['solved2'] = 0;
 					$this->User->save($u[$i]);
@@ -86,9 +85,9 @@ class UsersController extends AppController{
 			$this->TsumegoAttempt->delete($t[$i]['TsumegoAttempt']['id']);
 		}
 		
-		$ut = $this->UserTsumego->find('all', array('limit' => 10000, 'conditions' =>  array('user_id' => 33)));
+		$ut = $this->TsumegoStatus->find('all', array('limit' => 10000, 'conditions' =>  array('user_id' => 33)));
 		for($i=0; $i<count($ut); $i++){
-			$this->UserTsumego->delete($ut[$i]['UserTsumego']['id']);
+			$this->TsumegoStatus->delete($ut[$i]['TsumegoStatus']['id']);
 		}
 		
 		$tr = $this->TsumegoRatingAttempt->find('all');
@@ -117,7 +116,7 @@ class UsersController extends AppController{
 			$this->TsumegoRatingAttempt->delete($tr[$i]['TsumegoRatingAttempt']['id']);
 		}
 		
-		//$t1['Tsumego']['elo'] = $this->ratingMatch2($t1['Tsumego']['difficulty']);
+		//$t1['Tsumego']['elo_rating_mode'] = $this->ratingMatch2($t1['Tsumego']['difficulty']);
 		//$this->Tsumego->save($t1);
 				
 		*/
@@ -168,15 +167,15 @@ class UsersController extends AppController{
 	}
 	
 	public function empty_uts(){
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$this->loadModel('PurgeList');
 		$pl = $this->PurgeList->find('first', array('order' => 'id DESC'));
 		$pl['PurgeList']['empty_uts'] = date('Y-m-d H:i:s');
 		$this->PurgeList->save($pl);
 		
-		$ut = $this->UserTsumego->find('all', array('limit' => 10000, 'conditions' =>  array('user_id' => 33)));
+		$ut = $this->TsumegoStatus->find('all', array('limit' => 10000, 'conditions' =>  array('user_id' => 33)));
 		for($i=0; $i<count($ut); $i++){
-			$this->UserTsumego->delete($ut[$i]['UserTsumego']['id']);
+			$this->TsumegoStatus->delete($ut[$i]['TsumegoStatus']['id']);
 		}
 		$this->set('ut', count($ut));
 	}
@@ -412,7 +411,7 @@ Joschka Zimdars';
 	}
 	
 	public function routine4x(){//0:20 remove inactive players 2
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$ux = $this->User->find('all', array('limit' => 1000, 'order' => 'created DESC'));
 		$u = array();
 		$d1 = date('Y-m-d', strtotime('-7 days'));
@@ -426,23 +425,23 @@ Joschka Zimdars';
 	}
 	
 	public function routine5(){//0:25 update user solved field
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		
 		$users = $this->User->find('all', array('limit' => 100, 'order' => 'created DESC'));
 		for($i=0; $i<count($users); $i++){
 			$uid = $users[$i]['User']['id'];
 			$ux = $this->User->findById($uid);
-			$uts = $this->UserTsumego->find('all', array('conditions' =>  array('user_id' => $uid)));
+			$uts = $this->TsumegoStatus->find('all', array('conditions' =>  array('user_id' => $uid)));
 			$solvedUts = array();
 			for($j=0; $j<count($uts); $j++){
-				if($uts[$j]['UserTsumego']['status']=='S' || $uts[$j]['UserTsumego']['status']=='W' || $uts[$j]['UserTsumego']['status']=='C'){
+				if($uts[$j]['TsumegoStatus']['status']=='S' || $uts[$j]['TsumegoStatus']['status']=='W' || $uts[$j]['TsumegoStatus']['status']=='C'){
 					array_push($solvedUts, $uts[$j]);
 				}			
 			}
-			/*$uts = $this->OldUserTsumego->find('all', array('conditions' =>  array('user_id' => $uid)));
+			/*$uts = $this->OldTsumegoStatus->find('all', array('conditions' =>  array('user_id' => $uid)));
 			$solvedUts2 = array();
 			for($j=0; $j<count($uts); $j++){
-				if($uts[$j]['OldUserTsumego']['status']=='S' || $uts[$j]['OldUserTsumego']['status']=='W' || $uts[$j]['OldUserTsumego']['status']=='C'){
+				if($uts[$j]['OldTsumegoStatus']['status']=='S' || $uts[$j]['OldTsumegoStatus']['status']=='W' || $uts[$j]['OldTsumegoStatus']['status']=='C'){
 					array_push($solvedUts2, $uts[$j]);
 				}			
 			}*/
@@ -455,14 +454,14 @@ Joschka Zimdars';
 	
 	public function routine6(){//0:30 update user solved field
 		$this->loadModel('Answer');
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$a = $this->Answer->findById(1);
 		$u = $this->User->find('all', array('order' => 'id ASC', 'conditions' =>  array(
 			'id >' => $a['Answer']['message'],
 			'id <=' => $a['Answer']['dismissed']
 		)));
 		for($i=0; $i<count($u); $i++){
-			$solvedUts = $this->UserTsumego->find('all', array('conditions' =>  array(
+			$solvedUts = $this->TsumegoStatus->find('all', array('conditions' =>  array(
 				'user_id' => $u[$i]['User']['id'],
 				'OR' => array(
 					array('status' => 'S'),
@@ -664,7 +663,7 @@ Joschka Zimdars';
 	public function stats($p=null){
 		$_SESSION['page'] = 'user';
 		$_SESSION['title'] = 'PAGE STATS';
-		$this->LoadModel('UserTsumego');
+		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Comment');
 		$this->LoadModel('User');
 		$this->LoadModel('DayRecord');
@@ -749,7 +748,7 @@ Joschka Zimdars';
 	public function adminstats($p=null){
 		$_SESSION['page'] = 'user';
 		$_SESSION['title'] = 'ADMIN STATS';
-		$this->LoadModel('UserTsumego');
+		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Comment');
 		$this->LoadModel('User');
 		$this->LoadModel('DayRecord');
@@ -841,22 +840,22 @@ Joschka Zimdars';
 	}
 	
 	public function login(){
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$_SESSION['page'] = 'user';
 		$_SESSION['title'] = 'Tsumego Hero - Sign In';
 		if(!empty($this->data)){
 			$u = $this->User->findByName($this->data['User']['name']);
 			if($u){
 				if($this->validateLogin($this->data)){
-					$vs = $this->UserTsumego->find('first', array('order' => 'created DESC', 'conditions' => array('user_id' => $u['User']['id'])));
-					if($vs!=null) $_SESSION['lastVisit'] = $vs['UserTsumego']['tsumego_id'];
+					$vs = $this->TsumegoStatus->find('first', array('order' => 'created DESC', 'conditions' => array('user_id' => $u['User']['id'])));
+					if($vs!=null) $_SESSION['lastVisit'] = $vs['TsumegoStatus']['tsumego_id'];
 					for($i=1;$i<=54;$i++){
 						if($u['User']['texture'.$i] == '1') $u['User']['texture'.$i] = 'checked';
 						$_SESSION['texture'.$i] = $u['User']['texture'.$i];
 					}
 					$this->Session->setFlash(__('Login successful.', true));
 					
-					$isLoaded = $this->UserTsumego->find('first', array('conditions' => array('user_id' => $u['User']['id'])));
+					$isLoaded = $this->TsumegoStatus->find('first', array('conditions' => array('user_id' => $u['User']['id'])));
 					if(count($isLoaded)==0) $_SESSION['redirect'] = 'loading';
 					else $_SESSION['redirect'] = 'sets';
 				}else{
@@ -869,7 +868,7 @@ Joschka Zimdars';
 	}
 	
 	public function login2(){
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$_SESSION['page'] = 'user';
 		$_SESSION['title'] = 'Tsumego Hero - Sign In';
 		if(!empty($this->data)){
@@ -877,15 +876,15 @@ Joschka Zimdars';
 			//$u = $this->User->find('first', array('conditions' =>  array('email' => $this->data['User']['email'])));
 			if($u){
 				if($this->validateLogin2($this->data)){
-					$vs = $this->UserTsumego->find('first', array('order' => 'created DESC', 'conditions' => array('user_id' => $u['User']['id'])));
-					if($vs!=null) $_SESSION['lastVisit'] = $vs['UserTsumego']['tsumego_id'];
+					$vs = $this->TsumegoStatus->find('first', array('order' => 'created DESC', 'conditions' => array('user_id' => $u['User']['id'])));
+					if($vs!=null) $_SESSION['lastVisit'] = $vs['TsumegoStatus']['tsumego_id'];
 					for($i=1;$i<=54;$i++){
 						if($u['User']['texture'.$i] == '1') $u['User']['texture'.$i] = 'checked';
 						$_SESSION['texture'.$i] = $u['User']['texture'.$i];
 					}
 					$this->Session->setFlash(__('Login successful.', true));
 					
-					$isLoaded = $this->UserTsumego->find('first', array('conditions' => array('user_id' => $u['User']['id'])));
+					$isLoaded = $this->TsumegoStatus->find('first', array('conditions' => array('user_id' => $u['User']['id'])));
 					if(count($isLoaded)==0) $_SESSION['redirect'] = 'loading';
 					else $_SESSION['redirect'] = 'sets';
 				}else{
@@ -930,7 +929,7 @@ Joschka Zimdars';
 		$_SESSION['page'] = 'levelHighscore';
 		$_SESSION['title'] = 'Tsumego Hero - Highscore';
 		
-		$this->LoadModel('UserTsumego');
+		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('Activate');
 		
@@ -939,7 +938,7 @@ Joschka Zimdars';
 		
 		if(isset($_SESSION['loggedInUser'])){
 			$ux = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
-			$solvedUts = $this->UserTsumego->find('all', array('conditions' =>  array(
+			$solvedUts = $this->TsumegoStatus->find('all', array('conditions' =>  array(
 				'user_id' => $_SESSION['loggedInUser']['User']['id'],
 				'OR' => array(
 					array('status' => 'S'),
@@ -1034,7 +1033,7 @@ Joschka Zimdars';
 		$_SESSION['page'] = 'ratingHighscore';
 		$_SESSION['title'] = 'Tsumego Hero - Rating';
 		
-		$this->LoadModel('UserTsumego');
+		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Tsumego');
 		if(isset($_SESSION['loggedInUser'])){
 			$ux = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
@@ -1042,7 +1041,7 @@ Joschka Zimdars';
 			$this->User->save($ux);
 		}
 		
-		$users = $this->User->find('all', array('limit' => 1000, 'order' => 'elo DESC', 'conditions' =>  array(
+		$users = $this->User->find('all', array('limit' => 1000, 'order' => 'elo_rating_mode DESC', 'conditions' =>  array(
 			'NOT' => array('id' => array(33, 34, 35))
 		)));
 		
@@ -1053,9 +1052,9 @@ Joschka Zimdars';
 		}
 		/*
 		//delete null uts
-		$uts = $this->UserTsumego->find('all', array('limit' => 1000, 'conditions' =>  array('user_id' => 33)));
+		$uts = $this->TsumegoStatus->find('all', array('limit' => 1000, 'conditions' =>  array('user_id' => 33)));
 		for($i=0; $i<count($uts); $i++){
-			$this->UserTsumego->delete($uts[$i]['UserTsumego']['id']);
+			$this->TsumegoStatus->delete($uts[$i]['TsumegoStatus']['id']);
 		}
 		*/
 		$this->set('users', $users);
@@ -1065,7 +1064,7 @@ Joschka Zimdars';
 		$_SESSION['page'] = 'timeHighscore';
 		$_SESSION['title'] = 'Tsumego Hero - Time Highscore';
 		
-		$this->LoadModel('UserTsumego');
+		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('RankOverview');
 		$currentRank = '';
@@ -1192,7 +1191,7 @@ Joschka Zimdars';
 		$_SESSION['page'] = 'dailyHighscore';
 		$_SESSION['title'] = 'Tsumego Hero - Daily Highscore';
 		
-		$this->LoadModel('UserTsumego');
+		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('DayRecord');
 		
@@ -1215,7 +1214,7 @@ Joschka Zimdars';
 		
 		for($i=count($users); $i>=0; $i--){
 				if($stop<=100){
-					//$uts = $this->UserTsumego->find('all', array('conditions' =>  array('user_id' => $users[$i]['User']['id'])));
+					//$uts = $this->TsumegoStatus->find('all', array('conditions' =>  array('user_id' => $users[$i]['User']['id'])));
 					$lvl = 1;
 					$toplvl = $users[$i]['User']['level'];
 					$startxp = 50;
@@ -1304,7 +1303,7 @@ Joschka Zimdars';
 	
 	public function view($id = null){
 		$_SESSION['page'] = 'user';
-		$this->LoadModel('UserTsumego');
+		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('Set');
 		$hideEmail = false;
@@ -1337,7 +1336,7 @@ Joschka Zimdars';
 		$tsumegoNum = count($tsumegoDates);
 		
 		
-		$uts = $this->UserTsumego->find('all', array('order' => 'created DESC', 'conditions' =>  array('user_id' => $id)));
+		$uts = $this->TsumegoStatus->find('all', array('order' => 'created DESC', 'conditions' =>  array('user_id' => $id)));
 				
 		$solvedUts = array();
 		$solvedUts2 = array();
@@ -1345,16 +1344,16 @@ Joschka Zimdars';
 		$dNum = 0;
 		
 		for($j=0; $j<count($uts); $j++){
-			$date = new DateTime($uts[$j]['UserTsumego']['created']);
-			$uts[$j]['UserTsumego']['created'] = $date->format('Y-m-d');
-			if($uts[$j]['UserTsumego']['status']=='S' || $uts[$j]['UserTsumego']['status']=='W' || $uts[$j]['UserTsumego']['status']=='C'){
+			$date = new DateTime($uts[$j]['TsumegoStatus']['created']);
+			$uts[$j]['TsumegoStatus']['created'] = $date->format('Y-m-d');
+			if($uts[$j]['TsumegoStatus']['status']=='S' || $uts[$j]['TsumegoStatus']['status']=='W' || $uts[$j]['TsumegoStatus']['status']=='C'){
 				array_push($solvedUts2, $uts[$j]);
 				$oldest = new DateTime(date('Y-m-d', strtotime('-30 days')));
-				if($uts[$j]['UserTsumego']['created']>$oldest->format('Y-m-d')){
+				if($uts[$j]['TsumegoStatus']['created']>$oldest->format('Y-m-d')){
 					array_push($solvedUts, $uts[$j]);
 				}
 			}	
-			if($uts[$j]['UserTsumego']['created']<$lastYear) $dNum++;
+			if($uts[$j]['TsumegoStatus']['created']<$lastYear) $dNum++;
 		}
 		
 		$lvl = 1;
@@ -1439,9 +1438,9 @@ Joschka Zimdars';
 		
 		$tDates = array();
 		for($j=0; $j<count($solvedUts); $j++){
-			$date = new DateTime($solvedUts[$j]['UserTsumego']['created']);
-			$solvedUts[$j]['UserTsumego']['created'] = $date->format('Y-m-d');
-			array_push($tDates, $solvedUts[$j]['UserTsumego']['created']);
+			$date = new DateTime($solvedUts[$j]['TsumegoStatus']['created']);
+			$solvedUts[$j]['TsumegoStatus']['created'] = $date->format('Y-m-d');
+			array_push($tDates, $solvedUts[$j]['TsumegoStatus']['created']);
 		}
 
 		$graphData1 = array_count_values($tDates);
@@ -1480,13 +1479,13 @@ Joschka Zimdars';
 		if(isset($this->params['url']['delete-uts'])){
 			if($this->params['url']['delete-uts']=='true' && $p>=75){
 				for($j=0; $j<count($uts); $j++){
-					if($uts[$j]['UserTsumego']['created']<$lastYear) $this->UserTsumego->delete($uts[$j]['UserTsumego']['id']);
+					if($uts[$j]['TsumegoStatus']['created']<$lastYear) $this->TsumegoStatus->delete($uts[$j]['TsumegoStatus']['id']);
 				}
 				$deletedProblems = 2;
-				$utx = $this->UserTsumego->find('all', array('conditions' => array('user_id' => $id)));
+				$utx = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => $id)));
 				$correctCounter = 0;
 				for($j=0; $j<count($utx); $j++){
-					if($utx[$j]['UserTsumego']['status']=='S' || $utx[$j]['UserTsumego']['status']=='W' || $utx[$j]['UserTsumego']['status']=='C'){
+					if($utx[$j]['TsumegoStatus']['status']=='S' || $utx[$j]['TsumegoStatus']['status']=='W' || $utx[$j]['TsumegoStatus']['status']=='C'){
 						$correctCounter++;
 					}	
 				}
@@ -1505,7 +1504,7 @@ Joschka Zimdars';
 		if($_SESSION['loggedInUser']['User']['id']!=$id) $deletedProblems = 3;
 		
 		$ux = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
-		$solvedUts = $this->UserTsumego->find('all', array('conditions' =>  array(
+		$solvedUts = $this->TsumegoStatus->find('all', array('conditions' =>  array(
 			'user_id' => $_SESSION['loggedInUser']['User']['id'],
 			'OR' => array(
 				array('status' => 'S'),
@@ -1779,11 +1778,11 @@ Joschka Zimdars';
 	}
 	
 	public function listplayers(){ //list players in ut database
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$ux = $this->User->find('all', array('limit' => 300, 'order' => 'created DESC'));
 		$u = array();
 		for($i=0; $i<count($ux); $i++){
-			$uts1 = $this->UserTsumego->find('first', array('conditions' => array('user_id' => $ux[$i]['User']['id'])));
+			$uts1 = $this->TsumegoStatus->find('first', array('conditions' => array('user_id' => $ux[$i]['User']['id'])));
 			$date = new DateTime($ux[$i]['User']['created']);
 			$date = $date->format('Y-m-d');
 			$u[$i][0] = $ux[$i]['User']['id'];
@@ -2152,23 +2151,23 @@ Joschka Zimdars';
 			$ts[$i]['Tsumego']['difficultyOld'] = $ts[$i]['Tsumego']['difficulty'];
 			$ts[$i]['Tsumego']['difficulty'] = $newXp;
 			
-			if($percent>=1 && $percent<=23) $ts[$i]['Tsumego']['elo'] = 2500;//$tRank='5d';
-			elseif($percent<=26) $ts[$i]['Tsumego']['elo'] = 2400;//$tRank='4d';
-			elseif($percent<=29) $ts[$i]['Tsumego']['elo'] = 2300;//$tRank='3d';
-			elseif($percent<=32) $ts[$i]['Tsumego']['elo'] = 2200;//$tRank='2d';
-			elseif($percent<=35) $ts[$i]['Tsumego']['elo'] = 2100;//$tRank='1d';
-			elseif($percent<=38) $ts[$i]['Tsumego']['elo'] = 2000;//$tRank='1k';
-			elseif($percent<=42) $ts[$i]['Tsumego']['elo'] = 1900;//$tRank='2k';
-			elseif($percent<=46) $ts[$i]['Tsumego']['elo'] = 1800;//$tRank='3k';
-			elseif($percent<=50) $ts[$i]['Tsumego']['elo'] = 1700;//$tRank='4k';
-			elseif($percent<=55) $ts[$i]['Tsumego']['elo'] = 1600;//$tRank='5k';
-			elseif($percent<=60) $ts[$i]['Tsumego']['elo'] = 1500;//$tRank='6k';
-			elseif($percent<=65) $ts[$i]['Tsumego']['elo'] = 1400;//$tRank='7k';
-			elseif($percent<=70) $ts[$i]['Tsumego']['elo'] = 1300;//$tRank='8k';
-			elseif($percent<=75) $ts[$i]['Tsumego']['elo'] = 1200;//$tRank='9k';
-			elseif($percent<=80) $ts[$i]['Tsumego']['elo'] = 1100;//$tRank='10k';
-			elseif($percent<=85) $ts[$i]['Tsumego']['elo'] = 1000;//$tRank='11k';
-			else $ts[$i]['Tsumego']['elo'] = 900;
+			if($percent>=1 && $percent<=23) $ts[$i]['Tsumego']['elo_rating_mode'] = 2500;//$tRank='5d';
+			elseif($percent<=26) $ts[$i]['Tsumego']['elo_rating_mode'] = 2400;//$tRank='4d';
+			elseif($percent<=29) $ts[$i]['Tsumego']['elo_rating_mode'] = 2300;//$tRank='3d';
+			elseif($percent<=32) $ts[$i]['Tsumego']['elo_rating_mode'] = 2200;//$tRank='2d';
+			elseif($percent<=35) $ts[$i]['Tsumego']['elo_rating_mode'] = 2100;//$tRank='1d';
+			elseif($percent<=38) $ts[$i]['Tsumego']['elo_rating_mode'] = 2000;//$tRank='1k';
+			elseif($percent<=42) $ts[$i]['Tsumego']['elo_rating_mode'] = 1900;//$tRank='2k';
+			elseif($percent<=46) $ts[$i]['Tsumego']['elo_rating_mode'] = 1800;//$tRank='3k';
+			elseif($percent<=50) $ts[$i]['Tsumego']['elo_rating_mode'] = 1700;//$tRank='4k';
+			elseif($percent<=55) $ts[$i]['Tsumego']['elo_rating_mode'] = 1600;//$tRank='5k';
+			elseif($percent<=60) $ts[$i]['Tsumego']['elo_rating_mode'] = 1500;//$tRank='6k';
+			elseif($percent<=65) $ts[$i]['Tsumego']['elo_rating_mode'] = 1400;//$tRank='7k';
+			elseif($percent<=70) $ts[$i]['Tsumego']['elo_rating_mode'] = 1300;//$tRank='8k';
+			elseif($percent<=75) $ts[$i]['Tsumego']['elo_rating_mode'] = 1200;//$tRank='9k';
+			elseif($percent<=80) $ts[$i]['Tsumego']['elo_rating_mode'] = 1100;//$tRank='10k';
+			elseif($percent<=85) $ts[$i]['Tsumego']['elo_rating_mode'] = 1000;//$tRank='11k';
+			else $ts[$i]['Tsumego']['elo_rating_mode'] = 900;
 			
 			$this->Tsumego->save($ts[$i]);
 		}
@@ -2284,12 +2283,12 @@ Joschka Zimdars';
 	}
 	
 	public function activeuts(){ //count active uts
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$ux = $this->User->find('all', array('order' => 'created DESC'));
 		$u = array();
 		for($i=0; $i<count($ux); $i++){
 			if($ux[$i]['User']['dbstorage']==1){
-				$uts = $this->UserTsumego->find('all', array('conditions' => array('user_id' => $ux[$i]['User']['id'])));
+				$uts = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => $ux[$i]['User']['id'])));
 				array_push($u, count($uts));
 			}
 		}
@@ -2298,7 +2297,7 @@ Joschka Zimdars';
 	
 	public function cleanuts(){
 		$this->loadModel('User');
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$this->loadModel('Answer');
 		
 		$dbToken = $this->Answer->findById(1);
@@ -2312,7 +2311,7 @@ Joschka Zimdars';
 		
 		$all = $this->User->find('all', array('order' => 'id ASC'));
 		for($i=$start; $i<$end; $i++){
-			$uts = $this->UserTsumego->find('first', array('conditions' => array('user_id' => $all[$i]['User']['id'])));
+			$uts = $this->TsumegoStatus->find('first', array('conditions' => array('user_id' => $all[$i]['User']['id'])));
 			array_push($u, $all[$i]);
 		}
 		
@@ -2321,7 +2320,7 @@ Joschka Zimdars';
 	
 	public function cleanuts2(){
 		$this->loadModel('User');
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$this->loadModel('Answer');
 		
 		$dbToken = $this->Answer->findById(1);
@@ -2336,14 +2335,14 @@ Joschka Zimdars';
 		$all = $this->User->find('all', array('order' => 'id ASC'));
 		for($i=$start; $i<$end; $i++){
 			/*
-			$uts = $this->UserTsumego->find('all', array('conditions' => array('user_id' => $all[$i]['User']['id'])));
-			$outs = $this->OldUserTsumego->find('all', array('conditions' => array('user_id' => $all[$i]['User']['id'])));
+			$uts = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => $all[$i]['User']['id'])));
+			$outs = $this->OldTsumegoStatus->find('all', array('conditions' => array('user_id' => $all[$i]['User']['id'])));
 			
 			$idMap = array();
 			$status = array();
 			
 			for($i=0; $i<count($uts); $i++){
-				array_push($idMap, $uts[$i]['UserTsumego']['tsumego_id']);
+				array_push($idMap, $uts[$i]['TsumegoStatus']['tsumego_id']);
 			}
 			$result = array_unique(array_diff_assoc($idMap, array_unique($idMap)));
 			if(count($result)==0) $all[$i]['User']['x'] = 'clean';
@@ -2390,7 +2389,7 @@ Joschka Zimdars';
 	}
 	
 	public function playerdb6(){ //update solved
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$this->loadModel('Answer');
 		
 		$dbToken = $this->Answer->findById(1);
@@ -2405,7 +2404,7 @@ Joschka Zimdars';
 		)));
 		$u = array();
 		for($i=0; $i<count($ux); $i++){
-			$ut = $this->UserTsumego->find('all', array('conditions' => array(
+			$ut = $this->TsumegoStatus->find('all', array('conditions' => array(
 				'user_id' => $ux[$i]['User']['id'],
 				'OR' => array(
 					array('status' => 'S'),
@@ -2431,26 +2430,26 @@ Joschka Zimdars';
 		$this->loadModel('Purge');
 		$this->loadModel('Tsumego');
 		$this->loadModel('Set');
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$ux = $this->User->findById($id);
-		$ut = $this->UserTsumego->find('all', array('conditions' => array('user_id' => $id)));
+		$ut = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => $id)));
 		$st2 = $this->Set->find('all', array('conditions' => array('public' => 1)));
 		$uty = array();
 		$keep = 0;
 		$deleted = 0;
 		$all = count($ut);
 		for($i=0; $i<count($ut); $i++){
-			array_push($uty, $ut[$i]['UserTsumego']['tsumego_id']);
+			array_push($uty, $ut[$i]['TsumegoStatus']['tsumego_id']);
 		}
 		for($i=0; $i<count($ut); $i++){
-			$t = $this->Tsumego->findById($ut[$i]['UserTsumego']['tsumego_id']);
+			$t = $this->Tsumego->findById($ut[$i]['TsumegoStatus']['tsumego_id']);
 			$isMain = false;
 			for($j=0; $j<count($st2); $j++){
 				if($t['Tsumego']['set_id']==$st2[$j]['Set']['id']) $isMain = true;
 			}
 			if($isMain)	$keep++;
 			else{
-				//$this->UserTsumego->delete($ut[$i]['UserTsumego']['id']);
+				//$this->TsumegoStatus->delete($ut[$i]['TsumegoStatus']['id']);
 				$deleted++;
 			}	
 		}
@@ -2463,7 +2462,7 @@ Joschka Zimdars';
 		$answer['Purge']['user_id'] = $id;
 		$answer['Purge']['duplicates'] = '|';
 		for($i=0; $i<count($a); $i++){
-			$utd = $this->UserTsumego->find('all', array('conditions' => array('user_id' => $id, 'tsumego_id' => $a[$i])));
+			$utd = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => $id, 'tsumego_id' => $a[$i])));
 			$c = count($utd);
 			$j = 0;
 			$b[$i]['uid'] = $id;
@@ -2471,7 +2470,7 @@ Joschka Zimdars';
 			$b[$i]['count'] = 1;
 			$answer['Purge']['duplicates'] .= $b[$i]['tid'].'-';
 			while($c>1){
-				$this->UserTsumego->delete($utd[$j]['UserTsumego']['id']);
+				$this->TsumegoStatus->delete($utd[$j]['TsumegoStatus']['id']);
 				$b[$i]['count']++;
 				if($c==2) $answer['Purge']['duplicates'] .= $b[$i]['count'].'|';
 				$c--;
@@ -2488,19 +2487,19 @@ Joschka Zimdars';
 	
 	private function countsingle($id){
 		$this->loadModel('Purge');
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$this->loadModel('TsumegoAttempt');
 		$u = $this->User->findById($id);
-		$ut = $this->UserTsumego->find('all', array('conditions' => array('user_id' => $id)));
+		$ut = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => $id)));
 		$correctCounter1 = 0;
 		for($j=0; $j<count($ut); $j++){
-			if($ut[$j]['UserTsumego']['status']=='S' || $ut[$j]['UserTsumego']['status']=='W' || $ut[$j]['UserTsumego']['status']=='C'){
+			if($ut[$j]['TsumegoStatus']['status']=='S' || $ut[$j]['TsumegoStatus']['status']=='W' || $ut[$j]['TsumegoStatus']['status']=='C'){
 				$correctCounter1++;
 			}	
 		}
 		$sum = $correctCounter1;
 		$u['User']['solved'] = $sum;
-		//$u['User']['elo'] = 100;
+		//$u['User']['elo_rating_mode'] = 100;
 		$u['User']['readingTrial'] = 30;
 		//$u['User']['mode'] = 1;
 		$u['User']['health'] = $this->getHealth($u['User']['level']);
@@ -2513,7 +2512,7 @@ Joschka Zimdars';
 	}
 	
 	public function archivesingle($id){
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$this->loadModel('TsumegoAttempt');
 		$this->loadModel('Purge');
 		$ux = $this->User->findById($id);
@@ -2529,7 +2528,7 @@ Joschka Zimdars';
 			$ux['User']['d1'] = $date;
 			if($date < $d1){
 				$ux['User']['d2'] = 'archive';
-				$c = count($this->UserTsumego->find('all', array('conditions' => array('user_id' => $ux['User']['id']))));
+				$c = count($this->TsumegoStatus->find('all', array('conditions' => array('user_id' => $ux['User']['id']))));
 				if($c==0) $c = '';
 				$p['Purge']['duplicates'] = '-'.$c;
 			}else{
@@ -2544,7 +2543,7 @@ Joschka Zimdars';
 	
 	public function purgelist(){
 		$this->loadModel('Purge');
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$this->loadModel('TsumegoAttempt');
 		$this->loadModel('PurgeList');
 		
@@ -2569,7 +2568,7 @@ Joschka Zimdars';
 	
 	public function countlist(){
 		$this->loadModel('Purge');
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$this->loadModel('TsumegoAttempt');
 		$this->loadModel('PurgeList');
 		
@@ -2594,7 +2593,7 @@ Joschka Zimdars';
 	
 	public function archivelist(){
 		$this->loadModel('Purge');
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$this->loadModel('TsumegoAttempt');
 		$this->loadModel('PurgeList');
 		
@@ -2645,7 +2644,7 @@ Joschka Zimdars';
 	
 	public function likesview(){
 		$this->loadModel('Purge');
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$this->loadModel('TsumegoAttempt');
 		$this->loadModel('Set');
 		$this->loadModel('Answer');
@@ -2886,7 +2885,7 @@ Joschka Zimdars';
 	
 	public function purge(){
 		$this->loadModel('Purge');
-		$this->loadModel('UserTsumego');
+		$this->loadModel('TsumegoStatus');
 		$this->loadModel('TsumegoAttempt');
 		$this->loadModel('Set');
 		$this->loadModel('Answer');

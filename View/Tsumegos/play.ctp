@@ -1312,7 +1312,7 @@
 	echo $eloScore.'<br>';
 	echo count($range).'<br>';
 	for($i=0; $i<count($range); $i++){
-		echo $range[$i]['Tsumego']['elo'].'<br>';
+		echo $range[$i]['Tsumego']['elo_rating_mode'].'<br>';
 	}
 	echo '<pre>';print_r($_SESSION['loggedInUser']['User']);echo '</pre>';
 	if(isset($_SESSION['loggedInUser']['User'])) echo 't';
@@ -1334,7 +1334,7 @@
 	//echo '<pre>'; print_r($nextMode); echo '</pre>'; 
 	//echo '<pre>'; print_r($nextMode3); echo '</pre>'; 
 	//echo '<pre>'; print_r($t); echo '</pre>'; 
-	//echo 'u '.$user['User']['elo'].'<br>';	
+	//echo 'u '.$user['User']['elo_rating_mode'].'<br>';	
 	//echo '<pre>'; print_r($masterArray); echo '</pre>';
 	//echo '<pre>'; print_r($_SESSION['loggedInUser']['User']['name']); echo '</pre>';
 	
@@ -2378,7 +2378,7 @@
 													';
 														$m2 = '';
 														if($mode==2){
-															$elo2 = $user['User']['elo']-$eloScore;
+															$elo2 = $user['User']['elo_rating_mode']-$eloScore;
 															$m2 = '
 															runXPBar(false);
 															sequence += "incorrect|";
@@ -2388,7 +2388,7 @@
 															locked = true;
 															$("#skipButton").text("Next");
 															ulvl = '.$user['User']['level'].';
-															runXPNumber("account-bar-xp", '.$user['User']['elo'].', '.$elo2.', 1000, ulvl);
+															runXPNumber("account-bar-xp", '.$user['User']['elo_rating_mode'].', '.$elo2.', 1000, ulvl);
 															';
 														}
 														$w .= 'misplays++;
@@ -2513,7 +2513,7 @@
 											}else ';
 										}elseif($mode==2 && $eloScore!=0){
 											if($eloScore>100) $eloScore = 100;
-											$elo2 = $user['User']['elo']+$eloScore;
+											$elo2 = $user['User']['elo_rating_mode']+$eloScore;
 											echo '
 											if(coord.i=='.$masterArray[$i][0].'&&coord.j=='.$masterArray[$i][1].' 
 											&& move=='.$masterArray[$i][2].' && branch=="'.$masterArray[$i][3].'"){
@@ -2565,7 +2565,7 @@
 														ulvl = ulvl + 1;
 													}
 													runXPBar(true);';
-													echo 'runXPNumber("account-bar-xp", '.$user['User']['elo'].', '.$elo2.', 1000, ulvl);';
+													echo 'runXPNumber("account-bar-xp", '.$user['User']['elo_rating_mode'].', '.$elo2.', 1000, ulvl);';
 													echo 'noXP = true;
 													$("#reviewButton2").show();
 													reviewEnabled = true;
@@ -2619,7 +2619,7 @@
 										}
 										}';
 									}elseif($mode==2){
-										$elo2 = $user['User']['elo']-$eloScore;
+										$elo2 = $user['User']['elo_rating_mode']-$eloScore;
 										echo '{
 										branch = "no";
 										document.getElementById("status").style.color = "#e03c4b";
@@ -2653,7 +2653,7 @@
 												window.location.href = "/tsumegos/play/'.$t['Tsumego']['id'].'";
 											}
 											ulvl = '.$user['User']['level'].';
-											runXPNumber("account-bar-xp", '.$user['User']['elo'].', '.$elo2.', 1000, ulvl);
+											runXPNumber("account-bar-xp", '.$user['User']['elo_rating_mode'].', '.$elo2.', 1000, ulvl);
 										}
 										}';
 									}
@@ -2995,8 +2995,8 @@
 				else x2 = 2;
 				userDifficulty = '.$t['Tsumego']['difficulty'].'*x2;
 				userNextlvl = '.$user['User']['nextlvl'].';
-				if(increase) newXP2 = '.substr($user['User']['elo'], -2).'+ '.$eloScore.';
-				else newXP2 = '.substr($user['User']['elo'], -2).'- '.$eloScore.';
+				if(increase) newXP2 = '.substr($user['User']['elo_rating_mode'], -2).'+ '.$eloScore.';
+				else newXP2 = '.substr($user['User']['elo_rating_mode'], -2).'- '.$eloScore.';
 				if(newXP2>=100){
 					newXP2=100;
 					//if(soundsEnabled){setTimeout(function(){document.getElementsByTagName("audio")[1].play();},800);}
