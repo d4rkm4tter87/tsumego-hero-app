@@ -38,8 +38,9 @@
      user-select: none;
 }
 
-.besogo-panels {
-    display: none;
+.besogo-panels
+{
+    display: flex;
     flex-direction: column;
 	flex-basis: 50%;
     align-items: center;

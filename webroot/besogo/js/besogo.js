@@ -34,7 +34,6 @@
     if (typeof options.panels === 'string')
       options.panels = options.panels.split('+');
   
- 
     options.path = options.path || '';
     if (options.shadows === undefined)
       options.shadows = 'auto';
