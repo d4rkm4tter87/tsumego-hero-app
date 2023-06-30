@@ -69,7 +69,8 @@ besogo.makeEditor = function(sizeX, sizeY)
     notifyListeners: notifyListeners,
     setShift: setShift,
     isShift: isShift,
-    applyTransformation : applyTransformation
+    applyTransformation : applyTransformation,
+    registerDisplayResult : registerDisplayResult
   };
 
   // Returns the active tool
@@ -216,7 +217,7 @@ besogo.makeEditor = function(sizeX, sizeY)
     }
     // Notify listeners of navigation (with no tree edits)
     notifyListeners({ navChange: true }, true); // Preserve history
-  
+
     if(soundEnabled)
       document.getElementsByTagName("audio")[0].play();
     if(displayResult && !current.correct && !current.hasChildIncludingVirtual())
@@ -378,7 +379,9 @@ besogo.makeEditor = function(sizeX, sizeY)
     }
     if (soundEnabled && isMutable)
       document.getElementsByTagName("audio")[0].play();
-    if (displayResult && current.correct && !currect.hasChildIncludingVirtual())
+    if (!displayResult)
+      window.alert("display result not defined");
+    if (displayResult && current.correct && !current.hasChildIncludingVirtual())
     {
       toggleBoardLock(true);
       enableReviewButton();
@@ -482,7 +485,7 @@ besogo.makeEditor = function(sizeX, sizeY)
       notifyListeners({ treeChange: true, stoneChange: true });
       edited = true;
     }
-    
+
     if (autoPlay && !reviewMode && color == root.firstToPlay)
       setTimeout(function(){ if(isMutable) nextNode(1); }, 360);
   }
@@ -595,12 +598,17 @@ besogo.makeEditor = function(sizeX, sizeY)
   {
     return shift;
   }
-  
+
   function applyTransformation(transformation)
   {
     root.applyTransformation(root, transformation);
     root.firstMove = transformation.applyOnColor(root.firstMove);
     notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
     edited = true;
+  }
+
+  function registerDisplayResult(displayResultInput)
+  {
+    displayResult = displayResultInput;
   }
 };

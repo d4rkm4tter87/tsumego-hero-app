@@ -2,11 +2,11 @@
   'use strict';
   var besogo = window.besogo = window.besogo || {}; // Establish our namespace
   besogo.VERSION = '0.0.2-alpha';
+  besogo.editor = null;
 
   besogo.create = function(container, options)
   {
-    var editor, // Core editor object
-        boardDisplay,
+    var boardDisplay,
         resizer, // Auto-resizing function
         boardDiv, // Board display container
         panelsDiv, // Parent container of panel divs
@@ -41,17 +41,17 @@
       options.shadows = false;
 
     // Make the core editor object
-    editor = besogo.makeEditor(options.size.x, options.size.y);
-    container.besogoEditor = editor;
-    editor.setTool(options.tool);
-    editor.setCoordStyle(options.coord);
+    besogo.editor = besogo.makeEditor(options.size.x, options.size.y);
+    container.besogoEditor = besogo.editor;
+    besogo.editor.setTool(options.tool);
+    besogo.editor.setCoordStyle(options.coord);
     if (options.realstones) // Using realistic stones
     {
-      editor.REAL_STONES = true;
-      editor.SHADOWS = options.shadows;
+      besogo.editor.REAL_STONES = true;
+      besogo.editor.SHADOWS = options.shadows;
     }
     else // SVG stones
-      editor.SHADOWS = (options.shadows && options.shadows !== 'auto');
+      besogo.editor.SHADOWS = (options.shadows && options.shadows !== 'auto');
 
     if (options.sgf) // Load SGF file from URL or SGF string
     {
@@ -64,11 +64,11 @@
       try
       {
         if (validURL)
-          fetchParseLoad(options.sgf, editor, options.path);
+          fetchParseLoad(options.sgf, besogo.editor, options.path);
         else
         {
-          parseAndLoad(options.sgf, editor);
-          navigatePath(editor, options.path);
+          parseAndLoad(options.sgf, besogo.editor);
+          navigatePath(besogo.editor, options.path);
         }
       }
       catch(e)
@@ -79,25 +79,25 @@
     }
     else if (insideText.match(/\s*\(\s*;/)) // Text content looks like an SGF file
     {
-      parseAndLoad(insideText, editor);
-      navigatePath(editor, options.path); // Navigate editor along path
+      parseAndLoad(insideText, besogo.editor);
+      navigatePath(besogo.editor, options.path); // Navigate editor along path
     }
 
     if (typeof options.variants === 'number' || typeof options.variants === 'string')
-      editor.setVariantStyle(+options.variants); // Converts to number
+      besogo.editor.setVariantStyle(+options.variants); // Converts to number
 
     while (container.firstChild) // Remove all children of container
       container.removeChild(container.firstChild);
 
     boardDiv = makeDiv('besogo-board'); // Create div for board display
-    boardDisplay = besogo.makeBoardDisplay(boardDiv, editor); // Create board display
+    boardDisplay = besogo.makeBoardDisplay(boardDiv, besogo.editor); // Create board display
 
     if (!options.nokeys) // Add keypress handler unless nokeys option is truthy
-      addKeypressHandler(container, editor, boardDisplay);
+      addKeypressHandler(container, besogo.editor, boardDisplay);
 
     if (!options.nowheel)
     // Add mousewheel handler unless nowheel option is truthy
-      addWheelHandler(boardDiv, editor);
+      addWheelHandler(boardDiv, besogo.editor);
 
     if (options.panels.length > 0) // Only create if there are panels to add
     {
@@ -106,7 +106,7 @@
       {
         panelName = options.panels[i];
         if (makers[panelName]) // Only add if creator function exists
-          makers[panelName](makeDiv('besogo-' + panelName, panelsDiv), editor);
+          makers[panelName](makeDiv('besogo-' + panelName, panelsDiv), besogo.editor);
       }
       if (!panelsDiv.firstChild) // If no panels were added
       {
@@ -252,7 +252,7 @@
     parent.appendChild(div);
     return div;
   }
-}; // END function besogo.create
+};
 
 // Parses size parameter from SGF format
 besogo.parseSize = function(input)
