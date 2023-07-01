@@ -382,8 +382,6 @@ besogo.makeEditor = function(sizeX, sizeY)
     }
     if (soundEnabled && isMutable)
       document.getElementsByTagName("audio")[0].play();
-    if (!displayResult)
-      window.alert("display result not defined");
     if (displayResult && current.correct && !current.hasChildIncludingVirtual())
     {
       toggleBoardLock(true);
@@ -467,7 +465,6 @@ besogo.makeEditor = function(sizeX, sizeY)
   // Set allowAll to truthy to allow illegal moves
   function playMove(i, j, color, allowAll)
   {
-    window.alert("wtf");
     // Check if current node is immutable or root
     if (!current.isMutable('move') || !current.parent)
     {
