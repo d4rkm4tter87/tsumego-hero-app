@@ -1123,6 +1123,7 @@ class TsumegosController extends AppController{
 		if(isset($noUser)) $_SESSION['noUser'] = $noUser;
 		if(isset($_SESSION['loggedInUser']) && $u['User']['id']!=33){
 			$u['User']['mode'] = $_SESSION['loggedInUser']['User']['mode'];
+			$u['User']['created'] = date('Y-m-d H:i:s');
 			$this->User->save($u);
 		}		
 		
@@ -1496,7 +1497,7 @@ class TsumegosController extends AppController{
 		elseif($mode==3) $_SESSION['page'] = 'time mode';
 		
 		//echo '<pre>'; print_r(($crs/$stopParameter)*100); echo '</pre>';
-		//echo '<pre>'; print_r($_SESSION); echo '</pre>';
+		//echo '<pre>'; print_r($choice); echo '</pre>';
 		
 		
 		$this->set('raName', $raName);

@@ -4,11 +4,11 @@ besogo.makeBoardDisplay = function(container, editor)
       COORD_MARGIN = 75, // Margin for coordinate labels
       EXTRA_MARGIN = 6, // Extra margin on the edge of board
       BOARD_MARGIN, // Total board margin
-
+	
       // Board size parameters
       sizeX = editor.getCurrent().getSize().x,
       sizeY = editor.getCurrent().getSize().y,
-
+		
       svg, // Holds the overall board display SVG element
       stoneGroup, // Group for stones
       markupGroup, // Group for markup
@@ -28,7 +28,7 @@ besogo.makeBoardDisplay = function(container, editor)
 
   // Set listener to detect touch interfaces
   container.addEventListener('touchstart', setTouchFlag);
-
+  
   return {
       redrawHover: redrawHover,
     };
@@ -100,7 +100,13 @@ besogo.makeBoardDisplay = function(container, editor)
   function redrawAll(current) {
       redrawStones(current);
       redrawMarkup(current);
-      if(reviewEnabled2) redrawNextMoves(current);
+	  
+	  if(typeof reviewEnabled2 === 'boolean'){
+		  if(reviewEnabled2) redrawNextMoves(current);
+		  else redrawNextMoves(current, true);
+	  }else{
+		  redrawNextMoves(current);
+	  }
       redrawHover(current);
   }
 
@@ -110,22 +116,24 @@ besogo.makeBoardDisplay = function(container, editor)
     var boardWidth,
         boardHeight,
         string = ""; // Path string for inner board lines
-
-    BOARD_MARGIN = (coord === 'none' ? 0 : COORD_MARGIN) + EXTRA_MARGIN;
+	//sizeY = 7;
+    BOARD_MARGIN = (coord === 'none' ? 0 : COORD_MARGIN);
     boardWidth = 2*BOARD_MARGIN + sizeX*CELL_SIZE;
     boardHeight = 2*BOARD_MARGIN + sizeY*CELL_SIZE;
-
+	
     svg = besogo.svgEl("svg", { // Initialize the SVG element
         width: "100%",
         height: "100%",
         viewBox: "0 0 " + boardWidth + " " + boardHeight
     });
-
+	
+	/*We prefer background images.
     svg.appendChild(besogo.svgEl("rect", { // Fill background color
         width: boardWidth,
         height: boardHeight,
         'class': 'besogo-svg-board'
     }) );
+	*/
 
     svg.appendChild(besogo.svgEl("rect", { // Draw outer square of board
         width: CELL_SIZE*(sizeX - 1),
@@ -282,10 +290,12 @@ besogo.makeBoardDisplay = function(container, editor)
       editor.click(i, j, event.ctrlKey, event.shiftKey);
       if(!TOUCH_FLAG)
         (handleOver(i, j))(); // Ensures that any updated tool is visible
-		if(!reviewEnabled2){
-			setTimeout(function(){
-				if(isMutable) editor.nextNode(1);
-			}, 360);
+		if(typeof mode === "number"){
+			if(!reviewEnabled2){
+				setTimeout(function(){
+					if(isMutable) editor.nextNode(1);
+				}, 360);
+			}
 		}
     };
   }
@@ -331,7 +341,7 @@ besogo.makeBoardDisplay = function(container, editor)
       shadowGroup = besogo.svgShadowGroup();
       group.appendChild(shadowGroup);
     }
-
+	
     for (i = 1; i <= sizeX; i++)
       for (j = 1; j <= sizeY; j++)
       {
@@ -341,11 +351,11 @@ besogo.makeBoardDisplay = function(container, editor)
           x = svgPos(i);
           y = svgPos(j);
 
-          if (editor.REAL_STONES) // Realistic stone
-            group.appendChild(besogo.realStone(x, y, color, randIndex[fromXY(i, j)]));
-          else // SVG stone
+          if (editor.REAL_STONES){ // Realistic stone
+            group.appendChild(besogo.realStone(x, y, color, randIndex[fromXY(i, j)], editor.BLACK_STONES, editor.WHITE_STONES));
+          }else{ // SVG stone
             group.appendChild(besogo.svgStone(x, y, color));
-
+		  }
           // Draw shadows
           if (editor.SHADOWS)
           {
@@ -448,20 +458,26 @@ besogo.makeBoardDisplay = function(container, editor)
       redrawNextMoveStatus(group, current.virtualChildren[i].target, current.virtualChildren[i].move);
   }
 
-  function redrawNextMoves(current)
+  function redrawNextMoves(current, clear=false)
   {
     var group = besogo.svgEl("g");
+	var circleSize = 15;
+	var virtualCircleSize = 8;
+	if(clear){
+		circleSize = 0;
+		virtualCircleSize = 0;	
+	}
     for (let i = 0; i < current.children.length; ++i)
     {
       var child = current.children[i];
-      var element = besogo.svgFilledCircle(svgPos(child.move.x), svgPos(child.move.y), child.getCorrectColor(), 15);
+      var element = besogo.svgFilledCircle(svgPos(child.move.x), svgPos(child.move.y), child.getCorrectColor(), circleSize);
       group.appendChild(element);
     }
     if (current.virtualChildren)
       for (let i = 0; i < current.virtualChildren.length; ++i)
       {
         var redirect = current.virtualChildren[i];
-        var element = besogo.svgFilledCircle(svgPos(redirect.move.x), svgPos(redirect.move.y), redirect.target.getCorrectColor(), 8);
+        var element = besogo.svgFilledCircle(svgPos(redirect.move.x), svgPos(redirect.move.y), redirect.target.getCorrectColor(), virtualCircleSize);
         group.appendChild(element);
       }
     redrawNextMoveStatuses(group, current);

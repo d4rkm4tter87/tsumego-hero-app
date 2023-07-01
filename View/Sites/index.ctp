@@ -90,6 +90,7 @@
 			</li>
 			<br><br>
 		</div>
+		<p class="title4">New Collection: 1000 Weiqi problems</p>
 		<div class="new1">
 			1000 Weiqi problems is a Chinese tsumego & tesuji book published in 2000. It is 385-pages in length with 1000-problems & solutions. The problems are 
 			categorized into two main sections: tsumego and tesuji; then further broken into 10 and 15 thematic subsections respectively.<br><br>

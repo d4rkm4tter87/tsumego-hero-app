@@ -665,64 +665,64 @@ class AppController extends Controller{
 				$this->User->save($u);
 			}
 			
-			$boardPositions[1] = 1;
-			$boardPositions[2] = 2;
-			$boardPositions[3] = 3;
-			$boardPositions[4] = 4;
-			$boardPositions[5] = 5;
-			$boardPositions[6] = 6;
-			$boardPositions[7] = 7;
-			$boardPositions[8] = 8;
-			$boardPositions[9] = 9;
-			$boardPositions[10] = 10;
-			$boardPositions[11] = 11;
-			$boardPositions[12] = 12;
-			$boardPositions[13] = 13;
-			$boardPositions[14] = 14;
-			$boardPositions[15] = 15;
-			$boardPositions[16] = 16;
-			$boardPositions[17] = 17;
-			$boardPositions[18] = 18;
-			$boardPositions[19] = 19;
-			$boardPositions[20] = 20;
-			$boardPositions[21] = 33;
-			$boardPositions[22] = 21;
-			$boardPositions[23] = 22;
+			$boardPositions[1] = array(1,'texture1','black34.png','white34.png');
+			$boardPositions[2] = array(2,'texture2','black34.png','white34.png');
+			$boardPositions[3] = array(3,'texture3','black34.png','white34.png');
+			$boardPositions[4] = array(4,'texture4','black.png','white.png');
+			$boardPositions[5] = array(5,'texture5','black34.png','white34.png');
+			$boardPositions[6] = array(6,'texture6','black.png','white.png');
+			$boardPositions[7] = array(7,'texture7','black34.png','white34.png');
+			$boardPositions[8] = array(8,'texture8','black.png','white.png');
+			$boardPositions[9] = array(9,'texture9','black.png','white.png');
+			$boardPositions[10] = array(10,'texture10','black34.png','white34.png');
+			$boardPositions[11] = array(11,'texture11','black34.png','white34.png');
+			$boardPositions[12] = array(12,'texture12','black34.png','white34.png');
+			$boardPositions[13] = array(13,'texture13','black34.png','white34.png');
+			$boardPositions[14] = array(14,'texture14','black34.png','white34.png');
+			$boardPositions[15] = array(15,'texture15','black.png','white.png');
+			$boardPositions[16] = array(16,'texture16','black34.png','white34.png');
+			$boardPositions[17] = array(17,'texture17','black34.png','white34.png');
+			$boardPositions[18] = array(18,'texture18','black.png','white.png');
+			$boardPositions[19] = array(19,'texture19','black34.png','white34.png');
+			$boardPositions[20] = array(20,'texture20','black34.png','white34.png');
+			$boardPositions[21] = array(33,'texture33','black34.png','white34.png');
+			$boardPositions[22] = array(21,'texture21','black.png','whiteKo.png');
+			$boardPositions[23] = array(22,'texture22','black34.png','white34.png');
 			$count = 24;
 			if(isset($_SESSION['loggedInUser'])){
 				if($_SESSION['loggedInUser']['User']['premium']>=1){
-					$boardPositions[24] = 34;
-					$boardPositions[25] = 35;
-					$boardPositions[26] = 36;
-					$boardPositions[27] = 37;
-					$boardPositions[28] = 38;
-					$boardPositions[29] = 39;
-					$boardPositions[30] = 40;
-					$boardPositions[31] = 41;
-					$boardPositions[32] = 42;
-					$boardPositions[33] = 43;
-					$boardPositions[34] = 44;
-					$boardPositions[35] = 45;
+					$boardPositions[24] = array(34,'texture34','black.png','white.png');
+					$boardPositions[25] = array(35,'texture35','black34.png','white34.png');
+					$boardPositions[26] = array(36,'texture36','black.png','white.png');
+					$boardPositions[27] = array(37,'texture37','black34.png','white34.png');
+					$boardPositions[28] = array(38,'texture38','black38.png','white34.png');
+					$boardPositions[29] = array(39,'texture39','black.png','white.png');
+					$boardPositions[30] = array(40,'texture40','black34.png','white34.png');
+					$boardPositions[31] = array(41,'texture41','black34.png','white34.png');
+					$boardPositions[32] = array(42,'texture42','black34.png','white42.png');
+					$boardPositions[33] = array(43,'texture43','black34.png','white42.png');
+					$boardPositions[34] = array(44,'texture44','black34.png','white34.png');
+					$boardPositions[35] = array(45,'texture45','black34.png','white42.png');
 					
-					$boardPositions[36] = 47;
-					$boardPositions[37] = 48;
-					$boardPositions[38] = 49;
-					$boardPositions[39] = 50;
-					$boardPositions[40] = 51;
-					$boardPositions[41] = 52;
-					$boardPositions[42] = 53;
-					$boardPositions[43] = 54;
+					$boardPositions[36] = array(47,'texture47','black34.png','white34.png');
+					$boardPositions[37] = array(48,'texture48','black34.png','white34.png');
+					$boardPositions[38] = array(49,'texture49','black.png','white.png');
+					$boardPositions[39] = array(50,'texture50','black34.png','white34.png');
+					$boardPositions[40] = array(51,'texture51','black34.png','white34.png');
+					$boardPositions[41] = array(52,'texture52','black34.png','white34.png');
+					$boardPositions[42] = array(53,'texture53','black34.png','white34.png');
+					$boardPositions[43] = array(54,'texture54','black54.png','white54.png');
 					$count = 44;
 				}
 				
-				if($_SESSION['loggedInUser']['User']['secretArea1']==1) $boardPositions[$count] = 23;
-				if($_SESSION['loggedInUser']['User']['secretArea2']==1) $boardPositions[$count+1] = 24;
-				if($_SESSION['loggedInUser']['User']['secretArea3']==1) $boardPositions[$count+2] = 25;
-				if($_SESSION['loggedInUser']['User']['secretArea4']==1) $boardPositions[$count+3] = 26;
-				if($_SESSION['loggedInUser']['User']['secretArea5']==1) $boardPositions[$count+4] = 27;
-				if($_SESSION['loggedInUser']['User']['secretArea6']==1) $boardPositions[$count+5] = 28;
-				if($_SESSION['loggedInUser']['User']['secretArea7']==1) $boardPositions[$count+6] = 29;
-				if($_SESSION['loggedInUser']['User']['secretArea10']==1) $boardPositions[$count+7] = 30;
+				if($_SESSION['loggedInUser']['User']['secretArea1']==1) $boardPositions[$count] = array(23,'texture23','black.png','whiteFlower.png');
+				if($_SESSION['loggedInUser']['User']['secretArea2']==1) $boardPositions[$count+1] = array(24,'texture24','black24.png','white24.png');
+				if($_SESSION['loggedInUser']['User']['secretArea3']==1) $boardPositions[$count+2] = array(25,'texture25','blackGhost.png','white.png');
+				if($_SESSION['loggedInUser']['User']['secretArea4']==1) $boardPositions[$count+3] = array(26,'texture26','blackInvis.png','whiteCarnage.png');
+				if($_SESSION['loggedInUser']['User']['secretArea5']==1) $boardPositions[$count+4] = array(27,'texture27','black27.png','white27.png');
+				if($_SESSION['loggedInUser']['User']['secretArea6']==1) $boardPositions[$count+5] = array(28,'texture28','blackGiant.png','whiteKo.png');
+				if($_SESSION['loggedInUser']['User']['secretArea7']==1) $boardPositions[$count+6] = array(29,'texture29','blackKo.png','whiteKo.png');
+				if($_SESSION['loggedInUser']['User']['secretArea10']==1) $boardPositions[$count+7] = array(30,'texture55','blackGalaxy.png','whiteGalaxy.png');
 			}
 		}else{
 			$enabledBoards[1] = 'checked';
@@ -749,29 +749,29 @@ class AppController extends Controller{
 			$enabledBoards[22] = 'checked';
 			$enabledBoards[23] = '';
 			
-			$boardPositions[1] = 1;
-			$boardPositions[2] = 2;
-			$boardPositions[3] = 3;
-			$boardPositions[4] = 4;
-			$boardPositions[5] = 5;
-			$boardPositions[6] = 6;
-			$boardPositions[7] = 7;
-			$boardPositions[8] = 8;
-			$boardPositions[9] = 9;
-			$boardPositions[10] = 10;
-			$boardPositions[11] = 11;
-			$boardPositions[12] = 12;
-			$boardPositions[13] = 13;
-			$boardPositions[14] = 14;
-			$boardPositions[15] = 15;
-			$boardPositions[16] = 16;
-			$boardPositions[17] = 17;
-			$boardPositions[18] = 18;
-			$boardPositions[19] = 19;
-			$boardPositions[20] = 20;
-			$boardPositions[21] = 33;
-			$boardPositions[22] = 21;
-			$boardPositions[23] = 22;
+			$boardPositions[1] = array(1,'texture1','black34.png','white34.png');
+			$boardPositions[2] = array(2,'texture2','black34.png','white34.png');
+			$boardPositions[3] = array(3,'texture3','black34.png','white34.png');
+			$boardPositions[4] = array(4,'texture4','black.png','white.png');
+			$boardPositions[5] = array(5,'texture5','black34.png','white34.png');
+			$boardPositions[6] = array(6,'texture6','black.png','white.png');
+			$boardPositions[7] = array(7,'texture7','black34.png','white34.png');
+			$boardPositions[8] = array(8,'texture8','black.png','white.png');
+			$boardPositions[9] = array(9,'texture9','black.png','white.png');
+			$boardPositions[10] = array(10,'texture10','black34.png','white34.png');
+			$boardPositions[11] = array(11,'texture11','black34.png','white34.png');
+			$boardPositions[12] = array(12,'texture12','black34.png','white34.png');
+			$boardPositions[13] = array(13,'texture13','black34.png','white34.png');
+			$boardPositions[14] = array(14,'texture14','black34.png','white34.png');
+			$boardPositions[15] = array(15,'texture15','black.png','white.png');
+			$boardPositions[16] = array(16,'texture16','black34.png','white34.png');
+			$boardPositions[17] = array(17,'texture17','black34.png','white34.png');
+			$boardPositions[18] = array(18,'texture18','black.png','white.png');
+			$boardPositions[19] = array(19,'texture19','black34.png','white34.png');
+			$boardPositions[20] = array(20,'texture20','black34.png','white34.png');
+			$boardPositions[21] = array(33,'texture33','black34.png','white34.png');
+			$boardPositions[22] = array(21,'texture21','black.png','whiteKo.png');
+			$boardPositions[23] = array(22,'texture22','black34.png','white34.png');
 		}
 		/*
 		//echo '<pre>'; print_r($_SESSION['loggedInUser']['User']['lastHighscore']); echo '</pre>';
@@ -790,7 +790,7 @@ class AppController extends Controller{
 		echo '<pre>'; print_r($ra[0]['Rank']['rank']); echo '</pre>';
 		*/
 		
-		//echo '<pre>'; print_r($_SESSION['loggedInUser']['User']['mode']); echo '</pre>';
+		//echo '<pre>'; print_r($_SESSION); echo '</pre>';
 		
 		$nextDay = new DateTime('tomorrow');
 		$this->set('mode', $mode);

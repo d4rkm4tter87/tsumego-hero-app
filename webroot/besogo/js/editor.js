@@ -32,8 +32,10 @@ besogo.makeEditor = function(sizeX, sizeY)
       // Variant style: even/odd - children/siblings, <2 - show auto markup for variants
       variantStyle = 0, // 0-3, 0 is default
       edited = false,
+	  soundsEnabled = true,
+	  soundsEnabled2 = true,
       shift = false;
-
+	  
   return {
     addListener: addListener,
     click: click,
@@ -68,7 +70,7 @@ besogo.makeEditor = function(sizeX, sizeY)
     isShift: isShift,
     applyTransformation : applyTransformation
   };
-
+   
   // Returns the active tool
   function getTool() { return tool; }
 
@@ -216,8 +218,10 @@ besogo.makeEditor = function(sizeX, sizeY)
 	
 	//console.log('w');
 	//console.log(current);
-	if(soundsEnabled && soundsEnabled2) document.getElementsByTagName("audio")[0].play();
-	if(current.correct==false && current.lastMove==1 && current.children.length<1) displayResult('F');
+	//if(soundsEnabled && soundsEnabled2) document.getElementsByTagName("audio")[0].play();
+	if(current.correct==false && current.lastMove==1 && current.children.length<1){
+		if(typeof displayResult === 'function') displayResult('F');
+	}
   }
 
   // Navigates backward num nodes (to the root if num === -1)
@@ -375,12 +379,16 @@ besogo.makeEditor = function(sizeX, sizeY)
     }
 	//console.log('b');
 	//console.log(current);
-	if(soundsEnabled && isMutable) document.getElementsByTagName("audio")[0].play();
-	if(current.comment=="+"){
-		soundsEnabled2 = false;
-		toggleBoardLock(true);
-		enableReviewButton();
-		displayResult('S');
+	//if(soundsEnabled && isMutable) document.getElementsByTagName("audio")[0].play();
+	if(current.correct==true && current.correctSource==true){
+		if(soundsEnabled2) soundsEnabled2 = false;
+		if(typeof toggleBoardLock === 'function') toggleBoardLock(true);
+		if(typeof enableReviewButton === 'function') enableReviewButton();
+		if(typeof displayResult === 'function'){
+			setTimeout(function(){
+				displayResult('S');
+			}, 360);
+		}
 	}
   }
 
@@ -465,9 +473,13 @@ besogo.makeEditor = function(sizeX, sizeY)
         // Notify tree change, navigation, and stone change
         notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
         edited = true;
-		if(soundsEnabled && soundsEnabled2) document.getElementsByTagName("audio")[0].play();
-		soundsEnabled2 = false;
-		displayResult('F');
+		//if(soundsEnabled && soundsEnabled2) document.getElementsByTagName("audio")[0].play();
+		if(soundsEnabled2) soundsEnabled2 = false;
+		if(typeof displayResult === 'function'){
+			setTimeout(function(){
+				if(displayResult) displayResult('F');
+			}, 360);
+		}
       }
     // Current node is mutable and not root
     }
@@ -480,7 +492,7 @@ besogo.makeEditor = function(sizeX, sizeY)
       notifyListeners({ treeChange: true, stoneChange: true });
       edited = true;
     }
-	isMutable = current.isMutable('move');
+	//isMutable = current.isMutable('move');
   }
 
   // Places a setup stone at the given color and location
@@ -599,4 +611,5 @@ besogo.makeEditor = function(sizeX, sizeY)
     notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
     edited = true;
   }
+  
 };

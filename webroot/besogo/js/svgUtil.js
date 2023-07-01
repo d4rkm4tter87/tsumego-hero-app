@@ -54,16 +54,25 @@ besogo.svgShadow = function(x, y) {
 };
 
 // Makes a photo realistic stone element
-besogo.realStone = function(x, y, color, index) {
+besogo.realStone = function(x, y, color, index, blackStone = '', whiteStone = '') {
     var element;
-
-    if (color < 0) {
-        color = 'black' + (index % besogo.BLACK_STONES);
-    } else {
-        color = 'white' + (index % besogo.WHITE_STONES);
-    }
-    color = '/besogo/img/' + color + '.png';
-
+	
+	if(blackStone === ''){
+		if (color < 0) {
+			color = 'black' + (index % besogo.BLACK_STONES);
+		} else {
+			color = 'white' + (index % besogo.WHITE_STONES);
+		}
+		color = '/besogo/img/' + color + '.png';
+	}else{
+		if (color < 0) {
+			color = blackStone;
+		} else {
+			color = whiteStone;
+		}
+		color = '/besogo/img/' + color;
+	}
+   
     element =  besogo.svgEl("image", {
         x: (x - 44),
         y: (y - 44),

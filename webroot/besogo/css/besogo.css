@@ -1,7 +1,6 @@
 .besogo-container {
     outline: none;
     display: flex;
-	flex-wrap: wrap;
     background: #fff;
 }
 
@@ -39,9 +38,8 @@
 }
 
 .besogo-panels {
-    display: none;
+    display: flex;
     flex-direction: column;
-	flex-basis: 50%;
     align-items: center;
     padding: 0px 5px;
 }
@@ -50,18 +48,12 @@
     margin: 3px 0px;
 }
 
-.besogo-bottom-panels {
-    align-items: center;
-    padding: 0px 5px;
-	flex-basis: 100%;
-}
-
 .besogo-control {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     justify-content: space-around;
-    width: 33%;
+    width: 100%;
 
     flex: 0 0 auto;
 }
@@ -139,8 +131,8 @@
 
 .besogo-tree {
     overflow: auto;
-    /*flex: 1 1 40%;
-    width: 100%;*/
+    flex: 1 1 40%;
+    width: 100%;
 }
 
 .besogo-file {

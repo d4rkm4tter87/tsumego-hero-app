@@ -1,27 +1,26 @@
 
 <?php if($ui==2){ ?>
-<link rel="stylesheet" type="text/css" href="/besogo/css/besogo.css">
-<link rel="stylesheet" type="text/css" href="/besogo/css/besogo-fill.css">
-<link rel="stylesheet" type="text/css" href="/besogo/css/board-flat.css">
+	<link rel="stylesheet" type="text/css" href="/besogo/css/besogo.css">
+	<link rel="stylesheet" type="text/css" href="/besogo/css/board-flat.css">
 
-<script src="/besogo/js/besogo.js"></script>
-<script src="/besogo/js/transformation.js"></script>
-<script src="/besogo/js/treeProblemUpdater.js"></script>
-<script src="/besogo/js/nodeHashTable.js"></script>
-<script src="/besogo/js/editor.js"></script>
-<script src="/besogo/js/gameRoot.js"></script>
-<script src="/besogo/js/status.js"></script>
-<script src="/besogo/js/svgUtil.js"></script>
-<script src="/besogo/js/parseSgf.js"></script>
-<script src="/besogo/js/loadSgf.js"></script>
-<script src="/besogo/js/saveSgf.js"></script>
-<script src="/besogo/js/boardDisplay.js"></script>
-<script src="/besogo/js/coord.js"></script>
-<script src="/besogo/js/toolPanel.js"></script>
-<script src="/besogo/js/filePanel.js"></script>
-<script src="/besogo/js/controlPanel.js"></script>
-<script src="/besogo/js/commentPanel.js"></script>
-<script src="/besogo/js/treePanel.js"></script>
+	<script src="/besogo/js/besogo.js"></script>
+	<script src="/besogo/js/transformation.js"></script>
+	<script src="/besogo/js/treeProblemUpdater.js"></script>
+	<script src="/besogo/js/nodeHashTable.js"></script>
+	<script src="/besogo/js/editor.js"></script>
+	<script src="/besogo/js/gameRoot.js"></script>
+	<script src="/besogo/js/status.js"></script>
+	<script src="/besogo/js/svgUtil.js"></script>
+	<script src="/besogo/js/parseSgf.js"></script>
+	<script src="/besogo/js/loadSgf.js"></script>
+	<script src="/besogo/js/saveSgf.js"></script>
+	<script src="/besogo/js/boardDisplay.js"></script>
+	<script src="/besogo/js/coord.js"></script>
+	<script src="/besogo/js/toolPanel.js"></script>
+	<script src="/besogo/js/filePanel.js"></script>
+	<script src="/besogo/js/controlPanel.js"></script>
+	<script src="/besogo/js/commentPanel.js"></script>
+	<script src="/besogo/js/treePanel.js"></script>
 <?php } ?>
 <?php
 	$choice = array();
@@ -94,15 +93,26 @@
 	else if($t['Tsumego']['set_id']==29156) echo '<script type="text/javascript" src="/'.$boardSize.'/board24.js"></script>'; //Hunting
 	else if($t['Tsumego']['set_id']==31813) echo '<script type="text/javascript" src="/'.$boardSize.'/board25.js"></script>'; //The Ghost
 	else if($t['Tsumego']['set_id']==33007) echo '<script type="text/javascript" src="/'.$boardSize.'/board26.js"></script>'; //Carnage
-	else if($t['Tsumego']['set_id']==71790) echo '<script type="text/javascript" src="/'.$boardSize.'/board27.js"></script>'; //Invisible Moves
+	else if($t['Tsumego']['set_id']==71790) echo '<script type="text/javascript" src="/'.$boardSize.'/board27.js"></script>'; //Blind Spot
 	else if($t['Tsumego']['set_id']==74761) echo '<script type="text/javascript" src="/'.$boardSize.'/board28.js"></script>'; //Giants
 	else if($t['Tsumego']['set_id']==81578) echo '<script type="text/javascript" src="/'.$boardSize.'/board29.js"></script>'; //Moves of Resistance
 	else if($t['Tsumego']['set_id']==88156) echo '<script type="text/javascript" src="/'.$boardSize.'/board30.js"></script>'; //Hand of God
 	else if($goldenTsumego) echo '<script type="text/javascript" src="/'.$boardSize.'/board46.js"></script>'; //Golden
 	else if($t['Tsumego']['set_id']==6473) echo '<script type="text/javascript" src="/'.$boardSize.'/board55.js"></script>'; //Tsumego Grandmaster
-	else echo '<script type="text/javascript" src="/'.$boardSize.'/board'.$choice[0].'.js"></script>'; // Regular
-	
-	
+	else echo '<script type="text/javascript" src="/'.$boardSize.'/board'.$choice[0][0].'.js"></script>'; // Regular
+	if($ui==2){ 
+		if($t['Tsumego']['set_id']==11969) $choice[0] = $boardPositions[44]; //Pretty Area
+		else if($t['Tsumego']['set_id']==29156) $choice[0] = $boardPositions[45]; //Hunting
+		else if($t['Tsumego']['set_id']==31813) $choice[0] = $boardPositions[46]; //The Ghost
+		else if($t['Tsumego']['set_id']==33007) $choice[0] = $boardPositions[47]; //Carnage
+		else if($t['Tsumego']['set_id']==71790) $choice[0] = $boardPositions[48]; //Blind Spot
+		else if($t['Tsumego']['set_id']==74761) $choice[0] = $boardPositions[49]; //Giants
+		else if($t['Tsumego']['set_id']==81578) $choice[0] = $boardPositions[50]; //Moves of Resistance
+		else if($t['Tsumego']['set_id']==88156) $choice[0] = $boardPositions[50]; //Hand of God
+		else if($goldenTsumego) $choice[0] = array(46,'texture46','black34.png','white34.png'); //Golden
+		else if($t['Tsumego']['set_id']==6473) $choice[0] = $boardPositions[51]; //Tsumego Grandmaster
+		else echo '<script type="text/javascript" src="/'.$boardSize.'/board'.$choice[0][0].'.js"></script>'; // Regular
+	}
 	if(isset($_SESSION['lastVisit'])) $lv = $_SESSION['lastVisit'];
 	else $lv = '15352';
 	
@@ -1337,6 +1347,10 @@
 	//echo 'u '.$user['User']['elo_rating_mode'].'<br>';	
 	//echo '<pre>'; print_r($masterArray); echo '</pre>';
 	//echo '<pre>'; print_r($_SESSION['loggedInUser']['User']['name']); echo '</pre>';
+	
+	//echo '<pre>'; print_r($enabledBoards); echo '</pre>'; 
+	//echo '<pre>'; print_r($boardPositions); echo '</pre>'; 
+	echo '<pre>'; print_r($choice); echo '</pre>'; 
 	
 	if(isset($_SESSION['loggedInUser'])){
 		if($firstRanks==0){
@@ -3616,12 +3630,19 @@
 		value = params[i].split("="); // Splits on all "=" symbols
 		options[value.shift()] = value.join("="); // First "=" separates value from name, rest are part of value
 	  }
+	  options.panels = 'tree+control';
+	  options.tool2 = 'auto';
 	  options.realstones = true;
 	  options.nowheel = true;
 	  options.nokeys = true;
+	  options.theme = '<?php echo $choice[0][1] ?>';
+	  options.themeParameters = ['<?php echo $choice[0][2] ?>', '<?php echo $choice[0][3] ?>'];
+	  options.coord = 'western';
+	  // COORDS = 'none numeric western eastern pierre corner eastcor'.split(' '),
 	  options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/'+'<?php echo $file; ?>';
 	  if (options.theme) // Board style theme (overrides std theme if set)
-		addStyleLink('css/board-' + options.theme + '.css');
+		addStyleLink('https://<?php echo $_SERVER['HTTP_HOST']; ?>/besogo/css/board-'+options.theme+'.css');
+		//addStyleLink('css/board-' + options.theme + '.css');
 	  if (options.height && options.width && options.resize === 'fixed')
 	  {
 		div.style.height = options.height + 'px';
@@ -3635,12 +3656,18 @@
 		element.href = cssURL;
 		element.type = 'text/css';
 		element.rel = 'stylesheet';
+		
 		document.head.appendChild(element);
 	  }
 	})();
 	</script>
 	<?php } ?>
-	
+	<style>
+	.besogo-panels{
+		display: none;
+		flex-basis: 50%;
+	}
+	</style>
 	
 	
 	

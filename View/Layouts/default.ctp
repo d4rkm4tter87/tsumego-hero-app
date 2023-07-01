@@ -232,7 +232,7 @@
 					echo '<li><a class="homeMenuLink" '.$playA.' href="/tsumegos/play/'.$lv.'">Play</a>';
 					echo '<ul class="newMenuLi3">';
 						echo '<li><a href="/tsumegos/play/'.$_SESSION['lastVisit'].'?mode=1" '.$levelModeA.'>Level</a></li>';
-						if(isset($_SESSION['loggedInUser'])){
+						if(isset($_SESSION['loggedInUser']['User']['id'])){
 							echo '<li><a href="/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2" '.$ratingModeA.'>Rating</a></li>';
 							echo '<li><a href="/ranks/overview" '.$timeModeA.'>Time</a></li>';
 						}
@@ -268,7 +268,7 @@
 													</td>
 													<td width="19px" align="center" style="position:relative;top:3px;padding:2px;">
 														
-														<div class="img-'.$boardPositions[$i].'small"></div>
+														<div class="img-'.$boardPositions[$i][0].'small"></div>
 													</td>
 													<td width="115px" style="padding:0px;text-align:left;">
 														'.$boardNames[$i].'

@@ -6,8 +6,9 @@ besogo.makeToolPanel = function(container, editor)
       labelText, // Text area for next label input
       selectors = {}; // Holds selection rects
 	var reviewMode = false;
-	console.log(container);
-  if(container.className!=='besogo-tool2'){  
+	//console.log(container);
+	
+  if(container.className!=='besogo-tool2'){
 	  svg = makeButtonSVG('auto', 'Auto-play/navigate\n' +
 		  'crtl+click to force ko, suicide, overwrite\n' +
 		  'shift+click to jump to move'); // Auto-play/nav tool button
@@ -105,12 +106,25 @@ besogo.makeToolPanel = function(container, editor)
 
   
   }else{
+	  
 	  makeButtonText('Invert', 'Invert colors of all stones and moves.', function()
 	  {
 		let transformation = besogo.makeTransformation();
 		transformation.invertColors = true;
 		editor.applyTransformation(transformation);
 		
+	  });
+	  makeButtonText('H Flip', 'Flip horizontally', function()
+	  {
+		let transformation = besogo.makeTransformation();
+		transformation.hFlip = true;
+		editor.applyTransformation(transformation);
+	  });
+	  makeButtonText('V Flip', 'Flip vertically', function()
+	  {
+		let transformation = besogo.makeTransformation();
+		transformation.vFlip = true;
+		editor.applyTransformation(transformation);
 	  });
 	  makeButtonText('Rotate', 'Rotate the board clockwise', function()
 	  {
@@ -127,10 +141,13 @@ besogo.makeToolPanel = function(container, editor)
 		editor.prevNode(-1);
 		toggleBoardLock(false);
 		reviewEnabled2 = false;
+		reviewMode = false;
+		reviewEnabled2 = false;
 		document.getElementById("status").innerHTML = "";
 		document.getElementById("theComment").style.cssText = "display:none;";
 		$(".besogo-panels").css("display","none");
 		$(".besogo-board").css("margin","0 315px");
+		editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
 	  });
 	  makeButtonText('Next', 'Next problem', function()
 	  {
@@ -157,6 +174,8 @@ besogo.makeToolPanel = function(container, editor)
   }
   
   editor.addListener(toolStateUpdate); // Set up listener for tool state updates
+  
+  
   toolStateUpdate({ label: editor.getLabel(), tool: editor.getTool(), tool2: editor.getTool() }); // Initialize
   // Creates a button holding an SVG image
   function makeButtonSVG(tool, tooltip)

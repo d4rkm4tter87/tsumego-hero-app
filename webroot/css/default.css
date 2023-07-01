@@ -2214,6 +2214,10 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		font-weight: 600;
 		line-height: 23px;
 		padding: 8px 15px 0px;
+		cursor:pointer;
+	}
+	.dropdown-button{
+		cursor:pointer;
 	}
 	.dropdown-overlay{
 		display: none;
@@ -2550,6 +2554,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.besogo-board{
 		width:50%;
 		margin: 0 315px;
+		box-shadow:0 8px 14px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.2);
 	}
 	
 	.besogo-tool2{
@@ -2965,9 +2970,21 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		z-index: -1;
 	}
 	
-	
-	
-	
+	.besogo-container{
+		flex-wrap: wrap;
+	}
+	.besogo-bottom-panels {
+		align-items: center;
+		padding: 0px 5px;
+		flex-basis: 100%;
+	}
+	.besogo-control {
+		width: 33%!important;
+	}
+	.besogo-tree {
+		flex: none!important;
+		width: auto!important;
+	}
 	
 	
 	
