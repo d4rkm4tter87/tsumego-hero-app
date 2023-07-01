@@ -70,7 +70,8 @@ besogo.makeEditor = function(sizeX, sizeY)
     setShift: setShift,
     isShift: isShift,
     applyTransformation : applyTransformation,
-    registerDisplayResult : registerDisplayResult
+    registerDisplayResult : registerDisplayResult,
+    setSoundEnabled, setSoundEnabled
   };
 
   // Returns the active tool
@@ -181,6 +182,7 @@ besogo.makeEditor = function(sizeX, sizeY)
 
   // Returns the root of the game state tree
   function getRoot() { return root; }
+
 
   function loadRoot(load)
   {
@@ -610,5 +612,10 @@ besogo.makeEditor = function(sizeX, sizeY)
   function registerDisplayResult(displayResultInput)
   {
     displayResult = displayResultInput;
+  }
+
+  function setSoundEnabled(value)
+  {
+    soundEnabled = value;
   }
 };

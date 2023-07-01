@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<?php 
+	<?php
 		$url = parse_url($_SERVER['HTTP_HOST']);
 		$url['path'] = str_replace('tsumego-hero.com','',$url['path']);
 		if($url['path']=='www.') echo '<script type="text/javascript">window.location.href = "https://tsumego-hero.com'.$_SERVER['REQUEST_URI'].'";</script>';
@@ -18,7 +18,7 @@
 			echo '<script type="text/javascript">window.location.href = "/users/loading";</script>';
 		}
 		//if($_SERVER['REMOTE_ADDR'] != '188.104.244.212') echo '<script type="text/javascript">window.location.href = "https://tsumego-hero.com/";</script>';
-		echo $this->Html->charset(); 
+		echo $this->Html->charset();
 	?>
 	<title>
 		<?php
@@ -26,9 +26,9 @@
 			else echo $_SESSION['title'];
 		?>
 	</title>
-	
+
 	<meta name="description" content="Interactive tsumego database. Solve go problems, get stronger, level up, have fun.">
-	<meta name="keywords" content="tsumego, problems, puzzles, baduk, weiqi, tesuji, life and death, solve, solving, hero, go, in-seong, level" >	
+	<meta name="keywords" content="tsumego, problems, puzzles, baduk, weiqi, tesuji, life and death, solve, solving, hero, go, in-seong, level" >
 	<meta name="Author" content="Joschka Zimdars">
 	<meta property="og:title" content="Tsumego Hero">
 	<link rel="stylesheet" type="text/css" href="/css/default.css?v=2.2">
@@ -39,14 +39,14 @@
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
-		
+
 	?>
-	
+
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script type="text/javascript" src="/dist/jgoboard-latest.js"></script>
 	<?php
-		
-		if($mode==1){ 
+
+		if($mode==1){
 			if(isset($user['User']['level'])) $levelNum = 'Level '.$user['User']['level'];
 			else $levelNum = 1;
 			$xpBarFill = 'xp-bar-fill-c1';
@@ -57,17 +57,17 @@
 			elseif($user['User']['elo_rating_mode']>=2700) $td = '7d';
 			elseif($user['User']['elo_rating_mode']>=2600) $td = '6d';
 			elseif($user['User']['elo_rating_mode']>=2500) $td = '5d';
-			elseif($user['User']['elo_rating_mode']>=2400) $td = '4d'; 
+			elseif($user['User']['elo_rating_mode']>=2400) $td = '4d';
 			elseif($user['User']['elo_rating_mode']>=2300) $td = '3d';
-			elseif($user['User']['elo_rating_mode']>=2200) $td = '2d'; 
+			elseif($user['User']['elo_rating_mode']>=2200) $td = '2d';
 			elseif($user['User']['elo_rating_mode']>=2100) $td = '1d';
-			elseif($user['User']['elo_rating_mode']>=2000) $td = '1k'; 
+			elseif($user['User']['elo_rating_mode']>=2000) $td = '1k';
 			elseif($user['User']['elo_rating_mode']>=1900) $td = '2k';
-			elseif($user['User']['elo_rating_mode']>=1800) $td = '3k'; 
+			elseif($user['User']['elo_rating_mode']>=1800) $td = '3k';
 			elseif($user['User']['elo_rating_mode']>=1700) $td = '4k';
 			elseif($user['User']['elo_rating_mode']>=1600) $td = '5k';
 			elseif($user['User']['elo_rating_mode']>=1500) $td = '6k';
-			elseif($user['User']['elo_rating_mode']>=1400) $td = '7k'; 
+			elseif($user['User']['elo_rating_mode']>=1400) $td = '7k';
 			elseif($user['User']['elo_rating_mode']>=1300) $td = '8k';
 			elseif($user['User']['elo_rating_mode']>=1200) $td = '9k';
 			elseif($user['User']['elo_rating_mode']>=1100) $td = '10k';
@@ -95,22 +95,22 @@
 	<div width="100%" class="whitebox1">
 		<div align="left">
 			<a href="/">
-				<?php 
+				<?php
 					$logo = 'tsumegoHero1';
 					$logoH = 'tsumegoHero2';
 				?>
 				<img id="logo1" alt="Tsumego Hero" title="Tsumego Hero" src="/img/tsumegoHero1.png" onmouseover="logoHover(this)" onmouseout="logoNoHover(this)" height="55px">
 			</a>
 		</div>
-	
+
 		<div class="outerMenu1">
-			<?php 
+			<?php
 				if(isset($_SESSION['lastVisit'])) $lv = $_SESSION['lastVisit'];
 				else $lv = '15352';
-				
+
 				if(isset($_SESSION['loggedInUser'])){
-					
-					
+
+
 					if($_SESSION['loggedInUser']['User']['premium']>=1) $sand = 'onmouseover="sandboxHover()" onmouseout="sandboxNoHover()"';
 					else $sand = '';
 					if($_SESSION['loggedInUser']['User']['premium']>=1) $leaderboard = 'onmouseover="leaderboardHover()" onmouseout="leaderboardNoHover()"';
@@ -119,7 +119,7 @@
 					$sand = '';
 					$leaderboard = '';
 				}
-				
+
 				$homeA = '';
 				$collectionsA = '';
 				$playA = '';
@@ -146,7 +146,7 @@
 				$websitefunctionsA = '';
 				$gotutorialA = '';
 				$aboutA = '';
-				
+
 				if($_SESSION['page'] == 'home') $homeA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'set') $collectionsA = 'style="color:#74d14c;"';
 				else if($_SESSION['page']=='play' || $_SESSION['page']=='level mode' || $_SESSION['page']=='rating mode' || $_SESSION['page']=='time mode'){
@@ -160,7 +160,7 @@
 					if($_SESSION['page'] == 'level mode') $levelModeA = 'style="color:#74d14c;"';
 					else if($_SESSION['page'] == 'rating mode') $ratingModeA = 'style="color:#74d14c;"';
 					else if($_SESSION['page'] == 'time mode') $timeModeA = 'style="color:#74d14c;"';
-				}					
+				}
 				else if($_SESSION['page'] == 'highscore') $highscoreA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'discuss') $discussA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'sandbox') $sandboxA = 'style="color:#74d14c;"';
@@ -172,7 +172,7 @@
 				else if($_SESSION['page'] == 'ratingHighscore') $ratingHighscoreA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'timeHighscore') $timeHighscoreA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'dailyHighscore') $dailyHighscoreA = 'style="color:#74d14c;"';
-				
+
 				if(isset($nextMode['Tsumego']['id'])){
 					if($nextMode['Tsumego']['id']==null) $nextMode['Tsumego']['id'] = 15352;
 				}else{
@@ -181,7 +181,7 @@
 				//echo $_SESSION['page'];
 				//echo '<li><a '.$refreshLinkToStart.' class="menuLi" '.$homeA.' href="/">Home</a></li>';
 				//echo '<li><a '.$refreshLinkToSets.' class="menuLi" '.$collectionsA.' id="collectionsInMenu" '.$sand.' href="/sets">Collections</a></li>';
-				//if(true)/*if(!$ac)*/ echo '<li><a class="menuLi" '.$playA.' href="/tsumegos/play/'.$lv.'">Play</a></li>';	
+				//if(true)/*if(!$ac)*/ echo '<li><a class="menuLi" '.$playA.' href="/tsumegos/play/'.$lv.'">Play</a></li>';
 				//else echo '<li><a class="menuLi" '.$playA.' href="/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2">Play</a></li>';
 				//echo '<li><a '.$refreshLinkToHighscore.' class="menuLi" '.$highscoreA.' id="highscoreInMenu" '.$leaderboard.' href="/users/'.$highscoreLink.'">Highscore</a></li>';
 				if(isset($_SESSION['loggedInUser'])){
@@ -199,19 +199,19 @@
 					}
 				}else{
 					$refreshLinkToDiscussBackup = '<a id="refreshLinkToDiscuss"></a>';
-				}	
-				
-			?> 
+				}
+
+			?>
 			<div id="newMenu">
 			<nav>
 				<ul>
-					<?php echo '<li><a class="homeMenuLink" href="/" '.$refreshLinkToStart.' '.$homeA.'>Home</a>'; 
+					<?php echo '<li><a class="homeMenuLink" href="/" '.$refreshLinkToStart.' '.$homeA.'>Home</a>';
 					echo '<ul class="newMenuLi1">';
 						echo '<li><a id="tutorialLink" href="/sites/websitefunctions" '.$websitefunctionsA.'>Functions & Modes</a></li>';
 						echo '<li><a id="tutorialLink" href="/sites/gotutorial" '.$gotutorialA.'>Go Rules</a></li>';
 						//echo '<li><a id="tutorialLink" href="/sites/gotutorial" '.$gotutorialA.'>Go Tutorial</a></li>';
 						echo '<li><a href="/users/authors" '.$aboutA.'>About</a></li>';
-					echo '</ul>';       
+					echo '</ul>';
 					echo '</li>';
 					echo '<li><a '.$refreshLinkToSets.' '.$collectionsA.' href="/sets">Collections</a>';
 					if(isset($_SESSION['loggedInUser'])){
@@ -236,7 +236,7 @@
 							echo '<li><a href="/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2" '.$ratingModeA.'>Rating</a></li>';
 							echo '<li><a href="/ranks/overview" '.$timeModeA.'>Time</a></li>';
 						}
-					echo '</ul>'; 
+					echo '</ul>';
 					echo '<li><a '.$refreshLinkToHighscore.' '.$highscoreA.' href="/users/'.$highscoreLink.'">Highscore</a>';
 					echo '<ul class="newMenuLi4">';
 						echo '<li><a id="tutorialLink" href="/users/highscore" '.$levelHighscoreA.'>Level Highscore</a></li>';
@@ -267,7 +267,7 @@
 														<input type="checkbox" class="newCheck" id="newCheck'.$i.'" onchange="check2();" '.$enabledBoards[$i].'>
 													</td>
 													<td width="19px" align="center" style="position:relative;top:3px;padding:2px;">
-														
+
 														<div class="img-'.$boardPositions[$i].'small"></div>
 													</td>
 													<td width="115px" style="padding:0px;text-align:left;">
@@ -278,7 +278,7 @@
 												if($tr%4==0 && $tr>0) echo '</tr><tr>';
 												$tr++;
 											}
-										?>	
+										?>
 										</tr>
 									</table>
 									<br>
@@ -290,7 +290,7 @@
 									</div>
 								</div>
 							</div>
-						
+
 					</li>
 				</ul>
 			</nav>
@@ -300,13 +300,13 @@
 			<li><a></a></li>
 		</div>
 		<div class="outerMenu3">
-			<?php  
+			<?php
 				$currentPage = '';
 				if($_SESSION['page'] == 'user') $currentPage = 'style="color:#74d14c;" ';
 				if(!isset($_SESSION['loggedInUser']['User']['id'])) echo '<li><a class="menuLi" id="signInMenu" '.$currentPage.'href="/users/login">Sign In</a></li>';
 			?>
 		</div>
-		
+
 	</div>
 	<?php
 		if(isset($_SESSION['loggedInUser']) && isset($_SESSION['loggedInUser']['User']['id'])){
@@ -344,12 +344,12 @@
 					<li><a href="/users/logout">Sign Out</a></li>
 				</div>
 			';
-			
+
 		}
 	?>
-	
+
 	<div width="100%" align="left" class="whitebox2" <?php if(isset($_SESSION['loggedInUser'])){ echo 'onmouseover="xpNoHover()"'; } ?>>
-		<?php 
+		<?php
 			$setHeight = '';
 			if(isset($set)){
 				if($set['Set']['id']==60) $setHeight = 'style="height:1340px;"';
@@ -358,18 +358,18 @@
 			echo '<div id="content" '.$setHeight.'>';
 			echo $this->Session->flash();
 			echo $this->Flash->render();
-			echo $this->fetch('content'); 
+			echo $this->fetch('content');
 		?>
 		</div>
 	</div>
 	</div>
 	<div id="footer" class="footerLinks"><br>
-	
-	
-	
+
+
+
 	<?php if(isset($_SESSION['loggedInUser'])){ ?>
 	<?php if($_SESSION['loggedInUser']['User']['premium']==0 && $user['User']['id']!=1165){ ?>
-		<div align="center"><a href="/users/donate"><img id="donateH2" onmouseover="donateHover2()" onmouseout="donateNoHover2()" width="180px" src="/img/donateButton1.png"></a><br></div><br>	
+		<div align="center"><a href="/users/donate"><img id="donateH2" onmouseover="donateHover2()" onmouseout="donateNoHover2()" width="180px" src="/img/donateButton1.png"></a><br></div><br>
 	<?php } ?>
 	<?php }else{ ?>
 		<div align="center"><a href="/users/donate"><img id="donateH2" onmouseover="donateHover2()" onmouseout="donateNoHover2()" width="180px" src="/img/donateButton1.png"></a><br></div><br>
@@ -379,8 +379,15 @@
 		<a href="/sites/impressum">Legal notice</a><br>
 		<a href="/users/authors">About</a><br><br><br>
 	</div>
-	
+
 	<script type="text/javascript">
+    function updateSoundValue(value)
+    {
+      if (typeof besogo !== 'undefined')
+        besogo.editor.setSoundEnabled(value);
+      soundsEnabled = value;
+    }
+
 		usedModeSwitch = false;
 		document.cookie = "score=0";
 		document.cookie = "misplay=0";
@@ -399,11 +406,10 @@
 		document.cookie = "reputation=0";
 		document.cookie = "rank=0";
 		document.cookie = "lastMode=0";
-		document.cookie = "sound=0";
 		document.cookie = "correctNoPoints=0";
 		document.cookie = "ui=0";
-		
-		<?php 
+
+		<?php
 			if(isset($textureCookies)){
 				for($i=0;$i<count($textureCookies);$i++){
 					echo 'document.cookie = "'.$textureCookies[$i].'=0";';
@@ -412,18 +418,20 @@
 		?>
 		var soundsEnabled = true;
 		var notMode3 = true;
-		
+
 		<?php if(isset($_SESSION['loggedInUser'])){ ?>
 		var userXP = <?php echo $user['User']['xp']; ?> ;
 		var userLevel = <?php echo $user['User']['level']; ?> ;
 		var userNextLvl = <?php echo $user['User']['nextlvl']; ?> ;
 		var userElo = <?php echo $user['User']['elo_rating_mode']; ?> ;
 		var soundValue = 0;
-		<?php 
+		<?php
 		echo 'soundValue = "'.$_SESSION['loggedInUser']['User']['sound'].'";';
-		
-		} ?>
-		
+		}
+    else echo 'soundValue = getCookie("sound");';
+    ?>
+    updateSoundValue(soundValue == 'on');
+
 		$(document).ready(function(){
 			loadBar();
 			if(soundValue=="off"){
@@ -436,7 +444,7 @@
 				document.cookie = "sound=on";
 				soundsEnabled = true;
 			}
-			
+
 			<?php
 				if($_SESSION['loggedInUser']['User']['mode']==1){
 					echo '$("#account-bar-user > a").css({color:"#74d14c"});';
@@ -483,7 +491,7 @@
 						echo 'dateButton2();';
 					}
 				}
-				
+
 			if(isset($loggedInUser)){
 				echo 'var end = new Date("'.$nextDay.' 00:00 AM");';
 				?>
@@ -536,24 +544,24 @@
 		function updateCookie(c1,c2){
 			document.cookie = c1+c2;
 		}
-		
+
 		function logoHover(img){
 			img.src = '/img/<?php echo $logoH ?>.png';
 		}
-		
+
 		function logoNoHover(img){
 			img.src = "/img/<?php echo $logo ?>.png";
 		}
-		
+
 		function check1(){
 			if(document.getElementById("dropdown-1").checked == true){
-				document.getElementById("dropdowntable").style.display = "inline-block"; 
-				document.getElementById("dropdowntable2").style.display = "inline-block"; 
+				document.getElementById("dropdowntable").style.display = "inline-block";
+				document.getElementById("dropdowntable2").style.display = "inline-block";
 				$(".dropdown-inner").css("opacity", "1");
 				$(".dropdown-inner").css("display", "inline-block");
 			}
 			if(document.getElementById("dropdown-1").checked == false){
-				document.getElementById("dropdowntable").style.display = "none"; 
+				document.getElementById("dropdowntable").style.display = "none";
 				document.getElementById("dropdowntable2").style.display = "none";
 				$(".dropdown-inner").css("opacity", "0");
 				$(".dropdown-inner").css("display", "none");
@@ -563,11 +571,11 @@
 			alert("test");
 		}
 		function boardsHover(){
-			document.getElementById("boardsInMenu").style.color = "#74D14C"; 
-			document.getElementById("boardsInMenu").style.backgroundColor = "grey"; 
+			document.getElementById("boardsInMenu").style.color = "#74D14C";
+			document.getElementById("boardsInMenu").style.backgroundColor = "grey";
 		}
 		function boardsNoHover(){
-			document.getElementById("boardsInMenu").style.color = "#d19fe4"; 
+			document.getElementById("boardsInMenu").style.color = "#d19fe4";
 			document.getElementById("boardsInMenu").style.backgroundColor = "transparent";
 		}
 		function check2(){
@@ -626,23 +634,23 @@
 			if(document.getElementById("newCheck53").checked) document.cookie = "texture53=checked"; else document.cookie = "texture53= ";
 			if(document.getElementById("newCheck54").checked) document.cookie = "texture54=checked"; else document.cookie = "texture54= ";
 		}
-		
+
 		function changeSound(){
 			if(getCookie("sound")=="off"){
 				document.getElementById("soundButtonImage").src="/img/sound-icon1.png";
 				document.cookie = "sound=on";
-				soundsEnabled = true;
+        updateSoundValue(true);
 			}else if(getCookie("sound")=="on"){
 				document.getElementById("soundButtonImage").src="/img/sound-icon2.png";
 				document.cookie = "sound=off";
-				soundsEnabled = false;
+        updateSoundValue(false);
 			}else{
 				document.getElementById("soundButtonImage").src="/img/sound-icon2.png";
 				document.cookie = "sound=off";
-				soundsEnabled = false;
+        updateSoundValue(false);
 			}
 		}
-		
+
 		function getCookie(cname){
 			var name = cname + "=";
 			var decodedCookie = decodeURIComponent(document.cookie);
@@ -658,7 +666,7 @@
 			}
 			return "";
 		}
-		
+
 		function loadBar(){
 			if(notMode3){
 			<?php if($mode==1){ ?>
@@ -681,16 +689,16 @@
 				$("#xp-increase-fx").fadeOut(0);$("#xp-bar-fill").css({"-webkit-transition":"all 0.5s ease","box-shadow":""});
 			<?php }?>
 			}else{
-				
+
 			}
 		}
-		
+
 		function xpHover(){
 			if(notMode3){
-				<?php 
+				<?php
 				if(isset($_SESSION['loggedInUser'])){
 					if($_SESSION['loggedInUser']['User']['mode']==1) echo 'document.getElementById("account-bar-xp").innerHTML = userXP+"/"+userNextLvl;';
-					elseif($_SESSION['loggedInUser']['User']['mode']==2) echo 'if(!usedModeSwitch) document.getElementById("account-bar-xp").innerHTML = userElo; 
+					elseif($_SESSION['loggedInUser']['User']['mode']==2) echo 'if(!usedModeSwitch) document.getElementById("account-bar-xp").innerHTML = userElo;
 					else document.getElementById("account-bar-xp").innerHTML = userXP+"/"+userNextLvl;';
 				}else{
 					echo 'document.getElementById("account-bar-xp").innerHTML = "Level"+userXP+"/"+userNextLvl;';
@@ -699,7 +707,7 @@
 			}
 			document.getElementById("heroProfile").style.display = "inline-block";
 			document.getElementById("heroLogout").style.display = "inline-block";
-		}	
+		}
 		function xpNoHover(){
 			if(notMode3){
 				<?php if($mode==1){ ?>
@@ -734,7 +742,7 @@
 		}
 		function donateHover2(){
 			document.getElementById("donateH2").src = '/img/donateButton1h.png';
-		}	
+		}
 		function donateNoHover2(){
 			document.getElementById("donateH2").src = "/img/donateButton1.png";
 		}
