@@ -6,6 +6,7 @@ besogo.makeToolPanel = function(container, editor)
       labelText, // Text area for next label input
       selectors = {}; // Holds selection rects
   var reviewMode = false;
+  var reviewButton = null;
   if (container.className == 'besogo-tsumegoPlayTool')
     makeReviewToolButtons(container, editor);
   else
@@ -13,7 +14,7 @@ besogo.makeToolPanel = function(container, editor)
 
   editor.addListener(toolStateUpdate); // Set up listener for tool state updates
   toolStateUpdate({ label: editor.getLabel(), tool: editor.getTool(), tool2: editor.getTool() }); // Initialize
-  
+
   function makeReviewToolButtons(container, editor)
   {
     makeButtonText('Invert', 'Invert colors of all stones and moves.', function()
@@ -51,7 +52,7 @@ besogo.makeToolPanel = function(container, editor)
       window.location.href = "/tsumegos/play/"+nextButtonLink;
     });
 
-    makeButtonText('Review', 'Review mode', function()
+    reviewButton = makeButtonText('Review', 'Review mode', function()
     {
       if (!reviewEnabled)
         return;
@@ -71,8 +72,10 @@ besogo.makeToolPanel = function(container, editor)
       reviewMode = !reviewMode;
       editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true, reviewMode: reviewMode });
     });
+
+    reviewButton.disabled = true;
   }
-  
+
   function makeEditorToolButtons(container, editor)
   {
     svg = makeButtonSVG('auto', 'Auto-play/navigate\n' +
@@ -170,7 +173,7 @@ besogo.makeToolPanel = function(container, editor)
       editor.edited = true;
     });
   }
-  
+
   // Creates a button holding an SVG image
   function makeButtonSVG(tool, tooltip)
   {
@@ -216,6 +219,7 @@ besogo.makeToolPanel = function(container, editor)
     button.title = tip;
     button.onclick = callback;
     container.appendChild(button);
+    return button;
   }
 
   // Callback for updating tool state and label
@@ -231,7 +235,10 @@ besogo.makeToolPanel = function(container, editor)
           else
             selectors[tool].setAttribute('visibility', 'hidden');
     if (msg.hasOwnProperty('reviewEnabled'))
+    {
       reviewEnabled = msg.reviewEnabled;
+      reviewButton.disabled = !reviewEnabled;
+    }
   }
 
   // Draws a yin yang
