@@ -71,7 +71,8 @@ besogo.makeEditor = function(sizeX, sizeY)
     isShift: isShift,
     applyTransformation : applyTransformation,
     registerDisplayResult : registerDisplayResult,
-    setSoundEnabled, setSoundEnabled
+    setSoundEnabled, setSoundEnabled,
+    setAutoPlay, setAutoPlay
   };
 
   // Returns the active tool
@@ -391,6 +392,14 @@ besogo.makeEditor = function(sizeX, sizeY)
     }
   }
 
+  function navigateToNode(node)
+  {
+    current = node; // Navigate to child if found
+    notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
+    if (autoPlay)
+      setTimeout(function(){ if(isMutable) nextNode(1); }, 360);
+  }
+
   // Navigates to child with move at (x, y), searching tree if shift key pressed
   // Returns true is successful, false if not
   function navigate(x, y, shiftKey)
@@ -408,8 +417,7 @@ besogo.makeEditor = function(sizeX, sizeY)
       }
       else if (move && move.x === x && move.y === y)
       {
-        current = children[i]; // Navigate to child if found
-        notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
+        navigateToNode(children[i]);
         return true;
       }
     }
@@ -422,8 +430,7 @@ besogo.makeEditor = function(sizeX, sizeY)
         if (move.x === x && move.y === y)
         {
           child.target.cameFrom = current;
-          current = child.target;
-          notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
+          navigateToNode(child.target);
           return true;
         }
       }
@@ -460,6 +467,7 @@ besogo.makeEditor = function(sizeX, sizeY)
   // Set allowAll to truthy to allow illegal moves
   function playMove(i, j, color, allowAll)
   {
+    window.alert("wtf");
     // Check if current node is immutable or root
     if (!current.isMutable('move') || !current.parent)
     {
@@ -487,9 +495,6 @@ besogo.makeEditor = function(sizeX, sizeY)
       notifyListeners({ treeChange: true, stoneChange: true });
       edited = true;
     }
-
-    if (autoPlay && !reviewMode && color == root.firstToPlay)
-      setTimeout(function(){ if(isMutable) nextNode(1); }, 360);
   }
 
   // Places a setup stone at the given color and location
@@ -617,5 +622,10 @@ besogo.makeEditor = function(sizeX, sizeY)
   function setSoundEnabled(value)
   {
     soundEnabled = value;
+  }
+
+  function setAutoPlay(value)
+  {
+    autoPlay = value;
   }
 };

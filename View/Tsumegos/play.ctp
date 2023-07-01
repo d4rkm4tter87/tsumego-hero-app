@@ -3619,7 +3619,6 @@
 	  options.realstones = true;
 	  options.nowheel = true;
 	  options.nokeys = true;
-    options.autoplay = true;
     options.panels = '';
 	  options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/'+'<?php echo $file; ?>';
 	  if (options.theme) // Board style theme (overrides std theme if set)
@@ -3631,6 +3630,7 @@
 	  }
 	  besogo.create(div, options);
     besogo.editor.registerDisplayResult(displayResult);
+    besogo.editor.setAutoPlay(true);
 
 	  function addStyleLink(cssURL)
 	  {
