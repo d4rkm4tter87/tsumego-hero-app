@@ -3631,6 +3631,7 @@
 	  besogo.create(div, options);
     besogo.editor.registerDisplayResult(displayResult);
     besogo.editor.setAutoPlay(true);
+    besogo.editor.notifyListeners({ reviewMode: false});
 
 	  function addStyleLink(cssURL)
 	  {
