@@ -230,6 +230,8 @@ besogo.makeToolPanel = function(container, editor)
             selectors[tool].setAttribute('visibility', 'visible');
           else
             selectors[tool].setAttribute('visibility', 'hidden');
+    if (msg.hasOwnProperty('reviewEnabled'))
+      reviewEnabled = msg.reviewEnabled;
   }
 
   // Draws a yin yang

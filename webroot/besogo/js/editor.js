@@ -382,12 +382,6 @@ besogo.makeEditor = function(sizeX, sizeY)
     }
     if (soundEnabled && isMutable)
       document.getElementsByTagName("audio")[0].play();
-    if (displayResult && current.correct && !current.hasChildIncludingVirtual())
-    {
-      toggleBoardLock(true);
-      enableReviewButton();
-      displayResult('S');
-    }
   }
 
   function navigateToNode(node)
@@ -396,6 +390,11 @@ besogo.makeEditor = function(sizeX, sizeY)
     notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
     if (autoPlay)
       setTimeout(function(){ if(isMutable) nextNode(1); }, 360);
+    if (displayResult && node.correct && !node.hasChildIncludingVirtual())
+    {
+      toggleBoardLock(true);
+      displayResult('S');
+    }
   }
 
   // Navigates to child with move at (x, y), searching tree if shift key pressed
