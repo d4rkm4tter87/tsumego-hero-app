@@ -3619,7 +3619,8 @@
 	  options.realstones = true;
 	  options.nowheel = true;
 	  options.nokeys = true;
-    options.panels = '';
+    options.panels = 'control+tree';
+    options.bottomPanels = 'tsumegoPlayTool'
 	  options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/'+'<?php echo $file; ?>';
 	  if (options.theme) // Board style theme (overrides std theme if set)
 		addStyleLink('css/board-' + options.theme + '.css');

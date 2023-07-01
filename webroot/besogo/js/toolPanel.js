@@ -6,7 +6,7 @@ besogo.makeToolPanel = function(container, editor)
       labelText, // Text area for next label input
       selectors = {}; // Holds selection rects
   var reviewMode = false;
-  if (container.className == 'besogo-tool2')
+  if (container.className == 'besogo-tsumegoPlayTool')
     makeReviewToolButtons(container, editor);
   else
     makeEditorToolButtons(container, editor);

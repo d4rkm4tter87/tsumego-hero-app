@@ -15,6 +15,7 @@
           control: besogo.makeControlPanel,
           comment: besogo.makeCommentPanel,
           tool: besogo.makeToolPanel,
+          tsumegoPlayTool: besogo.makeToolPanel,
           tree: besogo.makeTreePanel,
           file: besogo.makeFilePanel
         },
@@ -27,12 +28,16 @@
     options.size = besogo.parseSize(options.size || 19);
     options.coord = options.coord || 'none';
     options.tool = options.tool || 'auto';
+    options.tool2 = options.tool2 || 'auto';
     if (options.panels === '')
       options.panels = [];
   
     options.panels = options.panels || 'control+names+comment+tool+tree+file';
     if (typeof options.panels === 'string')
       options.panels = options.panels.split('+');
+  
+    if (typeof options.bottomPanels === 'string')
+      options.bottomPanels = options.bottomPanels.split('+');
   
     options.path = options.path || '';
     if (options.shadows === undefined)
@@ -101,7 +106,7 @@
 
     if (options.panels.length > 0) // Only create if there are panels to add
     {
-      panelsDiv = makeDiv(options.panelsAreBottom ? 'besogo-bottom-panels' : 'besogo-panels');
+      panelsDiv = makeDiv('besogo-panels');
       for (i = 0; i < options.panels.length; i++)
       {
         panelName = options.panels[i];
@@ -113,6 +118,23 @@
         container.removeChild(panelsDiv); // Remove the panels div
         panelsDiv = false; // Flags panels div as removed
       }
+    }
+    if (options.bottomPanels.length > 0) // Only create if there are panels to add
+    {
+      panelsDiv = makeDiv('besogo-bottom-panels');
+      for (i = 0; i < options.bottomPanels.length; i++)
+      {
+        panelName = options.bottomPanels[i];
+        if (makers[panelName]) // Only add if creator function exists
+          makers[panelName](makeDiv('besogo-' + panelName, panelsDiv), besogo.editor);
+      }
+      if (!panelsDiv.firstChild) // If no panels were added
+      {
+        container.removeChild(panelsDiv); // Remove the panels div
+        panelsDiv = false; // Flags panels div as removed
+      }
+      else
+        $(".besogo-panels").css("display","none"); // when the bottom panels are present, the main tool panels are hidden by default
     }
 
     options.resize = options.resize || 'auto';
@@ -304,15 +326,18 @@ besogo.autoInit = function()
     {
       options.panels = ['control', 'comment', 'tool', 'tree', 'file'];
       options.tool = 'auto';
+      options.tool2 = 'auto';
     }
     else if (hasClass(targetDivs[i], 'besogo-viewer'))
     {
       options.panels = ['control', 'comment'];
       options.tool = 'navOnly';
+      options.tool2 = 'navOnly';
     } else if (hasClass(targetDivs[i], 'besogo-diagram'))
     {
       options.panels = [];
       options.tool = 'navOnly';
+      options.tool2 = 'navOnly';
     }
 
     attrs = targetDivs[i].attributes;
