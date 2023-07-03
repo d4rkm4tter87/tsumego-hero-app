@@ -52,33 +52,15 @@ besogo.makeControlPanel = function(container, editor)
     leftElements.push(makeNavButton('First node',
                                     '5,10 5,90 25,90 25,50 95,90 95,10 25,50 25,10',
                                     function() { editor.prevNode(-1); }));
-    /*
-	leftElements.push(makeNavButton('Jump back',
-                                    '95,10 50,50 50,10 5,50 50,90 50,50 95,90',
-                                    function() {editor.prevNode(10); }));
-	*/
     leftElements.push(makeNavButton('Previous node',
                                     '85,10 85,90 15,50',
                                     function() { editor.prevNode(1); }));
     rightElements.push(makeNavButton('Next node',
                                      '15,10 15,90 85,50',
                                      function() { editor.nextNode(1); }));
-	/*								 
-    rightElements.push(makeNavButton('Jump forward',
-                                     '5,10 50,50 50,10 95,50 50,90 50,50 5,90',
-                                     function() { editor.nextNode(10); }));
-	*/								 
     rightElements.push(makeNavButton('Last node',
                                      '95,10 95,90 75,90 75,50 5,90 5,10 75,50 75,10',
                                      function() { editor.nextNode(-1); }));
-	/*
-    siblingElements.push(makeNavButton('Previous sibling',
-                                       '10,85 90,85 50,15',
-                                       function() { editor.nextSibling(-1); }));
-    siblingElements.push(makeNavButton('Next sibling',
-                                       '10,15 90,15 50,85',
-                                       function() { editor.nextSibling(1); }));
-	*/
     function makeNavButton(tooltip, pointString, action) // Creates a navigation button
     {
       var button = document.createElement('button'),

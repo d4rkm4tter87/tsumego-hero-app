@@ -34,6 +34,7 @@ besogo.makeEditor = function(sizeX, sizeY)
       edited = false,
 	  soundsEnabled = true,
 	  soundsEnabled2 = true,
+	  autoPlay = false,
       shift = false;
 	  var isEmbedded = typeof mode === "number"; //check if embedded in the website
 	  
@@ -69,7 +70,9 @@ besogo.makeEditor = function(sizeX, sizeY)
     notifyListeners: notifyListeners,
     setShift: setShift,
     isShift: isShift,
-    applyTransformation : applyTransformation
+    applyTransformation : applyTransformation,
+    registerDisplayResult : registerDisplayResult,
+    setAutoPlay, setAutoPlay
   };
    
   // Returns the active tool
@@ -181,6 +184,7 @@ besogo.makeEditor = function(sizeX, sizeY)
   // Returns the root of the game state tree
   function getRoot() { return root; }
 
+
   function loadRoot(load)
   {
     root = load;
@@ -216,9 +220,9 @@ besogo.makeEditor = function(sizeX, sizeY)
     }
     // Notify listeners of navigation (with no tree edits)
     notifyListeners({ navChange: true }, true); // Preserve history
-	
+
 	//opponent move and incorrect
-	if(isEmbedded){ 
+	if(isEmbedded){
 		if(!reviewEnabled2) document.getElementsByTagName("audio")[0].play();
 		if(current.correct==false && current.lastMove==1 && current.children.length<1){
 			displayResult('F');
@@ -380,7 +384,6 @@ besogo.makeEditor = function(sizeX, sizeY)
         setMarkup(i, j, label);
         break;
     }
-	//console.log('b');
 	if(isEmbedded){
 		if(!reviewEnabled2) document.getElementsByTagName("audio")[0].play();
 		if(current.correct==true && current.correctSource==true){
@@ -392,6 +395,19 @@ besogo.makeEditor = function(sizeX, sizeY)
 			}, 360);
 		}
 	}
+  }
+
+  function navigateToNode(node)
+  {
+    current = node; // Navigate to child if found
+    notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
+    if (autoPlay)
+      setTimeout(function(){ if(isMutable) nextNode(1); }, 360);
+    if (displayResult && node.correct && !node.hasChildIncludingVirtual())
+    {
+      toggleBoardLock(true);
+      displayResult('S');
+    }
   }
 
   // Navigates to child with move at (x, y), searching tree if shift key pressed
@@ -411,8 +427,7 @@ besogo.makeEditor = function(sizeX, sizeY)
       }
       else if (move && move.x === x && move.y === y)
       {
-        current = children[i]; // Navigate to child if found
-        notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
+        navigateToNode(children[i]);
         return true;
       }
     }
@@ -425,8 +440,7 @@ besogo.makeEditor = function(sizeX, sizeY)
         if (move.x === x && move.y === y)
         {
           child.target.cameFrom = current;
-          current = child.target;
-          notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
+          navigateToNode(child.target);
           return true;
         }
       }
@@ -490,13 +504,11 @@ besogo.makeEditor = function(sizeX, sizeY)
     else if (current.playMove(i, j, color, allowAll))
     { // Play in current
         // Only need to update if move succeeds
-		
       current.registerInVirtualMoves();
       besogo.updateCorrectValues(current.getRoot());
       notifyListeners({ treeChange: true, stoneChange: true });
       edited = true;
     }
-	//isMutable = current.isMutable('move');
   }
 
   // Places a setup stone at the given color and location
@@ -607,7 +619,7 @@ besogo.makeEditor = function(sizeX, sizeY)
   {
     return shift;
   }
-  
+
   function applyTransformation(transformation)
   {
     root.applyTransformation(root, transformation);
@@ -615,5 +627,14 @@ besogo.makeEditor = function(sizeX, sizeY)
     notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
     edited = true;
   }
-  
+
+  function registerDisplayResult(displayResultInput)
+  {
+    displayResult = displayResultInput;
+  }
+
+  function setAutoPlay(value)
+  {
+    autoPlay = value;
+  }
 };

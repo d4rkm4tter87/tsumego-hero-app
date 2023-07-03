@@ -5,109 +5,23 @@ besogo.makeToolPanel = function(container, editor)
       svg, // Scratch for building SVG images
       labelText, // Text area for next label input
       selectors = {}; // Holds selection rects
-	var reviewMode = false;
-	var isEmbedded = typeof mode === "number"; //check if embedded in the website
-	
-  if(container.className!=='besogo-tool2'){
-	  svg = makeButtonSVG('auto', 'Auto-play/navigate\n' +
-		  'crtl+click to force ko, suicide, overwrite\n' +
-		  'shift+click to jump to move'); // Auto-play/nav tool button
-	  svg.appendChild(makeYinYang(0, 0));
+	  var reviewMode = false;
+	  var isEmbedded = typeof mode === "number"; //check if embedded in the website
 
-	  svg = makeButtonSVG('addB', 'Set black\nshift+click addWhite\nctrl+click to play'); // Add black button
-	  element = besogo.svgEl('g');
-	  element.appendChild(besogo.svgStone(-15, -15, -1, 15)); // Black stone
-	  element.appendChild(besogo.svgStone(15, -15, 1, 15)); // White stone
-	  element.appendChild(besogo.svgStone(-15, 15, 1, 15)); // White stone
-	  element.appendChild(besogo.svgStone(15, 15, -1, 15)); // Black stone
-	  svg.appendChild(element);
-	  
-	  svg = makeButtonSVG('circle', 'Circle'); // Circle markup button
-	  svg.appendChild(besogo.svgCircle(0, 0, 'black'));
-	  
-	  svg = makeButtonSVG('square', 'Square'); // Square markup button
-	  svg.appendChild(besogo.svgSquare(0, 0, 'black'));
-	  
-	  svg = makeButtonSVG('triangle', 'Triangle'); // Triangle markup button
-	  svg.appendChild(besogo.svgTriangle(0, 0, 'black'));
+  var reviewMode = false;
+  var reviewButton = null;
+  if (container.className == 'besogo-tool2')
+    makeReviewToolButtons(container, editor);
+  else
+    makeEditorToolButtons(container, editor);
 
-	  svg = makeButtonSVG('cross', 'Cross'); // Cross markup button
-	  svg.appendChild(besogo.svgCross(0, 0, 'black'));
+  editor.addListener(toolStateUpdate); // Set up listener for tool state updates
+  
+  toolStateUpdate({ label: editor.getLabel(), tool: editor.getTool(), tool2: editor.getTool() }); // Initialize
 
-	  svg = makeButtonSVG('block', 'Block'); // Block markup button
-	  svg.appendChild(besogo.svgBlock(0, 0, 'black'));
-
-	  svg = makeButtonSVG('clrMark', 'Clear mark'); // Clear markup button
-	  element = besogo.svgEl('g');
-	  element.appendChild(besogo.svgTriangle(0, 0, besogo.GREY));
-	  element.appendChild(besogo.svgCross(0, 0, besogo.RED));
-	  svg.appendChild(element);
-
-	  svg = makeButtonSVG('label', 'Label'); // Label markup button
-	  svg.appendChild(besogo.svgLabel(0, 0, 'black', 'A1'));
-
-	  labelText = document.createElement("input"); // Label entry text field
-	  labelText.type = "text";
-	  labelText.title = 'Next label';
-	  labelText.onblur = function() { editor.setLabel(labelText.value); };
-	  labelText.addEventListener('keydown', function(evt)
-	  {
-		evt = evt || window.event;
-		evt.stopPropagation(); // Stop keydown propagation when in focus
-	  });
-	  container.appendChild(labelText);
-	  if(!isEmbedded){
-		  makeButtonText('Pass', 'Pass move', function()
-		  {
-			var tool = editor.getTool();
-			if (tool !== 'navOnly' && tool !== 'auto')
-			  editor.setTool('auto'); // Ensures that a move tool is selected
-			editor.click(0, 0, false); // Clicking off the board signals a pass
-		  });
-	  
-		  makeButtonText('Raise', 'Raise variation', function() { editor.promote(); });
-		  makeButtonText('Lower', 'Lower variation', function() { editor.demote(); });
-	  }
-	  makeButtonText('Cut', 'Remove branch', function() { editor.cutCurrent(); });
-	  if(!isEmbedded){
-		  makeButtonText('H Flip', 'Flip horizontally', function()
-		  {
-			let transformation = besogo.makeTransformation();
-			transformation.hFlip = true;
-			editor.applyTransformation(transformation);
-		  });
-		  makeButtonText('V Flip', 'Flip vertically', function()
-		  {
-			let transformation = besogo.makeTransformation();
-			transformation.vFlip = true;
-			editor.applyTransformation(transformation);
-		  });
-
-		  makeButtonText('Rotate', 'Rotate the board clockwise', function()
-		  {
-			let transformation = besogo.makeTransformation();
-			transformation.rotate = true;
-			editor.applyTransformation(transformation);
-		  });
-
-		  makeButtonText('Invert', 'Invert colors of all stones and moves.', function()
-		  {
-			let transformation = besogo.makeTransformation();
-			transformation.invertColors = true;
-			editor.applyTransformation(transformation);
-		  });
-		  
-		  makeButtonText('Invert firstMove', 'Invert the color of the first move', function()
-		  {
-			let transformation = besogo.makeTransformation();
-			transformation.invertColors = true;
-			editor.getRoot().firstMove = transformation.applyOnColor(editor.getRoot().firstMove);
-			editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
-			editor.edited = true;
-		  });
-	    }
-  }else{
-	  /*
+  function makeReviewToolButtons(container, editor)
+  {
+    /*
 	  makeButtonText('Invert', 'Invert colors of all stones and moves.', function()
 	  {
 		let transformation = besogo.makeTransformation();
@@ -173,12 +87,108 @@ besogo.makeToolPanel = function(container, editor)
 			editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
 		}
 	  });
+
+    reviewButton.disabled = true;
   }
-  
-  editor.addListener(toolStateUpdate); // Set up listener for tool state updates
-  
-  
-  toolStateUpdate({ label: editor.getLabel(), tool: editor.getTool(), tool2: editor.getTool() }); // Initialize
+
+  function makeEditorToolButtons(container, editor)
+  {
+    svg = makeButtonSVG('auto', 'Auto-play/navigate\n' +
+        'crtl+click to force ko, suicide, overwrite\n' +
+        'shift+click to jump to move'); // Auto-play/nav tool button
+    svg.appendChild(makeYinYang(0, 0));
+
+    svg = makeButtonSVG('addB', 'Set black\nshift+click addWhite\nctrl+click to play'); // Add black button
+    element = besogo.svgEl('g');
+    element.appendChild(besogo.svgStone(-15, -15, -1, 15)); // Black stone
+    element.appendChild(besogo.svgStone(15, -15, 1, 15)); // White stone
+    element.appendChild(besogo.svgStone(-15, 15, 1, 15)); // White stone
+    element.appendChild(besogo.svgStone(15, 15, -1, 15)); // Black stone
+    svg.appendChild(element);
+
+    svg = makeButtonSVG('circle', 'Circle'); // Circle markup button
+    svg.appendChild(besogo.svgCircle(0, 0, 'black'));
+
+    svg = makeButtonSVG('square', 'Square'); // Square markup button
+    svg.appendChild(besogo.svgSquare(0, 0, 'black'));
+
+    svg = makeButtonSVG('triangle', 'Triangle'); // Triangle markup button
+    svg.appendChild(besogo.svgTriangle(0, 0, 'black'));
+
+    svg = makeButtonSVG('cross', 'Cross'); // Cross markup button
+    svg.appendChild(besogo.svgCross(0, 0, 'black'));
+
+    svg = makeButtonSVG('block', 'Block'); // Block markup button
+    svg.appendChild(besogo.svgBlock(0, 0, 'black'));
+
+    svg = makeButtonSVG('clrMark', 'Clear mark'); // Clear markup button
+    element = besogo.svgEl('g');
+    element.appendChild(besogo.svgTriangle(0, 0, besogo.GREY));
+    element.appendChild(besogo.svgCross(0, 0, besogo.RED));
+    svg.appendChild(element);
+
+    svg = makeButtonSVG('label', 'Label'); // Label markup button
+    svg.appendChild(besogo.svgLabel(0, 0, 'black', 'A1'));
+
+    labelText = document.createElement("input"); // Label entry text field
+    labelText.type = "text";
+    labelText.title = 'Next label';
+    labelText.onblur = function() { editor.setLabel(labelText.value); };
+    labelText.addEventListener('keydown', function(evt)
+    {
+      evt = evt || window.event;
+      evt.stopPropagation(); // Stop keydown propagation when in focus
+    });
+    container.appendChild(labelText);
+
+    makeButtonText('Pass', 'Pass move', function()
+    {
+      var tool = editor.getTool();
+      if (tool !== 'navOnly' && tool !== 'auto')
+        editor.setTool('auto'); // Ensures that a move tool is selected
+      editor.click(0, 0, false); // Clicking off the board signals a pass
+    });
+
+    makeButtonText('Raise', 'Raise variation', function() { editor.promote(); });
+    makeButtonText('Lower', 'Lower variation', function() { editor.demote(); });
+    makeButtonText('Cut', 'Remove branch', function() { editor.cutCurrent(); });
+    makeButtonText('H Flip', 'Flip horizontally', function()
+    {
+      let transformation = besogo.makeTransformation();
+      transformation.hFlip = true;
+      editor.applyTransformation(transformation);
+    });
+    makeButtonText('V Flip', 'Flip vertically', function()
+    {
+      let transformation = besogo.makeTransformation();
+      transformation.vFlip = true;
+      editor.applyTransformation(transformation);
+    });
+
+    makeButtonText('Rotate', 'Rotate the board clockwise', function()
+    {
+      let transformation = besogo.makeTransformation();
+      transformation.rotate = true;
+      editor.applyTransformation(transformation);
+    });
+
+    makeButtonText('Invert', 'Invert colors of all stones and moves.', function()
+    {
+      let transformation = besogo.makeTransformation();
+      transformation.invertColors = true;
+      editor.applyTransformation(transformation);
+    });
+
+    makeButtonText('Invert firstMove', 'Invert the color of the first move', function()
+    {
+      let transformation = besogo.makeTransformation();
+      transformation.invertColors = true;
+      editor.getRoot().firstMove = transformation.applyOnColor(editor.getRoot().firstMove);
+      editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+      editor.edited = true;
+    });
+  }
+
   // Creates a button holding an SVG image
   function makeButtonSVG(tool, tooltip)
   {
@@ -205,9 +215,9 @@ besogo.makeToolPanel = function(container, editor)
     button.onclick = function()
     {
       if (tool === 'auto' && editor.getTool() === 'auto')
-          editor.setTool('navOnly');
+        editor.setTool('navOnly');
       else
-          editor.setTool(tool);
+        editor.setTool(tool);
     };
     button.title = tooltip;
     selectors[tool] = selected;
@@ -224,12 +234,13 @@ besogo.makeToolPanel = function(container, editor)
     button.title = tip;
     button.onclick = callback;
     container.appendChild(button);
+    return button;
   }
 
   // Callback for updating tool state and label
   function toolStateUpdate(msg)
   {
-    if (msg.label)
+    if (msg.label && labelText)
       labelText.value = msg.label;
     if (msg.tool)
       for (let tool in selectors) // Update which tool is selected
@@ -238,6 +249,11 @@ besogo.makeToolPanel = function(container, editor)
             selectors[tool].setAttribute('visibility', 'visible');
           else
             selectors[tool].setAttribute('visibility', 'hidden');
+    if (msg.hasOwnProperty('reviewEnabled'))
+    {
+      reviewEnabled = msg.reviewEnabled;
+      reviewButton.disabled = !reviewEnabled;
+    }
   }
 
   // Draws a yin yang

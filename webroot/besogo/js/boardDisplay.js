@@ -21,6 +21,8 @@ besogo.makeBoardDisplay = function(container, editor)
       lastHoverPosition = null,
       TOUCH_FLAG = false; // Flag for touch interfaces
 
+	var isEmbedded = typeof mode === "number"; //check if embedded in the website
+
   initializeBoard(editor.getCoordStyle()); // Initialize SVG element and draw the board
   container.appendChild(svg); // Add the SVG element to the document
   editor.addListener(update); // Register listener to handle editor/game state updates
@@ -54,7 +56,7 @@ besogo.makeBoardDisplay = function(container, editor)
 
     svg.appendChild(stoneGroup); // Add placeholder group for stone layer
     svg.appendChild(markupGroup); // Add placeholder group for markup layer
-   svg.appendChild(nextMoveGroup);
+    svg.appendChild(nextMoveGroup);
 
     if (!TOUCH_FLAG) {
         hoverGroup = besogo.svgEl("g");
@@ -95,13 +97,15 @@ besogo.makeBoardDisplay = function(container, editor)
     }
     else if (msg.tool || msg.label)
       redrawHover(current);
+    if (msg.hasOwnProperty('reviewMode'))
+      reviewMode = msg.reviewMode;
   }
 
   function redrawAll(current) {
       redrawStones(current);
       redrawMarkup(current);
 	  
-	  if(typeof reviewEnabled2 === 'boolean'){
+	  if(isEmbedded){
 		  if(reviewEnabled2) redrawNextMoves(current);
 		  else redrawNextMoves(current, true);
 	  }else{
@@ -288,9 +292,9 @@ besogo.makeBoardDisplay = function(container, editor)
     {
       // Call click handler in editor
       editor.click(i, j, event.ctrlKey, event.shiftKey);
-      if(!TOUCH_FLAG)
+      if (!TOUCH_FLAG)
         (handleOver(i, j))(); // Ensures that any updated tool is visible
-		if(typeof mode === "number"){//is embedded in Tsumego Hero
+		if(isEmbedded){//is embedded in Tsumego Hero
 			if(!reviewEnabled2){
 				setTimeout(function(){
 					if(isMutable) editor.nextNode(1);
@@ -299,6 +303,7 @@ besogo.makeBoardDisplay = function(container, editor)
 		}
     };
   }
+
   function handleOver(i, j) // Returns function for mouse over
   {
     return function()

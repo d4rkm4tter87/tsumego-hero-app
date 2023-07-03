@@ -1,10 +1,11 @@
 (function() {
-'use strict';
-var besogo = window.besogo = window.besogo || {}; // Establish our namespace
-besogo.VERSION = '0.0.2-alpha';
+  'use strict';
+  var besogo = window.besogo = window.besogo || {}; // Establish our namespace
+  besogo.VERSION = '0.0.2-alpha';
+  besogo.editor = null;
 
-besogo.create = function(container, options) {
-	
+  besogo.create = function(container, options)
+  {
     var editor, // Core editor object
         boardDisplay,
         resizer, // Auto-resizing function
@@ -31,10 +32,8 @@ besogo.create = function(container, options) {
 			  tree: besogo.makeTreePanel,
 			  file: besogo.makeFilePanel
 			}
-	}		
-	/*How to add?
-	makers += tool2: besogo.makeToolPanel;
-	makers.push(tool2: besogo.makeToolPanel);*/
+	}	
+
     container.className += ' besogo-container'; // Marks this div as initialized
     // Process options and set defaults
     options = options || {}; // Makes option checking simpler
@@ -45,14 +44,19 @@ besogo.create = function(container, options) {
     if (options.panels === '')
       options.panels = [];
   
+    //options.panels = options.panels || 'control+names+comment+tool+tree+file';
     if (typeof options.panels === 'string')
       options.panels = options.panels.split('+');
-	
+  
 	if(options.tool2){
 		options.panels2 = options.panels2 || 'tool2';
 		if (typeof options.panels2 === 'string')
 		  options.panels2 = options.panels2.split('+');
 	}
+  
+    if (typeof options.bottomPanels === 'string')
+      options.bottomPanels = options.bottomPanels.split('+');
+  
     options.path = options.path || '';
     if (options.shadows === undefined)
       options.shadows = 'auto';
@@ -60,25 +64,24 @@ besogo.create = function(container, options) {
       options.shadows = false;
   
     // Make the core editor object
-    editor = besogo.makeEditor(options.size.x, options.size.y);
-    container.besogoEditor = editor;
-    editor.setTool(options.tool);
-    if(options.tool2) editor.setTool(options.tool2);
-    editor.setCoordStyle(options.coord);
+    besogo.editor = besogo.makeEditor(options.size.x, options.size.y);
+    container.besogoEditor = besogo.editor;
+    besogo.editor.setTool(options.tool);
+	if(options.tool2) besogo.editor.setTool(options.tool2);
+    besogo.editor.setCoordStyle(options.coord);
     if (options.realstones) // Using realistic stones
     {
-      editor.REAL_STONES = true;
-      editor.SHADOWS = options.shadows;
+      besogo.editor.REAL_STONES = true;
+      besogo.editor.SHADOWS = options.shadows;
     }
 	
 	if (options.themeParameters) // Using realistic stones
     {
-       editor.BLACK_STONES = options.themeParameters[0];
-       editor.WHITE_STONES = options.themeParameters[1];
+       besogo.editor.BLACK_STONES = options.themeParameters[0];
+       besogo.editor.WHITE_STONES = options.themeParameters[1];
     }
     else // SVG stones
-      editor.SHADOWS = (options.shadows && options.shadows !== 'auto');
-
+      besogo.editor.SHADOWS = (options.shadows && options.shadows !== 'auto');
 
     if (options.sgf) // Load SGF file from URL or SGF string
     {
@@ -91,11 +94,11 @@ besogo.create = function(container, options) {
       try
       {
         if (validURL)
-          fetchParseLoad(options.sgf, editor, options.path);
+          fetchParseLoad(options.sgf, besogo.editor, options.path);
         else
         {
-          parseAndLoad(options.sgf, editor);
-          navigatePath(editor, options.path);
+          parseAndLoad(options.sgf, besogo.editor);
+          navigatePath(besogo.editor, options.path);
         }
       }
       catch(e)
@@ -106,25 +109,25 @@ besogo.create = function(container, options) {
     }
     else if (insideText.match(/\s*\(\s*;/)) // Text content looks like an SGF file
     {
-      parseAndLoad(insideText, editor);
-      navigatePath(editor, options.path); // Navigate editor along path
+      parseAndLoad(insideText, besogo.editor);
+      navigatePath(besogo.editor, options.path); // Navigate editor along path
     }
 
     if (typeof options.variants === 'number' || typeof options.variants === 'string')
-      editor.setVariantStyle(+options.variants); // Converts to number
+      besogo.editor.setVariantStyle(+options.variants); // Converts to number
 
     while (container.firstChild) // Remove all children of container
       container.removeChild(container.firstChild);
 
     boardDiv = makeDiv('besogo-board'); // Create div for board display
-    boardDisplay = besogo.makeBoardDisplay(boardDiv, editor); // Create board display
+    boardDisplay = besogo.makeBoardDisplay(boardDiv, besogo.editor); // Create board display
 
     if (!options.nokeys) // Add keypress handler unless nokeys option is truthy
-      addKeypressHandler(container, editor, boardDisplay);
+      addKeypressHandler(container, besogo.editor, boardDisplay);
 
     if (!options.nowheel)
     // Add mousewheel handler unless nowheel option is truthy
-      addWheelHandler(boardDiv, editor);
+      addWheelHandler(boardDiv, besogo.editor);
 
     if (options.panels.length > 0) // Only create if there are panels to add
     {
@@ -133,7 +136,7 @@ besogo.create = function(container, options) {
       {
         panelName = options.panels[i];
         if (makers[panelName]) // Only add if creator function exists
-          makers[panelName](makeDiv('besogo-' + panelName, panelsDiv), editor);
+          makers[panelName](makeDiv('besogo-' + panelName, panelsDiv), besogo.editor);
       }
       if (!panelsDiv.firstChild) // If no panels were added
       {
@@ -141,7 +144,7 @@ besogo.create = function(container, options) {
         panelsDiv = false; // Flags panels div as removed
       }
     }
-	if(options.tool2){
+    if(options.tool2){
 		if (options.panels2.length > 0) // Only create if there are panels to add
 		{
 		  panelsDiv = makeDiv('besogo-bottom-panels');
@@ -158,103 +161,107 @@ besogo.create = function(container, options) {
 		  }
 		}
 	}
+
     options.resize = options.resize || 'auto';
-    if (options.resize === 'auto') { // Add auto-resizing unless resize option is truthy
-        resizer = function() {
-            var windowHeight = window.innerHeight, // Viewport height
-                // Calculated width of parent element
-                parentWidth = parseFloat(getComputedStyle(container.parentElement).width),
-                maxWidth = +(options.maxwidth || -1),
-                orientation = options.orient || 'auto',
+    if (options.resize === 'auto') // Add auto-resizing unless resize option is truthy
+    {
+      resizer = function()
+      {
+        var windowHeight = window.innerHeight, // Viewport height
+            // Calculated width of parent element
+            parentWidth = parseFloat(getComputedStyle(container.parentElement).width),
+            maxWidth = +(options.maxwidth || -1),
+            orientation = options.orient || 'auto',
 
-                portraitRatio = +(options.portratio || 200) / 100,
-                landscapeRatio = +(options.landratio || 200) / 100,
-                minPanelsWidth = +(options.minpanelswidth || 350),
-                minPanelsHeight = +(options.minpanelsheight || 400),
-                minLandscapeWidth = +(options.transwidth || 600),
+            portraitRatio = +(options.portratio || 200) / 100,
+            landscapeRatio = +(options.landratio || 200) / 100,
+            minPanelsWidth = +(options.minpanelswidth || 350),
+            minPanelsHeight = +(options.minpanelsheight || 400),
+            minLandscapeWidth = +(options.transwidth || 600),
 
-                // Initial width parent
-                width = (maxWidth > 0 && maxWidth < parentWidth) ? maxWidth : parentWidth,
-                height; // Initial height is undefined
+            // Initial width parent
+            width = (maxWidth > 0 && maxWidth < parentWidth) ? maxWidth : parentWidth,
+            height; // Initial height is undefined
 
-            // Determine orientation if 'auto' or 'view'
-            if (orientation !== 'portrait' && orientation !== 'landscape') {
-                if (width < minLandscapeWidth || (orientation === 'view' && width < windowHeight)) {
-                    orientation = 'portrait';
-                } else {
-                    orientation = 'landscape';
-                }
-            }
+        // Determine orientation if 'auto' or 'view'
+        if (orientation !== 'portrait' && orientation !== 'landscape')
+          if (width < minLandscapeWidth || (orientation === 'view' && width < windowHeight))
+            orientation = 'portrait';
+          else
+            orientation = 'landscape';
 
-            if (orientation === 'portrait') { // Portrait mode
-                if (!isNaN(portraitRatio)) {
-                    height = portraitRatio * width;
-                    if (panelsDiv) {
-                        height = (height - width < minPanelsHeight) ? width + minPanelsHeight : height;
-                    }
-                } // Otherwise, leave height undefined
-            } else if (orientation === 'landscape') { // Landscape mode
-                if (!panelsDiv) { // No panels div
-                    height = width; // Square overall
-                } else if (isNaN(landscapeRatio)) {
-                    height = windowHeight;
-                } else { // Otherwise use ratio
-                    height = width / landscapeRatio;
-                }
+          if (orientation === 'portrait') // Portrait mode
+          {
+            if (!isNaN(portraitRatio))
+            {
+              height = portraitRatio * width;
+              if (panelsDiv)
+                height = (height - width < minPanelsHeight) ? width + minPanelsHeight : height;
+            } // Otherwise, leave height undefined
+          }
+          else if (orientation === 'landscape') // Landscape mode
+          {
+            if (!panelsDiv) // No panels div
+              height = width; // Square overall
+            else if (isNaN(landscapeRatio))
+              height = windowHeight;
+            else // Otherwise use ratio
+              height = width / landscapeRatio;
 
-                if (panelsDiv) {
-                    // Reduce height to ensure minimum width of panels div
-                    height = (width < height + minPanelsWidth) ? (width - minPanelsWidth) : height;
-                }
-            }
+            if (panelsDiv) // Reduce height to ensure minimum width of panels div
+              height = (width < height + minPanelsWidth) ? (width - minPanelsWidth) : height;
+          }
+        setDimensions(width, height);
+        container.style.width = width + 'px';
+      };
+      window.addEventListener("resize", resizer);
+      resizer(); // Initial div sizing
+    }
+    else if (options.resize === 'fixed')
+      setDimensions(container.clientWidth, container.clientHeight);
+    else if (options.resize === 'fill')
+    {
+      resizer = function()
+      {
+        var // height = window.innerHeight, // Viewport height
+            height = parseFloat(getComputedStyle(container.parentElement).height),
+            // Calculated width of parent element
+            width = parseFloat(getComputedStyle(container.parentElement).width),
 
-            setDimensions(width, height);
-            container.style.width = width + 'px';
-        };
-        window.addEventListener("resize", resizer);
-        resizer(); // Initial div sizing
-    } else if (options.resize === 'fixed') {
-        setDimensions(container.clientWidth, container.clientHeight);
-    } else if (options.resize === 'fill') {
-        resizer = function() {
-            var // height = window.innerHeight, // Viewport height
-                height = parseFloat(getComputedStyle(container.parentElement).height),
-                // Calculated width of parent element
-                width = parseFloat(getComputedStyle(container.parentElement).width),
+            minPanelsWidth = +(options.minpanelswidth || 350),
+            minPanelsHeight = +(options.minpanelsheight || 300),
 
-                minPanelsWidth = +(options.minpanelswidth || 350),
-                minPanelsHeight = +(options.minpanelsheight || 300),
+            // Calculated dimensions for the panels div
+            panelsWidth = 0, // Will be set if needed
+            panelsHeight = 0;
 
-                // Calculated dimensions for the panels div
-                panelsWidth = 0, // Will be set if needed
-                panelsHeight = 0;
-
-            if (width >= height) { // Landscape mode
-                container.style['flex-direction'] = 'row';
-                if (panelsDiv) {
-                    panelsWidth = (width - height >= minPanelsWidth) ? (width - height) : minPanelsWidth;
-                }
-                panelsDiv.style.height = height + 'px';
-                panelsDiv.style.width = panelsWidth + 'px';
-                boardDiv.style.height = height + 'px';
-                boardDiv.style.width = (width - panelsWidth) + 'px';
-            } else { // Portrait mode
-                container.style['flex-direction'] = 'column';
-                if (panelsDiv) {
-                    panelsHeight = (height - width >= minPanelsHeight) ? (height - width) : minPanelsHeight;
-                }
-                panelsDiv.style.height = panelsHeight + 'px';
-                panelsDiv.style.width = width + 'px';
-                boardDiv.style.height = (height - panelsHeight) + 'px';
-                boardDiv.style.width = width + 'px';
-            }
-        };
-        window.addEventListener("resize", resizer);
-        resizer(); // Initial div sizing
+        if (width >= height) // Landscape mode
+        {
+          container.style['flex-direction'] = 'row';
+          if (panelsDiv)
+              panelsWidth = (width - height >= minPanelsWidth) ? (width - height) : minPanelsWidth;
+          panelsDiv.style.height = height + 'px';
+          panelsDiv.style.width = panelsWidth + 'px';
+          boardDiv.style.height = height + 'px';
+          boardDiv.style.width = (width - panelsWidth) + 'px';
+        }
+        else // Portrait mode
+        {
+          container.style['flex-direction'] = 'column';
+          if (panelsDiv)
+            panelsHeight = (height - width >= minPanelsHeight) ? (height - width) : minPanelsHeight;
+          panelsDiv.style.height = panelsHeight + 'px';
+          panelsDiv.style.width = width + 'px';
+          boardDiv.style.height = (height - panelsHeight) + 'px';
+          boardDiv.style.width = width + 'px';
+        }
+      };
+      window.addEventListener("resize", resizer);
+      resizer(); // Initial div sizing
     }
 
-    // Sets dimensions with optional height param
-    function setDimensions(width, height) {
+  // Sets dimensions with optional height param
+  function setDimensions(width, height) {
         if (height && width > height) { // Landscape mode
             container.style['flex-direction'] = 'row';
             boardDiv.style.height = height + 'px';
@@ -286,12 +293,11 @@ besogo.create = function(container, options) {
         parent.appendChild(div);
         return div;
     }
-	
-	
-}; // END function besogo.create
+}; 
 
 // Parses size parameter from SGF format
-besogo.parseSize = function(input) {
+besogo.parseSize = function(input)
+{
     var matches,
         sizeX,
         sizeY;
@@ -299,18 +305,20 @@ besogo.parseSize = function(input) {
     input = (input + '').replace(/\s/g, ''); // Convert to string and remove whitespace
 
     matches = input.match(/^(\d+):(\d+)$/); // Check for #:# pattern
-    if (matches) { // Composed value pattern found
-        sizeX = +matches[1]; // Convert to numbers
-        sizeY = +matches[2];
-    } else if (input.match(/^\d+$/)) { // Check for # pattern
-        sizeX = +input; // Convert to numbers
-        sizeY = +input; // Implied square
-    } else { // Invalid input format
-        sizeX = sizeY = 19; // Default size value
+    if (matches) // Composed value pattern found
+    {
+      sizeX = +matches[1]; // Convert to numbers
+      sizeY = +matches[2];
     }
-    if (sizeX > 52 || sizeX < 1 || sizeY > 52 || sizeY < 1) {
-        sizeX = sizeY = 19; // Out of range, set to default
+    else if (input.match(/^\d+$/)) // Check for # pattern
+    {
+      sizeX = +input; // Convert to numbers
+      sizeY = +input; // Implied square
     }
+    else // Invalid input format
+      sizeX = sizeY = 19; // Default size value
+    if (sizeX > 52 || sizeX < 1 || sizeY > 52 || sizeY < 1)
+      sizeX = sizeY = 19; // Out of range, set to default
 
     return { x: sizeX, y: sizeY };
 };
