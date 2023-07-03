@@ -10,14 +10,14 @@ besogo.makeToolPanel = function(container, editor)
 
   var reviewMode = false;
   var reviewButton = null;
-  if (container.className == 'besogo-tool2')
+  if (container.className == 'besogo-tsumegoPlayTool')
     makeReviewToolButtons(container, editor);
   else
     makeEditorToolButtons(container, editor);
 
   editor.addListener(toolStateUpdate); // Set up listener for tool state updates
   
-  toolStateUpdate({ label: editor.getLabel(), tool: editor.getTool(), tool2: editor.getTool() }); // Initialize
+  toolStateUpdate({ label: editor.getLabel(), tool: editor.getTool(), tsumegoPlayTool: editor.getTool() }); // Initialize
 
   function makeReviewToolButtons(container, editor)
   {
@@ -87,8 +87,8 @@ besogo.makeToolPanel = function(container, editor)
 			editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
 		}
 	  });
-
-    reviewButton.disabled = true;
+	//not defined?
+    //reviewButton.disabled = true; 
   }
 
   function makeEditorToolButtons(container, editor)

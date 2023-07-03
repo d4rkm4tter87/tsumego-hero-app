@@ -2557,13 +2557,13 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		box-shadow:0 8px 14px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.2);
 	}
 	
-	.besogo-tool2{
+	.besogo-tsumegoPlayTool{
 		display: flex;
 		justify-content: center;
 		margin: 15px;
 	}
 	
-	.besogo-tool2 input[type="button"], .besogo-file input[type="button"]{
+	.besogo-tsumegoPlayTool input[type="button"], .besogo-file input[type="button"]{
 		font-family: Times New Roman,verdana,helvetica,arial,sans-serif;
 		font-size: 16px;
 		font-style: normal;
@@ -2595,16 +2595,16 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		border-color: #8f9092!important;
 		cursor:pointer;
 	}
-	.besogo-tool2 input:nth-last-child(1){
+	.besogo-tsumegoPlayTool input:nth-last-child(1){
 		background-color: #8f9092!important;
 		cursor:context-menu;
 		border-color: #8f9092!important;
 	}
-	#besogo-tool2-rButton{
+	#besogo-tsumegoPlayTool-rButton{
 		background-color: #5b5d60!important;
 		cursor:pointer;
 	}
-	.besogo-tool2-rButton2{
+	.besogo-tsumegoPlayTool-rButton2{
 		background-color: green!important;
 		cursor:context-menu;
 	}

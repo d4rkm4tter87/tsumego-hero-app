@@ -71,7 +71,6 @@ besogo.makeEditor = function(sizeX, sizeY)
     setShift: setShift,
     isShift: isShift,
     applyTransformation : applyTransformation,
-    registerDisplayResult : registerDisplayResult,
     setAutoPlay, setAutoPlay
   };
    
@@ -626,11 +625,6 @@ besogo.makeEditor = function(sizeX, sizeY)
     root.firstMove = transformation.applyOnColor(root.firstMove);
     notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
     edited = true;
-  }
-
-  function registerDisplayResult(displayResultInput)
-  {
-    displayResult = displayResultInput;
   }
 
   function setAutoPlay(value)

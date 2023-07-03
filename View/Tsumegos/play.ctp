@@ -2078,11 +2078,11 @@
 		?>
 		if(ui==2){
 			if(reviewEnabled){
-				$(".besogo-tool2 input:nth-last-child(1)").attr('id', 'besogo-tool2-rButton');
+				$(".besogo-tsumegoPlayTool input:nth-last-child(1)").attr('id', 'besogo-tsumegoPlayTool-rButton');
 			}
-			//$(".besogo-tool2 input:nth-last-child(2)").attr('id', 'besogo-tool2-rButton');
-			//$(".besogo-tool2 input:nth-last-child(2)").attr('class', 'besogo-tool2-rButton2');
-			//if(nextButtonLink==0) $(".besogo-tool2 input:nth-last-child(2)").attr('class', 'besogo-tool2-rButton2');
+			//$(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('id', 'besogo-tsumegoPlayTool-rButton');
+			//$(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('class', 'besogo-tsumegoPlayTool-rButton2');
+			//if(nextButtonLink==0) $(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('class', 'besogo-tsumegoPlayTool-rButton2');
 		}else{
 			if(reviewEnabled) $("#reviewButton").show();
 		}
@@ -3600,7 +3600,7 @@
 	  if($_SESSION['loggedInUser']['User']['isAdmin']>0) echo 'options.panels = "tree+control+tool+comment+file";';
 	  else 'options.panels = "tree+control";';
 	  ?> 
-	  options.tool2 = 'auto';
+	  options.tsumegoPlayTool = 'auto';
 	  options.realstones = true;
 	  options.nowheel = true;
 	  options.nokeys = true;

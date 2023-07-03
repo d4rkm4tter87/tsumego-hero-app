@@ -13,13 +13,13 @@
         panelsDiv, // Parent container of panel divs
         insideText = container.textContent || container.innerText || '',
         i, panelName; // Scratch iteration variables
-	if(options.tool2){
+	if(options.tsumegoPlayTool){
 		var makers = // Map to panel creators
 			{
 			  control: besogo.makeControlPanel,
 			  comment: besogo.makeCommentPanel,
 			  tool: besogo.makeToolPanel,
-			  tool2: besogo.makeToolPanel,
+			  tsumegoPlayTool: besogo.makeToolPanel,
 			  tree: besogo.makeTreePanel,
 			  file: besogo.makeFilePanel
 			}
@@ -39,8 +39,8 @@
     options = options || {}; // Makes option checking simpler
     options.size = besogo.parseSize(options.size || 19);
     options.coord = options.coord || 'none';
-    options.tool = options.tool || 'auto';
-    if(options.tool2) options.tool2 = options.tool2 || 'auto';
+    options.tool = options.tsumegoPlayTool || 'auto';
+    if(options.tsumegoPlayTool) options.tsumegoPlayTool = options.tsumegoPlayTool || 'auto';
     if (options.panels === '')
       options.panels = [];
   
@@ -48,8 +48,8 @@
     if (typeof options.panels === 'string')
       options.panels = options.panels.split('+');
   
-	if(options.tool2){
-		options.panels2 = options.panels2 || 'tool2';
+	if(options.tsumegoPlayTool){
+		options.panels2 = options.panels2 || 'tsumegoPlayTool';
 		if (typeof options.panels2 === 'string')
 		  options.panels2 = options.panels2.split('+');
 	}
@@ -67,7 +67,7 @@
     besogo.editor = besogo.makeEditor(options.size.x, options.size.y);
     container.besogoEditor = besogo.editor;
     besogo.editor.setTool(options.tool);
-	if(options.tool2) besogo.editor.setTool(options.tool2);
+	if(options.tsumegoPlayTool) besogo.editor.setTool(options.tsumegoPlayTool);
     besogo.editor.setCoordStyle(options.coord);
     if (options.realstones) // Using realistic stones
     {
@@ -144,7 +144,7 @@
         panelsDiv = false; // Flags panels div as removed
       }
     }
-    if(options.tool2){
+    if(options.tsumegoPlayTool){
 		if (options.panels2.length > 0) // Only create if there are panels to add
 		{
 		  panelsDiv = makeDiv('besogo-bottom-panels');
@@ -345,18 +345,18 @@ besogo.autoInit = function()
     {
       options.panels = ['control', 'comment', 'tool', 'tree', 'file'];
       options.tool = 'auto';
-      if(options.tool2) options.tool2 = 'auto';
+      if(options.tsumegoPlayTool) options.tsumegoPlayTool = 'auto';
     }
     else if (hasClass(targetDivs[i], 'besogo-viewer'))
     {
       options.panels = ['control', 'comment'];
       options.tool = 'navOnly';
-      if(options.tool2) options.tool2 = 'navOnly';
+      if(options.tsumegoPlayTool) options.tsumegoPlayTool = 'navOnly';
     } else if (hasClass(targetDivs[i], 'besogo-diagram'))
     {
       options.panels = [];
       options.tool = 'navOnly';
-      if(options.tool2) options.tool2 = 'navOnly';
+      if(options.tsumegoPlayTool) options.tsumegoPlayTool = 'navOnly';
     }
 
     attrs = targetDivs[i].attributes;

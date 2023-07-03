@@ -60,6 +60,8 @@
     value = params[i].split("="); // Splits on all "=" symbols
     options[value.shift()] = value.join("="); // First "=" separates value from name, rest are part of value
   }
+  options.theme = 'texture11';
+  options.themeParameters = ['black34.png', 'white34.png'];
   options.realstones = true;
   options.panels = 'control+comment+tool+tree+file';
   if (options.theme) // Board style theme (overrides std theme if set)
