@@ -402,6 +402,7 @@
 		document.cookie = "sound=0";
 		document.cookie = "correctNoPoints=0";
 		document.cookie = "ui=0";
+		document.cookie = "requestProblem=0";
 		
 		<?php 
 			if(isset($textureCookies)){

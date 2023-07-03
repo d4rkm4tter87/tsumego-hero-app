@@ -2563,7 +2563,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		margin: 15px;
 	}
 	
-	.besogo-tool2 input[type="button"]{
+	.besogo-tool2 input[type="button"], .besogo-file input[type="button"]{
 		font-family: Times New Roman,verdana,helvetica,arial,sans-serif;
 		font-size: 16px;
 		font-style: normal;
@@ -2603,6 +2603,10 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	#besogo-tool2-rButton{
 		background-color: #5b5d60!important;
 		cursor:pointer;
+	}
+	.besogo-tool2-rButton2{
+		background-color: green!important;
+		cursor:context-menu;
 	}
 	
 	.modeSwitcher {
@@ -2985,8 +2989,14 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		flex: none!important;
 		width: auto!important;
 	}
+	.besogo-comment {
+	  flex: none!important;
+	  height: 115px;
+	}
 	
-	
+	.besogo-comment table{
+		display:none;
+	}
 	
 	
 	

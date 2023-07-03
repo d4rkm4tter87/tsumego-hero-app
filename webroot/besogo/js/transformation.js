@@ -6,7 +6,7 @@ besogo.makeTransformation = function()
   transformation.vFlip = false;
   transformation.rotate = false;
   transformation.invertColors = false;
-	console.log("applyTransformation2");
+  
   transformation.apply = function(position, size)
   {
     let result = [];

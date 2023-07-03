@@ -280,7 +280,7 @@
 			if($t['Tsumego']['set_id']==109 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161) echo '<b>'.$t['Tsumego']['description'].'</b> '; 
 			else echo $t['Tsumego']['description'].' '; 
 			if(isset($t['Tsumego']['hint']) && $t['Tsumego']['hint']!='') echo '<font color="grey" style="font-style:italic;">('.$t['Tsumego']['hint'].')</font>'; 
-		if($_SESSION['loggedInUser']['User']['isAdmin']==1 || $set['Set']['public']==0&&$_SESSION['loggedInUser']['User']['isAdmin']==2){
+		if($_SESSION['loggedInUser']['User']['isAdmin']>0 || $set['Set']['public']==0 && $_SESSION['loggedInUser']['User']['isAdmin']==2){
 		?>
 		<a class="modify-description" href="#">(Edit)</a>
 		<div class="modify-description-panel">
@@ -1350,7 +1350,8 @@
 	
 	//echo '<pre>'; print_r($enabledBoards); echo '</pre>'; 
 	//echo '<pre>'; print_r($boardPositions); echo '</pre>'; 
-	echo '<pre>'; print_r($choice); echo '</pre>'; 
+	//echo '<pre>'; print_r($choice); echo '</pre>'; 
+	//echo '<pre>'; print_r($file); echo '</pre>'; 
 	
 	if(isset($_SESSION['loggedInUser'])){
 		if($firstRanks==0){
@@ -1770,9 +1771,11 @@
 	var soundsEnabled2 = true;
 	var isMutable = true;
 	var deleteNextMoveGroup = false;
+	var file = "<?php echo $file; ?>";
+	var clearFile = "<?php echo $set['Set']['title'].' - '.$t['Tsumego']['num']; ?>";
+	var tsumegoFileLink = "<?php echo $t['Tsumego']['id']; ?>";
 	
-	<?php 
-	
+	<?php
 	if($authorx==$_SESSION['loggedInUser']['User']['name'] && $isSandbox) echo 'authorProblem = true;';
 	if($firstRanks!=0) echo 'document.cookie = "mode=3";';
 	if($mode==3){
@@ -2110,6 +2113,9 @@
 			if(reviewEnabled){
 				$(".besogo-tool2 input:nth-last-child(1)").attr('id', 'besogo-tool2-rButton');
 			}
+			//$(".besogo-tool2 input:nth-last-child(2)").attr('id', 'besogo-tool2-rButton');
+			//$(".besogo-tool2 input:nth-last-child(2)").attr('class', 'besogo-tool2-rButton2');
+			//if(nextButtonLink==0) $(".besogo-tool2 input:nth-last-child(2)").attr('class', 'besogo-tool2-rButton2');
 		}else{
 			if(reviewEnabled) $("#reviewButton").show();
 		}
@@ -2349,6 +2355,7 @@
 									if(is_numeric($ma7[0]) && $ma7[1]=='-') $moveHasComment = 'moveHasComment = false;';
 									else $moveHasComment = 'moveHasComment = true;';
 									if(count($ma7)<2) $moveHasComment = 'moveHasComment = false;';
+									if($t['Tsumego']['set_id']==31813) $moveHasComment = 'moveHasComment = false;';
 									for($k=count($coordPlaces[$i])-1; $k>=0; $k--){
 										$coordP = explode('/', $coordPlaces[$i][$k]);
 										if(count($coordP)>1){
@@ -3630,7 +3637,10 @@
 		value = params[i].split("="); // Splits on all "=" symbols
 		options[value.shift()] = value.join("="); // First "=" separates value from name, rest are part of value
 	  }
-	  options.panels = 'tree+control';
+	  <?php 
+	  if($_SESSION['loggedInUser']['User']['isAdmin']>0) echo 'options.panels = "tree+control+tool+comment+file";';
+	  else 'options.panels = "tree+control";';
+	  ?> 
 	  options.tool2 = 'auto';
 	  options.realstones = true;
 	  options.nowheel = true;
@@ -3639,9 +3649,8 @@
 	  options.themeParameters = ['<?php echo $choice[0][2] ?>', '<?php echo $choice[0][3] ?>'];
 	  options.coord = 'western';
 	  // COORDS = 'none numeric western eastern pierre corner eastcor'.split(' '),
-	  options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/'+'<?php echo $file; ?>';
-	  if (options.theme) // Board style theme (overrides std theme if set)
-		addStyleLink('https://<?php echo $_SERVER['HTTP_HOST']; ?>/besogo/css/board-'+options.theme+'.css');
+	  options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/'+'<?php echo $file; ?>'+'<?php echo $requestProblem; ?>';
+	  if (options.theme) addStyleLink('https://<?php echo $_SERVER['HTTP_HOST']; ?>/besogo/css/board-'+options.theme+'.css');
 		//addStyleLink('css/board-' + options.theme + '.css');
 	  if (options.height && options.width && options.resize === 'fixed')
 	  {

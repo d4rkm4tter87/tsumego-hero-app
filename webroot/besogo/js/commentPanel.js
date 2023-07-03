@@ -54,6 +54,8 @@ besogo.makeCommentPanel = function(container, editor)
           CP: 'Copyright'
       };
 
+  var isEmbedded = typeof mode === "number"; //check if embedded in the website	
+  
   statusLabel = createStatusLabel();
   statusTable = createStatusTable();
   let parentDiv = document.createElement('div');
@@ -71,12 +73,16 @@ besogo.makeCommentPanel = function(container, editor)
   });
   statusBasedCheckbox.type = 'checkbox';
   correctButtonSpan.appendChild(correctButton);
-  parentDiv.appendChild(correctButtonSpan);
+  if(!isEmbedded) parentDiv.appendChild(correctButtonSpan);
+  
   parentDiv.appendChild(createGoalTable());
-  parentDiv.appendChild(statusLabel);
-  parentDiv.appendChild(statusTable);
-  parentDiv.appendChild(jumpToBranchWithoutStatusButton);
-  container.appendChild(makeCommentButton());
+  if(!isEmbedded){
+	  parentDiv.appendChild(statusLabel);
+	  parentDiv.appendChild(statusTable);
+	  parentDiv.appendChild(jumpToBranchWithoutStatusButton);
+  }
+	  container.appendChild(makeCommentButton());
+  
   //container.appendChild(gameInfoTable);
   //container.appendChild(gameInfoEdit);
   infoTexts.C = document.createTextNode('');
@@ -93,6 +99,7 @@ besogo.makeCommentPanel = function(container, editor)
   editor.addListener(update);
   update({ navChange: true});
   gameInfoEdit.style.display = 'none'; // Hide game info editting table initially
+
 
   function preventFocus(event)
   {
@@ -522,7 +529,6 @@ besogo.makeCommentPanel = function(container, editor)
     cell = row.insertCell(-1);
     cell = row.insertCell(-1);
     goalLiveSelection = createGoalRadioButton(cell, 'live', GOAL_LIVE);
-
     return table;
   }
 

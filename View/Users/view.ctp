@@ -184,10 +184,10 @@
 	</div></div>
 	<script>
 	function delUts(){
-		<?php 
-		echo 'confirm("Are you sure that you want to delete your progress on '.$dNum.' problems?");';
-		echo 'window.location.href = "/users/view/'.$_SESSION['loggedInUser']['User']['id'].'?delete-uts=true";'; 
-		?>
+		var dNum = "<?php echo $dNum; ?>";
+		var suid = "<?php echo $_SESSION['loggedInUser']['User']['id']; ?>";
+		var confirmed = confirm("Are you sure that you want to delete your progress on "+dNum+" problems?");
+		if(confirmed) window.location.href = "/users/view/"+suid+"?delete-uts=true";
 	}
 	</script>
 	

@@ -64,6 +64,7 @@ class TsumegosController extends AppController{
 		$ui = 1;
 		$eloScore = 0;
 		$range2 = array();
+		$requestProblem = '';
 		
 		if(isset($this->params['url']['potionAlert'])){
 			$potionAlert = true;
@@ -1148,6 +1149,26 @@ class TsumegosController extends AppController{
 		$anzahl = $ts[count($ts)-1]['Tsumego']['num'];
 		$_SESSION['title'] = $set['Set']['title'].' '.$t['Tsumego']['num'].'/'.$anzahl.' on Tsumego Hero';
 		
+		if(isset($_COOKIE['requestProblem']) && $_COOKIE['requestProblem'] != '0'){
+			if($this->params['url']['requestProblem']==true){
+				$requestProblem = $_COOKIE['requestProblem'];
+				$requestProblem = str_replace('@', ';', $requestProblem);
+				$requestProblem = str_replace('€', "\n", $requestProblem);
+				$requestProblem = str_replace('C[  ]', "C[+]", $requestProblem);
+				$requestProblem = str_replace('C[x]', "C[+]", $requestProblem);
+				file_put_contents('6473k339312/'.$set['Set']['folder'].'/'.$t['Tsumego']['num'].'.sgf', $requestProblem);
+				//echo '<pre>'; print_r($requestProblem); echo '</pre>';
+				$this->AdminActivity->create();
+				$adminActivity = array();
+				$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+				$adminActivity['AdminActivity']['tsumego_id'] = $t['Tsumego']['id'];
+				$adminActivity['AdminActivity']['file'] = $t['Tsumego']['num'];
+				$adminActivity['AdminActivity']['answer'] = $t['Tsumego']['num'].'.sgf'.' <font color="grey">(direct save)</font>';
+				$this->AdminActivity->save($adminActivity);
+			}
+			unset($_COOKIE['requestProblem']);
+		}
+		
 		$prev = 0;
 		$next = 0;
 		$tsBack = array();
@@ -1496,9 +1517,14 @@ class TsumegosController extends AppController{
 		elseif($mode==2) $_SESSION['page'] = 'rating mode';
 		elseif($mode==3) $_SESSION['page'] = 'time mode';
 		
-		//echo '<pre>'; print_r(($crs/$stopParameter)*100); echo '</pre>';
-		//echo '<pre>'; print_r($choice); echo '</pre>';
+		if($requestProblem!=''){
+			$requestProblem = '?v='.strlen($requestProblem);
+		}else{
+			$sgfx = file_get_contents($file);
+			$requestProblem = '?v='.strlen($sgfx);
+		}
 		
+		//echo '<pre>'; print_r(); echo '</pre>';
 		
 		$this->set('raName', $raName);
 		$this->set('crs', $crs);
@@ -1578,6 +1604,7 @@ class TsumegosController extends AppController{
 		$this->set('sgfErrorMessage', $masterArrayBW[16]);
 		$this->set('file', $file);
 		$this->set('ui', $ui);
+		$this->set('requestProblem', $requestProblem);
     }
 	
 	private function findUt($id=null, $allUts=null, $map=null){

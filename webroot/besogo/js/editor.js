@@ -35,6 +35,7 @@ besogo.makeEditor = function(sizeX, sizeY)
 	  soundsEnabled = true,
 	  soundsEnabled2 = true,
       shift = false;
+	  var isEmbedded = typeof mode === "number"; //check if embedded in the website
 	  
   return {
     addListener: addListener,
@@ -216,11 +217,13 @@ besogo.makeEditor = function(sizeX, sizeY)
     // Notify listeners of navigation (with no tree edits)
     notifyListeners({ navChange: true }, true); // Preserve history
 	
-	//console.log('w');
-	//console.log(current);
-	//if(soundsEnabled && soundsEnabled2) document.getElementsByTagName("audio")[0].play();
-	if(current.correct==false && current.lastMove==1 && current.children.length<1){
-		if(typeof displayResult === 'function') displayResult('F');
+	//opponent move and incorrect
+	if(isEmbedded){ 
+		if(!reviewEnabled2) document.getElementsByTagName("audio")[0].play();
+		if(current.correct==false && current.lastMove==1 && current.children.length<1){
+			displayResult('F');
+			if(mode==2 || mode==3) toggleBoardLock(true);
+		}
 	}
   }
 
@@ -378,15 +381,14 @@ besogo.makeEditor = function(sizeX, sizeY)
         break;
     }
 	//console.log('b');
-	//console.log(current);
-	//if(soundsEnabled && isMutable) document.getElementsByTagName("audio")[0].play();
-	if(current.correct==true && current.correctSource==true){
-		if(soundsEnabled2) soundsEnabled2 = false;
-		if(typeof toggleBoardLock === 'function') toggleBoardLock(true);
-		if(typeof enableReviewButton === 'function') enableReviewButton();
-		if(typeof displayResult === 'function'){
+	if(isEmbedded){
+		if(!reviewEnabled2) document.getElementsByTagName("audio")[0].play();
+		if(current.correct==true && current.correctSource==true){
+			soundsEnabled2 = false;
+			toggleBoardLock(true);
+			enableReviewButton();
 			setTimeout(function(){
-				displayResult('S');
+				if(!reviewEnabled2) displayResult('S');
 			}, 360);
 		}
 	}
@@ -473,11 +475,13 @@ besogo.makeEditor = function(sizeX, sizeY)
         // Notify tree change, navigation, and stone change
         notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
         edited = true;
-		//if(soundsEnabled && soundsEnabled2) document.getElementsByTagName("audio")[0].play();
-		if(soundsEnabled2) soundsEnabled2 = false;
-		if(typeof displayResult === 'function'){
+		
+		if(isEmbedded){
+			if(!reviewEnabled2) document.getElementsByTagName("audio")[0].play();
+			soundsEnabled2 = false;
 			setTimeout(function(){
-				if(displayResult) displayResult('F');
+				if(!reviewEnabled2) displayResult('F');
+				if(mode==2 || mode==3) toggleBoardLock(true);
 			}, 360);
 		}
       }

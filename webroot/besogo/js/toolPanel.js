@@ -6,7 +6,7 @@ besogo.makeToolPanel = function(container, editor)
       labelText, // Text area for next label input
       selectors = {}; // Holds selection rects
 	var reviewMode = false;
-	//console.log(container);
+	var isEmbedded = typeof mode === "number"; //check if embedded in the website
 	
   if(container.className!=='besogo-tool2'){
 	  svg = makeButtonSVG('auto', 'Auto-play/navigate\n' +
@@ -56,57 +56,58 @@ besogo.makeToolPanel = function(container, editor)
 		evt.stopPropagation(); // Stop keydown propagation when in focus
 	  });
 	  container.appendChild(labelText);
-
-	  makeButtonText('Pass', 'Pass move', function()
-	  {
-		var tool = editor.getTool();
-		if (tool !== 'navOnly' && tool !== 'auto')
-		  editor.setTool('auto'); // Ensures that a move tool is selected
-		editor.click(0, 0, false); // Clicking off the board signals a pass
-	  });
-
-	  makeButtonText('Raise', 'Raise variation', function() { editor.promote(); });
-	  makeButtonText('Lower', 'Lower variation', function() { editor.demote(); });
+	  if(!isEmbedded){
+		  makeButtonText('Pass', 'Pass move', function()
+		  {
+			var tool = editor.getTool();
+			if (tool !== 'navOnly' && tool !== 'auto')
+			  editor.setTool('auto'); // Ensures that a move tool is selected
+			editor.click(0, 0, false); // Clicking off the board signals a pass
+		  });
+	  
+		  makeButtonText('Raise', 'Raise variation', function() { editor.promote(); });
+		  makeButtonText('Lower', 'Lower variation', function() { editor.demote(); });
+	  }
 	  makeButtonText('Cut', 'Remove branch', function() { editor.cutCurrent(); });
-	  makeButtonText('H Flip', 'Flip horizontally', function()
-	  {
-		let transformation = besogo.makeTransformation();
-		transformation.hFlip = true;
-		editor.applyTransformation(transformation);
-	  });
-	  makeButtonText('V Flip', 'Flip vertically', function()
-	  {
-		let transformation = besogo.makeTransformation();
-		transformation.vFlip = true;
-		editor.applyTransformation(transformation);
-	  });
+	  if(!isEmbedded){
+		  makeButtonText('H Flip', 'Flip horizontally', function()
+		  {
+			let transformation = besogo.makeTransformation();
+			transformation.hFlip = true;
+			editor.applyTransformation(transformation);
+		  });
+		  makeButtonText('V Flip', 'Flip vertically', function()
+		  {
+			let transformation = besogo.makeTransformation();
+			transformation.vFlip = true;
+			editor.applyTransformation(transformation);
+		  });
 
-	  makeButtonText('Rotate', 'Rotate the board clockwise', function()
-	  {
-		let transformation = besogo.makeTransformation();
-		transformation.rotate = true;
-		editor.applyTransformation(transformation);
-	  });
+		  makeButtonText('Rotate', 'Rotate the board clockwise', function()
+		  {
+			let transformation = besogo.makeTransformation();
+			transformation.rotate = true;
+			editor.applyTransformation(transformation);
+		  });
 
-	  makeButtonText('Invert', 'Invert colors of all stones and moves.', function()
-	  {
-		let transformation = besogo.makeTransformation();
-		transformation.invertColors = true;
-		editor.applyTransformation(transformation);
-	  });
-	  
-	  makeButtonText('Invert firstMove', 'Invert the color of the first move', function()
-	  {
-		let transformation = besogo.makeTransformation();
-		transformation.invertColors = true;
-		editor.getRoot().firstMove = transformation.applyOnColor(editor.getRoot().firstMove);
-		editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
-		editor.edited = true;
-	  });
-
-  
+		  makeButtonText('Invert', 'Invert colors of all stones and moves.', function()
+		  {
+			let transformation = besogo.makeTransformation();
+			transformation.invertColors = true;
+			editor.applyTransformation(transformation);
+		  });
+		  
+		  makeButtonText('Invert firstMove', 'Invert the color of the first move', function()
+		  {
+			let transformation = besogo.makeTransformation();
+			transformation.invertColors = true;
+			editor.getRoot().firstMove = transformation.applyOnColor(editor.getRoot().firstMove);
+			editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+			editor.edited = true;
+		  });
+	    }
   }else{
-	  
+	  /*
 	  makeButtonText('Invert', 'Invert colors of all stones and moves.', function()
 	  {
 		let transformation = besogo.makeTransformation();
@@ -126,15 +127,17 @@ besogo.makeToolPanel = function(container, editor)
 		transformation.vFlip = true;
 		editor.applyTransformation(transformation);
 	  });
+	  
 	  makeButtonText('Rotate', 'Rotate the board clockwise', function()
 	  {
 		let transformation = besogo.makeTransformation();
 		transformation.rotate = true;
 		editor.applyTransformation(transformation);
 	  });
+	  */
 	  makeButtonText('Back', 'Previous problem', function()
 	  {
-		window.location.href = "/tsumegos/play/"+prevButtonLink;
+		if(prevButtonLink!=0) window.location.href = "/tsumegos/play/"+prevButtonLink;
 	  });
 	  makeButtonText('Reset', 'Resets the problem', function()
 	  {
@@ -142,7 +145,6 @@ besogo.makeToolPanel = function(container, editor)
 		toggleBoardLock(false);
 		reviewEnabled2 = false;
 		reviewMode = false;
-		reviewEnabled2 = false;
 		document.getElementById("status").innerHTML = "";
 		document.getElementById("theComment").style.cssText = "display:none;";
 		$(".besogo-panels").css("display","none");
@@ -151,7 +153,7 @@ besogo.makeToolPanel = function(container, editor)
 	  });
 	  makeButtonText('Next', 'Next problem', function()
 	  {
-		window.location.href = "/tsumegos/play/"+nextButtonLink;
+		if(nextButtonLink!=0) window.location.href = "/tsumegos/play/"+nextButtonLink;
 	  });
 	  makeButtonText('Review', 'Review mode', function()
 	  {
