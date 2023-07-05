@@ -43,7 +43,8 @@
 					</li>';
 				}
 			}
-			echo '<br>';
+			if(count($scheduleTsumego)<=10) echo '';
+			else echo '<br>';
 		}
 		/*
 			$currentSet = 145;
@@ -89,6 +90,13 @@
 				<a href="/tsumegos/play/<?php echo $totd['Tsumego']['id']; ?>"><?php echo $totd['Tsumego']['num']; ?></a>
 			</li>
 			<br><br>
+		</div>
+		<p class="title4">New Collection: 4x4 problems</p>
+		<div class="new1">
+			This collection features problems on a 4x4 board.<br><br>
+			<div align="center"><img width="95%" src="/img/4x4.png">
+			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/181">Play</a><br><br></div>
 		</div>
 		<p class="title4">New Collection: 1000 Weiqi problems</p>
 		<div class="new1">

@@ -1159,7 +1159,7 @@
 	<div class="tsumegoNavi-middle2">
 		<?php
 		//BUTTONS
-		echo '<a class="new-button" target="_blank" href="/tsumego_records/user/'.$_SESSION['loggedInUser']['User']['id'].'" >History</a>';
+		echo '<a class="new-button" target="_blank" href="/tsumego_rating_attempts/user/'.$_SESSION['loggedInUser']['User']['id'].'" >History</a>';
 		echo '<a id="resetButton" class="new-button" href="#" onclick="reset(); return false;">Reset</a>';
 		echo '<a id="reviewButton2" class="new-button-red" href="#" onclick="review(); return false;">Review</a>';
 		if($user['User']['readingTrial']<=0){

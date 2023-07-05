@@ -388,7 +388,6 @@ besogo.makeEditor = function(sizeX, sizeY)
 		if(current.correct==true && current.correctSource==true){
 			soundsEnabled2 = false;
 			toggleBoardLock(true);
-			enableReviewButton();
 			setTimeout(function(){
 				if(!reviewEnabled2) displayResult('S');
 			}, 360);

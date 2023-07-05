@@ -15,33 +15,33 @@ besogo.makeToolPanel = function(container, editor)
   else
     makeEditorToolButtons(container, editor);
 
-  editor.addListener(toolStateUpdate); // Set up listener for tool state updates
+  besogo.editor.addListener(toolStateUpdate); // Set up listener for tool state updates
   
-  toolStateUpdate({ label: editor.getLabel(), tool: editor.getTool(), tsumegoPlayTool: editor.getTool() }); // Initialize
+  toolStateUpdate({ label: besogo.editor.getLabel(), tool: besogo.editor.getTool(), tsumegoPlayTool: besogo.editor.getTool() }); // Initialize
 
   function makeReviewToolButtons(container, editor)
   {
-    /*
+    
 	  makeButtonText('Invert', 'Invert colors of all stones and moves.', function()
 	  {
 		let transformation = besogo.makeTransformation();
 		transformation.invertColors = true;
-		editor.applyTransformation(transformation);
+		besogo.editor.applyTransformation(transformation);
 		
 	  });
 	  makeButtonText('H Flip', 'Flip horizontally', function()
 	  {
 		let transformation = besogo.makeTransformation();
 		transformation.hFlip = true;
-		editor.applyTransformation(transformation);
+		besogo.editor.applyTransformation(transformation);
 	  });
 	  makeButtonText('V Flip', 'Flip vertically', function()
 	  {
 		let transformation = besogo.makeTransformation();
 		transformation.vFlip = true;
-		editor.applyTransformation(transformation);
+		besogo.editor.applyTransformation(transformation);
 	  });
-	  
+	  /*
 	  makeButtonText('Rotate', 'Rotate the board clockwise', function()
 	  {
 		let transformation = besogo.makeTransformation();
@@ -55,7 +55,7 @@ besogo.makeToolPanel = function(container, editor)
 	  });
 	  makeButtonText('Reset', 'Resets the problem', function()
 	  {
-		editor.prevNode(-1);
+		besogo.editor.prevNode(-1);
 		toggleBoardLock(false);
 		reviewEnabled2 = false;
 		reviewMode = false;
@@ -63,7 +63,7 @@ besogo.makeToolPanel = function(container, editor)
 		document.getElementById("theComment").style.cssText = "display:none;";
 		$(".besogo-panels").css("display","none");
 		$(".besogo-board").css("margin","0 315px");
-		editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+		besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
 	  });
 	  makeButtonText('Next', 'Next problem', function()
 	  {
@@ -84,7 +84,7 @@ besogo.makeToolPanel = function(container, editor)
 			}
 			reviewMode = !reviewMode;
 			reviewEnabled2 = !reviewEnabled2;
-			editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+			besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
 		}
 	  });
 	//not defined?

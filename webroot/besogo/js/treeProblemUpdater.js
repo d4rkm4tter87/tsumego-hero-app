@@ -1,7 +1,7 @@
 besogo.updateTreeAsProblem = function(root)
 {
   root.prunnedMoveCount = 0;
-  //besogo.pruneTree(root, root);
+  besogo.pruneTree(root, root);
   //if (root.prunnedMoveCount) window.alert("Pruned move count: " + root.prunnedMoveCount + " (out of original " + (root.prunnedMoveCount + root.treeSize()) + ")");
   besogo.addRelevantMoves(root, root)
   var test = 0;
