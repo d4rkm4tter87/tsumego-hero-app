@@ -1,4 +1,4 @@
-besogo.makeBoardDisplay = function(container, editor, scaleParameters)
+besogo.makeBoardDisplay = function(container, editor)
 {
   var CELL_SIZE = 88, // Including line width
       COORD_MARGIN = 75, // Margin for coordinate labels
@@ -53,7 +53,7 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters)
     stoneGroup = besogo.svgEl("g");
     markupGroup = besogo.svgEl("g");
     nextMoveGroup = besogo.svgEl("g");
-	
+
     svg.appendChild(stoneGroup); // Add placeholder group for stone layer
     svg.appendChild(markupGroup); // Add placeholder group for markup layer
     svg.appendChild(nextMoveGroup);
@@ -119,49 +119,11 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters)
   {
     var boardWidth,
         boardHeight,
-		corner,
         string = ""; // Path string for inner board lines
-	
+	//sizeY = 7;
     BOARD_MARGIN = (coord === 'none' ? 0 : COORD_MARGIN);
-	/*
-	console.log('lowestY '+scaleParameters['lowestY']);
-	console.log('lowestX '+scaleParameters['lowestX']);
-	console.log('highestX '+scaleParameters['highestX']);
-	console.log('highestY '+scaleParameters['highestY']);
-	console.log('distToX0 '+scaleParameters['distToX0']);
-	console.log('distToX19 '+scaleParameters['distToX19']);
-	console.log('distToY0 '+scaleParameters['distToY0']);
-	console.log('distToY19 '+scaleParameters['distToY19']);
-	*/
-	boardWidth = 2*BOARD_MARGIN + sizeX*CELL_SIZE;
+    boardWidth = 2*BOARD_MARGIN + sizeX*CELL_SIZE;
     boardHeight = 2*BOARD_MARGIN + sizeY*CELL_SIZE;
-	
-	if(!scaleParameters['fullBoard']){
-	
-		let corner = 'full board';
-		if(!scaleParameters['hFlip'] && !scaleParameters['vFlip']) corner = 'top-left';
-		else if(scaleParameters['hFlip'] && !scaleParameters['vFlip']) corner = 'top-right';
-		else if(!scaleParameters['hFlip'] && scaleParameters['vFlip']) corner = 'bottom-left';
-		else if(scaleParameters['hFlip'] && scaleParameters['vFlip']) corner = 'bottom-right';
-		console.log('curner '+corner);
-		
-		let boardSizeX = 19-scaleParameters['distToX19']+4;
-		let boardSizeY = 19-scaleParameters['distToY19']+4;
-		
-		console.log('boardSizeX '+boardSizeX);
-		console.log('boardSizeY '+boardSizeY);
-		
-		if(boardSizeX>boardSizeY) boardSizeY = boardSizeX;
-		else if(boardSizeX<boardSizeY) boardSizeX = boardSizeY;
-		
-		sizeX = boardSizeX;
-		sizeY = boardSizeY;
-		
-		board_margin_x = BOARD_MARGIN - 75;
-		board_margin_y = BOARD_MARGIN - 75;
-		boardWidth = 2*board_margin_x + sizeX*CELL_SIZE;
-		boardHeight = 2*board_margin_y + sizeY*CELL_SIZE;
-	}
 	
     svg = besogo.svgEl("svg", { // Initialize the SVG element
         width: "100%",
@@ -177,7 +139,7 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters)
     }) );
 	*/
 
-	svg.appendChild(besogo.svgEl("rect", { // Draw outer square of board
+    svg.appendChild(besogo.svgEl("rect", { // Draw outer square of board
         width: CELL_SIZE*(sizeX - 1),
         height: CELL_SIZE*(sizeY - 1),
         x: svgPos(1),
@@ -188,20 +150,19 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters)
     for (let i = 2; i <= (sizeY - 1); i++) // Horizontal inner lines
       string += "M" + svgPos(1) + "," + svgPos(i) + "h" + CELL_SIZE*(sizeX - 1);
     for (let i = 2; i <= (sizeX - 1); i++) // Vertical inner lines
-      string += "M" + svgPos(i) + "," + svgPos(1) + "v" + CELL_SIZE*(sizeY - 1);
-    //console.log(string);
-	svg.appendChild( besogo.svgEl("path", { // Draw inner lines of board
+        string += "M" + svgPos(i) + "," + svgPos(1) + "v" + CELL_SIZE*(sizeY - 1);
+    svg.appendChild( besogo.svgEl("path", { // Draw inner lines of board
         d: string,
         'class': 'besogo-svg-lines'
     }) );
 
     drawHoshi(); // Draw the hoshi points
     if (coord !== 'none')
-      drawCoords(coord, corner); // Draw the coordinate labels
+      drawCoords(coord); // Draw the coordinate labels
   }
 
   // Draws coordinate labels on the board
-  function drawCoords(coord, corner)
+  function drawCoords(coord)
   {
       var labels = besogo.coord[coord](sizeX, sizeY),
           labelXa = labels.x, // Top edge labels
@@ -215,14 +176,14 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters)
       {
         x = svgPos(i);
         drawCoordLabel(x, svgPos(1) - shift, labelXa[i]);
-        if(corner!='top-left') drawCoordLabel(x, svgPos(sizeY) + shift, labelXb[i]);
+        drawCoordLabel(x, svgPos(sizeY) + shift, labelXb[i]);
       }
-		yFillValue = 19-sizeY;
+
       for (let i = 1; i <= sizeY; i++) // Draw row coordinate labels
       {
         y = svgPos(i);
-        drawCoordLabel(svgPos(1) - shift, y, Number(labelYa[i])+yFillValue);
-        if(corner!='top-left') drawCoordLabel(svgPos(sizeX) + shift, y, labelYb[i]);
+        drawCoordLabel(svgPos(1) - shift, y, labelYa[i]);
+        drawCoordLabel(svgPos(sizeX) + shift, y, labelYb[i]);
       }
 
       function drawCoordLabel(x, y, label)

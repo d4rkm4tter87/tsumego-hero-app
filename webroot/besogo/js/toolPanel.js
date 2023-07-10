@@ -252,7 +252,7 @@ besogo.makeToolPanel = function(container, editor)
     if (msg.hasOwnProperty('reviewEnabled'))
     {
       reviewEnabled = msg.reviewEnabled;
-      reviewButton.disabled = !reviewEnabled;
+      //reviewButton.disabled = !reviewEnabled;
     }
   }
 

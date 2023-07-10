@@ -1660,11 +1660,11 @@
 	<script type="text/javascript">
 
   function setReviewEnabled(value)
-  {
+  {/*
     if (ui==2)
       besogo.editor.notifyListeners({ reviewEnabled: value});
     else
-     if(value) $("#reviewButton").show();
+     if(value) $("#reviewButton").show();*/
   }
 
 	var jrecordValue = 19;
@@ -3515,7 +3515,6 @@
 				if(mode==1) runXPBar(true);
 				if(mode==1) runXPNumber("account-bar-xp", userXP, xpReward, 1000, ulvl);
 				noXP = true;
-        setReviewEnabled(true);
 			}else{
 				if(mode==1){
 					secondsy = seconds;
@@ -3604,11 +3603,12 @@
 	  options.realstones = true;
 	  options.nowheel = true;
 	  options.nokeys = true;
-	  options.theme = '<?php echo $choice[0][1] ?>';
-	  options.themeParameters = ['<?php echo $choice[0][2] ?>', '<?php echo $choice[0][3] ?>'];
+	  options.theme = '<?php echo $choice[0][1]; ?>';
+	  options.themeParameters = ['<?php echo $choice[0][2]; ?>', '<?php echo $choice[0][3]; ?>'];
 	  options.coord = 'western';
 	  // COORDS = 'none numeric western eastern pierre corner eastcor'.split(' '),
-	  options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/'+'<?php echo $file; ?>'+'<?php echo $requestProblem; ?>';
+	  options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/'+'<?php echo $file; ?>';
+	  //options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/'+'<?php echo $file; ?>'+'<?php echo $requestProblem; ?>';
 	  if (options.theme) addStyleLink('https://<?php echo $_SERVER['HTTP_HOST']; ?>/besogo/css/board-'+options.theme+'.css');
 		//addStyleLink('css/board-' + options.theme + '.css');
 	  if (options.height && options.width && options.resize === 'fixed')

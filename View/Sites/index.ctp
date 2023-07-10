@@ -94,9 +94,9 @@
 		<p class="title4">New Collection: 4x4 problems</p>
 		<div class="new1">
 			This collection features problems on a 4x4 board.<br><br>
-			<div align="center"><img width="95%" src="/img/4x4.png">
+			<div align="center"><img width="95%" src="/img/4x4.PNG">
 			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/181">Play</a><br><br></div>
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/191">Play</a><br><br></div>
 		</div>
 		<p class="title4">New Collection: 1000 Weiqi problems</p>
 		<div class="new1">
@@ -120,29 +120,6 @@
 			The new menu takes away less space at the top. It also has more navigation options in a drowpdown. Other improvements involve spacing and colors on all pages.<br><br>
 			<img width="100%" src="/img/newMenu1.PNG"><br><br>
 			The Sandbox is now accessible for all premium users and users that reach level 60.<br>
-			<br>
-		</div>
-		<p class="title4">Winners of the Time Mode in May '23 </p>
-		<div class="new1">
-			<b>Winners: darkgeass, posetcay, Fupfv, iryumika, bliviu</b><br><br>
-			The winners get a premium upgrade and the achievement Time Master. Achievements will be visible later this year.<br><br>
-			<div align="center">
-			<img src="/img/time-master.png" width="75%"><br>
-			</div>
-			
-			<br>
-		</div>
-		<p class="title4">Update 22.05.2023</p>
-		<div class="new1">
-			<b>New: Collection accuracy and time scoring</b><br><br>
-			• The collections store data about the time spent and about the solved/failed attempts for each problem. 
-			This is shown by an accuracy (0% all fails, 100% all solves) and an average time (in seconds). 
-			The data is available one year back.<br><br>
-			• Progress in a collection can be reset. This can be used 4 times per month (on the entire website).<br><br>
-			<img src="/img/bild1.PNG" width="500px"><br>
-			Example: <a href="/sets/view/117">Easy Capture</a>
-			<br><br>
-			<p style="font-weight:800;text-align:left;">The first places in Slow/Fast/Blitz (Time Mode) by the end of May 2023 each get a reward.</p>
 			<br>
 		</div>
 		

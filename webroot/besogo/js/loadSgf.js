@@ -2,9 +2,22 @@
 besogo.loadSgf = function(sgf, editor)
 {
   'use strict';
-  var size = { x: 19, y: 19 }, // Default size (may be changed by load)
+  let size = { x: 19, y: 19 }, // Default size (may be changed by load)
       root;
-
+	  
+	let scaleParameters = [];
+	scaleParameters['lowestX'] = 19;
+	scaleParameters['lowestY'] = 19;
+	scaleParameters['highestX'] = 0;
+	scaleParameters['highestY'] = 0;
+	scaleParameters['hFlip'] = false;
+	scaleParameters['vFlip'] = false;
+	scaleParameters['fullBoard'] = false;
+	scaleParameters['distToX0'] = 0;
+	scaleParameters['distToX19'] = 0;
+	scaleParameters['distToY0'] = 0;
+	scaleParameters['distToY19'] = 0;
+	
   loadRootProps(sgf); // Load size, variants style and game info
   root = besogo.makeGameRoot(size.x, size.y);
 
@@ -13,15 +26,71 @@ besogo.loadSgf = function(sgf, editor)
   besogo.updateTreeAsProblem(root);
   editor.loadRoot(root); // Load root into the editor
 
+	scaleParameters['distToX0'] = Math.abs(1-scaleParameters['lowestX']);
+	scaleParameters['distToX19'] = 19-scaleParameters['highestX'];
+	if(scaleParameters['distToX0']>scaleParameters['distToX19']) scaleParameters['hFlip'] = true;
+	scaleParameters['distToY0'] = Math.abs(1-scaleParameters['lowestY']);
+	scaleParameters['distToY19'] = 19-scaleParameters['highestY'];
+	if(scaleParameters['distToY0']>scaleParameters['distToY19']) scaleParameters['vFlip'] = true;
+	
+	if(scaleParameters['hFlip'] || scaleParameters['vFlip']){
+		scaleParameters['lowestX'] = 19;
+		scaleParameters['lowestY'] = 19;
+		scaleParameters['highestX'] = 0;
+		scaleParameters['highestY'] = 0;
+		scaleParameters['distToX0'] = 0;
+		scaleParameters['distToX19'] = 0;
+		scaleParameters['distToY0'] = 0;
+		scaleParameters['distToY19'] = 0;
+	
+		var i;
+		var point;
+		for (i = 0; i < sgf.props.length; i++){
+			if(sgf.props[i].id=='AB' || sgf.props[i].id=='AW'){
+				var j;
+				for (j = 0; j < sgf.props[i].values.length; j++){
+					//console.log(sgf.props[i].values[j]);
+					point = lettersToCoords(sgf.props[i].values[j].slice(0, 2));
+					//console.log(point.x+" "+point.y);
+					if(scaleParameters['hFlip']) point.x = 19 - point.x + 1;
+					if(scaleParameters['vFlip']) point.y = 19 - point.y + 1;
+					//console.log(point.x+" "+point.y);
+					
+					if(point.x<scaleParameters['lowestX']) scaleParameters['lowestX'] = point.x;
+					if(point.y<scaleParameters['lowestY']) scaleParameters['lowestY'] = point.y;
+					if(point.x>scaleParameters['highestX']) scaleParameters['highestX'] = point.x;
+					if(point.y>scaleParameters['highestY']) scaleParameters['highestY'] = point.y;
+				}
+			}
+		}
+		scaleParameters['distToX0'] = Math.abs(1-scaleParameters['lowestX']);
+		scaleParameters['distToX19'] = 19-scaleParameters['highestX'];
+		scaleParameters['distToY0'] = Math.abs(1-scaleParameters['lowestY']);
+		scaleParameters['distToY19'] = 19-scaleParameters['highestY'];
+		
+		console.log('lowestY '+scaleParameters['lowestY']);
+		console.log('lowestX '+scaleParameters['lowestX']);
+		console.log('highestX '+scaleParameters['highestX']);
+		console.log('highestY '+scaleParameters['highestY']);
+		console.log('distToX0 '+scaleParameters['distToX0']);
+		console.log('distToX19 '+scaleParameters['distToX19']);
+		console.log('distToY0 '+scaleParameters['distToY0']);
+		console.log('distToY19 '+scaleParameters['distToY19']);
+	}
+	
+	//scaleParameters['fullBoard'] = true;
+	
+	return scaleParameters;
+	
   // Loads the game tree
   function loadNodeTree(sgfNode, gameNode)
   {
     var i, nextGameNode;
 
     // Load properties from the SGF node into the game state node
-    for (i = 0; i < sgfNode.props.length; i++)
+    for (i = 0; i < sgfNode.props.length; i++){
       loadProp(gameNode, sgfNode.props[i]);
-
+	}
     // Recursively load the rest of the tree
     for (i = 0; i < sgfNode.children.length; i++)
     {
@@ -37,22 +106,25 @@ besogo.loadSgf = function(sgf, editor)
     var setupFunc = 'placeSetup',
         markupFunc = 'addMarkup',
         move;
-
     switch(prop.id)
     {
       case 'B': // Play a black move
         move = lettersToCoords(prop.values[0]);
         node.playMove(move.x, move.y, -1, true);
+		//console.log(move);
         break;
       case 'W': // Play a white move
         move = lettersToCoords(prop.values[0]);
         node.playMove(move.x, move.y, 1, true);
+		//console.log(move);
         break;
       case 'AB': // Setup black stones
         applyPointList(prop.values, node, setupFunc, -1);
+		//console.log("b");
         break;
       case 'AW': // Setup white stones
         applyPointList(prop.values, node, setupFunc, 1);
+		//console.log("w");
         break;
       case 'AE': // Setup empty stones
         applyPointList(prop.values, node, setupFunc, 0);
@@ -103,6 +175,11 @@ besogo.loadSgf = function(sgf, editor)
     for (i = 0; i < values.length; i++)
     {
       point = lettersToCoords(values[i].slice(0, 2));
+	  if(point.x<scaleParameters['lowestX']) scaleParameters['lowestX'] = point.x;
+	  if(point.y<scaleParameters['lowestY']) scaleParameters['lowestY'] = point.y;
+	  if(point.x>scaleParameters['highestX']) scaleParameters['highestX'] = point.x;
+	  if(point.y>scaleParameters['highestY']) scaleParameters['highestY'] = point.y;
+	  //console.log(point);
       if (param === 'label') // Label markup property
       {
         label = values[i].slice(3).replace(/\n/g, ' ');
