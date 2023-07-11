@@ -32,8 +32,6 @@ besogo.makeEditor = function(sizeX, sizeY)
       // Variant style: even/odd - children/siblings, <2 - show auto markup for variants
       variantStyle = 0, // 0-3, 0 is default
       edited = false,
-	  soundsEnabled = true,
-	  soundsEnabled2 = true,
 	  autoPlay = false,
       shift = false;
 	  var isEmbedded = typeof mode === "number"; //check if embedded in the website
@@ -222,8 +220,8 @@ besogo.makeEditor = function(sizeX, sizeY)
 
 	//opponent move and incorrect
 	if(isEmbedded){
-		if(!reviewEnabled2) document.getElementsByTagName("audio")[0].play();
 		if(current.correct==false && current.lastMove==1 && current.children.length<1){
+			if(soundsEnabled) document.getElementsByTagName("audio")[0].play();
 			displayResult('F');
 			if(mode==2 || mode==3) toggleBoardLock(true);
 		}
@@ -384,11 +382,10 @@ besogo.makeEditor = function(sizeX, sizeY)
         break;
     }
 	if(isEmbedded){
-		if(!reviewEnabled2) document.getElementsByTagName("audio")[0].play();
+		if(soundsEnabled) document.getElementsByTagName("audio")[0].play();
 		if(current.correct==true && current.correctSource==true){
-			soundsEnabled2 = false;
-			toggleBoardLock(true);
 			setTimeout(function(){
+				toggleBoardLock(true);
 				if(!reviewEnabled2) displayResult('S');
 			}, 360);
 		}
@@ -399,12 +396,20 @@ besogo.makeEditor = function(sizeX, sizeY)
   {
     current = node; // Navigate to child if found
     notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
-    if (autoPlay)
-      setTimeout(function(){ if(isMutable) nextNode(1); }, 360);
+    if(autoPlay){
+      setTimeout(function(){
+			if(isMutable){
+				if(soundsEnabled) document.getElementsByTagName("audio")[0].play();
+				nextNode(1); 
+			}
+		}, 360);
+	}
     if (displayResult && node.correct && !node.hasChildIncludingVirtual())
     {
-      toggleBoardLock(true);
-      displayResult('S');
+        setTimeout(function(){
+		    toggleBoardLock(true);
+			if(!reviewEnabled2) displayResult('S');
+		}, 360);
     }
   }
 
@@ -489,8 +494,7 @@ besogo.makeEditor = function(sizeX, sizeY)
         edited = true;
 		
 		if(isEmbedded){
-			if(!reviewEnabled2) document.getElementsByTagName("audio")[0].play();
-			soundsEnabled2 = false;
+			if(soundsEnabled) document.getElementsByTagName("audio")[0].play();
 			setTimeout(function(){
 				if(!reviewEnabled2) displayResult('F');
 				if(mode==2 || mode==3) toggleBoardLock(true);

@@ -604,12 +604,11 @@
 		<p class="title4">Recent Donations and Upgrades</p>
 		<div class="new1">
 			<table class="newx">
-		<tr><td width="50%"><h1>meliache</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>Kyriaas</h1></td><td><h1>50,00 €</h1></td></tr>
-		<tr><td><h1>Scotty Reed</h1></td><td><h1>2,17 € <i>subscription</i></h1></td></tr>
-		<tr><td><h1>Jerome Hubert</h1></td><td><h1>60,00 €</h1></td></tr>
-		<tr><td><h1>yonur</h1></td><td><h1>10,00 €</h1></td></tr>
-		
+		<tr><td width="50%"><h1>Rene Tammen</h1></td><td><h1>12,00 €</h1></td></tr>
+		<tr><td><h1>gregth</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>Tomo</h1></td><td><h1>15,00 €</h1></td></tr>
+		<tr><td><h1>Pantera730</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>Vincent Lit</h1></td><td><h1>10,00 €</h1></td></tr>
 		</table>	
 		<br>
 		</div>	

@@ -1001,7 +1001,6 @@ class TsumegosController extends AppController{
 				$u['User']['penalty'] += 1;
 			}
 			unset($_COOKIE['score']);
-			unset($_COOKIE['preId']);
 			unset($_COOKIE['transition']);
 			unset($_COOKIE['sequence']);
 		}
@@ -1018,7 +1017,7 @@ class TsumegosController extends AppController{
 				$this->TsumegoAttempt->save($ur);
 			}
 		}
-		
+		unset($_COOKIE['preId']);
 		if(isset($_COOKIE['doublexp']) && $_COOKIE['doublexp'] != '0'){
 			if($u['User']['usedSprint']==0){
 				$doublexp = $_COOKIE['doublexp'];
