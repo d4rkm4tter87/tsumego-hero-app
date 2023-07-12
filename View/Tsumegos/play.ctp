@@ -1740,6 +1740,7 @@
 	var file = "<?php echo $file; ?>";
 	var clearFile = "<?php echo $set['Set']['title'].' - '.$t['Tsumego']['num']; ?>";
 	var tsumegoFileLink = "<?php echo $t['Tsumego']['id']; ?>";
+	var globalSvg = null;
 
 	<?php
 
@@ -3603,6 +3604,7 @@
 	  options.realstones = true;
 	  options.nowheel = true;
 	  options.nokeys = true;
+	  //options.resize = 'auto';
 	  options.theme = '<?php echo $choice[0][1]; ?>';
 	  options.themeParameters = ['<?php echo $choice[0][2]; ?>', '<?php echo $choice[0][3]; ?>'];
 	  options.coord = 'western';

@@ -12,7 +12,7 @@ besogo.loadSgf = function(sgf, editor)
 	scaleParameters['highestY'] = 0;
 	scaleParameters['hFlip'] = false;
 	scaleParameters['vFlip'] = false;
-	scaleParameters['fullBoard'] = false;
+	scaleParameters['orientation'] = '';
 	scaleParameters['distToX0'] = 0;
 	scaleParameters['distToX19'] = 0;
 	scaleParameters['distToY0'] = 0;
@@ -67,18 +67,20 @@ besogo.loadSgf = function(sgf, editor)
 		scaleParameters['distToX19'] = 19-scaleParameters['highestX'];
 		scaleParameters['distToY0'] = Math.abs(1-scaleParameters['lowestY']);
 		scaleParameters['distToY19'] = 19-scaleParameters['highestY'];
-		
-		console.log('lowestY '+scaleParameters['lowestY']);
-		console.log('lowestX '+scaleParameters['lowestX']);
-		console.log('highestX '+scaleParameters['highestX']);
-		console.log('highestY '+scaleParameters['highestY']);
-		console.log('distToX0 '+scaleParameters['distToX0']);
-		console.log('distToX19 '+scaleParameters['distToX19']);
-		console.log('distToY0 '+scaleParameters['distToY0']);
-		console.log('distToY19 '+scaleParameters['distToY19']);
 	}
 	
-	//scaleParameters['fullBoard'] = true;
+	if(scaleParameters['distToX19']<10 && scaleParameters['distToY19']<10) scaleParameters['orientation'] = 'full-board';
+	
+	//scaleParameters['orientation'] = 'full-board';
+	
+	console.log('lowestY '+scaleParameters['lowestY']);
+	console.log('lowestX '+scaleParameters['lowestX']);
+	console.log('highestX '+scaleParameters['highestX']);
+	console.log('highestY '+scaleParameters['highestY']);
+	console.log('distToX0 '+scaleParameters['distToX0']);
+	console.log('distToX19 '+scaleParameters['distToX19']);
+	console.log('distToY0 '+scaleParameters['distToY0']);
+	console.log('distToY19 '+scaleParameters['distToY19']);
 	
 	return scaleParameters;
 	

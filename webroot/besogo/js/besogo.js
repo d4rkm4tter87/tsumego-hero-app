@@ -34,7 +34,8 @@
 			  tree: besogo.makeTreePanel,
 			  file: besogo.makeFilePanel
 			}
-	}	
+	}
+
 	
 	let sgfLoaded = {
 	  aInternal: 10,
@@ -60,6 +61,7 @@
     if(options.tsumegoPlayTool) options.tsumegoPlayTool = options.tsumegoPlayTool || 'auto';
     if (options.panels === '')
       options.panels = [];
+  
   
     //options.panels = options.panels || 'control+names+comment+tool+tree+file';
     if (typeof options.panels === 'string')
@@ -136,7 +138,7 @@
     while (container.firstChild) // Remove all children of container
       container.removeChild(container.firstChild);
 
-	////////////////////////////////
+	//Fixes the asynchronous load of board and content
 	sgfLoaded.registerListener(function(val) {
 		boardDiv = makeDiv('besogo-board'); // Create div for board display
 		boardDisplay = besogo.makeBoardDisplay(boardDiv, besogo.editor, sgfLoaded.scaleParameters); // Create board display
@@ -230,6 +232,8 @@
 				if (panelsDiv) // Reduce height to ensure minimum width of panels div
 				  height = (width < height + minPanelsWidth) ? (width - minPanelsWidth) : height;
 			  }
+			 
+			  
 			setDimensions(width, height);
 			container.style.width = width + 'px';
 		  };
@@ -284,6 +288,15 @@
 
   // Sets dimensions with optional height param
   function setDimensions(width, height) {
+	    //height=390;
+	    //width=410;
+		console.log('height '+height);
+		console.log('width '+width);
+		//container.style['flex-direction'] = 'row';
+		//boardDiv.style.height = height + 'px';
+       // boardDiv.style.width = width + 'px';
+		
+		/*
         if (height && width > height) { // Landscape mode
             container.style['flex-direction'] = 'row';
             boardDiv.style.height = height + 'px';
@@ -303,6 +316,7 @@
                 panelsDiv.style.width = width + 'px';
             }
         }
+		*/
     }
 
     // Creates and adds divs to specified parent or container
@@ -473,7 +487,7 @@ function parseAndLoad(text, editor)
   }
   
   scaleParameters = besogo.loadSgf(sgf, editor);
-  if(!scaleParameters['fullBoard']){
+  if(scaleParameters['orientation']!=='full-board'){
 	  if(scaleParameters['hFlip']){
 		  let transformation = besogo.makeTransformation();
 		  transformation.hFlip = true;

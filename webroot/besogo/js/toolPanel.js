@@ -1,4 +1,4 @@
-besogo.makeToolPanel = function(container, editor)
+besogo.makeToolPanel = function(container, editor, scaleParameters)
 {
   'use strict';
   var element, // Scratch for building SVG images
@@ -34,6 +34,7 @@ besogo.makeToolPanel = function(container, editor)
 		let transformation = besogo.makeTransformation();
 		transformation.hFlip = true;
 		besogo.editor.applyTransformation(transformation);
+		globalSvg.setAttribute('viewBox', '200 0 ' + 1700 + ' ' + 700);
 	  });
 	  makeButtonText('V Flip', 'Flip vertically', function()
 	  {
@@ -64,6 +65,7 @@ besogo.makeToolPanel = function(container, editor)
 		$(".besogo-panels").css("display","none");
 		$(".besogo-board").css("margin","0 315px");
 		besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+		
 	  });
 	  makeButtonText('Next', 'Next problem', function()
 	  {
@@ -225,6 +227,10 @@ besogo.makeToolPanel = function(container, editor)
     return svg; // Returns reference to the icon container
   }
 
+	function test()
+  {
+	console.log('S');
+  }
   // Creates text button
   function makeButtonText(text, tip, callback)
   {
