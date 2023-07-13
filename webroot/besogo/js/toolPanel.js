@@ -49,11 +49,12 @@ besogo.makeToolPanel = function(container, editor, scaleParameters)
 		transformation.rotate = true;
 		editor.applyTransformation(transformation);
 	  });
-	  */
+	  
 	  makeButtonText('Back', 'Previous problem', function()
 	  {
 		if(prevButtonLink!=0) window.location.href = "/tsumegos/play/"+prevButtonLink;
 	  });
+	  */
 	  makeButtonText('Reset', 'Resets the problem', function()
 	  {
 		besogo.editor.prevNode(-1);

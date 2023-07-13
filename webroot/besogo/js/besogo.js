@@ -4,7 +4,7 @@
   besogo.VERSION = '0.0.2-alpha';
   besogo.editor = null;
   let scaleParameters = [];
-
+  let corner;
   besogo.create = function(container, options)
   {
     var editor, // Core editor object
@@ -12,6 +12,7 @@
         resizer, // Auto-resizing function
         boardDiv, // Board display container
         panelsDiv, // Parent container of panel divs
+		
         insideText = container.textContent || container.innerText || '',
         i, panelName; // Scratch iteration variables
 
@@ -36,7 +37,6 @@
 			}
 	}
 
-	
 	let sgfLoaded = {
 	  aInternal: 10,
 	  aListener: function(val) {},
@@ -62,7 +62,7 @@
     if (options.panels === '')
       options.panels = [];
   
-  
+	corner = options.corner;
     //options.panels = options.panels || 'control+names+comment+tool+tree+file';
     if (typeof options.panels === 'string')
       options.panels = options.panels.split('+');
@@ -141,7 +141,7 @@
 	//Fixes the asynchronous load of board and content
 	sgfLoaded.registerListener(function(val) {
 		boardDiv = makeDiv('besogo-board'); // Create div for board display
-		boardDisplay = besogo.makeBoardDisplay(boardDiv, besogo.editor, sgfLoaded.scaleParameters); // Create board display
+		boardDisplay = besogo.makeBoardDisplay(boardDiv, besogo.editor, sgfLoaded.scaleParameters, corner); // Create board display
 
 		if (!options.nokeys) // Add keypress handler unless nokeys option is truthy
 		  addKeypressHandler(container, besogo.editor, boardDisplay);
@@ -290,8 +290,8 @@
   function setDimensions(width, height) {
 	    //height=390;
 	    //width=410;
-		console.log('height '+height);
-		console.log('width '+width);
+		//console.log('height '+height);
+		//console.log('width '+width);
 		//container.style['flex-direction'] = 'row';
 		//boardDiv.style.height = height + 'px';
        // boardDiv.style.width = width + 'px';
@@ -487,7 +487,9 @@ function parseAndLoad(text, editor)
   }
   
   scaleParameters = besogo.loadSgf(sgf, editor);
+  //if the setting is not full-board
   if(scaleParameters['orientation']!=='full-board'){
+	  //set default corner top-left
 	  if(scaleParameters['hFlip']){
 		  let transformation = besogo.makeTransformation();
 		  transformation.hFlip = true;
@@ -495,6 +497,25 @@ function parseAndLoad(text, editor)
 	  }
 	  if(scaleParameters['vFlip']){
 		  let transformation = besogo.makeTransformation();
+		  transformation.vFlip = true;
+		  besogo.editor.applyTransformation(transformation);
+	  }
+	  scaleParameters['orientation'] = 'top-left';
+	  console.log(corner);
+	  //if another corner than top-left is set
+	  if(corner=='top-right'){
+		  let transformation = besogo.makeTransformation();
+		  transformation.hFlip = true;
+		  besogo.editor.applyTransformation(transformation);
+	  }else if(corner=='bottom-left'){
+		  let transformation = besogo.makeTransformation();
+		  transformation.vFlip = true;
+		  besogo.editor.applyTransformation(transformation);
+	  }else if(corner=='bottom-right'){
+		  let transformation = besogo.makeTransformation();
+		  transformation.hFlip = true;
+		  besogo.editor.applyTransformation(transformation);
+		  transformation = besogo.makeTransformation();
 		  transformation.vFlip = true;
 		  besogo.editor.applyTransformation(transformation);
 	  }

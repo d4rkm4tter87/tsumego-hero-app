@@ -104,7 +104,7 @@
 			categorized into two main sections: tsumego and tesuji; then further broken into 10 and 15 thematic subsections respectively.<br><br>
 			<div align="center"><img width="95%" src="/img/1001weiqi-home.png">
 			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/181">Play</a><br><br></div>
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/190">Play</a><br><br></div>
 		</div>
 		<p class="title4">Update 18.06.2023</p>
 		<div class="new1">

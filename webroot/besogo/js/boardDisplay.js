@@ -1,4 +1,4 @@
-besogo.makeBoardDisplay = function(container, editor, scaleParameters)
+besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
 {
   var CELL_SIZE = 88, // Including line width
       COORD_MARGIN = 75, // Margin for coordinate labels
@@ -135,32 +135,72 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters)
 	boardWidth = 2*BOARD_MARGIN + sizeX*CELL_SIZE;
     boardHeight = 2*BOARD_MARGIN + sizeY*CELL_SIZE;
 	
+	let modifiedSizeX = scaleParameters['highestX'];
+	let modifiedSizeY = scaleParameters['highestY'];
+	let fullBoardWidth = 0;
+	let fullBoardHeight = 0;
+	//scaleParameters['orientation'] = 'full-board';
 	if(scaleParameters['orientation']!=='full-board'){
 		if(!scaleParameters['hFlip'] && !scaleParameters['vFlip']) scaleParameters['orientation'] = 'top-left';
 		else if(scaleParameters['hFlip'] && !scaleParameters['vFlip']) scaleParameters['orientation'] = 'top-right';
 		else if(!scaleParameters['hFlip'] && scaleParameters['vFlip']) scaleParameters['orientation'] = 'bottom-left';
 		else if(scaleParameters['hFlip'] && scaleParameters['vFlip']) scaleParameters['orientation'] = 'bottom-right';
 		console.log('curner '+scaleParameters['orientation']);
+		console.log('curner top left');
 		
-		let boardSizeX = 19-scaleParameters['distToX19']+4;
-		let boardSizeY = 19-scaleParameters['distToY19']+4;
+		console.log('distToX0 '+scaleParameters['distToX0']);
+		console.log('distToX19 '+scaleParameters['distToX19']);
+		console.log('distToY0 '+scaleParameters['distToY0']);
+		console.log('distToY19 '+scaleParameters['distToY19']);
+		console.log('lowestY '+scaleParameters['lowestY']);
+		console.log('lowestX '+scaleParameters['lowestX']);
+		console.log('highestX '+scaleParameters['highestX']);
+		console.log('highestY '+scaleParameters['highestY']);
 		
-		console.log('boardSizeX '+boardSizeX);
-		console.log('boardSizeY '+boardSizeY);
+		if(scaleParameters['highestX']>=10) scaleParameters['highestX'] = 19;
+		else scaleParameters['highestX'] += 3;
+		if(scaleParameters['highestY']>=10) scaleParameters['highestY'] = 19;
+		else scaleParameters['highestY'] += 3;
+		console.log('highestX '+scaleParameters['highestX']);
+		console.log('highestY '+scaleParameters['highestY']);
+		//let boardSizeX = 19-scaleParameters['distToX19']+4;
+		//let boardSizeY = 19-scaleParameters['distToY19']+4;
+		
+		//console.log('boardSizeX '+boardSizeX);
+		//console.log('boardSizeY '+boardSizeY);
 		
 		//if(boardSizeX>boardSizeY) boardSizeY = boardSizeX;
 		//else if(boardSizeX<boardSizeY) boardSizeX = boardSizeY;
 		
-		sizeX = boardSizeX;
-		sizeY = boardSizeY;
+		//sizeX = boardSizeX;
+		//sizeY = boardSizeY;
 		
 		board_margin_x = BOARD_MARGIN - 75;
 		board_margin_y = BOARD_MARGIN - 75;
-		boardWidth = 2*board_margin_x + sizeX*CELL_SIZE;
-		boardHeight = 2*board_margin_y + sizeY*CELL_SIZE;
+		//boardWidth = 2*board_margin_x + sizeX*CELL_SIZE;
+		//boardHeight = 2*board_margin_y + sizeY*CELL_SIZE;
+		
+		modifiedSizeX = scaleParameters['highestX'];
+		modifiedSizeY = scaleParameters['highestY'];
+		
+		if(scaleParameters['highestX']!==19) numberOfXEdges = 1;
+		else numberOfXEdges = 2;
+		if(scaleParameters['highestY']!==19) numberOfYEdges = 1;
+		else numberOfYEdges = 2;
+		
+		boardWidth = numberOfXEdges*BOARD_MARGIN + modifiedSizeX*CELL_SIZE;
+		boardHeight = numberOfYEdges*BOARD_MARGIN + modifiedSizeY*CELL_SIZE;
+		
+		fullBoardWidth = 2*BOARD_MARGIN + 19*CELL_SIZE;
+		fullBoardHeight = 2*BOARD_MARGIN + 19*CELL_SIZE;
+		
 	}
-	//console.log('boardWidth '+boardWidth);
-	//console.log('boardHeight '+boardHeight);
+	console.log('boardWidth '+boardWidth);
+	console.log('boardHeight '+boardHeight);
+	console.log('CELL_SIZE '+CELL_SIZE);
+	console.log('BOARD_MARGIN '+BOARD_MARGIN);
+	console.log('sizeX '+modifiedSizeX);
+	console.log('sizeY '+modifiedSizeY);
     svg = besogo.svgEl("svg", { // Initialize the SVG element
         width: "100%",
         height: "100%",
@@ -176,7 +216,21 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters)
         'class': 'besogo-svg-board'
     }) );
 	*/
-
+	let boardWidth2 = fullBoardWidth - boardWidth;
+	let boardWidth3 = fullBoardWidth - boardWidth2;
+	console.log('fullBoardWidth '+fullBoardWidth);
+	console.log('boardWidth2 '+boardWidth2);
+	console.log('boardWidth3 '+boardWidth3);
+	
+	let boardHeight2 = fullBoardHeight - boardHeight;
+	let boardHeight3 = fullBoardHeight - boardHeight2;
+	console.log('fullBoardHeight '+fullBoardHeight);
+	console.log('boardHeight2 '+boardHeight2);
+	console.log('boardHeight3 '+boardHeight3);
+	
+	
+	//svg.setAttribute('viewBox', 955+'0'+' '+867+' '+fullBoardHeight);
+	if(corner==='top-right' && scaleParameters['orientation']!=='full-board') svg.setAttribute('viewBox', boardWidth2 + ' ' + 0 + ' ' + boardWidth3 + ' ' + boardHeight3);
 	svg.appendChild(besogo.svgEl("rect", { // Draw outer square of board
         width: CELL_SIZE*(sizeX - 1),
         height: CELL_SIZE*(sizeY - 1),
@@ -215,14 +269,13 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters)
       {
         x = svgPos(i);
         drawCoordLabel(x, svgPos(1) - shift, labelXa[i]);
-        if(scaleParameters['orientation']!=='top-left') drawCoordLabel(x, svgPos(sizeY) + shift, labelXb[i]);
+        drawCoordLabel(x, svgPos(sizeY) + shift, labelXb[i]);
       }
-		yFillValue = 19-sizeY;
       for (let i = 1; i <= sizeY; i++) // Draw row coordinate labels
       {
         y = svgPos(i);
-        drawCoordLabel(svgPos(1) - shift, y, Number(labelYa[i])+yFillValue);
-        if(scaleParameters['orientation']!=='top-left') drawCoordLabel(svgPos(sizeX) + shift, y, labelYb[i]);
+        drawCoordLabel(svgPos(1) - shift, y, labelYa[i]);
+        drawCoordLabel(svgPos(sizeX) + shift, y, labelYb[i]);
       }
 
       function drawCoordLabel(x, y, label)

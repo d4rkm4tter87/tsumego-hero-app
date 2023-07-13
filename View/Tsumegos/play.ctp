@@ -3605,6 +3605,9 @@
 	  options.nowheel = true;
 	  options.nokeys = true;
 	  //options.resize = 'auto';
+	  options.corner = 'top-right';
+	  
+	  
 	  options.theme = '<?php echo $choice[0][1]; ?>';
 	  options.themeParameters = ['<?php echo $choice[0][2]; ?>', '<?php echo $choice[0][3]; ?>'];
 	  options.coord = 'western';

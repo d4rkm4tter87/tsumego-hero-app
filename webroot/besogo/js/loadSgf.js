@@ -56,11 +56,11 @@ besogo.loadSgf = function(sgf, editor)
 					if(scaleParameters['vFlip']) point.y = 19 - point.y + 1;
 					//console.log(point.x+" "+point.y);
 					
-					if(point.x<scaleParameters['lowestX']) scaleParameters['lowestX'] = point.x;
-					if(point.y<scaleParameters['lowestY']) scaleParameters['lowestY'] = point.y;
-					if(point.x>scaleParameters['highestX']) scaleParameters['highestX'] = point.x;
-					if(point.y>scaleParameters['highestY']) scaleParameters['highestY'] = point.y;
+					checkScaleParameters('x', point.x);
+					checkScaleParameters('y', point.y);
+					
 				}
+			}else if(sgf.props[i].id=='B' || sgf.props[i].id=='W'){
 			}
 		}
 		scaleParameters['distToX0'] = Math.abs(1-scaleParameters['lowestX']);
@@ -72,7 +72,10 @@ besogo.loadSgf = function(sgf, editor)
 	if(scaleParameters['distToX19']<10 && scaleParameters['distToY19']<10) scaleParameters['orientation'] = 'full-board';
 	
 	//scaleParameters['orientation'] = 'full-board';
-	
+	/*
+	console.log('orientation '+scaleParameters['orientation']);
+	console.log('hFlip '+scaleParameters['hFlip']);
+	console.log('vFlip '+scaleParameters['vFlip']);
 	console.log('lowestY '+scaleParameters['lowestY']);
 	console.log('lowestX '+scaleParameters['lowestX']);
 	console.log('highestX '+scaleParameters['highestX']);
@@ -81,7 +84,7 @@ besogo.loadSgf = function(sgf, editor)
 	console.log('distToX19 '+scaleParameters['distToX19']);
 	console.log('distToY0 '+scaleParameters['distToY0']);
 	console.log('distToY19 '+scaleParameters['distToY19']);
-	
+	*/
 	return scaleParameters;
 	
   // Loads the game tree
@@ -112,11 +115,15 @@ besogo.loadSgf = function(sgf, editor)
     {
       case 'B': // Play a black move
         move = lettersToCoords(prop.values[0]);
+		checkScaleParameters('x', move.x);
+	    checkScaleParameters('y', move.y);
         node.playMove(move.x, move.y, -1, true);
-		//console.log(move);
+		
         break;
       case 'W': // Play a white move
         move = lettersToCoords(prop.values[0]);
+		checkScaleParameters('x', move.x);
+	    checkScaleParameters('y', move.y);
         node.playMove(move.x, move.y, 1, true);
 		//console.log(move);
         break;
@@ -165,6 +172,16 @@ besogo.loadSgf = function(sgf, editor)
         break;
     }
   }
+  
+  function checkScaleParameters(axis, value){
+	  if(axis==='x'){
+		if(value<scaleParameters['lowestX']) scaleParameters['lowestX'] = value; 
+		if(value>scaleParameters['highestX']) scaleParameters['highestX'] = value;
+	  }else if(axis==='y'){
+		if(value<scaleParameters['lowestY']) scaleParameters['lowestY'] = value;
+		if(value>scaleParameters['highestY']) scaleParameters['highestY'] = value;
+	  }
+  }
 
   // Extracts point list and calls func on each
   // Set param to 'label' to signal handling of label markup property
@@ -177,10 +194,10 @@ besogo.loadSgf = function(sgf, editor)
     for (i = 0; i < values.length; i++)
     {
       point = lettersToCoords(values[i].slice(0, 2));
-	  if(point.x<scaleParameters['lowestX']) scaleParameters['lowestX'] = point.x;
-	  if(point.y<scaleParameters['lowestY']) scaleParameters['lowestY'] = point.y;
-	  if(point.x>scaleParameters['highestX']) scaleParameters['highestX'] = point.x;
-	  if(point.y>scaleParameters['highestY']) scaleParameters['highestY'] = point.y;
+	  
+	  checkScaleParameters('x', point.x);
+	  checkScaleParameters('y', point.y);
+	  
 	  //console.log(point);
       if (param === 'label') // Label markup property
       {
