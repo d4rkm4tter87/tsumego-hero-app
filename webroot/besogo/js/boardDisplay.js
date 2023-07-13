@@ -21,6 +21,9 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
       lastHoverPosition = null,
       TOUCH_FLAG = false; // Flag for touch interfaces
 
+		
+	  if(sizeX!=19) scaleParameters['orientation'] = 'full-board';
+
 	var isEmbedded = typeof mode === "number"; //check if embedded in the website
 
   initializeBoard(editor.getCoordStyle()); // Initialize SVG element and draw the board
@@ -137,16 +140,14 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
 	
 	let modifiedSizeX = scaleParameters['highestX'];
 	let modifiedSizeY = scaleParameters['highestY'];
-	let fullBoardWidth = 0;
-	let fullBoardHeight = 0;
+	
 	//scaleParameters['orientation'] = 'full-board';
 	if(scaleParameters['orientation']!=='full-board'){
 		if(!scaleParameters['hFlip'] && !scaleParameters['vFlip']) scaleParameters['orientation'] = 'top-left';
 		else if(scaleParameters['hFlip'] && !scaleParameters['vFlip']) scaleParameters['orientation'] = 'top-right';
 		else if(!scaleParameters['hFlip'] && scaleParameters['vFlip']) scaleParameters['orientation'] = 'bottom-left';
 		else if(scaleParameters['hFlip'] && scaleParameters['vFlip']) scaleParameters['orientation'] = 'bottom-right';
-		console.log('curner '+scaleParameters['orientation']);
-		console.log('curner top left');
+		//console.log('curner '+scaleParameters['orientation']);
 		
 		console.log('distToX0 '+scaleParameters['distToX0']);
 		console.log('distToX19 '+scaleParameters['distToX19']);
@@ -190,17 +191,19 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
 		
 		boardWidth = numberOfXEdges*BOARD_MARGIN + modifiedSizeX*CELL_SIZE;
 		boardHeight = numberOfYEdges*BOARD_MARGIN + modifiedSizeY*CELL_SIZE;
-		
-		fullBoardWidth = 2*BOARD_MARGIN + 19*CELL_SIZE;
-		fullBoardHeight = 2*BOARD_MARGIN + 19*CELL_SIZE;
-		
+		besogoBoardWidth = boardWidth;
+		besogoBoardHeight = boardHeight;
+		besogoFullBoardWidth = 2*BOARD_MARGIN + 19*CELL_SIZE;
+		besogoFullBoardHeight = 2*BOARD_MARGIN + 19*CELL_SIZE;
 	}
+	/*
 	console.log('boardWidth '+boardWidth);
 	console.log('boardHeight '+boardHeight);
 	console.log('CELL_SIZE '+CELL_SIZE);
 	console.log('BOARD_MARGIN '+BOARD_MARGIN);
 	console.log('sizeX '+modifiedSizeX);
 	console.log('sizeY '+modifiedSizeY);
+	*/
     svg = besogo.svgEl("svg", { // Initialize the SVG element
         width: "100%",
         height: "100%",
@@ -216,28 +219,34 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
         'class': 'besogo-svg-board'
     }) );
 	*/
-	let boardWidth2 = fullBoardWidth - boardWidth;
-	let boardWidth3 = fullBoardWidth - boardWidth2;
-	console.log('fullBoardWidth '+fullBoardWidth);
-	console.log('boardWidth2 '+boardWidth2);
-	console.log('boardWidth3 '+boardWidth3);
+	besogoBoardWidth2 = besogoFullBoardWidth - besogoBoardWidth;
+	besogoBoardWidth3 = besogoFullBoardWidth - besogoBoardWidth2;
+	console.log('besogoBoardWidth2 '+besogoBoardWidth2);
+	console.log('besogoBoardWidth3 '+besogoBoardWidth3);
 	
-	let boardHeight2 = fullBoardHeight - boardHeight;
-	let boardHeight3 = fullBoardHeight - boardHeight2;
-	console.log('fullBoardHeight '+fullBoardHeight);
-	console.log('boardHeight2 '+boardHeight2);
-	console.log('boardHeight3 '+boardHeight3);
+	besogoBoardHeight2 = besogoFullBoardWidth - besogoBoardHeight;
+	besogoBoardHeight3 = besogoFullBoardWidth - besogoBoardHeight2;
+	console.log('besogoBoardHeight2 '+besogoBoardHeight2);
+	console.log('besogoBoardHeight3 '+besogoBoardHeight3);
 	
+	//svg.setAttribute('viewBox', 955+'0'+' '+867+' '+besogoBoardHeight);
 	
-	//svg.setAttribute('viewBox', 955+'0'+' '+867+' '+fullBoardHeight);
-	if(corner==='top-right' && scaleParameters['orientation']!=='full-board') svg.setAttribute('viewBox', boardWidth2 + ' ' + 0 + ' ' + boardWidth3 + ' ' + boardHeight3);
+	if(corner==='top-right' && scaleParameters['orientation']!=='full-board'){
+		svg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + 0 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+	}else if(corner==='bottom-left' && scaleParameters['orientation']!=='full-board'){
+		svg.setAttribute('viewBox', 0 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+	}else if(corner==='bottom-right' && scaleParameters['orientation']!=='full-board'){
+		svg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+	}else if(corner==='full-board'){
+		svg.setAttribute('viewBox', 0 + ' ' + 0 + ' ' + besogoFullBoardWidth + ' ' + besogoBoardHeight);
+	}
 	svg.appendChild(besogo.svgEl("rect", { // Draw outer square of board
         width: CELL_SIZE*(sizeX - 1),
         height: CELL_SIZE*(sizeY - 1),
         x: svgPos(1),
         y: svgPos(1),
         'class': 'besogo-svg-lines'
-    }) );
+    }));
 
     for (let i = 2; i <= (sizeY - 1); i++) // Horizontal inner lines
       string += "M" + svgPos(1) + "," + svgPos(i) + "h" + CELL_SIZE*(sizeX - 1);

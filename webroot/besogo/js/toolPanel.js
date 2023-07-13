@@ -1,4 +1,4 @@
-besogo.makeToolPanel = function(container, editor, scaleParameters)
+besogo.makeToolPanel = function(container, editor)
 {
   'use strict';
   var element, // Scratch for building SVG images
@@ -21,7 +21,6 @@ besogo.makeToolPanel = function(container, editor, scaleParameters)
 
   function makeReviewToolButtons(container, editor)
   {
-    
 	  makeButtonText('Invert', 'Invert colors of all stones and moves.', function()
 	  {
 		let transformation = besogo.makeTransformation();
@@ -29,12 +28,105 @@ besogo.makeToolPanel = function(container, editor, scaleParameters)
 		besogo.editor.applyTransformation(transformation);
 		
 	  });
+	  makeButtonText('top-left', 'top-left', function()
+	  {
+		if(besogoCorner==='top-left'){
+			//already there
+		}else if(besogoCorner==='top-right'){
+			let transformation = besogo.makeTransformation();
+			transformation.hFlip = true;
+			besogo.editor.applyTransformation(transformation);
+		}else if(besogoCorner==='bottom-left'){
+			let transformation = besogo.makeTransformation();
+			transformation.vFlip = true;
+			besogo.editor.applyTransformation(transformation);
+		}else if(besogoCorner==='bottom-right'){
+			let transformation = besogo.makeTransformation();
+		    transformation.hFlip = true;
+		    besogo.editor.applyTransformation(transformation);
+		    transformation = besogo.makeTransformation();
+		    transformation.vFlip = true;
+		    besogo.editor.applyTransformation(transformation);
+		}
+		globalSvg.setAttribute('viewBox', '0 0 ' + besogoBoardWidth + ' ' + besogoBoardHeight);
+		besogoCorner='top-left';
+	  });
+	  makeButtonText('top-right', 'top-right', function()
+	  {
+		if(besogoCorner==='top-left'){
+			let transformation = besogo.makeTransformation();
+			transformation.hFlip = true;
+			besogo.editor.applyTransformation(transformation);
+		}else if(besogoCorner==='top-right'){
+			//already there
+		}else if(besogoCorner==='bottom-left'){
+			let transformation = besogo.makeTransformation();
+		    transformation.hFlip = true;
+		    besogo.editor.applyTransformation(transformation);
+		    transformation = besogo.makeTransformation();
+		    transformation.vFlip = true;
+		    besogo.editor.applyTransformation(transformation);
+		}else if(besogoCorner==='bottom-right'){
+			let transformation = besogo.makeTransformation();
+			transformation.vFlip = true;
+			besogo.editor.applyTransformation(transformation);
+		}
+		globalSvg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + 0 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+		besogoCorner='top-right';
+	  });
+	  makeButtonText('bottom-left', 'bottom-left', function()
+	  {
+		if(besogoCorner==='top-left'){
+			let transformation = besogo.makeTransformation();
+			transformation.vFlip = true;
+			besogo.editor.applyTransformation(transformation);
+		}else if(besogoCorner==='top-right'){
+			let transformation = besogo.makeTransformation();
+		    transformation.hFlip = true;
+		    besogo.editor.applyTransformation(transformation);
+		    transformation = besogo.makeTransformation();
+		    transformation.vFlip = true;
+		    besogo.editor.applyTransformation(transformation);
+		}else if(besogoCorner==='bottom-left'){
+			//already there
+		}else if(besogoCorner==='bottom-right'){
+			let transformation = besogo.makeTransformation();
+		    transformation.hFlip = true;
+		    besogo.editor.applyTransformation(transformation);
+		}
+		globalSvg.setAttribute('viewBox', 0 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+		besogoCorner='bottom-left';
+	  });
+	  makeButtonText('bottom-right', 'bottom-right', function()
+	  {
+		if(besogoCorner==='top-left'){
+			let transformation = besogo.makeTransformation();
+		    transformation.hFlip = true;
+		    besogo.editor.applyTransformation(transformation);
+		    transformation = besogo.makeTransformation();
+		    transformation.vFlip = true;
+		    besogo.editor.applyTransformation(transformation);
+		}else if(besogoCorner==='top-right'){
+			let transformation = besogo.makeTransformation();
+			transformation.vFlip = true;
+			besogo.editor.applyTransformation(transformation);
+		}else if(besogoCorner==='bottom-left'){
+			let transformation = besogo.makeTransformation();
+		    transformation.hFlip = true;
+		    besogo.editor.applyTransformation(transformation);
+		}else if(besogoCorner==='bottom-right'){
+			//already there
+		}
+		globalSvg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+		besogoCorner='bottom-right';
+	  });
+	  /*
 	  makeButtonText('H Flip', 'Flip horizontally', function()
 	  {
 		let transformation = besogo.makeTransformation();
 		transformation.hFlip = true;
 		besogo.editor.applyTransformation(transformation);
-		globalSvg.setAttribute('viewBox', '200 0 ' + 1700 + ' ' + 700);
+		//globalSvg.setAttribute('viewBox', '200 0 ' + 1700 + ' ' + 700);
 	  });
 	  makeButtonText('V Flip', 'Flip vertically', function()
 	  {
@@ -42,7 +134,7 @@ besogo.makeToolPanel = function(container, editor, scaleParameters)
 		transformation.vFlip = true;
 		besogo.editor.applyTransformation(transformation);
 	  });
-	  /*
+	  
 	  makeButtonText('Rotate', 'Rotate the board clockwise', function()
 	  {
 		let transformation = besogo.makeTransformation();

@@ -1741,6 +1741,15 @@
 	var clearFile = "<?php echo $set['Set']['title'].' - '.$t['Tsumego']['num']; ?>";
 	var tsumegoFileLink = "<?php echo $t['Tsumego']['id']; ?>";
 	var globalSvg = null;
+	var besogoCorner = null;
+	var besogoFullBoardWidth = 0;
+	var besogoFullBoardHeight = 0;
+	var besogoBoardWidth = 0;
+	var besogoBoardHeight = 0;
+	var besogoBoardWidth2 = 0;
+	var besogoBoardHeight2 = 0;
+	var besogoBoardWidth3 = 0;
+	var besogoBoardHeight3 = 0;
 
 	<?php
 
@@ -3605,9 +3614,8 @@
 	  options.nowheel = true;
 	  options.nokeys = true;
 	  //options.resize = 'auto';
-	  options.corner = 'top-right';
-	  
-	  
+	  options.corner = 'bottom-right';
+	  besogoCorner = options.corner;
 	  options.theme = '<?php echo $choice[0][1]; ?>';
 	  options.themeParameters = ['<?php echo $choice[0][2]; ?>', '<?php echo $choice[0][3]; ?>'];
 	  options.coord = 'western';
