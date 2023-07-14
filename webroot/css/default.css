@@ -2994,13 +2994,26 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	  flex: none!important;
 	  height: 115px;
 	}
-	
 	.besogo-comment table{
 		display:none;
 	}
-	
-	
-	
+	#colorOrientation, #boardOrientationTL, #boardOrientationTR, #boardOrientationBL, #boardOrientationBR{
+		width:25px;
+		height:25px;
+		margin:12px 1px 0 1px;
+		cursor:pointer;
+	}
+	#boardOrientationBR{
+		margin-right:5px;
+	}
+	#author-notice{
+		position:relative;
+		font-family: Georgia;
+		font-size: 12px;
+		color: #717171;
+		right: -143px;
+		margin-top: 14px;
+	}
 	
 	
 	

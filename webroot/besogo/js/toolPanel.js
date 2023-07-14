@@ -21,105 +21,111 @@ besogo.makeToolPanel = function(container, editor)
 
   function makeReviewToolButtons(container, editor)
   {
-	  makeButtonText('Invert', 'Invert colors of all stones and moves.', function()
+	  makeImageButton('/img/colorOrientation.png', 'Invert colors of all stones and moves.', 'colorOrientation', function()
 	  {
 		let transformation = besogo.makeTransformation();
 		transformation.invertColors = true;
 		besogo.editor.applyTransformation(transformation);
-		
 	  });
-	  makeButtonText('top-left', 'top-left', function()
-	  {
-		if(besogoCorner==='top-left'){
-			//already there
-		}else if(besogoCorner==='top-right'){
-			let transformation = besogo.makeTransformation();
-			transformation.hFlip = true;
-			besogo.editor.applyTransformation(transformation);
-		}else if(besogoCorner==='bottom-left'){
-			let transformation = besogo.makeTransformation();
-			transformation.vFlip = true;
-			besogo.editor.applyTransformation(transformation);
-		}else if(besogoCorner==='bottom-right'){
-			let transformation = besogo.makeTransformation();
-		    transformation.hFlip = true;
-		    besogo.editor.applyTransformation(transformation);
-		    transformation = besogo.makeTransformation();
-		    transformation.vFlip = true;
-		    besogo.editor.applyTransformation(transformation);
-		}
-		globalSvg.setAttribute('viewBox', '0 0 ' + besogoBoardWidth + ' ' + besogoBoardHeight);
-		besogoCorner='top-left';
-	  });
-	  makeButtonText('top-right', 'top-right', function()
-	  {
-		if(besogoCorner==='top-left'){
-			let transformation = besogo.makeTransformation();
-			transformation.hFlip = true;
-			besogo.editor.applyTransformation(transformation);
-		}else if(besogoCorner==='top-right'){
-			//already there
-		}else if(besogoCorner==='bottom-left'){
-			let transformation = besogo.makeTransformation();
-		    transformation.hFlip = true;
-		    besogo.editor.applyTransformation(transformation);
-		    transformation = besogo.makeTransformation();
-		    transformation.vFlip = true;
-		    besogo.editor.applyTransformation(transformation);
-		}else if(besogoCorner==='bottom-right'){
-			let transformation = besogo.makeTransformation();
-			transformation.vFlip = true;
-			besogo.editor.applyTransformation(transformation);
-		}
-		globalSvg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + 0 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
-		besogoCorner='top-right';
-	  });
-	  makeButtonText('bottom-left', 'bottom-left', function()
-	  {
-		if(besogoCorner==='top-left'){
-			let transformation = besogo.makeTransformation();
-			transformation.vFlip = true;
-			besogo.editor.applyTransformation(transformation);
-		}else if(besogoCorner==='top-right'){
-			let transformation = besogo.makeTransformation();
-		    transformation.hFlip = true;
-		    besogo.editor.applyTransformation(transformation);
-		    transformation = besogo.makeTransformation();
-		    transformation.vFlip = true;
-		    besogo.editor.applyTransformation(transformation);
-		}else if(besogoCorner==='bottom-left'){
-			//already there
-		}else if(besogoCorner==='bottom-right'){
-			let transformation = besogo.makeTransformation();
-		    transformation.hFlip = true;
-		    besogo.editor.applyTransformation(transformation);
-		}
-		globalSvg.setAttribute('viewBox', 0 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
-		besogoCorner='bottom-left';
-	  });
-	  makeButtonText('bottom-right', 'bottom-right', function()
-	  {
-		if(besogoCorner==='top-left'){
-			let transformation = besogo.makeTransformation();
-		    transformation.hFlip = true;
-		    besogo.editor.applyTransformation(transformation);
-		    transformation = besogo.makeTransformation();
-		    transformation.vFlip = true;
-		    besogo.editor.applyTransformation(transformation);
-		}else if(besogoCorner==='top-right'){
-			let transformation = besogo.makeTransformation();
-			transformation.vFlip = true;
-			besogo.editor.applyTransformation(transformation);
-		}else if(besogoCorner==='bottom-left'){
-			let transformation = besogo.makeTransformation();
-		    transformation.hFlip = true;
-		    besogo.editor.applyTransformation(transformation);
-		}else if(besogoCorner==='bottom-right'){
-			//already there
-		}
-		globalSvg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
-		besogoCorner='bottom-right';
-	  });
+	  if(!besogoFullBoard){
+		  makeImageButton('/img/boardOrientationTL.png', 'top-left', 'boardOrientationTL', function()
+		  {
+			if(besogoCorner==='top-left'){
+				//already there
+			}else if(besogoCorner==='top-right'){
+				let transformation = besogo.makeTransformation();
+				transformation.hFlip = true;
+				besogo.editor.applyTransformation(transformation);
+			}else if(besogoCorner==='bottom-left'){
+				let transformation = besogo.makeTransformation();
+				transformation.vFlip = true;
+				besogo.editor.applyTransformation(transformation);
+			}else if(besogoCorner==='bottom-right'){
+				let transformation = besogo.makeTransformation();
+				transformation.hFlip = true;
+				besogo.editor.applyTransformation(transformation);
+				transformation = besogo.makeTransformation();
+				transformation.vFlip = true;
+				besogo.editor.applyTransformation(transformation);
+			}
+			globalSvg.setAttribute('viewBox', '0 0 ' + besogoBoardWidth + ' ' + besogoBoardHeight);
+			besogoCorner='top-left';
+		  });
+		  
+		  makeImageButton('/img/boardOrientationTR.png', 'top-right', 'boardOrientationTR', function()
+		  {
+			if(besogoCorner==='top-left'){
+				let transformation = besogo.makeTransformation();
+				transformation.hFlip = true;
+				besogo.editor.applyTransformation(transformation);
+			}else if(besogoCorner==='top-right'){
+				//already there
+			}else if(besogoCorner==='bottom-left'){
+				let transformation = besogo.makeTransformation();
+				transformation.hFlip = true;
+				besogo.editor.applyTransformation(transformation);
+				transformation = besogo.makeTransformation();
+				transformation.vFlip = true;
+				besogo.editor.applyTransformation(transformation);
+			}else if(besogoCorner==='bottom-right'){
+				let transformation = besogo.makeTransformation();
+				transformation.vFlip = true;
+				besogo.editor.applyTransformation(transformation);
+			}
+			globalSvg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + 0 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+			besogoCorner='top-right';
+		  });
+		  
+		  makeImageButton('/img/boardOrientationBL.png', 'bottom-left', 'boardOrientationBL', function()
+		  {
+			if(besogoCorner==='top-left'){
+				let transformation = besogo.makeTransformation();
+				transformation.vFlip = true;
+				besogo.editor.applyTransformation(transformation);
+			}else if(besogoCorner==='top-right'){
+				let transformation = besogo.makeTransformation();
+				transformation.hFlip = true;
+				besogo.editor.applyTransformation(transformation);
+				transformation = besogo.makeTransformation();
+				transformation.vFlip = true;
+				besogo.editor.applyTransformation(transformation);
+			}else if(besogoCorner==='bottom-left'){
+				//already there
+			}else if(besogoCorner==='bottom-right'){
+				let transformation = besogo.makeTransformation();
+				transformation.hFlip = true;
+				besogo.editor.applyTransformation(transformation);
+			}
+			globalSvg.setAttribute('viewBox', 0 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+			besogoCorner='bottom-left';
+		  });
+		  
+		  makeImageButton('/img/boardOrientationBR.png', 'bottom-right', 'boardOrientationBR', function()
+		  {
+			if(besogoCorner==='top-left'){
+				let transformation = besogo.makeTransformation();
+				transformation.hFlip = true;
+				besogo.editor.applyTransformation(transformation);
+				transformation = besogo.makeTransformation();
+				transformation.vFlip = true;
+				besogo.editor.applyTransformation(transformation);
+			}else if(besogoCorner==='top-right'){
+				let transformation = besogo.makeTransformation();
+				transformation.vFlip = true;
+				besogo.editor.applyTransformation(transformation);
+			}else if(besogoCorner==='bottom-left'){
+				let transformation = besogo.makeTransformation();
+				transformation.hFlip = true;
+				besogo.editor.applyTransformation(transformation);
+			}else if(besogoCorner==='bottom-right'){
+				//already there
+			}
+			globalSvg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+			besogoCorner='bottom-right';
+		  });
+	  }
+	  
+	  
 	  /*
 	  makeButtonText('H Flip', 'Flip horizontally', function()
 	  {
@@ -141,12 +147,13 @@ besogo.makeToolPanel = function(container, editor)
 		transformation.rotate = true;
 		editor.applyTransformation(transformation);
 	  });
+	  */
 	  
 	  makeButtonText('Back', 'Previous problem', function()
 	  {
 		if(prevButtonLink!=0) window.location.href = "/tsumegos/play/"+prevButtonLink;
 	  });
-	  */
+	  
 	  makeButtonText('Reset', 'Resets the problem', function()
 	  {
 		besogo.editor.prevNode(-1);
@@ -182,6 +189,8 @@ besogo.makeToolPanel = function(container, editor)
 			besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
 		}
 	  });
+	  
+	  makeAuthorText('author-notice');
 	//not defined?
     //reviewButton.disabled = true; 
   }
@@ -320,10 +329,6 @@ besogo.makeToolPanel = function(container, editor)
     return svg; // Returns reference to the icon container
   }
 
-	function test()
-  {
-	console.log('S');
-  }
   // Creates text button
   function makeButtonText(text, tip, callback)
   {
@@ -334,6 +339,27 @@ besogo.makeToolPanel = function(container, editor)
     button.onclick = callback;
     container.appendChild(button);
     return button;
+  }
+  
+   // Creates image button
+  function makeImageButton(src, tip, id, callback)
+  {
+    var img = document.createElement('img');
+    img.src = src;
+	img.title = tip;
+	img.id = id;
+    img.onclick = callback;
+    container.appendChild(img);
+    return img;
+  }
+	  
+  function makeAuthorText(id, name)
+  {
+	var div = document.createElement('div');
+	div.id = id;
+	container.appendChild(div);
+	$("#author-notice").text('File by '+author);
+	return div;
   }
 
   // Callback for updating tool state and label

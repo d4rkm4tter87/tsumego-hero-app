@@ -49,13 +49,9 @@ besogo.loadSgf = function(sgf, editor)
 			if(sgf.props[i].id=='AB' || sgf.props[i].id=='AW'){
 				var j;
 				for (j = 0; j < sgf.props[i].values.length; j++){
-					//console.log(sgf.props[i].values[j]);
 					point = lettersToCoords(sgf.props[i].values[j].slice(0, 2));
-					//console.log(point.x+" "+point.y);
 					if(scaleParameters['hFlip']) point.x = 19 - point.x + 1;
 					if(scaleParameters['vFlip']) point.y = 19 - point.y + 1;
-					//console.log(point.x+" "+point.y);
-					
 					checkScaleParameters('x', point.x);
 					checkScaleParameters('y', point.y);
 					
@@ -69,8 +65,10 @@ besogo.loadSgf = function(sgf, editor)
 		scaleParameters['distToY19'] = 19-scaleParameters['highestY'];
 	}
 	
-	if(scaleParameters['distToX19']<10 && scaleParameters['distToY19']<10) scaleParameters['orientation'] = 'full-board';
-	
+	if(scaleParameters['distToX19']<10 && scaleParameters['distToY19']<10){
+		scaleParameters['orientation'] = 'full-board';
+		besogoFullBoard = true;
+	}
 	//scaleParameters['orientation'] = 'full-board';
 	/*
 	console.log('orientation '+scaleParameters['orientation']);

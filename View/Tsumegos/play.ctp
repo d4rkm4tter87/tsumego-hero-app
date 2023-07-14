@@ -1740,7 +1740,9 @@
 	var file = "<?php echo $file; ?>";
 	var clearFile = "<?php echo $set['Set']['title'].' - '.$t['Tsumego']['num']; ?>";
 	var tsumegoFileLink = "<?php echo $t['Tsumego']['id']; ?>";
+	var author = "<?php echo $t['Tsumego']['author']; ?>";
 	var globalSvg = null;
+	var besogoFullBoard = false;
 	var besogoCorner = null;
 	var besogoFullBoardWidth = 0;
 	var besogoFullBoardHeight = 0;
@@ -2087,12 +2089,7 @@
 
 		?>
 		if(ui==2){
-			if(reviewEnabled){
-				$(".besogo-tsumegoPlayTool input:nth-last-child(1)").attr('id', 'besogo-tsumegoPlayTool-rButton');
-			}
-			//$(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('id', 'besogo-tsumegoPlayTool-rButton');
-			//$(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('class', 'besogo-tsumegoPlayTool-rButton2');
-			//if(nextButtonLink==0) $(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('class', 'besogo-tsumegoPlayTool-rButton2');
+			
 		}else{
 			if(reviewEnabled) $("#reviewButton").show();
 		}
@@ -3641,6 +3638,13 @@
 		document.head.appendChild(element);
 	  }
 	})();
+	
+			//$(".besogo-tsumegoPlayTool input:nth-last-child(1)").attr('id', 'besogo-tsumegoPlayTool-rButton');
+		
+		//$(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('id', 'besogo-tsumegoPlayTool-rButton');
+		//$(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('class', 'besogo-tsumegoPlayTool-rButton2');
+		//if(nextButtonLink==0) $(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('class', 'besogo-tsumegoPlayTool-rButton2');
+	
 	</script>
 	<?php } ?>
 	<style>

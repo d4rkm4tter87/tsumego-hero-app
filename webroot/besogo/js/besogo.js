@@ -507,10 +507,12 @@ function parseAndLoad(text, editor)
 		  let transformation = besogo.makeTransformation();
 		  transformation.hFlip = true;
 		  besogo.editor.applyTransformation(transformation);
+		  scaleParameters['orientation'] = 'top-right';
 	  }else if(corner=='bottom-left'){
 		  let transformation = besogo.makeTransformation();
 		  transformation.vFlip = true;
 		  besogo.editor.applyTransformation(transformation);
+		  scaleParameters['orientation'] = 'bottom-left';
 	  }else if(corner=='bottom-right'){
 		  let transformation = besogo.makeTransformation();
 		  transformation.hFlip = true;
@@ -518,6 +520,7 @@ function parseAndLoad(text, editor)
 		  transformation = besogo.makeTransformation();
 		  transformation.vFlip = true;
 		  besogo.editor.applyTransformation(transformation);
+		  scaleParameters['orientation'] = 'bottom-right';
 	  }
   }
   return scaleParameters;
