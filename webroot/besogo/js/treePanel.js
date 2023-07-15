@@ -9,16 +9,17 @@ besogo.makeTreePanel = function(container, editor) {
   rebuildNavTree();
   editor.addListener(treeUpdate);
 
-
   // Callback for handling tree changes
   function treeUpdate(msg)
   {
-    if (msg.treeChange) // Tree structure changed
-      rebuildNavTree(); // Rebuild entire tree
-    else if (msg.navChange) // Only navigation changed
-      updateCurrentMarker(); // Update current location marker
-    else if (msg.stoneChange) // Only stones in current changed
-      updateCurrentNodeIcon();
+	if(reviewEnabled){  
+		if (msg.treeChange) // Tree structure changed
+		  rebuildNavTree(); // Rebuild entire tree
+		else if (msg.navChange) // Only navigation changed
+		  updateCurrentMarker(); // Update current location marker
+		else if (msg.stoneChange) // Only stones in current changed
+		  updateCurrentNodeIcon();
+	}  
   }
 
   // Updates the current marker in the tree

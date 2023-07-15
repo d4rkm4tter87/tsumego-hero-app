@@ -3014,12 +3014,20 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		right: -143px;
 		margin-top: 14px;
 	}
-	
-	
-	
-	
-	
-	
+	#besogo-back-button-inactive{
+		background-color: #8f9092!important;
+		cursor:context-menu;
+	}
+	#besogo-next-button-inactive{
+		background-color: #8f9092!important;
+		cursor:context-menu;
+	}
+	#besogo-review-button{
+		background-color: #c63c3c!important
+	}
+	#besogo-review-button-inactive{
+		display:none;
+	}
 	
 	
 	

@@ -188,6 +188,7 @@
 		{
 		  resizer = function()
 		  {
+			  
 			var windowHeight = window.innerHeight, // Viewport height
 				// Calculated width of parent element
 				parentWidth = parseFloat(getComputedStyle(container.parentElement).width),
@@ -288,15 +289,7 @@
 
   // Sets dimensions with optional height param
   function setDimensions(width, height) {
-	    //height=390;
-	    //width=410;
-		//console.log('height '+height);
-		//console.log('width '+width);
-		//container.style['flex-direction'] = 'row';
-		//boardDiv.style.height = height + 'px';
-       // boardDiv.style.width = width + 'px';
-		
-		/*
+	  /*
         if (height && width > height) { // Landscape mode
             container.style['flex-direction'] = 'row';
             boardDiv.style.height = height + 'px';
@@ -315,10 +308,9 @@
                 }
                 panelsDiv.style.width = width + 'px';
             }
-        }
-		*/
+        }*/
     }
-
+	
     // Creates and adds divs to specified parent or container
     function makeDiv(className, parent) {
         var div = document.createElement("div");
@@ -501,7 +493,6 @@ function parseAndLoad(text, editor)
 		  besogo.editor.applyTransformation(transformation);
 	  }
 	  scaleParameters['orientation'] = 'top-left';
-	  console.log(corner);
 	  //if another corner than top-left is set
 	  if(corner=='top-right'){
 		  let transformation = besogo.makeTransformation();
@@ -522,6 +513,11 @@ function parseAndLoad(text, editor)
 		  besogo.editor.applyTransformation(transformation);
 		  scaleParameters['orientation'] = 'bottom-right';
 	  }
+  }
+  if(besogoPlayerColor=='white'){
+	  let transformation = besogo.makeTransformation();
+	  transformation.invertColors = true;
+	  besogo.editor.applyTransformation(transformation);
   }
   return scaleParameters;
 }

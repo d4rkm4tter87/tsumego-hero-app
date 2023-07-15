@@ -418,12 +418,13 @@ besogo.makeEditor = function(sizeX, sizeY)
   function navigate(x, y, shiftKey)
   {
     var children = current.children;
-
+	console.log("!");
     // Look for move across children
     for (let i = 0; i < children.length; i++)
     {
       let move = children[i].move;
-      if (shiftKey)  // Search for move in branch
+      //if (shiftKey)  // Search for move in branch
+	  if(false)
       {
         if (jumpToMove(x, y, children[i]))
           return true;
@@ -480,9 +481,11 @@ besogo.makeEditor = function(sizeX, sizeY)
   // Set allowAll to truthy to allow illegal moves
   function playMove(i, j, color, allowAll)
   {
+	  disableAutoplay = false;
     // Check if current node is immutable or root
     if (!current.isMutable('move') || !current.parent)
-    {
+    {	
+	  disableAutoplay = true;
       var next = current.makeChild(); // Create a new child node
       if (next.playMove(i, j, color, allowAll)) // Play in new node
       {
@@ -510,7 +513,8 @@ besogo.makeEditor = function(sizeX, sizeY)
       besogo.updateCorrectValues(current.getRoot());
       notifyListeners({ treeChange: true, stoneChange: true });
       edited = true;
-    }
+    }else{
+	}
   }
 
   // Places a setup stone at the given color and location

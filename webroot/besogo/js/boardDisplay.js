@@ -21,9 +21,10 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
       lastHoverPosition = null,
       TOUCH_FLAG = false; // Flag for touch interfaces
 
-		
-	  if(sizeX!=19) scaleParameters['orientation'] = 'full-board';
-
+	  if(sizeX!=19){
+		  scaleParameters['orientation'] = 'full-board';
+		  besogoFullBoard = true;
+	  }
 	var isEmbedded = typeof mode === "number"; //check if embedded in the website
 
   initializeBoard(editor.getCoordStyle()); // Initialize SVG element and draw the board
@@ -125,16 +126,6 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
         string = ""; // Path string for inner board lines
 	
     BOARD_MARGIN = (coord === 'none' ? 0 : COORD_MARGIN);
-	/*
-	console.log('lowestY '+scaleParameters['lowestY']);
-	console.log('lowestX '+scaleParameters['lowestX']);
-	console.log('highestX '+scaleParameters['highestX']);
-	console.log('highestY '+scaleParameters['highestY']);
-	console.log('distToX0 '+scaleParameters['distToX0']);
-	console.log('distToX19 '+scaleParameters['distToX19']);
-	console.log('distToY0 '+scaleParameters['distToY0']);
-	console.log('distToY19 '+scaleParameters['distToY19']);
-	*/
 	boardWidth = 2*BOARD_MARGIN + sizeX*CELL_SIZE;
     boardHeight = 2*BOARD_MARGIN + sizeY*CELL_SIZE;
 	
@@ -142,13 +133,13 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
 	let modifiedSizeY = scaleParameters['highestY'];
 	
 	//scaleParameters['orientation'] = 'full-board';
+	
 	if(scaleParameters['orientation']!=='full-board'){
 		if(!scaleParameters['hFlip'] && !scaleParameters['vFlip']) scaleParameters['orientation'] = 'top-left';
 		else if(scaleParameters['hFlip'] && !scaleParameters['vFlip']) scaleParameters['orientation'] = 'top-right';
 		else if(!scaleParameters['hFlip'] && scaleParameters['vFlip']) scaleParameters['orientation'] = 'bottom-left';
 		else if(scaleParameters['hFlip'] && scaleParameters['vFlip']) scaleParameters['orientation'] = 'bottom-right';
-		//console.log('curner '+scaleParameters['orientation']);
-		
+		/*
 		console.log('distToX0 '+scaleParameters['distToX0']);
 		console.log('distToX19 '+scaleParameters['distToX19']);
 		console.log('distToY0 '+scaleParameters['distToY0']);
@@ -157,21 +148,11 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
 		console.log('lowestX '+scaleParameters['lowestX']);
 		console.log('highestX '+scaleParameters['highestX']);
 		console.log('highestY '+scaleParameters['highestY']);
-		
+		*/
 		if(scaleParameters['highestX']>=10) scaleParameters['highestX'] = 19;
 		else scaleParameters['highestX'] += 3;
 		if(scaleParameters['highestY']>=10) scaleParameters['highestY'] = 19;
 		else scaleParameters['highestY'] += 3;
-		console.log('highestX '+scaleParameters['highestX']);
-		console.log('highestY '+scaleParameters['highestY']);
-		//let boardSizeX = 19-scaleParameters['distToX19']+4;
-		//let boardSizeY = 19-scaleParameters['distToY19']+4;
-		
-		//console.log('boardSizeX '+boardSizeX);
-		//console.log('boardSizeY '+boardSizeY);
-		
-		//if(boardSizeX>boardSizeY) boardSizeY = boardSizeX;
-		//else if(boardSizeX<boardSizeY) boardSizeX = boardSizeY;
 		
 		//sizeX = boardSizeX;
 		//sizeY = boardSizeY;
@@ -196,22 +177,12 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
 		besogoFullBoardWidth = 2*BOARD_MARGIN + 19*CELL_SIZE;
 		besogoFullBoardHeight = 2*BOARD_MARGIN + 19*CELL_SIZE;
 	}
-	/*
-	console.log('boardWidth '+boardWidth);
-	console.log('boardHeight '+boardHeight);
-	console.log('CELL_SIZE '+CELL_SIZE);
-	console.log('BOARD_MARGIN '+BOARD_MARGIN);
-	console.log('sizeX '+modifiedSizeX);
-	console.log('sizeY '+modifiedSizeY);
-	*/
     svg = besogo.svgEl("svg", { // Initialize the SVG element
         width: "100%",
         height: "100%",
-        viewBox: "0 0 " + boardWidth + " " + boardHeight
+        viewBox: "0 0 " + boardWidth + " " + boardHeight //top-left
     });
 	globalSvg = svg;
-	//svg.setAttribute('viewBox', '500 0 ' + 1300 + ' ' + 900);
-	
 	/*We prefer background images.
     svg.appendChild(besogo.svgEl("rect", { // Fill background color
         width: boardWidth,
@@ -221,15 +192,9 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
 	*/
 	besogoBoardWidth2 = besogoFullBoardWidth - besogoBoardWidth;
 	besogoBoardWidth3 = besogoFullBoardWidth - besogoBoardWidth2;
-	console.log('besogoBoardWidth2 '+besogoBoardWidth2);
-	console.log('besogoBoardWidth3 '+besogoBoardWidth3);
 	
 	besogoBoardHeight2 = besogoFullBoardWidth - besogoBoardHeight;
 	besogoBoardHeight3 = besogoFullBoardWidth - besogoBoardHeight2;
-	console.log('besogoBoardHeight2 '+besogoBoardHeight2);
-	console.log('besogoBoardHeight3 '+besogoBoardHeight3);
-	
-	//svg.setAttribute('viewBox', 955+'0'+' '+867+' '+besogoBoardHeight);
 	
 	if(corner==='top-right' && scaleParameters['orientation']!=='full-board'){
 		svg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + 0 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
@@ -398,7 +363,7 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
 		if(isEmbedded){//is embedded in Tsumego Hero
 			if(!reviewEnabled2){
 				setTimeout(function(){
-					if(isMutable) editor.nextNode(1);
+					if(isMutable && !disableAutoplay) editor.nextNode(1);
 				}, 360);
 			}
 		}

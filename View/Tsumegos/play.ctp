@@ -3,24 +3,24 @@
 	<link rel="stylesheet" type="text/css" href="/besogo/css/besogo.css">
 	<link rel="stylesheet" type="text/css" href="/besogo/css/board-flat.css">
 
-	<script src="/besogo/js/besogo.js"></script>
-	<script src="/besogo/js/transformation.js"></script>
-	<script src="/besogo/js/treeProblemUpdater.js"></script>
-	<script src="/besogo/js/nodeHashTable.js"></script>
-	<script src="/besogo/js/editor.js"></script>
-	<script src="/besogo/js/gameRoot.js"></script>
-	<script src="/besogo/js/status.js"></script>
-	<script src="/besogo/js/svgUtil.js"></script>
-	<script src="/besogo/js/parseSgf.js"></script>
-	<script src="/besogo/js/loadSgf.js"></script>
-	<script src="/besogo/js/saveSgf.js"></script>
-	<script src="/besogo/js/boardDisplay.js"></script>
-	<script src="/besogo/js/coord.js"></script>
-	<script src="/besogo/js/toolPanel.js"></script>
-	<script src="/besogo/js/filePanel.js"></script>
-	<script src="/besogo/js/controlPanel.js"></script>
-	<script src="/besogo/js/commentPanel.js"></script>
-	<script src="/besogo/js/treePanel.js"></script>
+	<script src="/besogo/js/besogo.js?v=1.1"></script>
+	<script src="/besogo/js/transformation.js?v=1.1"></script>
+	<script src="/besogo/js/treeProblemUpdater.js?v=1.1"></script>
+	<script src="/besogo/js/nodeHashTable.js?v=1.1"></script>
+	<script src="/besogo/js/editor.js?v=1.1"></script>
+	<script src="/besogo/js/gameRoot.js?v=1.1"></script>
+	<script src="/besogo/js/status.js?v=1.1"></script>
+	<script src="/besogo/js/svgUtil.js?v=1.1"></script>
+	<script src="/besogo/js/parseSgf.js?v=1.1"></script>
+	<script src="/besogo/js/loadSgf.js?v=1.1"></script>
+	<script src="/besogo/js/saveSgf.js?v=1.1"></script>
+	<script src="/besogo/js/boardDisplay.js?v=1.1"></script>
+	<script src="/besogo/js/coord.js?v=1.1"></script>
+	<script src="/besogo/js/toolPanel.js?v=1.1"></script>
+	<script src="/besogo/js/filePanel.js?v=1.1"></script>
+	<script src="/besogo/js/controlPanel.js?v=1.1"></script>
+	<script src="/besogo/js/commentPanel.js?v=1.1"></script>
+	<script src="/besogo/js/treePanel.js?v=1.1"></script>
 <?php } ?>
 <?php
 	$choice = array();
@@ -1752,8 +1752,11 @@
 	var besogoBoardHeight2 = 0;
 	var besogoBoardWidth3 = 0;
 	var besogoBoardHeight3 = 0;
-
+	var besogoPlayerColor = "black";
+	var disableAutoplay = false;
+	
 	<?php
+	if($pl==1) echo 'besogoPlayerColor = "white";';
 
 	if($authorx==$_SESSION['loggedInUser']['User']['name'] && $isSandbox) echo 'authorProblem = true;';
 	if($firstRanks!=0) echo 'document.cookie = "mode=3";';
@@ -2886,7 +2889,7 @@
 		whiteMoveAfterCorrect = false;
 		whiteMoveAfterCorrectI = 0;
 		whiteMoveAfterCorrectJ = 0;
-
+		disableAutoplay = false;
 		branch = "";
 		rw = false;
 		boardSize = 19;
@@ -3348,7 +3351,6 @@
 		<?php echo 'window.location.href = "/ranks/overview";'; ?>
 	}
 
-
 	function review(){
 		if(reviewEnabled){
 			hoverLocked = true;
@@ -3490,6 +3492,9 @@
 			if(mode==3) setReviewEnabled(true);
 			if(mode==3) runXPBar(true);
 			noLastMark = true;
+			
+			$("#besogo-review-button-inactive").attr("id","besogo-review-button");
+			
 			if(!noXP){
 				if(!doubleXP){
 					x2 = "<?php echo $score1; ?>";
@@ -3577,9 +3582,11 @@
 
 	function toggleBoardLock(t){
 		if(t){
+			let besogoBoardHeight = $('.besogo-board').height() + "px";
 			$("#targetLockOverlay").css("width", "633px");
-			$("#targetLockOverlay").css("height", "633px");
+			$("#targetLockOverlay").css("height", besogoBoardHeight);
 			$("#targetLockOverlay").css("z-index", "1000");
+			
 		}else{
 			$("#targetLockOverlay").css("width", "0");
 			$("#targetLockOverlay").css("height", "0");
@@ -3603,15 +3610,18 @@
 		options[value.shift()] = value.join("="); // First "=" separates value from name, rest are part of value
 	  }
 	  <?php 
-	  if($_SESSION['loggedInUser']['User']['isAdmin']>0) echo 'options.panels = "tree+control+tool+comment+file";';
+	  if($_SESSION['loggedInUser']['User']['isAdmin']>0) echo 'options.panels = "tree+control+tool";';//echo 'options.panels = "tree+control+tool+comment+file";';
 	  else 'options.panels = "tree+control";';
 	  ?> 
 	  options.tsumegoPlayTool = 'auto';
 	  options.realstones = true;
 	  options.nowheel = true;
 	  options.nokeys = true;
-	  //options.resize = 'auto';
-	  options.corner = 'bottom-right';
+	  
+	  const cornerArray = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
+	  shuffledCornerArray = cornerArray.sort((a, b) => 0.5 - Math.random());
+	  options.corner = shuffledCornerArray[0];
+	  
 	  besogoCorner = options.corner;
 	  options.theme = '<?php echo $choice[0][1]; ?>';
 	  options.themeParameters = ['<?php echo $choice[0][2]; ?>', '<?php echo $choice[0][3]; ?>'];

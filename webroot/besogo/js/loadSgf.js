@@ -69,20 +69,6 @@ besogo.loadSgf = function(sgf, editor)
 		scaleParameters['orientation'] = 'full-board';
 		besogoFullBoard = true;
 	}
-	//scaleParameters['orientation'] = 'full-board';
-	/*
-	console.log('orientation '+scaleParameters['orientation']);
-	console.log('hFlip '+scaleParameters['hFlip']);
-	console.log('vFlip '+scaleParameters['vFlip']);
-	console.log('lowestY '+scaleParameters['lowestY']);
-	console.log('lowestX '+scaleParameters['lowestX']);
-	console.log('highestX '+scaleParameters['highestX']);
-	console.log('highestY '+scaleParameters['highestY']);
-	console.log('distToX0 '+scaleParameters['distToX0']);
-	console.log('distToX19 '+scaleParameters['distToX19']);
-	console.log('distToY0 '+scaleParameters['distToY0']);
-	console.log('distToY19 '+scaleParameters['distToY19']);
-	*/
 	return scaleParameters;
 	
   // Loads the game tree
@@ -123,15 +109,12 @@ besogo.loadSgf = function(sgf, editor)
 		checkScaleParameters('x', move.x);
 	    checkScaleParameters('y', move.y);
         node.playMove(move.x, move.y, 1, true);
-		//console.log(move);
         break;
       case 'AB': // Setup black stones
         applyPointList(prop.values, node, setupFunc, -1);
-		//console.log("b");
         break;
       case 'AW': // Setup white stones
         applyPointList(prop.values, node, setupFunc, 1);
-		//console.log("w");
         break;
       case 'AE': // Setup empty stones
         applyPointList(prop.values, node, setupFunc, 0);
@@ -171,6 +154,7 @@ besogo.loadSgf = function(sgf, editor)
     }
   }
   
+  //checks the highest and lowest placed stones to decide what parts of the board are shown
   function checkScaleParameters(axis, value){
 	  if(axis==='x'){
 		if(value<scaleParameters['lowestX']) scaleParameters['lowestX'] = value; 

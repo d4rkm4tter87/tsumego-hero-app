@@ -149,10 +149,13 @@ besogo.makeToolPanel = function(container, editor)
 	  });
 	  */
 	  
+	  let prevButtonId;
+	  if(prevButtonLink!=0) prevButtonId = 'besogo-back-button';
+	  else prevButtonId = 'besogo-back-button-inactive';
 	  makeButtonText('Back', 'Previous problem', function()
 	  {
 		if(prevButtonLink!=0) window.location.href = "/tsumegos/play/"+prevButtonLink;
-	  });
+	  }, prevButtonId);
 	  
 	  makeButtonText('Reset', 'Resets the problem', function()
 	  {
@@ -166,11 +169,19 @@ besogo.makeToolPanel = function(container, editor)
 		$(".besogo-board").css("margin","0 315px");
 		besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
 		
-	  });
+	  }, 'besogo-reset-button');
+	  
+	  let nextButtonId;
+	  if(nextButtonLink!=0) nextButtonId = 'besogo-next-button';
+	  else nextButtonId = 'besogo-next-button-inactive';
 	  makeButtonText('Next', 'Next problem', function()
 	  {
 		if(nextButtonLink!=0) window.location.href = "/tsumegos/play/"+nextButtonLink;
-	  });
+	  }, nextButtonId);
+	  
+	  let reviewButtonId;
+	  if(reviewEnabled) reviewButtonId = 'besogo-review-button';
+	  else reviewButtonId = 'besogo-review-button-inactive';
 	  makeButtonText('Review', 'Review mode', function()
 	  {
 		if(reviewEnabled){
@@ -188,7 +199,7 @@ besogo.makeToolPanel = function(container, editor)
 			reviewEnabled2 = !reviewEnabled2;
 			besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
 		}
-	  });
+	  }, reviewButtonId);
 	  
 	  makeAuthorText('author-notice');
 	//not defined?
@@ -197,6 +208,7 @@ besogo.makeToolPanel = function(container, editor)
 
   function makeEditorToolButtons(container, editor)
   {
+	  /*
     svg = makeButtonSVG('auto', 'Auto-play/navigate\n' +
         'crtl+click to force ko, suicide, overwrite\n' +
         'shift+click to jump to move'); // Auto-play/nav tool button
@@ -291,6 +303,7 @@ besogo.makeToolPanel = function(container, editor)
       editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
       editor.edited = true;
     });
+	*/
   }
 
   // Creates a button holding an SVG image
@@ -330,12 +343,13 @@ besogo.makeToolPanel = function(container, editor)
   }
 
   // Creates text button
-  function makeButtonText(text, tip, callback)
+  function makeButtonText(text, tip, callback, id=null)
   {
     var button = document.createElement('input');
     button.type = 'button';
     button.value = text;
     button.title = tip;
+	if(id!==null) button.id = id;
     button.onclick = callback;
     container.appendChild(button);
     return button;
