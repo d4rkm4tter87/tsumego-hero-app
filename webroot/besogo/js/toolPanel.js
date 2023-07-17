@@ -49,6 +49,10 @@ besogo.makeToolPanel = function(container, editor)
 				besogo.editor.applyTransformation(transformation);
 			}
 			globalSvg.setAttribute('viewBox', '0 0 ' + besogoBoardWidth + ' ' + besogoBoardHeight);
+			$("#boardOrientationTL").css("opacity","1");
+			$("#boardOrientationTR").css("opacity",".62");
+			$("#boardOrientationBL").css("opacity",".62");
+			$("#boardOrientationBR").css("opacity",".62");
 			besogoCorner='top-left';
 		  });
 		  
@@ -73,6 +77,10 @@ besogo.makeToolPanel = function(container, editor)
 				besogo.editor.applyTransformation(transformation);
 			}
 			globalSvg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + 0 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+			$("#boardOrientationTL").css("opacity",".62");
+			$("#boardOrientationTR").css("opacity","1");
+			$("#boardOrientationBL").css("opacity",".62");
+			$("#boardOrientationBR").css("opacity",".62");
 			besogoCorner='top-right';
 		  });
 		  
@@ -97,6 +105,10 @@ besogo.makeToolPanel = function(container, editor)
 				besogo.editor.applyTransformation(transformation);
 			}
 			globalSvg.setAttribute('viewBox', 0 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+			$("#boardOrientationTL").css("opacity",".62");
+			$("#boardOrientationTR").css("opacity",".62");
+			$("#boardOrientationBL").css("opacity","1");
+			$("#boardOrientationBR").css("opacity",".62");
 			besogoCorner='bottom-left';
 		  });
 		  
@@ -121,6 +133,10 @@ besogo.makeToolPanel = function(container, editor)
 				//already there
 			}
 			globalSvg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+			$("#boardOrientationTL").css("opacity",".62");
+			$("#boardOrientationTR").css("opacity",".62");
+			$("#boardOrientationBL").css("opacity",".62");
+			$("#boardOrientationBR").css("opacity","1");
 			besogoCorner='bottom-right';
 		  });
 	  }

@@ -133,7 +133,7 @@
 	if($colorOrientation=='black') $pl = 0;
 	elseif($colorOrientation=='white') $pl = 1;
 	else $pl = rand(0,1);
-
+	
 	if($firstPlayer=='w' || $t['Tsumego']['set_id']==109 || $checkBSize!=19 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161) $pl=0;
 	if($pl==0){
 		$playerColor[0] = 'BLACK';
@@ -1299,6 +1299,7 @@
 	}
 	}
 	}
+	
 	//echo '<pre>';print_r($allUts);echo '</pre>';
 	//echo '<pre>'; print_r($nextMode); echo '</pre>';
 	//echo '<pre>'; print_r($nextMode3); echo '</pre>';
@@ -1658,15 +1659,6 @@
 	?>
 
 	<script type="text/javascript">
-
-  function setReviewEnabled(value)
-  {/*
-    if (ui==2)
-      besogo.editor.notifyListeners({ reviewEnabled: value});
-    else
-     if(value) $("#reviewButton").show();*/
-  }
-
 	var jrecordValue = 19;
 	<?php if($checkBSize!=19) echo 'jrecordValue = '.$checkBSize.';'; ?>
 	var jrecord = new JGO.Record(jrecordValue, jrecordValue);
@@ -2458,7 +2450,6 @@
 												if(mode==3) $("#time-mode-countdown").css("color","green");
 												if(mode==3) $("#reviewButton").show();
 												if(mode==3) $("#reviewButton-inactive").hide();
-												if(mode==3) setReviewEnabled(true);
 												if(mode==3) runXPBar(true);
 												noLastMark = true;
 												if(!isNaN("'.$masterArray[$i][4].'")){
@@ -2499,7 +2490,6 @@
 													if(mode==1) runXPBar(true);
 													if(mode==1) runXPNumber("account-bar-xp", userXP, xpReward, 1000, ulvl);
 													noXP = true;
-                          setReviewEnabled(true);
 												}else{
 													if(mode==1){
 														secondsy = seconds;
@@ -2564,7 +2554,6 @@
 													runXPBar(true);';
 													echo 'runXPNumber("account-bar-xp", '.$user['User']['elo_rating_mode'].', '.$elo2.', 1000, ulvl);';
 													echo 'noXP = true;
-                          setReviewEnabled(true);
 												}
 											}else ';
 										}
@@ -2879,7 +2868,13 @@
 	function reset(){
 		if(!tryAgainTomorrow) locked = false;
 		hoverLocked = false;
-		player = <?php echo 'JGO.'.$playerColor[1]; ?>;
+		<?php
+			if($ui!=2){
+				echo 'player = JGO.'.$playerColor[$whoPlays2].';';
+			}
+		?>
+		
+		//player = <?php echo 'JGO.'.$playerColor[$whoPlays2]; ?>;
 		opponent = (player == JGO.BLACK) ? JGO.WHITE : JGO.BLACK;
 		ko = false, lastMove = false;
 		lastHover = false, lastX = -1, lastY = -1;
@@ -3358,7 +3353,13 @@
 			if(!tryAgainTomorrow) locked = false;
 			freePlayMode = false;
 
-			player = <?php echo 'JGO.'.$playerColor[1]; ?>;
+			<?php
+				if($ui!=2){
+					echo 'player = JGO.'.$playerColor[$whoPlays2].';';
+				}
+			?>
+			
+			
 			opponent = (player == JGO.BLACK) ? JGO.WHITE : JGO.BLACK;
 			ko = false, lastMove = false;
 			lastHover = false, lastX = -1, lastY = -1;
@@ -3489,7 +3490,6 @@
 			if(mode==3) $("#time-mode-countdown").css("color","green");
 			if(mode==3) $("#reviewButton").show();
 			if(mode==3) $("#reviewButton-inactive").hide();
-			if(mode==3) setReviewEnabled(true);
 			if(mode==3) runXPBar(true);
 			noLastMark = true;
 			

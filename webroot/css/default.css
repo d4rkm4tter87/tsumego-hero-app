@@ -196,11 +196,6 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		border-top-right-radius: 20px;
 		border-top-left-radius: 20px;
 	}
-	@media screen and (max-width: 1110px) {
-	   #board{
-			width:1070px;
-		}
-	}
 	
 	.whitebox3{
 		width:776px;
@@ -2997,10 +2992,17 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.besogo-comment table{
 		display:none;
 	}
-	#colorOrientation, #boardOrientationTL, #boardOrientationTR, #boardOrientationBL, #boardOrientationBR{
+	#colorOrientation{
 		width:25px;
 		height:25px;
 		margin:12px 1px 0 1px;
+		cursor:pointer;
+	}
+	#boardOrientationTL, #boardOrientationTR, #boardOrientationBL, #boardOrientationBR{
+		width:25px;
+		height:25px;
+		margin:12px 1px 0 1px;
+		opacity:.62;
 		cursor:pointer;
 	}
 	#boardOrientationBR{
@@ -3023,12 +3025,17 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		cursor:context-menu;
 	}
 	#besogo-review-button{
-		background-color: #c63c3c!important
+		background-color: #c63c3c!important;
 	}
 	#besogo-review-button-inactive{
 		display:none;
 	}
-	
+	#besogo-next-button:hover, #besogo-reset-button:hover, #besogo-back-button:hover{
+		background-color:#737477!important;
+	}
+	#besogo-review-button:hover{
+		background-color:#cc6464!important
+	}
 	
 	
 	
@@ -3563,11 +3570,6 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 .img-8small { background-position: -57px -133px; width: 19px; height: 19px; }
 .img-9small { background-position: -76px -133px; width: 19px; height: 19px; }
 	
-@media screen and (max-width: 1110px){
-   #board{
-		width:1070px;
-	}
-}	
 	
 @media screen and (max-width: 1300px){
 	#heroProfile{left:935px;}

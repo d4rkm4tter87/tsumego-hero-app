@@ -283,8 +283,10 @@
 		  window.addEventListener("resize", resizer);
 		  resizer(); // Initial div sizing
 		}
-	  
-	  
+	  if(options.corner=='top-left') $("#boardOrientationTL").css("opacity","1");
+	  else if(options.corner=='top-right') $("#boardOrientationTR").css("opacity","1");
+	  else if(options.corner=='bottom-left') $("#boardOrientationBL").css("opacity","1");
+	  else if(options.corner=='bottom-right') $("#boardOrientationBR").css("opacity","1");
 	});
 
   // Sets dimensions with optional height param
