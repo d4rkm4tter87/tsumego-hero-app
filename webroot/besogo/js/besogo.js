@@ -52,6 +52,8 @@
 	  }
 	}
 	
+	
+	
     container.className += ' besogo-container'; // Marks this div as initialized
     // Process options and set defaults
     options = options || {}; // Makes option checking simpler
@@ -283,6 +285,9 @@
 		  window.addEventListener("resize", resizer);
 		  resizer(); // Initial div sizing
 		}
+		
+	  //globalTreePanel = tree;
+	  //besogo.editor.addListener(globalTreePanel.treeUpdate);
 	  if(options.corner=='top-left') $("#boardOrientationTL").css("opacity","1");
 	  else if(options.corner=='top-right') $("#boardOrientationTR").css("opacity","1");
 	  else if(options.corner=='bottom-left') $("#boardOrientationBL").css("opacity","1");

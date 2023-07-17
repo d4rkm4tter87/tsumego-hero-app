@@ -6,13 +6,13 @@ besogo.makeTreePanel = function(container, editor) {
       currentMarker,
       SCALE = 0.25; // Tree size scaling factor
 
-  rebuildNavTree();
+  if(reviewEnabled) rebuildNavTree();
   editor.addListener(treeUpdate);
 
   // Callback for handling tree changes
   function treeUpdate(msg)
   {
-	if(reviewEnabled){  
+	if(reviewEnabled){
 		if (msg.treeChange) // Tree structure changed
 		  rebuildNavTree(); // Rebuild entire tree
 		else if (msg.navChange) // Only navigation changed

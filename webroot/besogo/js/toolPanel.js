@@ -5,10 +5,9 @@ besogo.makeToolPanel = function(container, editor)
       svg, // Scratch for building SVG images
       labelText, // Text area for next label input
       selectors = {}; // Holds selection rects
-	  var reviewMode = false;
 	  var isEmbedded = typeof mode === "number"; //check if embedded in the website
 
-  var reviewMode = false;
+  var reviewMode = false;//might be removed
   var reviewButton = null;
   if (container.className == 'besogo-tsumegoPlayTool')
     makeReviewToolButtons(container, editor);
@@ -177,7 +176,7 @@ besogo.makeToolPanel = function(container, editor)
 	  {
 		besogo.editor.prevNode(-1);
 		toggleBoardLock(false);
-		reviewEnabled2 = false;
+		reviewModeActive = false;
 		reviewMode = false;
 		document.getElementById("status").innerHTML = "";
 		document.getElementById("theComment").style.cssText = "display:none;";
@@ -212,7 +211,7 @@ besogo.makeToolPanel = function(container, editor)
 				deleteNextMoveGroup = false;
 			}
 			reviewMode = !reviewMode;
-			reviewEnabled2 = !reviewEnabled2;
+			reviewModeActive = !reviewModeActive;
 			besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
 		}
 	  }, reviewButtonId);

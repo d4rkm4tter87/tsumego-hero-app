@@ -110,7 +110,7 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
       redrawMarkup(current);
 	  
 	  if(isEmbedded){
-		  if(reviewEnabled2) redrawNextMoves(current);
+		  if(reviewModeActive) redrawNextMoves(current);
 		  else redrawNextMoves(current, true);
 	  }else{
 		  redrawNextMoves(current);
@@ -361,7 +361,7 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
       if (!TOUCH_FLAG)
         (handleOver(i, j))(); // Ensures that any updated tool is visible
 		if(isEmbedded){//is embedded in Tsumego Hero
-			if(!reviewEnabled2){
+			if(!reviewModeActive){
 				setTimeout(function(){
 					if(isMutable && !disableAutoplay) editor.nextNode(1);
 				}, 360);

@@ -1721,7 +1721,7 @@
 	var whiteMoveAfterCorrect = false;
 	var whiteMoveAfterCorrectI = 0;
 	var whiteMoveAfterCorrectJ = 0;
-	var reviewEnabled2 = false;
+	var reviewModeActive = false;
 	var ui = <?php echo $ui; ?>;
 	var userXP = <?php echo $user['User']['xp']; ?>;
 	var prevButtonLink = <?php echo $prev; ?>;
@@ -1746,6 +1746,7 @@
 	var besogoBoardHeight3 = 0;
 	var besogoPlayerColor = "black";
 	var disableAutoplay = false;
+	var globalTreePanel = null;
 	
 	<?php
 	if($pl==1) echo 'besogoPlayerColor = "white";';
@@ -3492,6 +3493,7 @@
 			if(mode==3) $("#reviewButton-inactive").hide();
 			if(mode==3) runXPBar(true);
 			noLastMark = true;
+			reviewEnabled = true;
 			
 			$("#besogo-review-button-inactive").attr("id","besogo-review-button");
 			

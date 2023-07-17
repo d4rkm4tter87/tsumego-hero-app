@@ -386,7 +386,7 @@ besogo.makeEditor = function(sizeX, sizeY)
 		if(current.correct==true && current.correctSource==true){
 			setTimeout(function(){
 				toggleBoardLock(true);
-				if(!reviewEnabled2) displayResult('S');
+				if(!reviewModeActive) displayResult('S');
 			}, 360);
 		}
 	}
@@ -408,7 +408,7 @@ besogo.makeEditor = function(sizeX, sizeY)
     {
         setTimeout(function(){
 		    toggleBoardLock(true);
-			if(!reviewEnabled2) displayResult('S');
+			if(!reviewModeActive) displayResult('S');
 		}, 360);
     }
   }
@@ -418,7 +418,6 @@ besogo.makeEditor = function(sizeX, sizeY)
   function navigate(x, y, shiftKey)
   {
     var children = current.children;
-	console.log("!");
     // Look for move across children
     for (let i = 0; i < children.length; i++)
     {
@@ -499,7 +498,7 @@ besogo.makeEditor = function(sizeX, sizeY)
 		if(isEmbedded){
 			if(soundsEnabled) document.getElementsByTagName("audio")[0].play();
 			setTimeout(function(){
-				if(!reviewEnabled2) displayResult('F');
+				if(!reviewModeActive) displayResult('F');
 				if(mode==2 || mode==3) toggleBoardLock(true);
 			}, 360);
 		}
