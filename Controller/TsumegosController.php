@@ -683,7 +683,6 @@ class TsumegosController extends AppController{
 			array_push($mode3ScoreArray, $mode3Score4);
 		}
 		
-		
 		$favorite = $this->Favorite->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'tsumego_id' => $id)));
 		
 		if(isset($_COOKIE['favorite']) && $_COOKIE['favorite'] != '0'){
@@ -1523,7 +1522,7 @@ class TsumegosController extends AppController{
 			$requestProblem = '?v='.strlen($sgfx);
 		}
 		
-		//echo '<pre>'; print_r(); echo '</pre>';
+		//echo '<pre>'; print_r($favorite); echo '</pre>';
 		
 		$this->set('raName', $raName);
 		$this->set('crs', $crs);

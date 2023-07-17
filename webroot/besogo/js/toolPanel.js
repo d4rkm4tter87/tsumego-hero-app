@@ -20,7 +20,7 @@ besogo.makeToolPanel = function(container, editor)
 
   function makeReviewToolButtons(container, editor)
   {
-	  makeImageButton('/img/colorOrientation.png', 'Invert colors of all stones and moves.', 'colorOrientation', function()
+	  makeImageButton('/img/colorOrientation.png', 'change the color of your stones', 'colorOrientation', function()
 	  {
 		let transformation = besogo.makeTransformation();
 		transformation.invertColors = true;
@@ -138,6 +138,21 @@ besogo.makeToolPanel = function(container, editor)
 			$("#boardOrientationBR").css("opacity","1");
 			besogoCorner='bottom-right';
 		  });
+		  
+		  let favImage = '';
+		  if(!favorite) favImage = '/img/favButton.png';
+		  else favImage = '/img/favButtonActive.png';
+		  makeImageButton(favImage, 'mark as favorite', 'favButton', function()
+		  {
+			if(favImage=='/img/favButton.png'){
+				favImage = '/img/favButtonActive.png';
+				document.cookie = 'favorite=' + tsumegoFileLink;
+			}else{
+				favImage = '/img/favButton.png';
+				document.cookie = 'favorite=0';
+			}
+			$("#favButton").attr('src',favImage);
+		  });
 	  }
 	  
 	  
@@ -167,12 +182,12 @@ besogo.makeToolPanel = function(container, editor)
 	  let prevButtonId;
 	  if(prevButtonLink!=0) prevButtonId = 'besogo-back-button';
 	  else prevButtonId = 'besogo-back-button-inactive';
-	  makeButtonText('Back', 'Previous problem', function()
+	  makeButtonText('Back', 'previous problem', function()
 	  {
 		if(prevButtonLink!=0) window.location.href = "/tsumegos/play/"+prevButtonLink;
 	  }, prevButtonId);
 	  
-	  makeButtonText('Reset', 'Resets the problem', function()
+	  makeButtonText('Reset', 'reset the problem', function()
 	  {
 		besogo.editor.prevNode(-1);
 		toggleBoardLock(false);
@@ -189,7 +204,7 @@ besogo.makeToolPanel = function(container, editor)
 	  let nextButtonId;
 	  if(nextButtonLink!=0) nextButtonId = 'besogo-next-button';
 	  else nextButtonId = 'besogo-next-button-inactive';
-	  makeButtonText('Next', 'Next problem', function()
+	  makeButtonText('Next', 'next problem', function()
 	  {
 		if(nextButtonLink!=0) window.location.href = "/tsumegos/play/"+nextButtonLink;
 	  }, nextButtonId);
@@ -197,7 +212,7 @@ besogo.makeToolPanel = function(container, editor)
 	  let reviewButtonId;
 	  if(reviewEnabled) reviewButtonId = 'besogo-review-button';
 	  else reviewButtonId = 'besogo-review-button-inactive';
-	  makeButtonText('Review', 'Review mode', function()
+	  makeButtonText('Review', 'review mode', function()
 	  {
 		if(reviewEnabled){
 			if(!reviewMode){
@@ -205,12 +220,12 @@ besogo.makeToolPanel = function(container, editor)
 				$(".besogo-board").css("margin","0");
 				toggleBoardLock(false);
 				deleteNextMoveGroup = true;
+				besogo.editor.prevNode(-1);
 			}else{
 				$(".besogo-panels").css("display","none");
 				$(".besogo-board").css("margin","0 315px");
 				deleteNextMoveGroup = false;
 			}
-			besogo.editor.prevNode(-1);
 			reviewMode = !reviewMode;
 			reviewModeActive = !reviewModeActive;
 			besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });

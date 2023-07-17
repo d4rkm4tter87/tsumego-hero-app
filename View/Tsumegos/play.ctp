@@ -1747,6 +1747,7 @@
 	var besogoPlayerColor = "black";
 	var disableAutoplay = false;
 	var globalTreePanel = null;
+	var favorite = "<?php echo $favorite; ?>";
 	
 	<?php
 	if($pl==1) echo 'besogoPlayerColor = "white";';
