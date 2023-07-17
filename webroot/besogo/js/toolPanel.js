@@ -210,6 +210,7 @@ besogo.makeToolPanel = function(container, editor)
 				$(".besogo-board").css("margin","0 315px");
 				deleteNextMoveGroup = false;
 			}
+			besogo.editor.prevNode(-1);
 			reviewMode = !reviewMode;
 			reviewModeActive = !reviewModeActive;
 			besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
