@@ -570,6 +570,7 @@ class SetsController extends AppController{
 				$sortColor = $_COOKIE['sortColor'];
 				$_COOKIE['sortColor'] = 'null';
 				unset($_COOKIE['sortColor']);
+				unset($_COOKIE['sortColor']);
 			}
 			$this->User->save($u);
 
@@ -686,6 +687,7 @@ class SetsController extends AppController{
 		$refreshView = false;
 		$avgTime = 0;
 		$accuracy = 0;
+		$formChange = false;
 
 		if($id==161){
 			$x = 1;
@@ -694,32 +696,6 @@ class SetsController extends AppController{
 			for($i=0; $i<count($jo); $i++){
 				$t = $this->Tsumego->findById($jo[$i]['Joseki']['tsumego_id']);
 				$jo[$i]['Joseki']['num'] = $t['Tsumego']['num'];
-			}
-		}
-
-		if(isset($this->data['Tsumego'])){
-			$tf = array();
-			$tf['Tsumego']['num'] = $this->data['Tsumego']['num'];
-			$tf['Tsumego']['difficulty'] =  50;
-			$tf['Tsumego']['set_id'] =  $this->data['Tsumego']['set_id'];
-			$tf['Tsumego']['variance'] =  $this->data['Tsumego']['variance'];
-			$tf['Tsumego']['description'] =  $this->data['Tsumego']['description'];
-			$tf['Tsumego']['hint'] =  $this->data['Tsumego']['hint'];
-			$tf['Tsumego']['author'] =  $this->data['Tsumego']['author'];
-			if(is_numeric($this->data['Tsumego']['num'])){
-				if($this->data['Tsumego']['num']>=0){
-					$this->Tsumego->save($tf);
-				}
-			}
-			if($id==161){
-				$tx = $this->Tsumego->find('first', array('order' => 'id DESC'));
-				$this->Joseki->create();
-				$js = array();
-				$js['Joseki']['tsumego_id'] = $tx['Tsumego']['id'];
-				$js['Joseki']['type'] = $this->data['Tsumego']['type'];
-				$js['Joseki']['order'] = $this->data['Tsumego']['order'];
-				$js['Joseki']['thumbnail'] = $this->data['Tsumego']['thumb'];
-				$this->Joseki->save($js);
 			}
 		}
 
@@ -760,11 +736,8 @@ class SetsController extends AppController{
 		if($id!=1){
 			$set = $this->Set->find('first', array('conditions' =>  array('id' => $id)));
 			$ts = $this->Tsumego->find('all', array('order' => 'num',	'direction' => 'DESC', 'conditions' =>  array('set_id' => $id)));
-
-			for($i=0; $i<count($ts); $i++){
-				array_push($tsIds, $ts[$i]['Tsumego']['id']);
-			}
-
+			for($i=0; $i<count($ts); $i++) array_push($tsIds, $ts[$i]['Tsumego']['id']);
+			
 			if($set['Set']['public']==0) $_SESSION['page'] = 'sandbox';
 			$this->set('isFav', false);
 
@@ -833,6 +806,8 @@ class SetsController extends AppController{
 				}
 			}
 			if(isset($this->data['Set']['title'])){
+				if($set['Set']['title']!=$this->data['Set']['title']) $formChange = true;
+				if($set['Set']['title2']!=$this->data['Set']['title2']) $formChange = true;
 				$this->Set->create();
 				$changeSet = $set;
 				$changeSet['Set']['title'] = $this->data['Set']['title'];
@@ -842,6 +817,7 @@ class SetsController extends AppController{
 				$set = $this->Set->findById($id);
 			}
 			if(isset($this->data['Set']['description'])){
+				if($set['Set']['description']!=$this->data['Set']['description']) $formChange = true;
 				$this->Set->create();
 				$changeSet = $set;
 				$changeSet['Set']['description'] = $this->data['Set']['description'];
@@ -850,12 +826,42 @@ class SetsController extends AppController{
 				$set = $this->Set->findById($id);
 			}
 			if(isset($this->data['Set']['color'])){
+				if($set['Set']['color']!=$this->data['Set']['color']) $formChange = true;
 				$this->Set->create();
 				$changeSet = $set;
 				$changeSet['Set']['color'] = $this->data['Set']['color'];
 				$this->set('data', $changeSet['Set']['color']);
 				$this->Set->save($changeSet, true);
 				$set = $this->Set->findById($id);
+			}
+			if(isset($this->data['Tsumego'])){
+				if(!$formChange){
+					$tf = array();
+					$tf['Tsumego']['num'] = $this->data['Tsumego']['num'];
+					$tf['Tsumego']['difficulty'] =  50;
+					$tf['Tsumego']['set_id'] =  $this->data['Tsumego']['set_id'];
+					$tf['Tsumego']['variance'] =  $this->data['Tsumego']['variance'];
+					$tf['Tsumego']['description'] =  $this->data['Tsumego']['description'];
+					$tf['Tsumego']['hint'] =  $this->data['Tsumego']['hint'];
+					$tf['Tsumego']['author'] =  $this->data['Tsumego']['author'];
+					if(is_numeric($this->data['Tsumego']['num'])){
+						if($this->data['Tsumego']['num']>=0){
+							$this->Tsumego->save($tf);
+						}
+					}
+					if($id==161){
+						$tx = $this->Tsumego->find('first', array('order' => 'id DESC'));
+						$this->Joseki->create();
+						$js = array();
+						$js['Joseki']['tsumego_id'] = $tx['Tsumego']['id'];
+						$js['Joseki']['type'] = $this->data['Tsumego']['type'];
+						$js['Joseki']['order'] = $this->data['Tsumego']['order'];
+						$js['Joseki']['thumbnail'] = $this->data['Tsumego']['thumb'];
+						$this->Joseki->save($js);
+					}
+					$ts = $this->Tsumego->find('all', array('order' => 'num',	'direction' => 'DESC', 'conditions' =>  array('set_id' => $id)));
+					for($i=0; $i<count($ts); $i++) array_push($tsIds, $ts[$i]['Tsumego']['id']);
+				}
 			}
 		}else{
 			$allUts = $this->TsumegoStatus->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));

@@ -138,24 +138,22 @@ besogo.makeToolPanel = function(container, editor)
 			$("#boardOrientationBR").css("opacity","1");
 			besogoCorner='bottom-right';
 		  });
-		  
-		  let favImage = '';
-		  if(!favorite) favImage = '/img/favButton.png';
-		  else favImage = '/img/favButtonActive.png';
-		  makeImageButton(favImage, 'mark as favorite', 'favButton', function()
-		  {
-			if(favImage=='/img/favButton.png'){
-				favImage = '/img/favButtonActive.png';
-				document.cookie = 'favorite=' + tsumegoFileLink;
-			}else{
-				favImage = '/img/favButton.png';
-				document.cookie = 'favorite=0';
-			}
-			$("#favButton").attr('src',favImage);
-		  });
 	  }
 	  
-	  
+	  let favImage = '';
+	  if(!favorite) favImage = '/img/favButton.png';
+	  else favImage = '/img/favButtonActive.png';
+	  makeImageButton(favImage, 'mark as favorite', 'favButton', function()
+	  {
+		if(favImage=='/img/favButton.png'){
+			favImage = '/img/favButtonActive.png';
+			document.cookie = 'favorite=' + tsumegoFileLink;
+		}else{
+			favImage = '/img/favButton.png';
+			document.cookie = 'favorite=-' + tsumegoFileLink;
+		}
+		$("#favButton").attr('src',favImage);
+	  });
 	  /*
 	  makeButtonText('H Flip', 'Flip horizontally', function()
 	  {

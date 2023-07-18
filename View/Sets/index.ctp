@@ -13,7 +13,6 @@
 		if($sortOrder=='41') echo '<script src="/js/demos/adding-removing41.js"></script>';
 	}else echo '<script src="/js/demos/adding-removing00.js"></script>';
 	
-	
 		$active0 = '';
 		$active1 = '';
 		$active2 = '';

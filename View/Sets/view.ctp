@@ -103,7 +103,7 @@
 	
 	<div class="homeLeft">
 		<?php 
-		if($set['Set']['title2']==null) $set['Set']['title2'] = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+		//if($set['Set']['title2']==null) $set['Set']['title2'] = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 		echo '<p class="title4">'.$set['Set']['title'].'</p>';?>
 		<div class="new1">
 		<table border="0" width="100%">

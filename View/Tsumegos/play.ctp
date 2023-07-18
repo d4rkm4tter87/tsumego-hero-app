@@ -3,24 +3,24 @@
 	<link rel="stylesheet" type="text/css" href="/besogo/css/besogo.css">
 	<link rel="stylesheet" type="text/css" href="/besogo/css/board-flat.css">
 
-	<script src="/besogo/js/besogo.js?v=1.1"></script>
-	<script src="/besogo/js/transformation.js?v=1.1"></script>
-	<script src="/besogo/js/treeProblemUpdater.js?v=1.1"></script>
-	<script src="/besogo/js/nodeHashTable.js?v=1.1"></script>
-	<script src="/besogo/js/editor.js?v=1.1"></script>
-	<script src="/besogo/js/gameRoot.js?v=1.1"></script>
-	<script src="/besogo/js/status.js?v=1.1"></script>
-	<script src="/besogo/js/svgUtil.js?v=1.1"></script>
-	<script src="/besogo/js/parseSgf.js?v=1.1"></script>
-	<script src="/besogo/js/loadSgf.js?v=1.1"></script>
-	<script src="/besogo/js/saveSgf.js?v=1.1"></script>
-	<script src="/besogo/js/boardDisplay.js?v=1.1"></script>
-	<script src="/besogo/js/coord.js?v=1.1"></script>
-	<script src="/besogo/js/toolPanel.js?v=1.1"></script>
-	<script src="/besogo/js/filePanel.js?v=1.1"></script>
-	<script src="/besogo/js/controlPanel.js?v=1.1"></script>
-	<script src="/besogo/js/commentPanel.js?v=1.1"></script>
-	<script src="/besogo/js/treePanel.js?v=1.1"></script>
+	<script src="/besogo/js/besogo.js?v=1.2"></script>
+	<script src="/besogo/js/transformation.js?v=1.2"></script>
+	<script src="/besogo/js/treeProblemUpdater.js?v=1.2"></script>
+	<script src="/besogo/js/nodeHashTable.js?v=1.2"></script>
+	<script src="/besogo/js/editor.js?v=1.2"></script>
+	<script src="/besogo/js/gameRoot.js?v=1.2"></script>
+	<script src="/besogo/js/status.js?v=1.2"></script>
+	<script src="/besogo/js/svgUtil.js?v=1.2"></script>
+	<script src="/besogo/js/parseSgf.js?v=1.2"></script>
+	<script src="/besogo/js/loadSgf.js?v=1.2"></script>
+	<script src="/besogo/js/saveSgf.js?v=1.2"></script>
+	<script src="/besogo/js/boardDisplay.js?v=1.2"></script>
+	<script src="/besogo/js/coord.js?v=1.2"></script>
+	<script src="/besogo/js/toolPanel.js?v=1.3"></script>
+	<script src="/besogo/js/filePanel.js?v=1.2"></script>
+	<script src="/besogo/js/controlPanel.js?v=1.2"></script>
+	<script src="/besogo/js/commentPanel.js?v=1.2"></script>
+	<script src="/besogo/js/treePanel.js?v=1.2"></script>
 <?php } ?>
 <?php
 	$choice = array();
