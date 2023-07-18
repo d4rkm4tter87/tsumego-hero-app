@@ -934,17 +934,15 @@ class SetsController extends AppController{
 			for($i=0; $i<count($ts); $i++){
 				$urTemp = array();
 				$urSum = '';
-				$secondsUsed = false;
 				$ts[$i]['Tsumego']['seconds'] = 0;
 				for($j=0; $j<count($ur); $j++){
 					if($ts[$i]['Tsumego']['id'] == $ur[$j]['TsumegoAttempt']['tsumego_id']){
 						array_push($urTemp, $ur[$j]);
 
-						if($ur[$j]['TsumegoAttempt']['solved']=='S' && !$secondsUsed || $ur[$j]['TsumegoAttempt']['solved']==1 && !$secondsUsed){
+						if($ur[$j]['TsumegoAttempt']['solved']==1){
 							$ts[$i]['Tsumego']['seconds'] = $ur[$j]['TsumegoAttempt']['seconds'];
-							$secondsUsed = true;
 						}
-						if($ur[$j]['TsumegoAttempt']['solved']=='F' || $ur[$j]['TsumegoAttempt']['solved']==0){
+						if($ur[$j]['TsumegoAttempt']['solved']==0){
 							$mis = $ur[$j]['TsumegoAttempt']['misplays'];
 
 							if($mis==0) $mis=1;
@@ -956,6 +954,7 @@ class SetsController extends AppController{
 							$urSum.=$ur[$j]['TsumegoAttempt']['solved'];
 						}
 					}
+					
 				}
 				$ts[$i]['Tsumego']['performance'] = $urSum;
 			}
@@ -1022,15 +1021,12 @@ class SetsController extends AppController{
 			}
 
 			$pd = $this->ProgressDeletion->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
-			//echo '<pre>'; print_r($pd); echo '</pre>';
 			$pdCounter = 0;
 			for($i=0; $i<count($pd); $i++){
 				$date = date_create($pd[$i]['ProgressDeletion']['created']);
 				$pd[$i]['ProgressDeletion']['d'] = $date->format('Y').'-'.$date->format('m');
 				if(date('Y-m')==$pd[$i]['ProgressDeletion']['d']) $pdCounter++;
 			}
-			//echo '<pre>'; print_r($pd); echo '</pre>';
-			//echo $pdCounter;
 
 			$delNum = $pdCounter;
 
@@ -1046,7 +1042,7 @@ class SetsController extends AppController{
 				}
 				if($tss!=0) $urSecCounter++;
 
-				$pS = substr_count($ts[$i]['Tsumego']['performance'], 'S');
+				$pS = substr_count($ts[$i]['Tsumego']['performance'], '1');
 				$pF = substr_count($ts[$i]['Tsumego']['performance'], 'F');
 				$pSsum += $pS;
 				$pFsum += $pF;
@@ -1058,7 +1054,7 @@ class SetsController extends AppController{
 			$delNum = 5;
 			$scoring = false;
 		}
-
+		
 		$this->set('tfs', $tfs[0]);
 		$this->set('ts', $ts);
 		$this->set('set', $set);

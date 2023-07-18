@@ -845,6 +845,8 @@ class TsumegosController extends AppController{
 			unset($_COOKIE['misplay']);
 			unset($_COOKIE['sequence']);
 		}
+		
+		$correctSolveAttempt = false;
 		//Correct!
 		if(isset($_COOKIE['score']) && $_COOKIE['score'] != '0'){
 			$_COOKIE['score'] = $this->decrypt($_COOKIE['score']);
@@ -908,13 +910,13 @@ class TsumegosController extends AppController{
 							if(isset($_SESSION['loggedInUser']['User']['id'])){
 								$this->TsumegoAttempt->create();
 								$ur = array();
-								
 								$ur['TsumegoAttempt']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
 								$ur['TsumegoAttempt']['tsumego_id'] = $_COOKIE['preId'];
 								$ur['TsumegoAttempt']['gain'] = $_COOKIE['score'];
 								$ur['TsumegoAttempt']['seconds'] = $_COOKIE['seconds'];
 								$ur['TsumegoAttempt']['solved'] = '1';
 								$this->TsumegoAttempt->save($ur);
+								$correctSolveAttempt = true;
 							}
 						}
 						if(isset($_COOKIE['rank']) && $_COOKIE['rank'] != '0'){
@@ -1005,7 +1007,7 @@ class TsumegosController extends AppController{
 		}
 		
 		if(isset($_COOKIE['correctNoPoints']) && $_COOKIE['correctNoPoints'] != '0'){
-			if($u['User']['id']!=33){
+			if($u['User']['id']!=33 && !$correctSolveAttempt){
 				$this->TsumegoAttempt->create();
 				$ur = array();
 				$ur['TsumegoAttempt']['user_id'] = $_SESSION['loggedInUser']['User']['id'];

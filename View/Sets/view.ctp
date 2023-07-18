@@ -49,7 +49,7 @@
 				if($josekiOrder==0){
 					$num = $ts[$i]['Tsumego']['num'];
 					$num = '<div class="setViewButtons1">'.$num.'</div>';
-					$persormanceS = substr_count($ts[$i]['Tsumego']['performance'], 'S');
+					$persormanceS = substr_count($ts[$i]['Tsumego']['performance'], '1');
 					$persormanceF = substr_count($ts[$i]['Tsumego']['performance'], 'F');
 					if($persormanceS==0 && $persormanceF==0) $num2 = '-';
 					else $num2 = $persormanceS.'/'.$persormanceF;
