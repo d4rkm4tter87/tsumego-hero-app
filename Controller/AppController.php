@@ -758,6 +758,10 @@ class AppController extends Controller{
 				$_SESSION['loggedInUser']['User']['mode'] = 1;
 			}
 		}
+		unset($_COOKIE['sortColor']);
+		unset($_COOKIE['sortColor']);
+		unset($_COOKIE['sortOrder']);
+		unset($_COOKIE['sortOrder']);
 	}
 	
 }

@@ -628,6 +628,7 @@ class SetsController extends AppController{
 		$this->set('sortColor', $sortColor);
         $this->set('sets', $sets);
     }
+	
 	public function ui($id=null){
 		$s = $this->Set->findById($id);
 		$redirect = false;
