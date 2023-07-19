@@ -139,23 +139,11 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
 		else if(scaleParameters['hFlip'] && !scaleParameters['vFlip']) scaleParameters['orientation'] = 'top-right';
 		else if(!scaleParameters['hFlip'] && scaleParameters['vFlip']) scaleParameters['orientation'] = 'bottom-left';
 		else if(scaleParameters['hFlip'] && scaleParameters['vFlip']) scaleParameters['orientation'] = 'bottom-right';
-		/*
-		console.log('distToX0 '+scaleParameters['distToX0']);
-		console.log('distToX19 '+scaleParameters['distToX19']);
-		console.log('distToY0 '+scaleParameters['distToY0']);
-		console.log('distToY19 '+scaleParameters['distToY19']);
-		console.log('lowestY '+scaleParameters['lowestY']);
-		console.log('lowestX '+scaleParameters['lowestX']);
-		console.log('highestX '+scaleParameters['highestX']);
-		console.log('highestY '+scaleParameters['highestY']);
-		*/
+		
 		if(scaleParameters['highestX']>=10) scaleParameters['highestX'] = 19;
 		else scaleParameters['highestX'] += 3;
 		if(scaleParameters['highestY']>=10) scaleParameters['highestY'] = 19;
 		else scaleParameters['highestY'] += 3;
-		
-		//sizeX = boardSizeX;
-		//sizeY = boardSizeY;
 		
 		board_margin_x = BOARD_MARGIN - 75;
 		board_margin_y = BOARD_MARGIN - 75;

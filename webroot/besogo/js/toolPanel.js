@@ -155,58 +155,77 @@ besogo.makeToolPanel = function(container, editor)
 		$("#favButton").attr('src',favImage);
 	  });
 	  
-	  let prevButtonId;
-	  if(prevButtonLink!=0) prevButtonId = 'besogo-back-button';
-	  else prevButtonId = 'besogo-back-button-inactive';
-	  makeButtonText('Back', 'previous problem', function()
-	  {
-		if(prevButtonLink!=0) window.location.href = "/tsumegos/play/"+prevButtonLink;
-	  }, prevButtonId);
-	  
-	  makeButtonText('Reset', 'reset the problem', function()
-	  {
-		besogo.editor.prevNode(-1);
-		toggleBoardLock(false);
-		reviewModeActive = false;
-		reviewMode = false;
-		document.getElementById("status").innerHTML = "";
-		document.getElementById("theComment").style.cssText = "display:none;";
-		$(".besogo-panels").css("display","none");
-		$(".besogo-board").css("margin","0 315px");
-		besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
-		
-	  }, 'besogo-reset-button');
-	  
-	  let nextButtonId;
-	  if(nextButtonLink!=0) nextButtonId = 'besogo-next-button';
-	  else nextButtonId = 'besogo-next-button-inactive';
-	  makeButtonText('Next', 'next problem', function()
-	  {
-		if(nextButtonLink!=0) window.location.href = "/tsumegos/play/"+nextButtonLink;
-	  }, nextButtonId);
-	  
-	  let reviewButtonId;
-	  if(reviewEnabled) reviewButtonId = 'besogo-review-button';
-	  else reviewButtonId = 'besogo-review-button-inactive';
-	  makeButtonText('Review', 'review mode', function()
-	  { 
-		if(reviewEnabled){
-			if(!reviewMode){
-				$(".besogo-panels").css("display","flex");
-				$(".besogo-board").css("margin","0");
-				toggleBoardLock(false);
-				deleteNextMoveGroup = true;
-				besogo.editor.prevNode(-1);
-			}else{
-				$(".besogo-panels").css("display","none");
-				$(".besogo-board").css("margin","0 315px");
-				deleteNextMoveGroup = false;
-			}
-			reviewMode = !reviewMode;
-			reviewModeActive = !reviewModeActive;
+	  if(mode==1){
+		  let prevButtonId;
+		  if(prevButtonLink!=0) prevButtonId = 'besogo-back-button';
+		  else prevButtonId = 'besogo-back-button-inactive';
+		  makeButtonText('Back', 'previous problem', function()
+		  {
+			if(prevButtonLink!=0) window.location.href = "/tsumegos/play/"+prevButtonLink;
+		  }, prevButtonId);
+		  
+		  makeButtonText('Reset', 'reset the problem', function()
+		  {
+			besogo.editor.prevNode(-1);
+			toggleBoardLock(false);
+			reviewModeActive = false;
+			reviewMode = false;
+			document.getElementById("status").innerHTML = "";
+			document.getElementById("theComment").style.cssText = "display:none;";
+			$(".besogo-panels").css("display","none");
+			$(".besogo-board").css("margin","0 315px");
 			besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
-		}
-	  }, reviewButtonId);
+			
+		  }, 'besogo-reset-button');
+		  
+		  let nextButtonId;
+		  if(nextButtonLink!=0) nextButtonId = 'besogo-next-button';
+		  else nextButtonId = 'besogo-next-button-inactive';
+		  makeButtonText('Next', 'next problem', function()
+		  {
+			if(nextButtonLink!=0) window.location.href = "/tsumegos/play/"+nextButtonLink;
+		  }, nextButtonId);
+	  }else if(mode==2){
+		  makeButtonText('History', 'history of rating mode', function()
+		  {
+			window.location.href = "/tsumego_rating_attempts/user/"+besogoUserId;
+		  }, 'history-button');
+		  
+		  makeButtonText('Next', 'next problem', function()
+		  {
+			if(besogoMode2Solved) window.location.href = "/tsumegos/play/"+nextButtonLink;
+		  }, 'besogo-next-button-inactive');
+	  }else if(mode==3){
+		  makeButtonText('Next', 'next problem', function()
+		  {
+			window.location.href = "/tsumegos/play/"+besogoMode3Next;
+		  }, 'besogo-next-button');
+	  }
+	  
+	  if(mode==1||mode==3){
+		  let reviewButtonId;
+		  if(reviewEnabled) reviewButtonId = 'besogo-review-button';
+		  else reviewButtonId = 'besogo-review-button-inactive';
+		  makeButtonText('Review', 'review mode', function()
+		  {
+			if(reviewEnabled){
+				if(!reviewMode){
+					$(".besogo-panels").css("display","flex");
+					$(".besogo-board").css("margin","0");
+					toggleBoardLock(false);
+					deleteNextMoveGroup = true;
+					besogo.editor.prevNode(-1);
+				}else{
+					$(".besogo-panels").css("display","none");
+					$(".besogo-board").css("margin","0 315px");
+					deleteNextMoveGroup = false;
+				}
+				reviewMode = !reviewMode;
+				reviewModeActive = !reviewModeActive;
+				besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+			}
+		  }, reviewButtonId);
+	}
 	  
 	  makeAuthorText('author-notice');
 	//not defined?

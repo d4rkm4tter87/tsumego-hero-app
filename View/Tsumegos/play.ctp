@@ -1748,14 +1748,21 @@
 	var disableAutoplay = false;
 	var globalTreePanel = null;
 	var favorite = "<?php echo $favorite; ?>";
+	var besogoMode2Solved = false;
+	
 	
 	<?php
+	if(isset($_SESSION['loggedInUser'])){
+		echo 'var besogoUserId = '.$_SESSION['loggedInUser']['User']['id'].';';
+	}
+	
 	if($pl==1) echo 'besogoPlayerColor = "white";';
 
 	if($authorx==$_SESSION['loggedInUser']['User']['name'] && $isSandbox) echo 'authorProblem = true;';
 	if($firstRanks!=0) echo 'document.cookie = "mode=3";';
 	if($mode==3){
 		echo 'seconds = 0.0;';
+		echo 'var besogoMode3Next = '.$next.';';
 	}
 		echo '
 		';
@@ -3545,6 +3552,9 @@
 				$("#commentSpace").show();
 				locked = true;
 				noLastMark = true;
+				besogoMode2Solved = true;
+				$("#besogo-review-button-inactive").attr("id","besogo-review-button");
+				$("#besogo-next-button-inactive").attr("id","besogo-next-button");
 				if(!noXP){
 					sequence += "correct|";
 					updateCookie("score=","<?php echo $score3; ?>");
@@ -3602,11 +3612,13 @@
 						if(mode==1) updateHealth();
 					}
 					freePlayMode = true;
-					if(<?php echo $user['User']['health'] - $user['User']['damage']; ?> - misplays<0){
-						document.getElementById("currentElement").style.backgroundColor = "#e03c4b";
-						document.getElementById("status").innerHTML = "<h2>Try again tomorrow</h2>";
-						tryAgainTomorrow = true;
-						//locked = true;
+					if(mode==1){
+						if(<?php echo $user['User']['health'] - $user['User']['damage']; ?> - misplays<0){
+							document.getElementById("currentElement").style.backgroundColor = "#e03c4b";
+							document.getElementById("status").innerHTML = "<h2>Try again tomorrow</h2>";
+							tryAgainTomorrow = true;
+							//locked = true;
+						}
 					}
 					if(goldenTsumego){
 						document.cookie = "refinement=-1";
@@ -3715,6 +3727,7 @@
 	
 			//$(".besogo-tsumegoPlayTool input:nth-last-child(1)").attr('id', 'besogo-tsumegoPlayTool-rButton');
 		
+		if(mode==2) $("#targetLockOverlay").css('top', '235px');
 		//$(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('id', 'besogo-tsumegoPlayTool-rButton');
 		//$(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('class', 'besogo-tsumegoPlayTool-rButton2');
 		//if(nextButtonLink==0) $(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('class', 'besogo-tsumegoPlayTool-rButton2');

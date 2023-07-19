@@ -384,6 +384,7 @@ besogo.makeEditor = function(sizeX, sizeY)
 	if(isEmbedded){
 		if(soundsEnabled) document.getElementsByTagName("audio")[0].play();
 		if(current.correct==true && current.correctSource==true){
+			console.log("current.correct==true");
 			setTimeout(function(){
 				toggleBoardLock(true);
 				if(!reviewModeActive){
@@ -397,6 +398,7 @@ besogo.makeEditor = function(sizeX, sizeY)
 
   function navigateToNode(node)
   {
+	console.log("navigateToNode");
     current = node; // Navigate to child if found
     notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
     if(autoPlay){
@@ -483,14 +485,18 @@ besogo.makeEditor = function(sizeX, sizeY)
   // Set allowAll to truthy to allow illegal moves
   function playMove(i, j, color, allowAll)
   {
-	  disableAutoplay = false;
+	disableAutoplay = false;
+	allowAll = false;
     // Check if current node is immutable or root
+	console.log("1");
     if (!current.isMutable('move') || !current.parent)
-    {	
+    {
+	console.log("2");
 	  disableAutoplay = true;
       var next = current.makeChild(); // Create a new child node
       if (next.playMove(i, j, color, allowAll)) // Play in new node
       {
+		console.log("3");  
         // Keep (add to game state tree) only if move succeeds
         current.registerChild(next);
         current = next;
@@ -511,12 +517,12 @@ besogo.makeEditor = function(sizeX, sizeY)
     else if (current.playMove(i, j, color, allowAll))
     { // Play in current
         // Only need to update if move succeeds
+		console.log("4");
       current.registerInVirtualMoves();
       besogo.updateCorrectValues(current.getRoot());
       notifyListeners({ treeChange: true, stoneChange: true });
       edited = true;
-    }else{
-	}
+    }
   }
 
   // Places a setup stone at the given color and location

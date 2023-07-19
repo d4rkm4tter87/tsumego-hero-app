@@ -91,6 +91,14 @@
 			</li>
 			<br><br>
 		</div>
+		<p class="title4">New Collection: French Go Review</p>
+		<div class="new1">
+			The french Go review is a magazine published currently 3 times a year which started in 1979. The first issue for 2023 is N° 158. In each issue, some tsumego or tesuji 
+			problems are proposed with several levels : beginner, intermediate and advanced. Many problems were proposed by Fan Hui, 2 Dan professional. <br><br>
+			<div align="center"><img width="95%" src="/img/french-go-review-promotion.png">
+			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/192">Play</a><br><br></div>
+		</div>
 		<p class="title4">New Collection: 4x4 problems</p>
 		<div class="new1">
 			This collection features problems on a 4x4 board.<br><br>
@@ -98,14 +106,7 @@
 			
 			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/191">Play</a><br><br></div>
 		</div>
-		<p class="title4">New Collection: 1000 Weiqi problems</p>
-		<div class="new1">
-			1000 Weiqi problems is a Chinese tsumego & tesuji book published in 2000. It is 385-pages in length with 1000-problems & solutions. The problems are 
-			categorized into two main sections: tsumego and tesuji; then further broken into 10 and 15 thematic subsections respectively.<br><br>
-			<div align="center"><img width="95%" src="/img/1001weiqi-home.png">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/190">Play</a><br><br></div>
-		</div>
+		
 		<p class="title4">Update 18.06.2023</p>
 		<div class="new1">
 			<b>The website is faster now!</b><br><br>
