@@ -1749,6 +1749,7 @@
 	var globalTreePanel = null;
 	var favorite = "<?php echo $favorite; ?>";
 	var besogoMode2Solved = false;
+	var disableAutoplay = false;
 	
 	
 	<?php

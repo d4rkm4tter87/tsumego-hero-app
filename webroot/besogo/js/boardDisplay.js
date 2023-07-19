@@ -205,7 +205,7 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
       string += "M" + svgPos(1) + "," + svgPos(i) + "h" + CELL_SIZE*(sizeX - 1);
     for (let i = 2; i <= (sizeX - 1); i++) // Vertical inner lines
       string += "M" + svgPos(i) + "," + svgPos(1) + "v" + CELL_SIZE*(sizeY - 1);
-    //console.log(string);
+	  
 	svg.appendChild( besogo.svgEl("path", { // Draw inner lines of board
         d: string,
         'class': 'besogo-svg-lines'
@@ -329,7 +329,8 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
         });
 
         // Add event listeners, using closures to decouple (i, j)
-        element.addEventListener("click", handleClick(i, j));
+		// no event listeners if there is a stone
+		if(editor.getCurrent().getStone(i, j) == 0) element.addEventListener("click", handleClick(i, j));
 
         if (!TOUCH_FLAG) { // Skip hover listeners for touch interfaces
             element.addEventListener("mouseover", handleOver(i, j));

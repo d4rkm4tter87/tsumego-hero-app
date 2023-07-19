@@ -382,16 +382,19 @@ besogo.makeEditor = function(sizeX, sizeY)
         break;
     }
 	if(isEmbedded){
-		if(soundsEnabled) document.getElementsByTagName("audio")[0].play();
-		if(current.correct==true && current.correctSource==true){
-			console.log("current.correct==true");
-			setTimeout(function(){
-				toggleBoardLock(true);
-				if(!reviewModeActive){
-					displayResult('S');
-					notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
-				}
-			}, 360);
+		if(!disableAutoplay){
+			console.log("further click");
+			if(soundsEnabled) document.getElementsByTagName("audio")[0].play();
+			if(current.correct==true && current.correctSource==true){
+				console.log("current.correct==true");
+				setTimeout(function(){
+					toggleBoardLock(true);
+					if(!reviewModeActive){
+						displayResult('S');
+						notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+					}
+				}, 360);
+			}
 		}
 	}
   }
@@ -488,15 +491,12 @@ besogo.makeEditor = function(sizeX, sizeY)
 	disableAutoplay = false;
 	allowAll = false;
     // Check if current node is immutable or root
-	console.log("1");
     if (!current.isMutable('move') || !current.parent)
     {
-	console.log("2");
 	  disableAutoplay = true;
       var next = current.makeChild(); // Create a new child node
       if (next.playMove(i, j, color, allowAll)) // Play in new node
-      {
-		console.log("3");  
+      { 
         // Keep (add to game state tree) only if move succeeds
         current.registerChild(next);
         current = next;
@@ -523,6 +523,7 @@ besogo.makeEditor = function(sizeX, sizeY)
       notifyListeners({ treeChange: true, stoneChange: true });
       edited = true;
     }
+	
   }
 
   // Places a setup stone at the given color and location
