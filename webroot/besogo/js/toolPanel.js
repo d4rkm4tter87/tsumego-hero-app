@@ -154,28 +154,6 @@ besogo.makeToolPanel = function(container, editor)
 		}
 		$("#favButton").attr('src',favImage);
 	  });
-	  /*
-	  makeButtonText('H Flip', 'Flip horizontally', function()
-	  {
-		let transformation = besogo.makeTransformation();
-		transformation.hFlip = true;
-		besogo.editor.applyTransformation(transformation);
-		//globalSvg.setAttribute('viewBox', '200 0 ' + 1700 + ' ' + 700);
-	  });
-	  makeButtonText('V Flip', 'Flip vertically', function()
-	  {
-		let transformation = besogo.makeTransformation();
-		transformation.vFlip = true;
-		besogo.editor.applyTransformation(transformation);
-	  });
-	  
-	  makeButtonText('Rotate', 'Rotate the board clockwise', function()
-	  {
-		let transformation = besogo.makeTransformation();
-		transformation.rotate = true;
-		editor.applyTransformation(transformation);
-	  });
-	  */
 	  
 	  let prevButtonId;
 	  if(prevButtonLink!=0) prevButtonId = 'besogo-back-button';
@@ -211,7 +189,7 @@ besogo.makeToolPanel = function(container, editor)
 	  if(reviewEnabled) reviewButtonId = 'besogo-review-button';
 	  else reviewButtonId = 'besogo-review-button-inactive';
 	  makeButtonText('Review', 'review mode', function()
-	  {
+	  { 
 		if(reviewEnabled){
 			if(!reviewMode){
 				$(".besogo-panels").css("display","flex");

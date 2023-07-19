@@ -386,7 +386,10 @@ besogo.makeEditor = function(sizeX, sizeY)
 		if(current.correct==true && current.correctSource==true){
 			setTimeout(function(){
 				toggleBoardLock(true);
-				if(!reviewModeActive) displayResult('S');
+				if(!reviewModeActive){
+					displayResult('S');
+					notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+				}
 			}, 360);
 		}
 	}

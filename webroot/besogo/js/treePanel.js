@@ -19,7 +19,9 @@ besogo.makeTreePanel = function(container, editor) {
 		  updateCurrentMarker(); // Update current location marker
 		else if (msg.stoneChange) // Only stones in current changed
 		  updateCurrentNodeIcon();
-	}  
+	}else{
+		//if(pressedReviewButton) rebuildNavTree();
+	}
   }
 
   // Updates the current marker in the tree
