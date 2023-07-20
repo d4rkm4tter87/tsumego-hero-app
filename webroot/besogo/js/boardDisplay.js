@@ -109,7 +109,7 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
   {
     redrawStones(current);
     redrawMarkup(current);
-    redrawNextMoves(current, isEmbedded && !editor.reviewMode);
+    redrawNextMoves(current, isEmbedded && !editor.getReviewMode());
     redrawHover(current);
   }
 
