@@ -38,9 +38,9 @@ besogo.makeEditor = function(sizeX, sizeY, options)
       reviewEnabled = true;
       var isEmbedded = typeof mode === "number"; //check if embedded in the website
 
-    if (typeof options.reviewMode === 'bool')
+    if (typeof options.reviewMode === 'boolean')
       reviewMode = options.reviewMode;
-    if (typeof options.reviewEnabled === 'bool')
+    if (typeof options.reviewEnabled === 'boolean')
       reviewEnabled = options.reviewEnabled;
 
   return {

@@ -3719,11 +3719,11 @@
 		//addStyleLink('css/board-' + options.theme + '.css');
 	  if (options.height && options.width && options.resize === 'fixed')
 	  {
-		div.style.height = options.height + 'px';
-		div.style.width = options.width + 'px';
+		  div.style.height = options.height + 'px';
+		  div.style.width = options.width + 'px';
 	  }
     options.reviewMode = false;
-    options.reviewEnabled = false; // should be true when it is solved
+    options.reviewEnabled = <?php echo $reviewEnabled ? 'true' : 'false'; ?>;
 	  besogo.create(div, options);
     besogo.editor.setAutoPlay(true);
 
