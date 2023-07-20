@@ -61,7 +61,7 @@ class TsumegosController extends AppController{
 		$mode3ScoreArray = array();
 		$trs = array();
 		$potionAlert = false;
-		$ui = 1;
+		$ui = 2;
 		$eloScore = 0;
 		$range2 = array();
 		$requestProblem = '';
@@ -1492,7 +1492,7 @@ class TsumegosController extends AppController{
 			if(!isset($_SESSION['loggedInUser']['User']['id']) && isset($_SESSION['loggedInUser']['User']['premium'])){
 				unset($_SESSION['loggedInUser']);
 			}
-			if($_SESSION['loggedInUser']['User']['isAdmin']<1) $ui = 1;
+			if($_SESSION['loggedInUser']['User']['isAdmin']<1) $ui = 2;
 		}
 		
 		$admins = $this->User->find('all', array('conditions' => array('isAdmin' => 1)));

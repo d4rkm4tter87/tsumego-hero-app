@@ -140,20 +140,22 @@ besogo.makeToolPanel = function(container, editor)
 		  });
 	  }
 	  
-	  let favImage = '';
-	  if(!favorite) favImage = '/img/favButton.png';
-	  else favImage = '/img/favButtonActive.png';
-	  makeImageButton(favImage, 'mark as favorite', 'favButton', function()
-	  {
-		if(favImage=='/img/favButton.png'){
-			favImage = '/img/favButtonActive.png';
-			document.cookie = 'favorite=' + tsumegoFileLink;
-		}else{
-			favImage = '/img/favButton.png';
-			document.cookie = 'favorite=-' + tsumegoFileLink;
-		}
-		$("#favButton").attr('src',favImage);
-	  });
+	  if(!besogoNoLogin){
+		  let favImage = '';
+		  if(!favorite) favImage = '/img/favButton.png';
+		  else favImage = '/img/favButtonActive.png';
+		  makeImageButton(favImage, 'mark as favorite', 'favButton', function()
+		  {
+			if(favImage=='/img/favButton.png'){
+				favImage = '/img/favButtonActive.png';
+				document.cookie = 'favorite=' + tsumegoFileLink;
+			}else{
+				favImage = '/img/favButton.png';
+				document.cookie = 'favorite=-' + tsumegoFileLink;
+			}
+			$("#favButton").attr('src',favImage);
+		  });
+	  } 
 	  
 	  if(mode==1){
 		  let prevButtonId;

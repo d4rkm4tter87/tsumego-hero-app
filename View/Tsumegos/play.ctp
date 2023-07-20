@@ -100,7 +100,7 @@
 	else if($goldenTsumego) echo '<script type="text/javascript" src="/'.$boardSize.'/board46.js"></script>'; //Golden
 	else if($t['Tsumego']['set_id']==6473) echo '<script type="text/javascript" src="/'.$boardSize.'/board55.js"></script>'; //Tsumego Grandmaster
 	else echo '<script type="text/javascript" src="/'.$boardSize.'/board'.$choice[0][0].'.js"></script>'; // Regular
-	if($ui==2){ 
+	if($ui==2){
 		if($t['Tsumego']['set_id']==11969) $choice[0] = $boardPositions[44]; //Pretty Area
 		else if($t['Tsumego']['set_id']==29156) $choice[0] = $boardPositions[45]; //Hunting
 		else if($t['Tsumego']['set_id']==31813) $choice[0] = $boardPositions[46]; //The Ghost
@@ -1283,13 +1283,13 @@
 			<table>
 			<tr>
 			<td>
-			<div class="modeSwitcher" id="modeSwitcher1" onmouseover="m1hover()" onmouseout="m1noHover()">
-				<input type="radio" id="ms1" name="ms" value="1" onchange="modeCheckbox(1);">
-				<label for="ms1">jGoBoard</label>
-			</div>
 			<div class="modeSwitcher" id="modeSwitcher2" onmouseover="m2hover()" onmouseout="m2noHover()">
 				<input type="radio" id="ms2" name="ms" value="2" onchange="modeCheckbox(2);">
 				<label for="ms2">BesoGo</label>
+			</div>
+			<div class="modeSwitcher" id="modeSwitcher1" onmouseover="m1hover()" onmouseout="m1noHover()">
+				<input type="radio" id="ms1" name="ms" value="1" onchange="modeCheckbox(1);">
+				<label for="ms1">jGoBoard</label>
 			</div>
 			</td>
 			</tr>
@@ -1750,11 +1750,16 @@
 	var favorite = "<?php echo $favorite; ?>";
 	var besogoMode2Solved = false;
 	var disableAutoplay = false;
+	var besogoNoLogin = false;
 	
 	
 	<?php
-	if(isset($_SESSION['loggedInUser'])){
+	
+	
+	if(isset($_SESSION['loggedInUser']['User']['id'])){
 		echo 'var besogoUserId = '.$_SESSION['loggedInUser']['User']['id'].';';
+	}else{
+		echo 'besogoNoLogin = true;';
 	}
 	
 	if($pl==1) echo 'besogoPlayerColor = "white";';
@@ -3687,9 +3692,11 @@
 		value = params[i].split("="); // Splits on all "=" symbols
 		options[value.shift()] = value.join("="); // First "=" separates value from name, rest are part of value
 	  }
+	  
+	  options.panels = "tree+control+tool";
 	  <?php 
 	  if($_SESSION['loggedInUser']['User']['isAdmin']>0) echo 'options.panels = "tree+control+tool";';//echo 'options.panels = "tree+control+tool+comment+file";';
-	  else 'options.panels = "tree+control";';
+	  
 	  ?> 
 	  options.tsumegoPlayTool = 'auto';
 	  options.realstones = true;
