@@ -21,7 +21,7 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
       lastHoverPosition = null,
       TOUCH_FLAG = false; // Flag for touch interfaces
 
-    if(sizeX!=19)
+    if(sizeX != 19)
     {
       scaleParameters['orientation'] = 'full-board';
       besogoFullBoard = true;
@@ -138,9 +138,9 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
       else if(!scaleParameters['hFlip'] && scaleParameters['vFlip']) scaleParameters['orientation'] = 'bottom-left';
       else if(scaleParameters['hFlip'] && scaleParameters['vFlip']) scaleParameters['orientation'] = 'bottom-right';
 
-      if(scaleParameters['highestX']>=10) scaleParameters['highestX'] = 19;
+      if(scaleParameters['highestX'] >= 10) scaleParameters['highestX'] = 19;
       else scaleParameters['highestX'] += 3;
-      if(scaleParameters['highestY']>=10) scaleParameters['highestY'] = 19;
+      if(scaleParameters['highestY'] >= 10) scaleParameters['highestY'] = 19;
       else scaleParameters['highestY'] += 3;
 
       board_margin_x = BOARD_MARGIN - 75;

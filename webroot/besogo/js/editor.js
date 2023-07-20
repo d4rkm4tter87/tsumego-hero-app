@@ -32,9 +32,10 @@ besogo.makeEditor = function(sizeX, sizeY)
       // Variant style: even/odd - children/siblings, <2 - show auto markup for variants
       variantStyle = 0, // 0-3, 0 is default
       edited = false,
-	  autoPlay = false,
-      shift = false;
-	  var isEmbedded = typeof mode === "number"; //check if embedded in the website
+	    autoPlay = false,
+      shift = false,
+      reviewEnabled = false;
+	    var isEmbedded = typeof mode === "number"; //check if embedded in the website
 	  
   return {
     addListener: addListener,

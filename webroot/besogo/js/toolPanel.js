@@ -205,26 +205,30 @@ besogo.makeToolPanel = function(container, editor)
 	  }
 	  
 	  let reviewButtonId;
-	  if(reviewEnabled) reviewButtonId = 'besogo-review-button';
+	  if(editor.reviewEnabled) reviewButtonId = 'besogo-review-button';
 	  else reviewButtonId = 'besogo-review-button-inactive';
 	  makeButtonText('Review', 'review mode', function()
 	  {
-		if(reviewEnabled){
-			if(!reviewMode){
-				$(".besogo-panels").css("display","flex");
-				$(".besogo-board").css("margin","0");
-				toggleBoardLock(false);
-				deleteNextMoveGroup = true;
-				besogo.editor.prevNode(-1);
-			}else{
-				$(".besogo-panels").css("display","none");
-				$(".besogo-board").css("margin","0 315px");
-				deleteNextMoveGroup = false;
-			}
-			reviewMode = !reviewMode;
-			reviewModeActive = !reviewModeActive;
-			besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
-		}
+      if (editor.reviewEnabled)
+      {
+        if (!reviewMode)
+        {
+          $(".besogo-panels").css("display","flex");
+          $(".besogo-board").css("margin","0");
+          toggleBoardLock(false);
+          deleteNextMoveGroup = true;
+          besogo.editor.prevNode(-1);
+        }
+        else
+        {
+          $(".besogo-panels").css("display","none");
+          $(".besogo-board").css("margin","0 315px");
+          deleteNextMoveGroup = false;
+        }
+        reviewMode = !reviewMode;
+        reviewModeActive = !reviewModeActive;
+        besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+      }
 	  }, reviewButtonId);
 	
 	  makeAuthorText('author-notice');
@@ -386,8 +390,8 @@ besogo.makeToolPanel = function(container, editor)
   {
     var img = document.createElement('img');
     img.src = src;
-	img.title = tip;
-	img.id = id;
+    img.title = tip;
+    img.id = id;
     img.onclick = callback;
     container.appendChild(img);
     return img;
@@ -414,11 +418,6 @@ besogo.makeToolPanel = function(container, editor)
             selectors[tool].setAttribute('visibility', 'visible');
           else
             selectors[tool].setAttribute('visibility', 'hidden');
-    if (msg.hasOwnProperty('reviewEnabled'))
-    {
-      reviewEnabled = msg.reviewEnabled;
-      //reviewButton.disabled = !reviewEnabled;
-    }
   }
 
   // Draws a yin yang
