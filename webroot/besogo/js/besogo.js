@@ -3,6 +3,7 @@
   var besogo = window.besogo = window.besogo || {}; // Establish our namespace
   besogo.VERSION = '0.0.2-alpha';
   besogo.editor = null;
+  var rootPath = '';
   let scaleParameters = [];
   let corner;
 
@@ -212,6 +213,10 @@
       }
     }
 
+    if (typeof options.rootPath === 'string')
+      besogo.rootPath = options.rootPath;
+    else
+      besogo.rootPath = '';
     container.className += ' besogo-container'; // Marks this div as initialized
     // Process options and set defaults
     options = options || {}; // Makes option checking simpler

@@ -3708,6 +3708,7 @@
 	  options.corner = shuffledCornerArray[0];
 	  
 	  besogoCorner = options.corner;
+    options.rootPath = '/besogo/';
 	  options.theme = '<?php echo $choice[0][1]; ?>';
 	  options.themeParameters = ['<?php echo $choice[0][2]; ?>', '<?php echo $choice[0][3]; ?>'];
 	  options.coord = 'western';
