@@ -18,6 +18,31 @@
     makers['file'] = besogo.makeFilePanel;
     return makers;
   }
+  
+ // Sets dimensions with optional height param
+  function setDimensions(width, height)
+  {
+    /*
+        if (height && width > height) { // Landscape mode
+            container.style['flex-direction'] = 'row';
+            boardDiv.style.height = height + 'px';
+            boardDiv.style.width = height + 'px';
+            if (panelsDiv) {
+                panelsDiv.style.height = height + 'px';
+                panelsDiv.style.width = (width - height) + 'px';
+            }
+        } else { // Portrait mode (implied if height is missing)
+            container.style['flex-direction'] = 'column';
+            boardDiv.style.height = width + 'px';
+            boardDiv.style.width = width + 'px';
+            if (panelsDiv) {
+                if (height) { // Only set height if param present
+                    panelsDiv.style.height = (height - width) + 'px';
+                }
+                panelsDiv.style.width = width + 'px';
+            }
+        }*/
+  }
 
   // Creates and adds divs to specified parent or container
   function makeDiv(className, parent)
@@ -69,7 +94,7 @@
         let panelName = options.panels2[i];
         let makers = getMakers();
         if (makers[panelName]) // Only add if creator function exists
-          makers[panelName](makeDiv('besogo-' + panelName, panelsDiv), editor);
+          makers[panelName](makeDiv('besogo-' + panelName, panelsDiv), besogo.editor);
       }
       if (!panelsDiv.firstChild) // If no panels were added
       {
@@ -307,30 +332,6 @@
 
     //Fixes the asynchronous load of board and content
     sgfLoaded.registerListener(function(val) { besogo.initPanels(options, container, boardDiv, boardDisplay, sgfLoaded.scaleParameters, corner); });
-
-    // Sets dimensions with optional height param
-    function setDimensions(width, height) {
-      /*
-          if (height && width > height) { // Landscape mode
-              container.style['flex-direction'] = 'row';
-              boardDiv.style.height = height + 'px';
-              boardDiv.style.width = height + 'px';
-              if (panelsDiv) {
-                  panelsDiv.style.height = height + 'px';
-                  panelsDiv.style.width = (width - height) + 'px';
-              }
-          } else { // Portrait mode (implied if height is missing)
-              container.style['flex-direction'] = 'column';
-              boardDiv.style.height = width + 'px';
-              boardDiv.style.width = width + 'px';
-              if (panelsDiv) {
-                  if (height) { // Only set height if param present
-                      panelsDiv.style.height = (height - width) + 'px';
-                  }
-                  panelsDiv.style.width = width + 'px';
-              }
-          }*/
-      }
   };
 
   // Parses size parameter from SGF format

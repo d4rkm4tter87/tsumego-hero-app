@@ -103,15 +103,13 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
     }
     else if (msg.tool || msg.label)
       redrawHover(current);
-    if (msg.hasOwnProperty('reviewMode'))
-      reviewMode = msg.reviewMode;
   }
 
   function redrawAll(current)
   {
     redrawStones(current);
     redrawMarkup(current);
-    redrawNextMoves(current, isEmbedded && !reviewModeActive /* clear */);
+    redrawNextMoves(current, isEmbedded && !editor.reviewMode);
     redrawHover(current);
   }
 

@@ -34,7 +34,7 @@ besogo.makeEditor = function(sizeX, sizeY)
       edited = false,
       autoPlay = false,
       shift = false,
-      reviewMode = false;
+      reviewMode = true;
       var isEmbedded = typeof mode === "number"; //check if embedded in the website
     
   return {
@@ -70,7 +70,8 @@ besogo.makeEditor = function(sizeX, sizeY)
     setShift: setShift,
     isShift: isShift,
     applyTransformation : applyTransformation,
-    setAutoPlay, setAutoPlay
+    setAutoPlay: setAutoPlay,
+    getReviewMode: getReviewMode,
   };
    
   // Returns the active tool
@@ -520,7 +521,7 @@ besogo.makeEditor = function(sizeX, sizeY)
             document.getElementsByTagName("audio")[0].play();
           setTimeout(function()
           {
-            if(!reviewEnabled)
+            if(!reviewMode)
               displayResult('F');
             if(mode==2 || mode==3) toggleBoardLock(true);
           }, 360);
@@ -623,6 +624,8 @@ besogo.makeEditor = function(sizeX, sizeY)
       edited = true;
     if (!keepHistory && msg.navChange)
       navHistory = []; // Clear navigation history
+    if (msg.hasOwnProperty('reviewMode'))
+      reviewMode = msg.reviewMode;
     for (let i = 0; i < listeners.length; i++)
       listeners[i](msg);
   }
@@ -658,5 +661,10 @@ besogo.makeEditor = function(sizeX, sizeY)
   function setAutoPlay(value)
   {
     autoPlay = value;
+  }
+  
+  function getReviewMode()
+  {
+    return reviewMode;
   }
 };
