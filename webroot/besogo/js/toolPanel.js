@@ -5,9 +5,8 @@ besogo.makeToolPanel = function(container, editor)
       svg, // Scratch for building SVG images
       labelText, // Text area for next label input
       selectors = {}; // Holds selection rects
-	  var isEmbedded = typeof mode === "number"; //check if embedded in the website
+    var isEmbedded = typeof mode === "number"; //check if embedded in the website
 
-  var reviewMode = false;//might be removed
   var reviewButton = null;
   if (container.className == 'besogo-tsumegoPlayTool')
     makeReviewToolButtons(container, editor);
@@ -20,219 +19,256 @@ besogo.makeToolPanel = function(container, editor)
 
   function makeReviewToolButtons(container, editor)
   {
-	  makeImageButton('/img/colorOrientation.png', 'change the color of your stones', 'colorOrientation', function()
-	  {
-		let transformation = besogo.makeTransformation();
-		transformation.invertColors = true;
-		besogo.editor.applyTransformation(transformation);
-	  });
-	  if(!besogoFullBoard){
-		  makeImageButton('/img/boardOrientationTL.png', 'top-left', 'boardOrientationTL', function()
-		  {
-			if(besogoCorner==='top-left'){
-				//already there
-			}else if(besogoCorner==='top-right'){
-				let transformation = besogo.makeTransformation();
-				transformation.hFlip = true;
-				besogo.editor.applyTransformation(transformation);
-			}else if(besogoCorner==='bottom-left'){
-				let transformation = besogo.makeTransformation();
-				transformation.vFlip = true;
-				besogo.editor.applyTransformation(transformation);
-			}else if(besogoCorner==='bottom-right'){
-				let transformation = besogo.makeTransformation();
-				transformation.hFlip = true;
-				besogo.editor.applyTransformation(transformation);
-				transformation = besogo.makeTransformation();
-				transformation.vFlip = true;
-				besogo.editor.applyTransformation(transformation);
-			}
-			globalSvg.setAttribute('viewBox', '0 0 ' + besogoBoardWidth + ' ' + besogoBoardHeight);
-			$("#boardOrientationTL").css("opacity","1");
-			$("#boardOrientationTR").css("opacity",".62");
-			$("#boardOrientationBL").css("opacity",".62");
-			$("#boardOrientationBR").css("opacity",".62");
-			besogoCorner='top-left';
-		  });
-		  
-		  makeImageButton('/img/boardOrientationTR.png', 'top-right', 'boardOrientationTR', function()
-		  {
-			if(besogoCorner==='top-left'){
-				let transformation = besogo.makeTransformation();
-				transformation.hFlip = true;
-				besogo.editor.applyTransformation(transformation);
-			}else if(besogoCorner==='top-right'){
-				//already there
-			}else if(besogoCorner==='bottom-left'){
-				let transformation = besogo.makeTransformation();
-				transformation.hFlip = true;
-				besogo.editor.applyTransformation(transformation);
-				transformation = besogo.makeTransformation();
-				transformation.vFlip = true;
-				besogo.editor.applyTransformation(transformation);
-			}else if(besogoCorner==='bottom-right'){
-				let transformation = besogo.makeTransformation();
-				transformation.vFlip = true;
-				besogo.editor.applyTransformation(transformation);
-			}
-			globalSvg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + 0 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
-			$("#boardOrientationTL").css("opacity",".62");
-			$("#boardOrientationTR").css("opacity","1");
-			$("#boardOrientationBL").css("opacity",".62");
-			$("#boardOrientationBR").css("opacity",".62");
-			besogoCorner='top-right';
-		  });
-		  
-		  makeImageButton('/img/boardOrientationBL.png', 'bottom-left', 'boardOrientationBL', function()
-		  {
-			if(besogoCorner==='top-left'){
-				let transformation = besogo.makeTransformation();
-				transformation.vFlip = true;
-				besogo.editor.applyTransformation(transformation);
-			}else if(besogoCorner==='top-right'){
-				let transformation = besogo.makeTransformation();
-				transformation.hFlip = true;
-				besogo.editor.applyTransformation(transformation);
-				transformation = besogo.makeTransformation();
-				transformation.vFlip = true;
-				besogo.editor.applyTransformation(transformation);
-			}else if(besogoCorner==='bottom-left'){
-				//already there
-			}else if(besogoCorner==='bottom-right'){
-				let transformation = besogo.makeTransformation();
-				transformation.hFlip = true;
-				besogo.editor.applyTransformation(transformation);
-			}
-			globalSvg.setAttribute('viewBox', 0 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
-			$("#boardOrientationTL").css("opacity",".62");
-			$("#boardOrientationTR").css("opacity",".62");
-			$("#boardOrientationBL").css("opacity","1");
-			$("#boardOrientationBR").css("opacity",".62");
-			besogoCorner='bottom-left';
-		  });
-		  
-		  makeImageButton('/img/boardOrientationBR.png', 'bottom-right', 'boardOrientationBR', function()
-		  {
-			if(besogoCorner==='top-left'){
-				let transformation = besogo.makeTransformation();
-				transformation.hFlip = true;
-				besogo.editor.applyTransformation(transformation);
-				transformation = besogo.makeTransformation();
-				transformation.vFlip = true;
-				besogo.editor.applyTransformation(transformation);
-			}else if(besogoCorner==='top-right'){
-				let transformation = besogo.makeTransformation();
-				transformation.vFlip = true;
-				besogo.editor.applyTransformation(transformation);
-			}else if(besogoCorner==='bottom-left'){
-				let transformation = besogo.makeTransformation();
-				transformation.hFlip = true;
-				besogo.editor.applyTransformation(transformation);
-			}else if(besogoCorner==='bottom-right'){
-				//already there
-			}
-			globalSvg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
-			$("#boardOrientationTL").css("opacity",".62");
-			$("#boardOrientationTR").css("opacity",".62");
-			$("#boardOrientationBL").css("opacity",".62");
-			$("#boardOrientationBR").css("opacity","1");
-			besogoCorner='bottom-right';
-		  });
-	  }
-	  
-	  if(!besogoNoLogin){
-		  let favImage = '';
-		  if(!favorite) favImage = '/img/favButton.png';
-		  else favImage = '/img/favButtonActive.png';
-		  makeImageButton(favImage, 'mark as favorite', 'favButton', function()
-		  {
-			if(favImage=='/img/favButton.png'){
-				favImage = '/img/favButtonActive.png';
-				document.cookie = 'favorite=' + tsumegoFileLink;
-			}else{
-				favImage = '/img/favButton.png';
-				document.cookie = 'favorite=-' + tsumegoFileLink;
-			}
-			$("#favButton").attr('src',favImage);
-		  });
-	  } 
-	  
-	  if(mode==1){
-		  let prevButtonId;
-		  if(prevButtonLink!=0) prevButtonId = 'besogo-back-button';
-		  else prevButtonId = 'besogo-back-button-inactive';
-		  makeButtonText('Back', 'previous problem', function()
-		  {
-			if(prevButtonLink!=0) window.location.href = "/tsumegos/play/"+prevButtonLink;
-		  }, prevButtonId);
-		  
-		  makeButtonText('Reset', 'reset the problem', function()
-		  {
-			besogo.editor.prevNode(-1);
-			toggleBoardLock(false);
-			reviewModeActive = false;
-			reviewMode = false;
-			document.getElementById("status").innerHTML = "";
-			document.getElementById("theComment").style.cssText = "display:none;";
-			$(".besogo-panels").css("display","none");
-			$(".besogo-board").css("margin","0 315px");
-			besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
-			
-		  }, 'besogo-reset-button');
-		  
-		  let nextButtonId;
-		  if(nextButtonLink!=0) nextButtonId = 'besogo-next-button';
-		  else nextButtonId = 'besogo-next-button-inactive';
-		  makeButtonText('Next', 'next problem', function()
-		  {
-			if(nextButtonLink!=0) window.location.href = "/tsumegos/play/"+nextButtonLink;
-		  }, nextButtonId);
-	  }else if(mode==2){
-		  makeButtonText('History', 'history of rating mode', function()
-		  {
-			window.location.href = "/tsumego_rating_attempts/user/"+besogoUserId;
-		  }, 'history-button');
-		  
-		  makeButtonText('Next', 'next problem', function()
-		  {
-			if(besogoMode2Solved) window.location.href = "/tsumegos/play/"+nextButtonLink;
-		  }, 'besogo-next-button-inactive');
-	  }else if(mode==3){
-		  makeButtonText('Next', 'next problem', function()
-		  {
-			window.location.href = "/tsumegos/play/"+besogoMode3Next;
-		  }, 'besogo-next-button');
-	  }
-	  
-	  let reviewButtonId;
-	  if(editor.reviewEnabled) reviewButtonId = 'besogo-review-button';
-	  else reviewButtonId = 'besogo-review-button-inactive';
-	  makeButtonText('Review', 'review mode', function()
-	  {
-      if (editor.reviewEnabled)
+    makeImageButton('/img/colorOrientation.png', 'change the color of your stones', 'colorOrientation', function()
+    {
+    let transformation = besogo.makeTransformation();
+    transformation.invertColors = true;
+    besogo.editor.applyTransformation(transformation);
+    });
+    if(!besogoFullBoard){
+      makeImageButton('/img/boardOrientationTL.png', 'top-left', 'boardOrientationTL', function()
       {
-        if (!reviewMode)
+      if(besogoCorner==='top-left')
+      {
+        //already there
+      }
+      else if(besogoCorner==='top-right')
+      {
+        let transformation = besogo.makeTransformation();
+        transformation.hFlip = true;
+        besogo.editor.applyTransformation(transformation);
+      }
+      else if(besogoCorner==='bottom-left')
+      {
+        let transformation = besogo.makeTransformation();
+        transformation.vFlip = true;
+        besogo.editor.applyTransformation(transformation);
+      }
+      else if(besogoCorner==='bottom-right')
+      {
+        let transformation = besogo.makeTransformation();
+        transformation.hFlip = true;
+        besogo.editor.applyTransformation(transformation);
+        transformation = besogo.makeTransformation();
+        transformation.vFlip = true;
+        besogo.editor.applyTransformation(transformation);
+      }
+      globalSvg.setAttribute('viewBox', '0 0 ' + besogoBoardWidth + ' ' + besogoBoardHeight);
+      $("#boardOrientationTL").css("opacity","1");
+      $("#boardOrientationTR").css("opacity",".62");
+      $("#boardOrientationBL").css("opacity",".62");
+      $("#boardOrientationBR").css("opacity",".62");
+      besogoCorner='top-left';
+      });
+      
+      makeImageButton('/img/boardOrientationTR.png', 'top-right', 'boardOrientationTR', function()
+      {
+        if(besogoCorner==='top-left')
+        {
+          let transformation = besogo.makeTransformation();
+          transformation.hFlip = true;
+          besogo.editor.applyTransformation(transformation);
+        }
+        else if(besogoCorner==='top-right')
+        {
+          //already there
+        }
+        else if(besogoCorner==='bottom-left')
+        {
+          let transformation = besogo.makeTransformation();
+          transformation.hFlip = true;
+          besogo.editor.applyTransformation(transformation);
+          transformation = besogo.makeTransformation();
+          transformation.vFlip = true;
+          besogo.editor.applyTransformation(transformation);
+        }
+        else if (besogoCorner==='bottom-right')
+        {
+          let transformation = besogo.makeTransformation();
+          transformation.vFlip = true;
+          besogo.editor.applyTransformation(transformation);
+        }
+        globalSvg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + 0 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+        $("#boardOrientationTL").css("opacity",".62");
+        $("#boardOrientationTR").css("opacity","1");
+        $("#boardOrientationBL").css("opacity",".62");
+        $("#boardOrientationBR").css("opacity",".62");
+        besogoCorner='top-right';
+        });
+      
+      makeImageButton('/img/boardOrientationBL.png', 'bottom-left', 'boardOrientationBL', function()
+      {
+        if (besogoCorner === 'top-left')
+        {
+          let transformation = besogo.makeTransformation();
+          transformation.vFlip = true;
+          besogo.editor.applyTransformation(transformation);
+        }
+        else if (besogoCorner === 'top-right')
+        {
+          let transformation = besogo.makeTransformation();
+          transformation.hFlip = true;
+          besogo.editor.applyTransformation(transformation);
+          transformation = besogo.makeTransformation();
+          transformation.vFlip = true;
+          besogo.editor.applyTransformation(transformation);
+        }
+        else if (besogoCorner==='bottom-left')
+        {
+          //already there
+        }
+        else if(besogoCorner==='bottom-right')
+        {
+          let transformation = besogo.makeTransformation();
+          transformation.hFlip = true;
+          besogo.editor.applyTransformation(transformation);
+        }
+        globalSvg.setAttribute('viewBox', 0 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+        $("#boardOrientationTL").css("opacity",".62");
+        $("#boardOrientationTR").css("opacity",".62");
+        $("#boardOrientationBL").css("opacity","1");
+        $("#boardOrientationBR").css("opacity",".62");
+        besogoCorner='bottom-left';
+      });
+      
+      makeImageButton('/img/boardOrientationBR.png', 'bottom-right', 'boardOrientationBR', function()
+      {
+        if(besogoCorner === 'top-left')
+        {
+          let transformation = besogo.makeTransformation();
+          transformation.hFlip = true;
+          besogo.editor.applyTransformation(transformation);
+          transformation = besogo.makeTransformation();
+          transformation.vFlip = true;
+          besogo.editor.applyTransformation(transformation);
+        }
+        else if(besogoCorner==='top-right')
+        {
+          let transformation = besogo.makeTransformation();
+          transformation.vFlip = true;
+          besogo.editor.applyTransformation(transformation);
+        }
+        else if(besogoCorner==='bottom-left')
+        {
+          let transformation = besogo.makeTransformation();
+          transformation.hFlip = true;
+          besogo.editor.applyTransformation(transformation);
+        }
+        else if(besogoCorner==='bottom-right')
+        {
+          //already there
+        }
+        globalSvg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+        $("#boardOrientationTL").css("opacity",".62");
+        $("#boardOrientationTR").css("opacity",".62");
+        $("#boardOrientationBL").css("opacity",".62");
+        $("#boardOrientationBR").css("opacity","1");
+        besogoCorner='bottom-right';
+        });
+    }
+    
+    if (!besogoNoLogin)
+    {
+      let favImage = '';
+      if(!favorite) favImage = '/img/favButton.png';
+      else favImage = '/img/favButtonActive.png';
+      makeImageButton(favImage, 'mark as favorite', 'favButton', function()
+      {
+        if (favImage=='/img/favButton.png')
+        {
+          favImage = '/img/favButtonActive.png';
+          document.cookie = 'favorite=' + tsumegoFileLink;
+        }
+        else
+        {
+          favImage = '/img/favButton.png';
+          document.cookie = 'favorite=-' + tsumegoFileLink;
+        }
+        $("#favButton").attr('src',favImage);
+        });
+    } 
+    
+    if(mode==1)
+    {
+      let prevButtonId;
+      if(prevButtonLink!=0) prevButtonId = 'besogo-back-button';
+      else prevButtonId = 'besogo-back-button-inactive';
+      makeButtonText('Back', 'previous problem', function()
+      {
+        if(prevButtonLink!=0) window.location.href = "/tsumegos/play/"+prevButtonLink;
+      }, prevButtonId);
+      
+      makeButtonText('Reset', 'reset the problem', function()
+      {
+        besogo.editor.prevNode(-1);
+        toggleBoardLock(false);
+        reviewModeActive = false;
+        reviewMode = false;
+        document.getElementById("status").innerHTML = "";
+        document.getElementById("theComment").style.cssText = "display:none;";
+        $(".besogo-panels").css("display","none");
+        $(".besogo-board").css("margin","0 315px");
+        besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+      
+      }, 'besogo-reset-button');
+      
+      let nextButtonId;
+      if(nextButtonLink!=0) nextButtonId = 'besogo-next-button';
+      else nextButtonId = 'besogo-next-button-inactive';
+      makeButtonText('Next', 'next problem', function()
+      {
+        if(nextButtonLink!=0) window.location.href = "/tsumegos/play/"+nextButtonLink;
+      }, nextButtonId);
+    }
+    else if(mode == 2)
+    {
+      makeButtonText('History', 'history of rating mode', function()
+      { window.location.href = "/tsumego_rating_attempts/user/"+besogoUserId; }, 'history-button');
+      makeButtonText('Next', 'next problem', function()
+      {
+        if (besogoMode2Solved) window.location.href = "/tsumegos/play/"+nextButtonLink;
+      }, 'besogo-next-button-inactive');
+    }
+    else if(mode == 3)
+    {
+      makeButtonText('Next',
+                     'next problem',
+                     function() { window.location.href = "/tsumegos/play/"+besogoMode3Next; },
+                     'besogo-next-button');
+    }
+    
+    let reviewButtonId;
+    if (editor.getReviewEnabled())
+      reviewButtonId = 'besogo-review-button';
+    else
+      reviewButtonId = 'besogo-review-button-inactive';
+
+    makeButtonText('Review', 'review mode', function()
+    {
+      if (editor.getReviewEnabled())
+      {
+        if (!editor.getReviewMode())
         {
           $(".besogo-panels").css("display","flex");
           $(".besogo-board").css("margin","0");
           toggleBoardLock(false);
           deleteNextMoveGroup = true;
           besogo.editor.prevNode(-1);
+          editor.setReviewMode(true);
         }
         else
         {
           $(".besogo-panels").css("display","none");
           $(".besogo-board").css("margin","0 315px");
           deleteNextMoveGroup = false;
+          editor.setReviewMode(false);
         }
-        reviewMode = !reviewMode;
-        reviewModeActive = !reviewModeActive;
         besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
       }
-	  }, reviewButtonId);
-	
-	  makeAuthorText('author-notice');
-	//not defined?
+    }, reviewButtonId);
+  
+    makeAuthorText('author-notice');
+  //not defined?
     //reviewButton.disabled = true; 
   }
 
@@ -377,7 +413,7 @@ besogo.makeToolPanel = function(container, editor)
     button.type = 'button';
     button.value = text;
     button.title = tip;
-	if(id!==null) button.id = id;
+  if(id!==null) button.id = id;
     button.onclick = callback;
     container.appendChild(button);
     return button;
@@ -394,14 +430,14 @@ besogo.makeToolPanel = function(container, editor)
     container.appendChild(img);
     return img;
   }
-	  
+    
   function makeAuthorText(id, name)
   {
-	var div = document.createElement('div');
-	div.id = id;
-	container.appendChild(div);
-	$("#author-notice").text('File by '+author);
-	return div;
+  var div = document.createElement('div');
+  div.id = id;
+  container.appendChild(div);
+  $("#author-notice").text('File by '+author);
+  return div;
   }
 
   // Callback for updating tool state and label

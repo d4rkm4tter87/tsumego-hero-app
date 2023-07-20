@@ -3722,9 +3722,10 @@
 		div.style.height = options.height + 'px';
 		div.style.width = options.width + 'px';
 	  }
+    options.reviewMode = false;
+    options.reviewEnabled = false; // should be true when it is solved
 	  besogo.create(div, options);
     besogo.editor.setAutoPlay(true);
-    besogo.editor.notifyListeners({ reviewMode: false});
 
 	  function addStyleLink(cssURL)
 	  {

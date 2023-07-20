@@ -273,7 +273,7 @@
       options.shadows = false;
 
     // Make the core editor object
-    besogo.editor = besogo.makeEditor(options.size.x, options.size.y);
+    besogo.editor = besogo.makeEditor(options.size.x, options.size.y, options);
     container.besogoEditor = besogo.editor;
     besogo.editor.setTool(options.tool);
     if(options.tsumegoPlayTool) besogo.editor.setTool(options.tsumegoPlayTool);

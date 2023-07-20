@@ -1,4 +1,4 @@
-besogo.makeEditor = function(sizeX, sizeY)
+besogo.makeEditor = function(sizeX, sizeY, options)
 {
   'use strict';
   // Creates an associated game state tree
@@ -34,9 +34,15 @@ besogo.makeEditor = function(sizeX, sizeY)
       edited = false,
       autoPlay = false,
       shift = false,
-      reviewMode = true;
+      reviewMode = true,
+      reviewEnabled = true;
       var isEmbedded = typeof mode === "number"; //check if embedded in the website
-    
+
+    if (typeof options.reviewMode === 'bool')
+      reviewMode = options.reviewMode;
+    if (typeof options.reviewEnabled === 'bool')
+      reviewEnabled = options.reviewEnabled;
+
   return {
     addListener: addListener,
     click: click,
@@ -72,8 +78,11 @@ besogo.makeEditor = function(sizeX, sizeY)
     applyTransformation : applyTransformation,
     setAutoPlay: setAutoPlay,
     getReviewMode: getReviewMode,
+    setReviewMode: setReviewMode,
+    getReviewEnabled: getReviewEnabled,
+    setReviewEnabled: setReviewEnabled,
   };
-   
+
   // Returns the active tool
   function getTool() { return tool; }
 
@@ -419,7 +428,7 @@ besogo.makeEditor = function(sizeX, sizeY)
         {
           if(soundsEnabled)
             document.getElementsByTagName("audio")[0].play();
-          nextNode(1); 
+          nextNode(1);
         }
       }, 360);
     }
@@ -507,14 +516,14 @@ besogo.makeEditor = function(sizeX, sizeY)
     {
       var next = current.makeChild(); // Create a new child node
       if (next.playMove(i, j, color, allowAll)) // Play in new node
-      { 
+      {
         // Keep (add to game state tree) only if move succeeds
         current.registerChild(next);
         current = next;
         // Notify tree change, navigation, and stone change
         notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
         edited = true;
-    
+
         if (isEmbedded)
         {
           if (soundsEnabled)
@@ -624,8 +633,6 @@ besogo.makeEditor = function(sizeX, sizeY)
       edited = true;
     if (!keepHistory && msg.navChange)
       navHistory = []; // Clear navigation history
-    if (msg.hasOwnProperty('reviewMode'))
-      reviewMode = msg.reviewMode;
     for (let i = 0; i < listeners.length; i++)
       listeners[i](msg);
   }
@@ -662,9 +669,24 @@ besogo.makeEditor = function(sizeX, sizeY)
   {
     autoPlay = value;
   }
-  
+
   function getReviewMode()
   {
     return reviewMode;
+  }
+
+  function setReviewMode(value)
+  {
+    reviewMode = value;
+  }
+
+  function getReviewEnabled()
+  {
+    return reviewEnabled;
+  }
+
+  function setReviewEnabled(value)
+  {
+    reviewEnabled = value
   }
 };
