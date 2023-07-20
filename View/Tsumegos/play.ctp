@@ -3508,7 +3508,7 @@
 					runXPBar(true);
 				}
 				noLastMark = true;
-				reviewEnabled = true;
+        besogo.editor.setReviewEnabled(true);
 				$("#besogo-review-button-inactive").attr("id","besogo-review-button");
 				if(!noXP){
 					if(!doubleXP){
@@ -3559,7 +3559,7 @@
 				//locked = true;
 				noLastMark = true;
 				besogoMode2Solved = true;
-				reviewEnabled = true;
+        besogo.editor.setReviewEnabled(true);
 				$("#besogo-review-button-inactive").attr("id","besogo-review-button");
 				$("#besogo-next-button-inactive").attr("id","besogo-next-button");
 				if(!noXP){
