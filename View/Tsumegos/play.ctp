@@ -3477,10 +3477,8 @@
 	?>
 
 	function displayResult(result){
-		//console.log(result);
-		//§
 		if(result=='S'){
-			if(mode!=2){
+			if(mode!=2){//mode 1 and 3 correct
 				<?php echo $sandboxCheck; ?>
 				document.getElementById("status").style.color = "green";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
@@ -3491,17 +3489,19 @@
 				}else{document.getElementById("theComment").style.cssText = "display:none;border:thick double green;";}
 				$("#commentSpace").show();
 				//locked = true;
-				if(mode==3) document.cookie = "rank=<?php echo $mode3ScoreArray[0]; ?>";
-				if(mode==3) seconds = seconds.toFixed(1);
-				if(mode==3) secondsy = seconds*10*<?php echo $t['Tsumego']['id']; ?>;
-				if(mode==3) document.cookie = "seconds="+secondsy;
-				if(mode==3) timeModeEnabled = false;
-				if(mode==3) document.cookie = "score=<?php echo $score1; ?>";
-				if(mode==3) document.cookie = "preId=<?php echo $t['Tsumego']['id']; ?>";
-				if(mode==3) $("#time-mode-countdown").css("color","green");
-				if(mode==3) $("#reviewButton").show();
-				if(mode==3) $("#reviewButton-inactive").hide();
-				if(mode==3) runXPBar(true);
+				if(mode==3){
+					document.cookie = "rank=<?php echo $mode3ScoreArray[0]; ?>";
+					//seconds = seconds.toFixed(1);
+					secondsy = seconds*10*<?php echo $t['Tsumego']['id']; ?>;
+					document.cookie = "seconds="+secondsy;
+					timeModeEnabled = false;
+					document.cookie = "score=<?php echo $score1; ?>";
+					document.cookie = "preId=<?php echo $t['Tsumego']['id']; ?>";
+					$("#time-mode-countdown").css("color","green");
+					$("#reviewButton").show();
+					$("#reviewButton-inactive").hide();
+					runXPBar(true);
+				}
 				noLastMark = true;
 				reviewEnabled = true;
 				$("#besogo-review-button-inactive").attr("id","besogo-review-button");
@@ -3544,16 +3544,17 @@
 						document.cookie = "seconds="+secondsy;
 					}
 				}
-			}else if(eloScore!=0){//mode 2
+			}else if(eloScore!=0){//mode 2 correct
 				if(eloScore>100) eloScore = 100;
 				elo2 = <?php echo $user['User']['elo_rating_mode']; ?>+eloScore;
 				document.getElementById("status").style.color = "green";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
 				document.getElementById("xpDisplay").style.color = "white";
 				$("#commentSpace").show();
-				locked = true;
+				//locked = true;
 				noLastMark = true;
 				besogoMode2Solved = true;
+				reviewEnabled = true;
 				$("#besogo-review-button-inactive").attr("id","besogo-review-button");
 				$("#besogo-next-button-inactive").attr("id","besogo-next-button");
 				if(!noXP){
@@ -3562,7 +3563,6 @@
 					secondsy = seconds;
 					document.cookie = "seconds="+secondsy;
 					document.cookie = "sequence="+sequence;
-					$("#skipButton").text("Next");
 					document.getElementById("refreshLinkToStart").href = "/tsumegos/play/'.$lv.'?refresh=1";
 					document.getElementById("refreshLinkToSets").href = "/tsumegos/play/'.$lv.'?refresh=2";
 					if(document.getElementById("playTitleA")) document.getElementById("playTitleA").href = "/tsumegos/play/'.$lv.'?refresh=3";
@@ -3581,14 +3581,14 @@
 					noXP = true;
 				}
 			}
-		}else{//incorrect
+		}else{//mode 1 and 3 incorrect
 			if(mode!=2){
 				branch = "no";
 				document.getElementById("status").style.color = "#e03c4b";
 				document.getElementById("status").innerHTML = "<h2>Incorrect</h2>";
 				if(mode==3){
 					document.cookie = "rank=<?php echo $mode3ScoreArray[1]; ?>";
-					locked = true;
+					//locked = true;
 					document.cookie = "misplay=1";
 					seconds = seconds.toFixed(1);
 					secondsy = seconds*10*<?php echo $t['Tsumego']['id']; ?>;
@@ -3626,12 +3626,13 @@
 						window.location.href = "/tsumegos/play/<?php echo $t['Tsumego']['id']; ?>";
 					}
 				}
-			}else{//mode 2
+			}else{//mode 2 incorrect
 				elo2 = <?php echo $user['User']['elo_rating_mode']; ?>-eloScore;
 				branch = "no";
 				document.getElementById("status").style.color = "#e03c4b";
 				document.getElementById("status").innerHTML = "<h2>Incorrect</h2>";
 				noLastMark = true;
+				$("#besogo-next-button-inactive").attr("id","besogo-next-button");
 				if(!noXP){
 					sequence += "incorrect|";
 					document.cookie = "sequence="+sequence;
@@ -3647,7 +3648,7 @@
 					document.getElementById("refreshLinkToDiscuss").href = "/tsumegos/play/<?php echo $lv; ?>?refresh=5";
 					hoverLocked = false;
 					tryAgainTomorrow = true;
-					locked = true;
+					//locked = true;
 					freePlayMode = true;
 					ulvl = <?php echo $user['User']['level']; ?>;
 					runXPNumber("account-bar-xp", <?php echo $user['User']['elo_rating_mode']; ?>, elo2, 1000, ulvl);

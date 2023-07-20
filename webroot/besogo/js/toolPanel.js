@@ -202,31 +202,29 @@ besogo.makeToolPanel = function(container, editor)
 		  }, 'besogo-next-button');
 	  }
 	  
-	  if(mode==1||mode==3){
-		  let reviewButtonId;
-		  if(reviewEnabled) reviewButtonId = 'besogo-review-button';
-		  else reviewButtonId = 'besogo-review-button-inactive';
-		  makeButtonText('Review', 'review mode', function()
-		  {
-			if(reviewEnabled){
-				if(!reviewMode){
-					$(".besogo-panels").css("display","flex");
-					$(".besogo-board").css("margin","0");
-					toggleBoardLock(false);
-					deleteNextMoveGroup = true;
-					besogo.editor.prevNode(-1);
-				}else{
-					$(".besogo-panels").css("display","none");
-					$(".besogo-board").css("margin","0 315px");
-					deleteNextMoveGroup = false;
-				}
-				reviewMode = !reviewMode;
-				reviewModeActive = !reviewModeActive;
-				besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+	  let reviewButtonId;
+	  if(reviewEnabled) reviewButtonId = 'besogo-review-button';
+	  else reviewButtonId = 'besogo-review-button-inactive';
+	  makeButtonText('Review', 'review mode', function()
+	  {
+		if(reviewEnabled){
+			if(!reviewMode){
+				$(".besogo-panels").css("display","flex");
+				$(".besogo-board").css("margin","0");
+				toggleBoardLock(false);
+				deleteNextMoveGroup = true;
+				besogo.editor.prevNode(-1);
+			}else{
+				$(".besogo-panels").css("display","none");
+				$(".besogo-board").css("margin","0 315px");
+				deleteNextMoveGroup = false;
 			}
-		  }, reviewButtonId);
-	}
-	  
+			reviewMode = !reviewMode;
+			reviewModeActive = !reviewModeActive;
+			besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+		}
+	  }, reviewButtonId);
+	
 	  makeAuthorText('author-notice');
 	//not defined?
     //reviewButton.disabled = true; 
