@@ -238,7 +238,6 @@ besogo.makeToolPanel = function(container, editor)
 
   function makeEditorToolButtons(container, editor)
   {
-	  /*
     svg = makeButtonSVG('auto', 'Auto-play/navigate\n' +
         'crtl+click to force ko, suicide, overwrite\n' +
         'shift+click to jump to move'); // Auto-play/nav tool button
@@ -333,7 +332,6 @@ besogo.makeToolPanel = function(container, editor)
       editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
       editor.edited = true;
     });
-	*/
   }
 
   // Creates a button holding an SVG image
