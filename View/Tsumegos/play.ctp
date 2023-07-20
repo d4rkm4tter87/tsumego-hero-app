@@ -3723,6 +3723,8 @@
 		div.style.width = options.width + 'px';
 	  }
 	  besogo.create(div, options);
+    besogo.editor.setAutoPlay(true);
+    besogo.editor.notifyListeners({ reviewMode: false});
 
 	  function addStyleLink(cssURL)
 	  {

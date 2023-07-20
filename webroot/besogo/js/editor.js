@@ -32,12 +32,11 @@ besogo.makeEditor = function(sizeX, sizeY)
       // Variant style: even/odd - children/siblings, <2 - show auto markup for variants
       variantStyle = 0, // 0-3, 0 is default
       edited = false,
-	    autoPlay = false,
+      autoPlay = false,
       shift = false,
-      reviewEnabled = false,
-      disableAutoplay = false;
-	    var isEmbedded = typeof mode === "number"; //check if embedded in the website
-	  
+      reviewMode = false;
+      var isEmbedded = typeof mode === "number"; //check if embedded in the website
+    
   return {
     addListener: addListener,
     click: click,
@@ -195,9 +194,9 @@ besogo.makeEditor = function(sizeX, sizeY)
   // Navigates forward num nodes (to the end if num === -1)
   function nextNode(num)
   {
-    if (current.children.length + current.virtualChildren.length === 0) // Check if no children
+    if (!current.hasChildIncludingVirtual()) // Check if no children
       return; // Do nothing if no children (avoid notification)
-    while (current.children.length + current.virtualChildren.length > 0 && num !== 0)
+    while (current.hasChildIncludingVirtual() && num !== 0)
     {
       if (navHistory.length) // Non-empty navigation history
         current = navHistory.pop();
@@ -220,14 +219,18 @@ besogo.makeEditor = function(sizeX, sizeY)
     // Notify listeners of navigation (with no tree edits)
     notifyListeners({ navChange: true }, true); // Preserve history
 
-	//opponent move and incorrect
-	if(isEmbedded){
-		if(current.correct==false && current.lastMove==1 && current.children.length<1){
-			if(soundsEnabled) document.getElementsByTagName("audio")[0].play();
-			displayResult('F');
-			if(mode==2 || mode==3) toggleBoardLock(true);
-		}
-	}
+    //opponent move and incorrect
+    if (isEmbedded)
+    {
+      if (!current.hasChildIncludingVirtual())
+      {
+        if (soundsEnabled)
+          document.getElementsByTagName("audio")[0].play();
+        displayResult(current.correct ? 'S' : 'F');
+        if (!current.correct && (mode == 2 || mode == 3))
+          toggleBoardLock(true);
+      }
+    }
   }
 
   // Navigates backward num nodes (to the root if num === -1)
@@ -384,7 +387,7 @@ besogo.makeEditor = function(sizeX, sizeY)
         break;
     }
 
-    if (isEmbedded && !disableAutoplay)
+    if (isEmbedded && autoPlay)
     {
       if (soundsEnabled)
         document.getElementsByTagName("audio")[0].play();
@@ -393,7 +396,7 @@ besogo.makeEditor = function(sizeX, sizeY)
         setTimeout(function()
         {
           toggleBoardLock(true);
-          if (!reviewModeActive)
+          if (!reviewMode)
           {
             displayResult('S');
             notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
@@ -405,23 +408,28 @@ besogo.makeEditor = function(sizeX, sizeY)
 
   function navigateToNode(node)
   {
-	console.log("navigateToNode");
     current = node; // Navigate to child if found
     notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
-    if(autoPlay){
-      setTimeout(function(){
-			if(isMutable){
-				if(soundsEnabled) document.getElementsByTagName("audio")[0].play();
-				nextNode(1); 
-			}
-		}, 360);
-	}
-    if (displayResult && node.correct && !node.hasChildIncludingVirtual())
+    if (autoPlay && !reviewMode && node.move.color != node.getRoot().firstToPlay && node.hasChildIncludingVirtual())
     {
-        setTimeout(function(){
-		    toggleBoardLock(true);
-			if(!reviewModeActive) displayResult('S');
-		}, 360);
+      setTimeout(function()
+      {
+        if (isMutable)
+        {
+          if(soundsEnabled)
+            document.getElementsByTagName("audio")[0].play();
+          nextNode(1); 
+        }
+      }, 360);
+    }
+    else if (displayResult && !node.hasChildIncludingVirtual())
+    {
+      setTimeout(function()
+      {
+        toggleBoardLock(true);
+        if(!reviewMode)
+          displayResult(node.correct ? 'S' : 'F');
+      }, 360);
     }
   }
 
@@ -435,7 +443,7 @@ besogo.makeEditor = function(sizeX, sizeY)
     {
       let move = children[i].move;
       //if (shiftKey)  // Search for move in branch
-	  if(false)
+      if(false)
       {
         if (jumpToMove(x, y, children[i]))
           return true;
@@ -492,12 +500,10 @@ besogo.makeEditor = function(sizeX, sizeY)
   // Set allowAll to truthy to allow illegal moves
   function playMove(i, j, color, allowAll)
   {
-    disableAutoplay = false;
     allowAll = false;
     // Check if current node is immutable or root
     if (!current.isMutable('move') || !current.parent)
     {
-	    disableAutoplay = true;
       var next = current.makeChild(); // Create a new child node
       if (next.playMove(i, j, color, allowAll)) // Play in new node
       { 
@@ -507,14 +513,14 @@ besogo.makeEditor = function(sizeX, sizeY)
         // Notify tree change, navigation, and stone change
         notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
         edited = true;
-		
+    
         if (isEmbedded)
         {
           if (soundsEnabled)
             document.getElementsByTagName("audio")[0].play();
           setTimeout(function()
           {
-            if(!reviewModeActive)
+            if(!reviewEnabled)
               displayResult('F');
             if(mode==2 || mode==3) toggleBoardLock(true);
           }, 360);

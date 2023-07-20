@@ -343,10 +343,6 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
       editor.click(i, j, event.ctrlKey, event.shiftKey);
       if (!TOUCH_FLAG)
         (handleOver(i, j))(); // Ensures that any updated tool is visible
-      if(isEmbedded && !reviewModeActive)
-        setTimeout(function(){
-          if(isMutable && !disableAutoplay) editor.nextNode(1);
-        }, 360);
     };
   }
 
