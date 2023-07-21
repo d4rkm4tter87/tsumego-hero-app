@@ -336,25 +336,9 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
   {
     return function(event)
     {
-      // Call click handler in editor
-	  if(editor.getCurrent().getStone(i, j) == 0){ 
-		  editor.click(i, j, event.ctrlKey, event.shiftKey);
-		  if (!TOUCH_FLAG)
-			(handleOver(i, j))(); // Ensures that any updated tool is visible
-			if(isEmbedded){//is embedded in Tsumego Hero
-				if(!reviewModeActive){
-					setTimeout(function(){
-						if(isMutable && !disableAutoplay){
-							if(soundsEnabled && !soundParameterForCorrect) document.getElementsByTagName("audio")[0].play();
-							editor.nextNode(1);
-						}
-					}, 360);
-				}
-			}
-	   }
       editor.click(i, j, event.ctrlKey, event.shiftKey);
-      if (!TOUCH_FLAG)
-        (handleOver(i, j))(); // Ensures that any updated tool is visible
+		  if (!TOUCH_FLAG)
+  			(handleOver(i, j))(); // Ensures that any updated tool is visible
     };
   }
 
