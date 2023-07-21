@@ -85,6 +85,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     setReviewEnabled: setReviewEnabled,
     isPerformingAutoPlay: isPerformingAutoPlay,
     setSoundEnabled: setSoundEnabled,
+    registerDisplayResult: registerDisplayResult
   };
 
   // Returns the active tool
@@ -232,17 +233,15 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     // Notify listeners of navigation (with no tree edits)
     notifyListeners({ navChange: true }, true); // Preserve history
 
-    //opponent move and incorrect
-    if (isEmbedded)
+    //opponent move and end of variant
+    if (isEmbedded && !current.hasChildIncludingVirtual())
     {
-      if (!current.hasChildIncludingVirtual())
-      {
-        if (soundEnabled)
-          document.getElementsByTagName("audio")[0].play();
+      if (soundEnabled && !reviewMode)
+        document.getElementsByTagName("audio")[0].play();
+      if (displayResult)
         displayResult(current.correct ? 'S' : 'F');
-        if (!current.correct && (mode == 2 || mode == 3))
-          toggleBoardLock(true);
-      }
+      if (!current.correct && (mode == 2 || mode == 3))
+        toggleBoardLock(true);
     }
   }
 
@@ -399,27 +398,11 @@ besogo.makeEditor = function(sizeX, sizeY, options)
         setMarkup(i, j, label);
         break;
     }
-
-    if (isEmbedded && autoPlay)
-    {
-      if (current.correct && !current.hasChildIncludingVirtual())
-      {
-        setTimeout(function()
-        {
-          toggleBoardLock(true);
-          if (!reviewMode)
-          {
-            displayResult('S');
-            notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
-          }
-        }, 360);
-      }
-    }
   }
 
   function navigateToNode(node, byClicking = false)
   {
-    if (byClicking && soundEnabled)
+    if (byClicking && soundEnabled && !reviewMode)
       document.getElementsByTagName("audio")[0].play();
     current = node; // Navigate to child if found
     if (autoPlay && !reviewMode && node.move.color != node.getRoot().firstToPlay && node.hasChildIncludingVirtual())
@@ -429,20 +412,19 @@ besogo.makeEditor = function(sizeX, sizeY, options)
       {
         if (isMutable)
         {
-          if(soundsEnabled)
+          if (soundsEnabled && !reviewMode)
             document.getElementsByTagName("audio")[0].play();
           performingAutoPlay = false;
           nextNode(1);
         }
       }, 360);
     }
-    else if (displayResult && !node.hasChildIncludingVirtual())
+    else if (!reviewMode && autoPlay && displayResult && !node.hasChildIncludingVirtual())
     {
       setTimeout(function()
       {
         toggleBoardLock(true);
-        if(!reviewMode)
-          displayResult(node.correct ? 'S' : 'F');
+        displayResult(node.correct ? 'S' : 'F');
       }, 360);
     }
     notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
@@ -531,11 +513,11 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 
         if (isEmbedded)
         {
-          if (soundsEnabled)
+          if (soundEnabled && !reviewMode)
             document.getElementsByTagName("audio")[0].play();
           setTimeout(function()
           {
-            if(!reviewMode)
+            if(!reviewMode && displayResult)
               displayResult('F');
             if(mode==2 || mode==3) toggleBoardLock(true);
           }, 360);
@@ -703,5 +685,10 @@ besogo.makeEditor = function(sizeX, sizeY, options)
   function setSoundEnabled(value)
   {
     soundEnabled = value;
+  }
+
+  function registerDisplayResult(value)
+  {
+    displayResult = value;
   }
 };

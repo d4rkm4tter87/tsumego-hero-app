@@ -3724,6 +3724,7 @@
     options.reviewEnabled = <?php echo $reviewEnabled ? 'true' : 'false'; ?>;
 	  besogo.create(div, options);
     besogo.editor.setAutoPlay(true);
+    besogo.editor.registerDisplayResult(displayResult);
 
 	  function addStyleLink(cssURL)
 	  {
