@@ -202,8 +202,7 @@ besogo.makeToolPanel = function(container, editor)
       {
         besogo.editor.prevNode(-1);
         toggleBoardLock(false);
-        reviewModeActive = false;
-        reviewMode = false;
+        besogo.editor.setReviewMode(false);
         document.getElementById("status").innerHTML = "";
         document.getElementById("theComment").style.cssText = "display:none;";
         $(".besogo-panels").css("display","none");
