@@ -35,6 +35,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
       autoPlay = false,
       shift = false,
       reviewMode = true,
+      performingAutoPlay = false,
       reviewEnabled = true;
       var isEmbedded = typeof mode === "number"; //check if embedded in the website
 
@@ -81,6 +82,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     setReviewMode: setReviewMode,
     getReviewEnabled: getReviewEnabled,
     setReviewEnabled: setReviewEnabled,
+    isPerformingAutoPlay: isPerformingAutoPlay,
   };
 
   // Returns the active tool
@@ -419,15 +421,16 @@ besogo.makeEditor = function(sizeX, sizeY, options)
   function navigateToNode(node)
   {
     current = node; // Navigate to child if found
-    notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
     if (autoPlay && !reviewMode && node.move.color != node.getRoot().firstToPlay && node.hasChildIncludingVirtual())
     {
+      performingAutoPlay = true;
       setTimeout(function()
       {
         if (isMutable)
         {
           if(soundsEnabled)
             document.getElementsByTagName("audio")[0].play();
+          performingAutoPlay = false;
           nextNode(1);
         }
       }, 360);
@@ -441,6 +444,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
           displayResult(node.correct ? 'S' : 'F');
       }, 360);
     }
+    notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
   }
 
   // Navigates to child with move at (x, y), searching tree if shift key pressed
@@ -688,5 +692,10 @@ besogo.makeEditor = function(sizeX, sizeY, options)
   function setReviewEnabled(value)
   {
     reviewEnabled = value
+  }
+
+  function isPerformingAutoPlay()
+  {
+    return performingAutoPlay;
   }
 };

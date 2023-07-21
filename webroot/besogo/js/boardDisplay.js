@@ -583,6 +583,14 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
     var group = besogo.svgEl("g"); // Group holding hover layer elements
 
     hoverLayer = []; // Clear the references to the old layer
+
+    if (editor.isPerformingAutoPlay())
+    {
+      hoverLayer = []; // Clear the references to the old layer
+      updateHoverState();
+      return;
+    }
+
     group.setAttribute('opacity', '0.35');
 
     if (editor.getTool() === 'navOnly')
