@@ -320,16 +320,7 @@ besogo.makeToolPanel = function(container, editor)
     });
     container.appendChild(labelText);
 	
-	makeButtonText('Cut', 'Remove branch', function() { editor.cutCurrent(); });
-	/*
-    makeButtonText('Pass', 'Pass move', function()
-    {
-      var tool = editor.getTool();
-      if (tool !== 'navOnly' && tool !== 'auto')
-        editor.setTool('auto'); // Ensures that a move tool is selected
-      editor.click(0, 0, false); // Clicking off the board signals a pass
-    });
-
+	  makeButtonText('Cut', 'Remove branch', function() { editor.cutCurrent(); });
     makeButtonText('Raise', 'Raise variation', function() { editor.promote(); });
     makeButtonText('Lower', 'Lower variation', function() { editor.demote(); });
     makeButtonText('Cut', 'Remove branch', function() { editor.cutCurrent(); });
@@ -367,7 +358,7 @@ besogo.makeToolPanel = function(container, editor)
       editor.getRoot().firstMove = transformation.applyOnColor(editor.getRoot().firstMove);
       editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
       editor.edited = true;
-    });*/
+    });
   }
 
   // Creates a button holding an SVG image
