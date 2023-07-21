@@ -163,7 +163,7 @@ besogo.makeToolPanel = function(container, editor)
 		  else prevButtonId = 'besogo-back-button-inactive';
 		  makeButtonText('Back', 'previous problem', function()
 		  {
-			if(prevButtonLink!=0) window.location.href = "/tsumegos/play/"+prevButtonLink;
+			if(prevButtonLink!=0) window.location.href = "/tsumegos/play/"+prevButtonLink+inFavorite;
 		  }, prevButtonId);
 		  
 		  makeButtonText('Reset', 'reset the problem', function()
@@ -172,6 +172,8 @@ besogo.makeToolPanel = function(container, editor)
 			toggleBoardLock(false);
 			reviewModeActive = false;
 			reviewMode = false;
+			soundParameterForCorrect = false;
+			disableAutoplay = false;
 			document.getElementById("status").innerHTML = "";
 			document.getElementById("theComment").style.cssText = "display:none;";
 			$(".besogo-panels").css("display","none");
@@ -185,7 +187,7 @@ besogo.makeToolPanel = function(container, editor)
 		  else nextButtonId = 'besogo-next-button-inactive';
 		  makeButtonText('Next', 'next problem', function()
 		  {
-			if(nextButtonLink!=0) window.location.href = "/tsumegos/play/"+nextButtonLink;
+			if(nextButtonLink!=0) window.location.href = "/tsumegos/play/"+nextButtonLink+inFavorite;
 		  }, nextButtonId);
 	  }else if(mode==2){
 		  makeButtonText('History', 'history of rating mode', function()
@@ -234,7 +236,7 @@ besogo.makeToolPanel = function(container, editor)
 
   function makeEditorToolButtons(container, editor)
   {
-	  /*
+	  
     svg = makeButtonSVG('auto', 'Auto-play/navigate\n' +
         'crtl+click to force ko, suicide, overwrite\n' +
         'shift+click to jump to move'); // Auto-play/nav tool button
@@ -282,7 +284,9 @@ besogo.makeToolPanel = function(container, editor)
       evt.stopPropagation(); // Stop keydown propagation when in focus
     });
     container.appendChild(labelText);
-
+	
+	makeButtonText('Cut', 'Remove branch', function() { editor.cutCurrent(); });
+/*
     makeButtonText('Pass', 'Pass move', function()
     {
       var tool = editor.getTool();

@@ -91,6 +91,20 @@
 			</li>
 			<br><br>
 		</div>
+		<p class="title4">Update 20.07.2023</p>
+		<div class="new1">
+			<b>New board viewer: BesoGo</b><br><br>
+			We changed the technology that is used to display the problems from jGoBoard to BesoGo. There are various advantages, such as 
+			a tree display in the review, changing views without refresh, editing and saving problems on the website and more. It also opens
+			possibilities to merge recurring board positions and to make a better result distinction. Instead of correct and incorrect,
+			a future update is going to include more details.
+			<br><br>
+			<div align="center"><img width="60%" src="/img/besoGoExample.png"></div>
+			<br>
+			It comes
+			with a separate editor which was the starting point to make this possible. <a href="https://kovarex.github.io/besogo/testing.html" target="_blank">Editor</a>
+			<br><br>
+		</div>
 		<p class="title4">New Collection: French Go Review</p>
 		<div class="new1">
 			The french Go review is a magazine published currently 3 times a year which started in 1979. The first issue for 2023 is N° 158. In each issue, some tsumego or tesuji 
@@ -270,6 +284,11 @@
 			if($ac) $modeActions2 = 'class="modeboxes"';
 			else $modeActions2 = 'class="modeboxes"';
 		
+			echo '<div class="egc2023promo">';
+			echo '<a href="https://www.egc2023.de/en/home-en/" target="_blank" alt="EGC 2023 Leipzig" title="EGC 2023 Leipzig">Go to the website >></a>';
+			echo '</div>';
+		
+			/*
 			if(isset($_SESSION['loggedInUser'])){
 				$url1 = '';
 				$url2 = '';
@@ -298,7 +317,7 @@
 				echo $url3;
 				echo $url4;
 				echo '</div>';
-			}
+			}*/
 		?>
 		
 		<div class="modeBox1" onmouseover="mode1hover()" onmouseout="modeNoHover()" onclick="goMode1()">
@@ -335,7 +354,7 @@
 			</div>
 		</div>
 		<?php
-			echo '<img src="/img/'.$quote.'.PNG" width="100%" alt="Tsumego Hero Message of the Day" title="Tsumego Hero Message of the Day">';
+		echo '<img src="/img/egc2023.png" width="100%" alt="Tsumego Hero Message of the Day" title="Tsumego Hero Message of the Day">';
 		
 		/*
 		<div class="danielml-bg">
@@ -605,11 +624,11 @@
 		<p class="title4">Recent Donations and Upgrades</p>
 		<div class="new1">
 			<table class="newx">
-		<tr><td width="50%"><h1>Rene Tammen</h1></td><td><h1>12,00 €</h1></td></tr>
-		<tr><td><h1>gregth</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>Tomo</h1></td><td><h1>15,00 €</h1></td></tr>
-		<tr><td><h1>Pantera730</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>Vincent Lit</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td width="50%"><h1>Max Byrd</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>John Boger</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>tigertrap500</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>Martin Python</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>Pufpuf</h1></td><td><h1>10,00 €</h1></td></tr>	
 		</table>	
 		<br>
 		</div>	

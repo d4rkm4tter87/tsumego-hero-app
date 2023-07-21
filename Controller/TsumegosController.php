@@ -1526,6 +1526,8 @@ class TsumegosController extends AppController{
 		
 		//echo '<pre>'; print_r($favorite); echo '</pre>';
 		
+		if($t['Tsumego']['set_id']==42) $ui = 1;
+		
 		$this->set('raName', $raName);
 		$this->set('crs', $crs);
 		$this->set('admins', $admins);

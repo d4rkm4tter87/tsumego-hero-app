@@ -3039,8 +3039,15 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	#besogo-review-button:hover{
 		background-color:#cc6464!important
 	}
-	
-	
+	.egc2023promo{
+		font-size: 34px;
+		position: absolute;
+		top: 154px;
+		left: 129px;
+	}
+	.egc2023promo a{
+		color: white!important;
+	}
 	
 	
 	

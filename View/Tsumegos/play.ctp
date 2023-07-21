@@ -3,24 +3,24 @@
 	<link rel="stylesheet" type="text/css" href="/besogo/css/besogo.css">
 	<link rel="stylesheet" type="text/css" href="/besogo/css/board-flat.css">
 
-	<script src="/besogo/js/besogo.js?v=1.2"></script>
-	<script src="/besogo/js/transformation.js?v=1.2"></script>
-	<script src="/besogo/js/treeProblemUpdater.js?v=1.2"></script>
-	<script src="/besogo/js/nodeHashTable.js?v=1.2"></script>
-	<script src="/besogo/js/editor.js?v=1.2"></script>
-	<script src="/besogo/js/gameRoot.js?v=1.2"></script>
-	<script src="/besogo/js/status.js?v=1.2"></script>
-	<script src="/besogo/js/svgUtil.js?v=1.2"></script>
-	<script src="/besogo/js/parseSgf.js?v=1.2"></script>
-	<script src="/besogo/js/loadSgf.js?v=1.2"></script>
-	<script src="/besogo/js/saveSgf.js?v=1.2"></script>
-	<script src="/besogo/js/boardDisplay.js?v=1.2"></script>
-	<script src="/besogo/js/coord.js?v=1.2"></script>
-	<script src="/besogo/js/toolPanel.js?v=1.3"></script>
-	<script src="/besogo/js/filePanel.js?v=1.2"></script>
-	<script src="/besogo/js/controlPanel.js?v=1.2"></script>
-	<script src="/besogo/js/commentPanel.js?v=1.2"></script>
-	<script src="/besogo/js/treePanel.js?v=1.2"></script>
+	<script src="/besogo/js/besogo.js?v=1.7"></script>
+	<script src="/besogo/js/transformation.js?v=1.7"></script>
+	<script src="/besogo/js/treeProblemUpdater.js?v=1.7"></script>
+	<script src="/besogo/js/nodeHashTable.js?v=1.7"></script>
+	<script src="/besogo/js/editor.js?v=1.7"></script>
+	<script src="/besogo/js/gameRoot.js?v=1.7"></script>
+	<script src="/besogo/js/status.js?v=1.7"></script>
+	<script src="/besogo/js/svgUtil.js?v=1.7"></script>
+	<script src="/besogo/js/parseSgf.js?v=1.7"></script>
+	<script src="/besogo/js/loadSgf.js?v=1.7"></script>
+	<script src="/besogo/js/saveSgf.js?v=1.7"></script>
+	<script src="/besogo/js/boardDisplay.js?v=1.7"></script>
+	<script src="/besogo/js/coord.js?v=1.7"></script>
+	<script src="/besogo/js/toolPanel.js?v=1.7"></script>
+	<script src="/besogo/js/filePanel.js?v=1.7"></script>
+	<script src="/besogo/js/controlPanel.js?v=1.7"></script>
+	<script src="/besogo/js/commentPanel.js?v=1.7"></script>
+	<script src="/besogo/js/treePanel.js?v=1.7"></script>
 <?php } ?>
 <?php
 	$choice = array();
@@ -30,7 +30,6 @@
 	if($corner=='full board') $boardSize = 'medium';
 	else $boardSize = 'large';
 	shuffle($choice);
-
 
 	$authorx = $t['Tsumego']['author'];
 	if($authorx=='Joschka Zimdars') $authorx = 'd4rkm4tter';
@@ -1643,7 +1642,7 @@
 	}
 	$browser = $_SERVER['HTTP_USER_AGENT'] . "\n\n";
 
-	echo '<audio><source src="/sounds/stone1.ogg"></audio>';
+	echo '<audio><source src="/sounds/newStone.ogg"></audio>';
 	echo '';
 	/*
 	if(strpos($browser, 'Firefox')){
@@ -1751,11 +1750,10 @@
 	var besogoMode2Solved = false;
 	var disableAutoplay = false;
 	var besogoNoLogin = false;
-	
+	var soundParameterForCorrect = false;
+	var inFavorite = "<?php echo $inFavorite; ?>";
 	
 	<?php
-	
-	
 	if(isset($_SESSION['loggedInUser']['User']['id'])){
 		echo 'var besogoUserId = '.$_SESSION['loggedInUser']['User']['id'].';';
 	}else{
@@ -3693,9 +3691,9 @@
 		options[value.shift()] = value.join("="); // First "=" separates value from name, rest are part of value
 	  }
 	  
-	  options.panels = "tree+control+tool";
+	  options.panels = "tree+control";
 	  <?php 
-	  if($_SESSION['loggedInUser']['User']['isAdmin']>0) echo 'options.panels = "tree+control+tool";';//echo 'options.panels = "tree+control+tool+comment+file";';
+	  if($_SESSION['loggedInUser']['User']['isAdmin']>0) echo 'options.panels = "tree+control";';//echo 'options.panels = "tree+control+tool+comment+file";';
 	  
 	  ?> 
 	  options.tsumegoPlayTool = 'auto';

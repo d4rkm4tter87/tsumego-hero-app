@@ -383,10 +383,9 @@ besogo.makeEditor = function(sizeX, sizeY)
     }
 	if(isEmbedded){
 		if(!disableAutoplay){
-			console.log("further click");
 			if(soundsEnabled) document.getElementsByTagName("audio")[0].play();
 			if(current.correct==true && current.correctSource==true){
-				console.log("current.correct==true");
+				soundParameterForCorrect = true;
 				setTimeout(function(){
 					toggleBoardLock(true);
 					if(!reviewModeActive){
@@ -401,7 +400,6 @@ besogo.makeEditor = function(sizeX, sizeY)
 
   function navigateToNode(node)
   {
-	console.log("navigateToNode");
     current = node; // Navigate to child if found
     notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
     if(autoPlay){
@@ -517,7 +515,6 @@ besogo.makeEditor = function(sizeX, sizeY)
     else if (current.playMove(i, j, color, allowAll))
     { // Play in current
         // Only need to update if move succeeds
-		console.log("4");
       current.registerInVirtualMoves();
       besogo.updateCorrectValues(current.getRoot());
       notifyListeners({ treeChange: true, stoneChange: true });
