@@ -1,4 +1,4 @@
-besogo.makeEditor = function(sizeX, sizeY)
+besogo.makeEditor = function(sizeX, sizeY, options)
 {
   'use strict';
   // Creates an associated game state tree
@@ -32,10 +32,17 @@ besogo.makeEditor = function(sizeX, sizeY)
       // Variant style: even/odd - children/siblings, <2 - show auto markup for variants
       variantStyle = 0, // 0-3, 0 is default
       edited = false,
-	  autoPlay = false,
-      shift = false;
-	  var isEmbedded = typeof mode === "number"; //check if embedded in the website
-	  
+      autoPlay = false,
+      shift = false,
+      reviewMode = true,
+      reviewEnabled = true;
+      var isEmbedded = typeof mode === "number"; //check if embedded in the website
+
+    if (typeof options.reviewMode === 'boolean')
+      reviewMode = options.reviewMode;
+    if (typeof options.reviewEnabled === 'boolean')
+      reviewEnabled = options.reviewEnabled;
+
   return {
     addListener: addListener,
     click: click,
@@ -69,9 +76,13 @@ besogo.makeEditor = function(sizeX, sizeY)
     setShift: setShift,
     isShift: isShift,
     applyTransformation : applyTransformation,
-    setAutoPlay, setAutoPlay
+    setAutoPlay: setAutoPlay,
+    getReviewMode: getReviewMode,
+    setReviewMode: setReviewMode,
+    getReviewEnabled: getReviewEnabled,
+    setReviewEnabled: setReviewEnabled,
   };
-   
+
   // Returns the active tool
   function getTool() { return tool; }
 
@@ -193,9 +204,9 @@ besogo.makeEditor = function(sizeX, sizeY)
   // Navigates forward num nodes (to the end if num === -1)
   function nextNode(num)
   {
-    if (current.children.length + current.virtualChildren.length === 0) // Check if no children
+    if (!current.hasChildIncludingVirtual()) // Check if no children
       return; // Do nothing if no children (avoid notification)
-    while (current.children.length + current.virtualChildren.length > 0 && num !== 0)
+    while (current.hasChildIncludingVirtual() && num !== 0)
     {
       if (navHistory.length) // Non-empty navigation history
         current = navHistory.pop();
@@ -218,14 +229,18 @@ besogo.makeEditor = function(sizeX, sizeY)
     // Notify listeners of navigation (with no tree edits)
     notifyListeners({ navChange: true }, true); // Preserve history
 
-	//opponent move and incorrect
-	if(isEmbedded){
-		if(current.correct==false && current.lastMove==1 && current.children.length<1){
-			if(soundsEnabled) document.getElementsByTagName("audio")[0].play();
-			displayResult('F');
-			if(mode==2 || mode==3) toggleBoardLock(true);
-		}
-	}
+    //opponent move and incorrect
+    if (isEmbedded)
+    {
+      if (!current.hasChildIncludingVirtual())
+      {
+        if (soundsEnabled)
+          document.getElementsByTagName("audio")[0].play();
+        displayResult(current.correct ? 'S' : 'F');
+        if (!current.correct && (mode == 2 || mode == 3))
+          toggleBoardLock(true);
+      }
+    }
   }
 
   // Navigates backward num nodes (to the root if num === -1)
@@ -381,41 +396,50 @@ besogo.makeEditor = function(sizeX, sizeY)
         setMarkup(i, j, label);
         break;
     }
-	if(isEmbedded){
-		if(!disableAutoplay){
-			if(soundsEnabled) document.getElementsByTagName("audio")[0].play();
-			if(current.correct==true && current.correctSource==true){
-				soundParameterForCorrect = true;
-				setTimeout(function(){
-					toggleBoardLock(true);
-					if(!reviewModeActive){
-						displayResult('S');
-						notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
-					}
-				}, 360);
-			}
-		}
-	}
+
+    if (isEmbedded && autoPlay)
+    {
+      if (soundsEnabled)
+        document.getElementsByTagName("audio")[0].play();
+      if (current.correct && !current.hasChildIncludingVirtual())
+      {
+        setTimeout(function()
+        {
+          toggleBoardLock(true);
+          if (!reviewMode)
+          {
+            displayResult('S');
+            notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+          }
+        }, 360);
+      }
+    }
   }
 
   function navigateToNode(node)
   {
     current = node; // Navigate to child if found
     notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
-    if(autoPlay){
-      setTimeout(function(){
-			if(isMutable){
-				if(soundsEnabled) document.getElementsByTagName("audio")[0].play();
-				nextNode(1); 
-			}
-		}, 360);
-	}
-    if (displayResult && node.correct && !node.hasChildIncludingVirtual())
+    if (autoPlay && !reviewMode && node.move.color != node.getRoot().firstToPlay && node.hasChildIncludingVirtual())
     {
-        setTimeout(function(){
-		    toggleBoardLock(true);
-			if(!reviewModeActive) displayResult('S');
-		}, 360);
+      setTimeout(function()
+      {
+        if (isMutable)
+        {
+          if(soundsEnabled)
+            document.getElementsByTagName("audio")[0].play();
+          nextNode(1);
+        }
+      }, 360);
+    }
+    else if (displayResult && !node.hasChildIncludingVirtual())
+    {
+      setTimeout(function()
+      {
+        toggleBoardLock(true);
+        if(!reviewMode)
+          displayResult(node.correct ? 'S' : 'F');
+      }, 360);
     }
   }
 
@@ -429,7 +453,7 @@ besogo.makeEditor = function(sizeX, sizeY)
     {
       let move = children[i].move;
       //if (shiftKey)  // Search for move in branch
-	  if(false)
+      if(false)
       {
         if (jumpToMove(x, y, children[i]))
           return true;
@@ -486,41 +510,42 @@ besogo.makeEditor = function(sizeX, sizeY)
   // Set allowAll to truthy to allow illegal moves
   function playMove(i, j, color, allowAll)
   {
-	disableAutoplay = false;
-	allowAll = false;
+    allowAll = false;
     // Check if current node is immutable or root
     if (!current.isMutable('move') || !current.parent)
     {
-	  disableAutoplay = true;
       var next = current.makeChild(); // Create a new child node
       if (next.playMove(i, j, color, allowAll)) // Play in new node
-      { 
+      {
         // Keep (add to game state tree) only if move succeeds
         current.registerChild(next);
         current = next;
         // Notify tree change, navigation, and stone change
         notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
         edited = true;
-		
-		if(isEmbedded){
-			if(soundsEnabled) document.getElementsByTagName("audio")[0].play();
-			setTimeout(function(){
-				if(!reviewModeActive) displayResult('F');
-				if(mode==2 || mode==3) toggleBoardLock(true);
-			}, 360);
-		}
+
+        if (isEmbedded)
+        {
+          if (soundsEnabled)
+            document.getElementsByTagName("audio")[0].play();
+          setTimeout(function()
+          {
+            if(!reviewMode)
+              displayResult('F');
+            if(mode==2 || mode==3) toggleBoardLock(true);
+          }, 360);
+        }
       }
     // Current node is mutable and not root
     }
     else if (current.playMove(i, j, color, allowAll))
     { // Play in current
-        // Only need to update if move succeeds
+      // Only need to update if move succeeds
       current.registerInVirtualMoves();
       besogo.updateCorrectValues(current.getRoot());
       notifyListeners({ treeChange: true, stoneChange: true });
       edited = true;
     }
-	
   }
 
   // Places a setup stone at the given color and location
@@ -643,5 +668,25 @@ besogo.makeEditor = function(sizeX, sizeY)
   function setAutoPlay(value)
   {
     autoPlay = value;
+  }
+
+  function getReviewMode()
+  {
+    return reviewMode;
+  }
+
+  function setReviewMode(value)
+  {
+    reviewMode = value;
+  }
+
+  function getReviewEnabled()
+  {
+    return reviewEnabled;
+  }
+
+  function setReviewEnabled(value)
+  {
+    reviewEnabled = value
   }
 };

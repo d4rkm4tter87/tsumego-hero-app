@@ -1,4 +1,22 @@
 // Load a parsed SGF object into a game state tree
+
+besogo.getDefaultScaleParameters = function(size)
+{
+  let scaleParameters = [];
+	scaleParameters['lowestX'] = size.x;
+	scaleParameters['lowestY'] = size.y;
+	scaleParameters['highestX'] = size.x;
+	scaleParameters['highestY'] = size.y;
+	scaleParameters['hFlip'] = false;
+	scaleParameters['vFlip'] = false;
+	scaleParameters['orientation'] = '';
+	scaleParameters['distToX0'] = 0;
+	scaleParameters['distToX19'] = 0;
+	scaleParameters['distToY0'] = 0;
+	scaleParameters['distToY19'] = 0;
+  return scaleParameters;
+}
+
 besogo.loadSgf = function(sgf, editor)
 {
   'use strict';

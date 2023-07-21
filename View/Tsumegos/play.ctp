@@ -3506,7 +3506,7 @@
 					runXPBar(true);
 				}
 				noLastMark = true;
-				reviewEnabled = true;
+        besogo.editor.setReviewEnabled(true);
 				$("#besogo-review-button-inactive").attr("id","besogo-review-button");
 				if(!noXP){
 					if(!doubleXP){
@@ -3557,7 +3557,7 @@
 				//locked = true;
 				noLastMark = true;
 				besogoMode2Solved = true;
-				reviewEnabled = true;
+        besogo.editor.setReviewEnabled(true);
 				$("#besogo-review-button-inactive").attr("id","besogo-review-button");
 				$("#besogo-next-button-inactive").attr("id","besogo-next-button");
 				if(!noXP){
@@ -3706,6 +3706,7 @@
 	  options.corner = shuffledCornerArray[0];
 	  
 	  besogoCorner = options.corner;
+    options.rootPath = '/besogo/';
 	  options.theme = '<?php echo $choice[0][1]; ?>';
 	  options.themeParameters = ['<?php echo $choice[0][2]; ?>', '<?php echo $choice[0][3]; ?>'];
 	  options.coord = 'western';
@@ -3716,10 +3717,13 @@
 		//addStyleLink('css/board-' + options.theme + '.css');
 	  if (options.height && options.width && options.resize === 'fixed')
 	  {
-		div.style.height = options.height + 'px';
-		div.style.width = options.width + 'px';
+		  div.style.height = options.height + 'px';
+		  div.style.width = options.width + 'px';
 	  }
+    options.reviewMode = false;
+    options.reviewEnabled = <?php echo $reviewEnabled ? 'true' : 'false'; ?>;
 	  besogo.create(div, options);
+    besogo.editor.setAutoPlay(true);
 
 	  function addStyleLink(cssURL)
 	  {

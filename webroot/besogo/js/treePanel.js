@@ -1,4 +1,5 @@
-besogo.makeTreePanel = function(container, editor) {
+besogo.makeTreePanel = function(container, editor)
+{
   'use strict';
   var svg,
       pathGroup,
@@ -6,22 +7,22 @@ besogo.makeTreePanel = function(container, editor) {
       currentMarker,
       SCALE = 0.25; // Tree size scaling factor
 
-  if(reviewEnabled) rebuildNavTree();
+  if (editor.getReviewMode())
+    rebuildNavTree();
   editor.addListener(treeUpdate);
 
   // Callback for handling tree changes
   function treeUpdate(msg)
   {
-	if(reviewEnabled){
-		if (msg.treeChange) // Tree structure changed
-		  rebuildNavTree(); // Rebuild entire tree
-		else if (msg.navChange) // Only navigation changed
-		  updateCurrentMarker(); // Update current location marker
-		else if (msg.stoneChange) // Only stones in current changed
-		  updateCurrentNodeIcon();
-	}else{
-		//if(pressedReviewButton) rebuildNavTree();
-	}
+    if (!editor.getReviewMode())
+      return;
+
+    if (msg.treeChange) // Tree structure changed
+      rebuildNavTree(); // Rebuild entire tree
+    else if (msg.navChange) // Only navigation changed
+      updateCurrentMarker(); // Update current location marker
+    else if (msg.stoneChange) // Only stones in current changed
+      updateCurrentNodeIcon();
   }
 
   // Updates the current marker in the tree

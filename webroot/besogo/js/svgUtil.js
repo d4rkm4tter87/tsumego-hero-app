@@ -57,20 +57,21 @@ besogo.svgShadow = function(x, y) {
 besogo.realStone = function(x, y, color, index, blackStone = '', whiteStone = '') {
     var element;
 	
-	if(blackStone === ''){
-		if (color < 0) {
+	if(blackStone === '')
+  {
+		if (color < 0)
 			color = 'black' + (index % besogo.BLACK_STONES);
-		} else {
+		else
 			color = 'white' + (index % besogo.WHITE_STONES);
-		}
-		color = '/besogo/img/' + color + '.png';
-	}else{
-		if (color < 0) {
+		color = besogo.rootPath + 'img/' + color + '.png';
+	}
+  else
+  {
+		if (color < 0)
 			color = blackStone;
-		} else {
+		else
 			color = whiteStone;
-		}
-		color = '/besogo/img/' + color;
+		color = besogo.rootPath + 'img/' + color;
 	}
    
     element =  besogo.svgEl("image", {
