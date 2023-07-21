@@ -431,31 +431,33 @@ besogo.makeEditor = function(sizeX, sizeY, options)
       performingAutoPlay = true;
       setTimeout(function()
       {
-        if (isMutable)
-        {
-          if (soundsEnabled && !reviewMode)
-            document.getElementsByTagName("audio")[0].play();
-          performingAutoPlay = false;
+        // when autoplay was cancelled, it was reset in the meantime, so we forget about this
+        if (!performingAutoPlay)
+          return;
+        performingAutoPlay = false;
+        if (!isMutable)
+          return;
+        if (soundsEnabled && !reviewMode)
+          document.getElementsByTagName("audio")[0].play();
 
-          let firstSkipped = false;
-          for (let i = 0; i < current.children.length; i++)
-            if (!firstSkipped)
-            {
-              firstSkipped = true;
-              continue;
-            }
-            else if (current.children[i].required)
-              remainingRequiredNodes.push(current.children[i]);
-          for (let i = 0; i < current.virtualChildren.length; i++)
-            if (!firstSkipped)
-            {
-              firstSkipped = true;
-              continue;
-            }
-            else if (current.virtualChildren[i].required)
-              remainingRequiredNodes.push(current.virtualChildren[i]);
-          nextNode(1);
-        }
+        let firstSkipped = false;
+        for (let i = 0; i < current.children.length; i++)
+          if (!firstSkipped)
+          {
+            firstSkipped = true;
+            continue;
+          }
+          else if (current.children[i].required)
+            remainingRequiredNodes.push(current.children[i]);
+        for (let i = 0; i < current.virtualChildren.length; i++)
+          if (!firstSkipped)
+          {
+            firstSkipped = true;
+            continue;
+          }
+          else if (current.virtualChildren[i].required)
+            remainingRequiredNodes.push(current.virtualChildren[i]);
+        nextNode(1);
       }, 360);
     }
     notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
@@ -738,6 +740,10 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     performingAutoPlay = true;
     setTimeout(function()
     {
+      // when autoplay was cancelled, it was reset in the meantime, so we forget about this
+      if (!performingAutoPlay)
+        return;
+
       performingAutoPlay = false;
       let node = remainingRequiredNodes.pop();
       navigateToNode(node);
@@ -750,6 +756,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 
   function resetToStart()
   {
+    performingAutoPlay = false;
     prevNode(-1);
     remainingRequiredNodes = [];
   }
