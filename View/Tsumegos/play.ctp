@@ -1276,7 +1276,7 @@
 	<div align="center">
 	<?php if($activate){
 	if(isset($_SESSION['loggedInUser'])){
-	if($_SESSION['loggedInUser']['User']['isAdmin']>0){
+	if(true){
 		?>
 		<div class="mode1">
 			<table>
