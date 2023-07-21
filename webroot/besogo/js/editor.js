@@ -34,17 +34,14 @@ besogo.makeEditor = function(sizeX, sizeY, options)
       edited = false,
       autoPlay = false,
       shift = false,
-      reviewMode = true,
+      reviewMode = typeof options.reviewMode === 'boolean' ? options.reviewMode : true,
       performingAutoPlay = false,
-      reviewEnabled = true,
-      soundEnabled = false;
-      var remainingRequiredNodes = [];
-      var isEmbedded = typeof mode === "number"; //check if embedded in the website
-
-    if (typeof options.reviewMode === 'boolean')
-      reviewMode = options.reviewMode;
-    if (typeof options.reviewEnabled === 'boolean')
-      reviewEnabled = options.reviewEnabled;
+      reviewEnabled = typeof options.reviewEnabled === 'boolean' ? options.reviewEnabled : true,
+      soundEnabled = false,
+      remainingRequiredNodes = [],
+      isEmbedded = typeof mode === "number", //check if embedded in the website
+      displayResult = null,
+      showComment = null;
 
   return {
     addListener: addListener,
@@ -87,7 +84,8 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     isPerformingAutoPlay: isPerformingAutoPlay,
     setSoundEnabled: setSoundEnabled,
     registerDisplayResult: registerDisplayResult,
-    resetToStart: resetToStart
+    resetToStart: resetToStart,
+    registerShowComment: registerShowComment,
   };
 
   // Returns the active tool
@@ -361,6 +359,8 @@ besogo.makeEditor = function(sizeX, sizeY, options)
   // Handle click with application of selected tool
   function click(i, j, ctrlKey, shiftKey)
   {
+    if (performingAutoPlay)
+      return;
     switch(tool)
     {
       case 'navOnly':
@@ -426,15 +426,6 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     if (byClicking && soundEnabled && !reviewMode)
       document.getElementsByTagName("audio")[0].play();
     current = node; // Navigate to child if found
-
-    if (node.comment.length != 0)
-    {
-      $("#theComment").css("display", "block");
-      $('#theComment').text(node.comment);
-    }
-    else
-      $("#theComment").css("display", "none");
-
     if (autoPlay && !reviewMode && node.move.color == node.getRoot().firstMove && node.hasChildIncludingVirtual())
     {
       performingAutoPlay = true;
@@ -467,9 +458,8 @@ besogo.makeEditor = function(sizeX, sizeY, options)
         }
       }, 360);
     }
-    else
-      tryToFinish(node);
     notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
+    tryToFinish(node);
   }
 
   // Navigates to child with move at (x, y), searching tree if shift key pressed
@@ -662,6 +652,8 @@ besogo.makeEditor = function(sizeX, sizeY, options)
       edited = true;
     if (!keepHistory && msg.navChange)
       navHistory = []; // Clear navigation history
+    if (msg.navChange && showComment)
+      showComment(current.comment);
     for (let i = 0; i < listeners.length; i++)
       listeners[i](msg);
   }
@@ -743,10 +735,16 @@ besogo.makeEditor = function(sizeX, sizeY, options)
   {
     if (remainingRequiredNodes.length == 0)
       return false;
-    let node = remainingRequiredNodes.pop();
-    navigateToNode(node);
-    $("#theComment").css("display", "block");
-    $('#theComment').text("Correct, but what about this answer?\n" + node.comment);
+    performingAutoPlay = true;
+    setTimeout(function()
+    {
+      performingAutoPlay = false;
+      let node = remainingRequiredNodes.pop();
+      navigateToNode(node);
+      if (showComment)
+        showComment("Correct, but what about this answer?\n" + node.comment);
+    }, 720);
+    notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
     return true;
   }
 
@@ -754,5 +752,10 @@ besogo.makeEditor = function(sizeX, sizeY, options)
   {
     prevNode(-1);
     remainingRequiredNodes = [];
+  }
+
+  function registerShowComment(value)
+  {
+    showComment = value
   }
 };

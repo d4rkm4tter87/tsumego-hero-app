@@ -3725,6 +3725,11 @@
 	  besogo.create(div, options);
     besogo.editor.setAutoPlay(true);
     besogo.editor.registerDisplayResult(displayResult);
+    besogo.editor.registerShowComment(function(commentText)
+    {
+      $("#theComment").css("display", commentText.length == 0 ? "none" : "block");
+      $('#theComment').text(commentText);
+    });
 
 	  function addStyleLink(cssURL)
 	  {
