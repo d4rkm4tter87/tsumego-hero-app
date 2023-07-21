@@ -10,6 +10,7 @@ besogo.makeCommentPanel = function(container, editor)
       commentEdit = document.createElement('textarea'),
       statusBasedCheckbox = null,
       correctButton = makeCorrectVariantButton(),
+      requiredButton = makeRequiredVariantButton(),
       playerInfoOrder = 'PW WR WT PB BR BT'.split(' '),
       infoOrder = 'HA KM RU TM OT GN EV PC RO DT RE ON GC AN US SO CP'.split(' '),
       noneSelection = null,
@@ -54,8 +55,8 @@ besogo.makeCommentPanel = function(container, editor)
           CP: 'Copyright'
       };
 
-  var isEmbedded = typeof mode === "number"; //check if embedded in the website	
-  
+  var isEmbedded = typeof mode === "number"; //check if embedded in the website
+
   statusLabel = createStatusLabel();
   statusTable = createStatusTable();
   let parentDiv = document.createElement('div');
@@ -73,16 +74,19 @@ besogo.makeCommentPanel = function(container, editor)
   });
   statusBasedCheckbox.type = 'checkbox';
   correctButtonSpan.appendChild(correctButton);
-  if(!isEmbedded) parentDiv.appendChild(correctButtonSpan);
-  
+  correctButtonSpan.appendChild(requiredButton);
+  if (!isEmbedded)
+    parentDiv.appendChild(correctButtonSpan);
+
   parentDiv.appendChild(createGoalTable());
-  if(!isEmbedded){
+  if (!isEmbedded)
+  {
 	  parentDiv.appendChild(statusLabel);
 	  parentDiv.appendChild(statusTable);
 	  parentDiv.appendChild(jumpToBranchWithoutStatusButton);
   }
 	  container.appendChild(makeCommentButton());
-  
+
   //container.appendChild(gameInfoTable);
   //container.appendChild(gameInfoEdit);
   infoTexts.C = document.createTextNode('');
@@ -341,6 +345,7 @@ besogo.makeCommentPanel = function(container, editor)
     }
 
     updateCorrectButton();
+    updateRequiredButton();
     updateJumpToBranchWithoutStatusButton();
     statusBasedCheckbox.checked = (editor.getCurrent().getRoot().goal != GOAL_NONE);
   }
@@ -499,6 +504,22 @@ besogo.makeCommentPanel = function(container, editor)
     return button;
   }
 
+  function makeRequiredVariantButton()
+  {
+    var button = document.createElement('input');
+    button.type = 'button';
+    button.value = 'Make required';
+    button.title = 'Change if this variant needs to be always played';
+    button.addEventListener('focus', preventFocus);
+
+    button.onclick = function()
+    {
+      editor.getCurrent().required = !editor.getCurrent().required;
+      updateRequiredButton();
+    };
+    return button;
+  }
+
   function createGoalRadioButton(parent, name, goal)
   {
     return createRadioButton(parent,
@@ -542,6 +563,16 @@ besogo.makeCommentPanel = function(container, editor)
       correctButton.value = 'Make incorrect';
     else
       correctButton.value = 'Make correct';
+  }
+
+  function updateRequiredButton()
+  {
+    let current = editor.getCurrent();
+    requiredButton.disabled = current.getRoot().firstMove != current.nextMove()
+    if (current.required)
+      requiredButton.value = 'Make not required';
+    else
+      requiredButton.value = 'Make required';
   }
 
   function createJumpToBranchWithoutStatusButton()

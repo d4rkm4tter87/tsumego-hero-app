@@ -200,7 +200,7 @@ besogo.makeToolPanel = function(container, editor)
       
       makeButtonText('Reset', 'reset the problem', function()
       {
-        besogo.editor.prevNode(-1);
+        besogo.editor.resetToStart();
         toggleBoardLock(false);
         besogo.editor.setReviewMode(false);
         document.getElementById("status").innerHTML = "";
@@ -252,7 +252,7 @@ besogo.makeToolPanel = function(container, editor)
           $(".besogo-board").css("margin","0");
           toggleBoardLock(false);
           deleteNextMoveGroup = true;
-          besogo.editor.prevNode(-1);
+          besogo.editor.resetToStart();
           editor.setReviewMode(true);
         }
         else

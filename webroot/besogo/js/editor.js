@@ -38,6 +38,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
       performingAutoPlay = false,
       reviewEnabled = true,
       soundEnabled = false;
+      var remainingRequiredNodes = [];
       var isEmbedded = typeof mode === "number"; //check if embedded in the website
 
     if (typeof options.reviewMode === 'boolean')
@@ -85,7 +86,8 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     setReviewEnabled: setReviewEnabled,
     isPerformingAutoPlay: isPerformingAutoPlay,
     setSoundEnabled: setSoundEnabled,
-    registerDisplayResult: registerDisplayResult
+    registerDisplayResult: registerDisplayResult,
+    resetToStart: resetToStart
   };
 
   // Returns the active tool
@@ -400,12 +402,40 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     }
   }
 
+  function tryToFinish(node)
+  {
+    if (node.hasChildIncludingVirtual())
+      return;
+    if (reviewMode)
+      return;
+    if (!autoPlay)
+      return;
+    if (!displayResult)
+      return;
+    if (navigateToRemainingRequiredIfNeeded())
+      return;
+    setTimeout(function()
+    {
+      toggleBoardLock(true);
+      displayResult(node.correct ? 'S' : 'F');
+    }, 360);
+  }
+
   function navigateToNode(node, byClicking = false)
   {
     if (byClicking && soundEnabled && !reviewMode)
       document.getElementsByTagName("audio")[0].play();
     current = node; // Navigate to child if found
-    if (autoPlay && !reviewMode && node.move.color != node.getRoot().firstToPlay && node.hasChildIncludingVirtual())
+
+    if (node.comment.length != 0)
+    {
+      $("#theComment").css("display", "block");
+      $('#theComment').text(node.comment);
+    }
+    else
+      $("#theComment").css("display", "none");
+
+    if (autoPlay && !reviewMode && node.move.color == node.getRoot().firstMove && node.hasChildIncludingVirtual())
     {
       performingAutoPlay = true;
       setTimeout(function()
@@ -415,18 +445,30 @@ besogo.makeEditor = function(sizeX, sizeY, options)
           if (soundsEnabled && !reviewMode)
             document.getElementsByTagName("audio")[0].play();
           performingAutoPlay = false;
+
+          let firstSkipped = false;
+          for (let i = 0; i < current.children.length; i++)
+            if (!firstSkipped)
+            {
+              firstSkipped = true;
+              continue;
+            }
+            else
+              remainingRequiredNodes.push(current.children[i]);
+          for (let i = 0; i < current.virtualChildren.length; i++)
+            if (!firstSkipped)
+            {
+              firstSkipped = true;
+              continue;
+            }
+            else
+              remainingRequiredNodes.push(current.virtualChildren[i]);
           nextNode(1);
         }
       }, 360);
     }
-    else if (!reviewMode && autoPlay && displayResult && !node.hasChildIncludingVirtual())
-    {
-      setTimeout(function()
-      {
-        toggleBoardLock(true);
-        displayResult(node.correct ? 'S' : 'F');
-      }, 360);
-    }
+    else
+      tryToFinish(node);
     notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
   }
 
@@ -690,5 +732,27 @@ besogo.makeEditor = function(sizeX, sizeY, options)
   function registerDisplayResult(value)
   {
     displayResult = value;
+  }
+
+  function addToRequired(node)
+  {
+    remainingRequiredNodes.push(node);
+  }
+
+  function navigateToRemainingRequiredIfNeeded()
+  {
+    if (remainingRequiredNodes.length == 0)
+      return false;
+    let node = remainingRequiredNodes.pop();
+    navigateToNode(node);
+    $("#theComment").css("display", "block");
+    $('#theComment').text("Correct, but what about this answer?\n" + node.comment);
+    return true;
+  }
+
+  function resetToStart()
+  {
+    prevNode(-1);
+    remainingRequiredNodes = [];
   }
 };
