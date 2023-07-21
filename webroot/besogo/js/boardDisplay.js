@@ -571,7 +571,7 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
     var color = (stone === -1) ? "white" : "black"; // White on black
     switch(editor.getTool())
     {
-      case 'auto': return besogo.svgStone(x, y, current.nextMove());
+      case 'auto': return !stone ? besogo.svgStone(x, y, current.nextMove()) : null;
       case 'addB':
         if (stone)
           return besogo.svgCross(x, y, besogo.RED);
