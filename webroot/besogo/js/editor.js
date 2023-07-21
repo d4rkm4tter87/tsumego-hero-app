@@ -401,8 +401,6 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 
     if (isEmbedded && autoPlay)
     {
-      if (soundsEnabled)
-        document.getElementsByTagName("audio")[0].play();
       if (current.correct && !current.hasChildIncludingVirtual())
       {
         setTimeout(function()
@@ -418,8 +416,10 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     }
   }
 
-  function navigateToNode(node)
+  function navigateToNode(node, byClicking = false)
   {
+    if (byClicking && soundsEnabled)
+      document.getElementsByTagName("audio")[0].play();
     current = node; // Navigate to child if found
     if (autoPlay && !reviewMode && node.move.color != node.getRoot().firstToPlay && node.hasChildIncludingVirtual())
     {
@@ -464,7 +464,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
       }
       else if (move && move.x === x && move.y === y)
       {
-        navigateToNode(children[i]);
+        navigateToNode(children[i], true /* by clicking */);
         return true;
       }
     }
@@ -477,7 +477,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
         if (move.x === x && move.y === y)
         {
           child.target.cameFrom = current;
-          navigateToNode(child.target);
+          navigateToNode(child.target, true /* by clicking */);
           return true;
         }
       }
