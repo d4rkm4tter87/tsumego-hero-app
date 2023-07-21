@@ -419,7 +419,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 
   function navigateToNode(node, byClicking = false)
   {
-    if (byClicking && soundsEnabled)
+    if (byClicking && soundEnabled)
       document.getElementsByTagName("audio")[0].play();
     current = node; // Navigate to child if found
     if (autoPlay && !reviewMode && node.move.color != node.getRoot().firstToPlay && node.hasChildIncludingVirtual())
