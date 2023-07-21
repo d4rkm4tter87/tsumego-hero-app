@@ -36,7 +36,8 @@ besogo.makeEditor = function(sizeX, sizeY, options)
       shift = false,
       reviewMode = true,
       performingAutoPlay = false,
-      reviewEnabled = true;
+      reviewEnabled = true,
+      soundEnabled = false;
       var isEmbedded = typeof mode === "number"; //check if embedded in the website
 
     if (typeof options.reviewMode === 'boolean')
@@ -83,6 +84,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     getReviewEnabled: getReviewEnabled,
     setReviewEnabled: setReviewEnabled,
     isPerformingAutoPlay: isPerformingAutoPlay,
+    setSoundEnabled: setSoundEnabled,
   };
 
   // Returns the active tool
@@ -194,7 +196,6 @@ besogo.makeEditor = function(sizeX, sizeY, options)
   // Returns the root of the game state tree
   function getRoot() { return root; }
 
-
   function loadRoot(load)
   {
     root = load;
@@ -236,7 +237,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     {
       if (!current.hasChildIncludingVirtual())
       {
-        if (soundsEnabled)
+        if (soundEnabled)
           document.getElementsByTagName("audio")[0].play();
         displayResult(current.correct ? 'S' : 'F');
         if (!current.correct && (mode == 2 || mode == 3))
@@ -697,5 +698,10 @@ besogo.makeEditor = function(sizeX, sizeY, options)
   function isPerformingAutoPlay()
   {
     return performingAutoPlay;
+  }
+
+  function setSoundEnabled(value)
+  {
+    soundEnabled = value;
   }
 };
