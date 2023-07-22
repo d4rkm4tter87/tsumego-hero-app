@@ -661,6 +661,8 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
 
     for (let i = 0; i < this.children.length; ++i)
       this.children[i].applyTransformation(rootNode, transformation);
+    for (let i = 0; i < this.virtualChildren.length; ++i)
+      this.virtualChildren[i].move = transformation.apply(this.virtualChildren[i].move, {x: sizeX, y: sizeY});
   }
 
   root.figureFirstToMove = function()
