@@ -3488,8 +3488,6 @@
 				document.getElementById("xpDisplay").style.color = "white";
 				if(set159){document.getElementById("theComment").style.cssText = "visibility:visible;color:green;";
 				document.getElementById("theComment").innerHTML = "xxx";}
-				if(moveHasComment){isCorrect=true;document.getElementById("theComment").style.cssText = "display:block;border:thick double green;";
-				}else{document.getElementById("theComment").style.cssText = "display:none;border:thick double green;";}
 				$("#commentSpace").show();
 				//locked = true;
 				if(mode==3){
