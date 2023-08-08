@@ -4,7 +4,7 @@
   besogo.VERSION = '0.0.2-alpha';
   besogo.editor = null;
   var rootPath = '';
-  let scaleParameters = [];
+  besogo.scaleParameters = [];
   let corner;
 
   function getMakers()
@@ -57,7 +57,7 @@
   besogo.initPanels = function(options, container, boardDiv, boardDisplay, scaleParameters, corner)
   {
     boardDiv = makeDiv('besogo-board', container); // Create div for board display
-    boardDisplay = besogo.makeBoardDisplay(boardDiv, besogo.editor, scaleParameters, corner); // Create board display
+    boardDisplay = besogo.makeBoardDisplay(boardDiv, besogo.editor, corner); // Create board display
 
     if (!options.nokeys) // Add keypress handler unless nokeys option is truthy
       addKeypressHandler(container, besogo.editor, boardDisplay);
@@ -210,6 +210,20 @@
     else if(options.corner=='top-right') $("#boardOrientationTR").css("opacity","1");
     else if(options.corner=='bottom-left') $("#boardOrientationBL").css("opacity","1");
     else if(options.corner=='bottom-right') $("#boardOrientationBR").css("opacity","1");
+	
+	if(besogo.scaleParameters['boardCanvasSize'] === 'full board'){
+		$(".besogo-board").css("width", "60%");
+		$(".besogo-board").css("margin", "0 252px");
+	}else if(besogo.scaleParameters['boardCanvasSize'] === 'horizontal half board'){
+		$(".besogo-board").css("width", "78%");
+		$(".besogo-board").css("margin", "0 138px");
+	}else if(besogo.scaleParameters['boardCanvasSize'] === 'vertical half board'){
+		$(".besogo-board").css("width", "30%");
+		$(".besogo-board").css("margin", "0 443px");
+	}else{
+		$(".besogo-board").css("width", "50%");
+		$(".besogo-board").css("margin", "0 315px");
+	}
   }
 
   besogo.create = function(container, options)
@@ -489,38 +503,38 @@
       return; // Silently fail on parse error
     }
 
-    scaleParameters = besogo.loadSgf(sgf, editor);
+    besogo.scaleParameters = besogo.loadSgf(sgf, editor);
     //if the setting is not full-board
-    if(scaleParameters['orientation'] !== 'full-board')
+    if(besogo.scaleParameters['orientation'] !== 'full-board')
     {
       //set default corner top-left
-      if(scaleParameters['hFlip'])
+      if(besogo.scaleParameters['hFlip'])
       {
         let transformation = besogo.makeTransformation();
         transformation.hFlip = true;
         besogo.editor.applyTransformation(transformation);
       }
-      if(scaleParameters['vFlip'])
+      if(besogo.scaleParameters['vFlip'])
       {
         let transformation = besogo.makeTransformation();
         transformation.vFlip = true;
         besogo.editor.applyTransformation(transformation);
       }
-      scaleParameters['orientation'] = 'top-left';
+      besogo.scaleParameters['orientation'] = 'top-left';
       //if another corner than top-left is set
       if(corner=='top-right')
       {
         let transformation = besogo.makeTransformation();
         transformation.hFlip = true;
         besogo.editor.applyTransformation(transformation);
-        scaleParameters['orientation'] = 'top-right';
+        besogo.scaleParameters['orientation'] = 'top-right';
       }
       else if(corner=='bottom-left')
       {
         let transformation = besogo.makeTransformation();
         transformation.vFlip = true;
         besogo.editor.applyTransformation(transformation);
-        scaleParameters['orientation'] = 'bottom-left';
+        besogo.scaleParameters['orientation'] = 'bottom-left';
       }
       else if(corner=='bottom-right')
       {
@@ -530,7 +544,7 @@
         transformation = besogo.makeTransformation();
         transformation.vFlip = true;
         besogo.editor.applyTransformation(transformation);
-        scaleParameters['orientation'] = 'bottom-right';
+        besogo.scaleParameters['orientation'] = 'bottom-right';
       }
     }
     if(besogoPlayerColor=='white')
@@ -539,7 +553,7 @@
       transformation.invertColors = true;
       besogo.editor.applyTransformation(transformation);
     }
-    return scaleParameters;
+    return besogo.scaleParameters;
   }
 
   // Fetches text file at url from same domain

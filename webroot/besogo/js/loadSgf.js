@@ -2,19 +2,19 @@
 
 besogo.getDefaultScaleParameters = function(size)
 {
-  let scaleParameters = [];
-  scaleParameters['lowestX'] = size.x;
-  scaleParameters['lowestY'] = size.y;
-  scaleParameters['highestX'] = size.x;
-  scaleParameters['highestY'] = size.y;
-  scaleParameters['hFlip'] = false;
-  scaleParameters['vFlip'] = false;
-  scaleParameters['orientation'] = '';
-  scaleParameters['distToX0'] = 0;
-  scaleParameters['distToX19'] = 0;
-  scaleParameters['distToY0'] = 0;
-  scaleParameters['distToY19'] = 0;
-  return scaleParameters;
+  besogo.scaleParameters['lowestX'] = size.x;
+  besogo.scaleParameters['lowestY'] = size.y;
+  besogo.scaleParameters['highestX'] = size.x;
+  besogo.scaleParameters['highestY'] = size.y;
+  besogo.scaleParameters['hFlip'] = false;
+  besogo.scaleParameters['vFlip'] = false;
+  besogo.scaleParameters['orientation'] = '';
+  besogo.scaleParameters['distToX0'] = 0;
+  besogo.scaleParameters['distToX19'] = 0;
+  besogo.scaleParameters['distToY0'] = 0;
+  besogo.scaleParameters['distToY19'] = 0;
+  besogo.scaleParameters['boardCanvasSize'] = 'regular board';
+  return besogo.scaleParameters;
 }
 
 besogo.loadSgf = function(sgf, editor)
@@ -23,18 +23,18 @@ besogo.loadSgf = function(sgf, editor)
   let size = { x: 19, y: 19 }, // Default size (may be changed by load)
       root;
 
-  let scaleParameters = [];
-  scaleParameters['lowestX'] = 19;
-  scaleParameters['lowestY'] = 19;
-  scaleParameters['highestX'] = 0;
-  scaleParameters['highestY'] = 0;
-  scaleParameters['hFlip'] = false;
-  scaleParameters['vFlip'] = false;
-  scaleParameters['orientation'] = '';
-  scaleParameters['distToX0'] = 0;
-  scaleParameters['distToX19'] = 0;
-  scaleParameters['distToY0'] = 0;
-  scaleParameters['distToY19'] = 0;
+  besogo.scaleParameters['lowestX'] = 19;
+  besogo.scaleParameters['lowestY'] = 19;
+  besogo.scaleParameters['highestX'] = 0;
+  besogo.scaleParameters['highestY'] = 0;
+  besogo.scaleParameters['hFlip'] = false;
+  besogo.scaleParameters['vFlip'] = false;
+  besogo.scaleParameters['orientation'] = '';
+  besogo.scaleParameters['distToX0'] = 0;
+  besogo.scaleParameters['distToX19'] = 0;
+  besogo.scaleParameters['distToY0'] = 0;
+  besogo.scaleParameters['distToY19'] = 0;
+  besogo.scaleParameters['boardCanvasSize'] = 'regular board';
 
   loadRootProps(sgf); // Load size, variants style and game info
   root = besogo.makeGameRoot(size.x, size.y);
@@ -44,22 +44,22 @@ besogo.loadSgf = function(sgf, editor)
   besogo.updateTreeAsProblem(root);
   editor.loadRoot(root); // Load root into the editor
 
-  scaleParameters['distToX0'] = Math.abs(1-scaleParameters['lowestX']);
-  scaleParameters['distToX19'] = 19-scaleParameters['highestX'];
-  if(scaleParameters['distToX0']>scaleParameters['distToX19']) scaleParameters['hFlip'] = true;
-  scaleParameters['distToY0'] = Math.abs(1-scaleParameters['lowestY']);
-  scaleParameters['distToY19'] = 19-scaleParameters['highestY'];
-  if(scaleParameters['distToY0']>scaleParameters['distToY19']) scaleParameters['vFlip'] = true;
+  besogo.scaleParameters['distToX0'] = Math.abs(1-besogo.scaleParameters['lowestX']);
+  besogo.scaleParameters['distToX19'] = 19-besogo.scaleParameters['highestX'];
+  if(besogo.scaleParameters['distToX0']>besogo.scaleParameters['distToX19']) besogo.scaleParameters['hFlip'] = true;
+  besogo.scaleParameters['distToY0'] = Math.abs(1-besogo.scaleParameters['lowestY']);
+  besogo.scaleParameters['distToY19'] = 19-besogo.scaleParameters['highestY'];
+  if(besogo.scaleParameters['distToY0']>besogo.scaleParameters['distToY19']) besogo.scaleParameters['vFlip'] = true;
 
-  if(scaleParameters['hFlip'] || scaleParameters['vFlip']){
-    scaleParameters['lowestX'] = 19;
-    scaleParameters['lowestY'] = 19;
-    scaleParameters['highestX'] = 0;
-    scaleParameters['highestY'] = 0;
-    scaleParameters['distToX0'] = 0;
-    scaleParameters['distToX19'] = 0;
-    scaleParameters['distToY0'] = 0;
-    scaleParameters['distToY19'] = 0;
+  if(besogo.scaleParameters['hFlip'] || besogo.scaleParameters['vFlip']){
+    besogo.scaleParameters['lowestX'] = 19;
+    besogo.scaleParameters['lowestY'] = 19;
+    besogo.scaleParameters['highestX'] = 0;
+    besogo.scaleParameters['highestY'] = 0;
+    besogo.scaleParameters['distToX0'] = 0;
+    besogo.scaleParameters['distToX19'] = 0;
+    besogo.scaleParameters['distToY0'] = 0;
+    besogo.scaleParameters['distToY19'] = 0;
 
     var i;
     var point;
@@ -68,8 +68,8 @@ besogo.loadSgf = function(sgf, editor)
         var j;
         for (j = 0; j < sgf.props[i].values.length; j++){
           point = lettersToCoords(sgf.props[i].values[j].slice(0, 2));
-          if(scaleParameters['hFlip']) point.x = 19 - point.x + 1;
-          if(scaleParameters['vFlip']) point.y = 19 - point.y + 1;
+          if(besogo.scaleParameters['hFlip']) point.x = 19 - point.x + 1;
+          if(besogo.scaleParameters['vFlip']) point.y = 19 - point.y + 1;
           checkScaleParameters('x', point.x);
           checkScaleParameters('y', point.y);
 
@@ -77,17 +77,17 @@ besogo.loadSgf = function(sgf, editor)
       }else if(sgf.props[i].id=='B' || sgf.props[i].id=='W'){
       }
     }
-    scaleParameters['distToX0'] = Math.abs(1-scaleParameters['lowestX']);
-    scaleParameters['distToX19'] = 19-scaleParameters['highestX'];
-    scaleParameters['distToY0'] = Math.abs(1-scaleParameters['lowestY']);
-    scaleParameters['distToY19'] = 19-scaleParameters['highestY'];
+    besogo.scaleParameters['distToX0'] = Math.abs(1-besogo.scaleParameters['lowestX']);
+    besogo.scaleParameters['distToX19'] = 19-besogo.scaleParameters['highestX'];
+    besogo.scaleParameters['distToY0'] = Math.abs(1-besogo.scaleParameters['lowestY']);
+    besogo.scaleParameters['distToY19'] = 19-besogo.scaleParameters['highestY'];
   }
 
-  if(scaleParameters['distToX19']<10 && scaleParameters['distToY19']<10){
-    scaleParameters['orientation'] = 'full-board';
+  if(besogo.scaleParameters['distToX19']<10 && besogo.scaleParameters['distToY19']<10){
+    besogo.scaleParameters['orientation'] = 'full-board';
     besogoFullBoard = true;
   }
-  return scaleParameters;
+  return besogo.scaleParameters;
 
   // Loads the game tree
   function loadNodeTree(sgfNode, gameNode)
@@ -179,17 +179,17 @@ besogo.loadSgf = function(sgf, editor)
   {
     if (axis === 'x')
     {
-      if (value < scaleParameters['lowestX'])
-        scaleParameters['lowestX'] = value;
-      if (value>scaleParameters['highestX'])
-        scaleParameters['highestX'] = value;
+      if (value < besogo.scaleParameters['lowestX'])
+        besogo.scaleParameters['lowestX'] = value;
+      if (value>besogo.scaleParameters['highestX'])
+        besogo.scaleParameters['highestX'] = value;
     }
     else if (axis==='y')
     {
-      if (value < scaleParameters['lowestY'])
-        scaleParameters['lowestY'] = value;
-      if (value > scaleParameters['highestY'])
-        scaleParameters['highestY'] = value;
+      if (value < besogo.scaleParameters['lowestY'])
+        besogo.scaleParameters['lowestY'] = value;
+      if (value > besogo.scaleParameters['highestY'])
+        besogo.scaleParameters['highestY'] = value;
     }
   }
 

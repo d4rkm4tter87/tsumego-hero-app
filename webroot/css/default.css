@@ -2546,7 +2546,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	  line-height:42px;
 	}
 	
-	.besogo-board{
+	.besogo-board{ /*regular*/
 		width:50%;
 		margin: 0 315px;
 		box-shadow:0 8px 14px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.2);

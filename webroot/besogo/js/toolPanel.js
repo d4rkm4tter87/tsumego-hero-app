@@ -206,7 +206,19 @@ besogo.makeToolPanel = function(container, editor)
         document.getElementById("status").innerHTML = "";
         document.getElementById("theComment").style.cssText = "display:none;";
         $(".besogo-panels").css("display","none");
-        $(".besogo-board").css("margin","0 315px");
+        if(besogo.scaleParameters['boardCanvasSize'] === 'full board'){
+			$(".besogo-board").css("width", "60%");
+			$(".besogo-board").css("margin", "0 252px");
+		}else if(besogo.scaleParameters['boardCanvasSize'] === 'horizontal half board'){
+			$(".besogo-board").css("width", "78%");
+			$(".besogo-board").css("margin", "0 138px");
+		}else if(besogo.scaleParameters['boardCanvasSize'] === 'vertical half board'){
+			$(".besogo-board").css("width", "30%");
+			$(".besogo-board").css("margin", "0 443px");
+		}else{
+			$(".besogo-board").css("width", "50%");
+			$(".besogo-board").css("margin", "0 315px");
+		}
 		$(".besogo-board").css("box-shadow","0 8px 14px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
         besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
       
@@ -250,6 +262,8 @@ besogo.makeToolPanel = function(container, editor)
         if (!editor.getReviewMode())
         {
           $(".besogo-panels").css("display","flex");
+		  if(besogo.scaleParameters['boardCanvasSize'] !== 'vertical half board')
+			  $(".besogo-board").css("width", "50%");
           $(".besogo-board").css("margin","0");
           toggleBoardLock(false);
           deleteNextMoveGroup = true;
@@ -258,8 +272,24 @@ besogo.makeToolPanel = function(container, editor)
         }
         else
         {
-          $(".besogo-panels").css("display","none");
-          $(".besogo-board").css("margin","0 315px");
+        $(".besogo-panels").css("display","none");
+		
+		if(besogo.scaleParameters['boardCanvasSize'] === 'full board'){
+			$(".besogo-board").css("width", "60%");
+			$(".besogo-board").css("margin", "0 252px");
+		}else if(besogo.scaleParameters['boardCanvasSize'] === 'horizontal half board'){
+			$(".besogo-board").css("width", "78%");
+			$(".besogo-board").css("margin", "0 138px");
+		}else if(besogo.scaleParameters['boardCanvasSize'] === 'vertical half board'){
+			$(".besogo-board").css("width", "30%");
+			$(".besogo-board").css("margin", "0 443px");
+		}else{
+			$(".besogo-board").css("width", "50%");
+			$(".besogo-board").css("margin", "0 315px");
+		}
+		 
+		  
+		  
           deleteNextMoveGroup = false;
           editor.setReviewMode(false);
         }

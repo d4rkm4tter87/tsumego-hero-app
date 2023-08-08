@@ -1,4 +1,4 @@
-besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
+besogo.makeBoardDisplay = function(container, editor, corner)
 {
   var CELL_SIZE = 88, // Including line width
       COORD_MARGIN = 75, // Margin for coordinate labels
@@ -21,9 +21,10 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
       lastHoverPosition = null,
       TOUCH_FLAG = false; // Flag for touch interfaces
 
+	//Not a 19x19 board, so it should be full board view
     if(sizeX != 19)
     {
-      scaleParameters['orientation'] = 'full-board';
+      besogo.scaleParameters['orientation'] = 'full-board';
       besogoFullBoard = true;
     }
   var isEmbedded = typeof mode === "number"; //check if embedded in the website
@@ -124,36 +125,49 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
     boardWidth = 2*BOARD_MARGIN + sizeX*CELL_SIZE;
     boardHeight = 2*BOARD_MARGIN + sizeY*CELL_SIZE;
 
-    let modifiedSizeX = scaleParameters['highestX'];
-    let modifiedSizeY = scaleParameters['highestY'];
+    let modifiedSizeX = besogo.scaleParameters['highestX'];
+    let modifiedSizeY = besogo.scaleParameters['highestY'];
 
-    //scaleParameters['orientation'] = 'full-board';
-
-    if(scaleParameters['orientation']!=='full-board')
+    if(besogo.scaleParameters['orientation']!=='full-board')
     {
-      if(!scaleParameters['hFlip'] && !scaleParameters['vFlip']) scaleParameters['orientation'] = 'top-left';
-      else if(scaleParameters['hFlip'] && !scaleParameters['vFlip']) scaleParameters['orientation'] = 'top-right';
-      else if(!scaleParameters['hFlip'] && scaleParameters['vFlip']) scaleParameters['orientation'] = 'bottom-left';
-      else if(scaleParameters['hFlip'] && scaleParameters['vFlip']) scaleParameters['orientation'] = 'bottom-right';
+      if(!besogo.scaleParameters['hFlip'] && !besogo.scaleParameters['vFlip']) 
+		  besogo.scaleParameters['orientation'] = 'top-left';
+      else if(besogo.scaleParameters['hFlip'] && !besogo.scaleParameters['vFlip']) 
+		  besogo.scaleParameters['orientation'] = 'top-right';
+      else if(!besogo.scaleParameters['hFlip'] && besogo.scaleParameters['vFlip']) 
+		  besogo.scaleParameters['orientation'] = 'bottom-left';
+      else if(besogo.scaleParameters['hFlip'] && besogo.scaleParameters['vFlip']) 
+		  besogo.scaleParameters['orientation'] = 'bottom-right';
 
-      if(scaleParameters['highestX'] >= 10) scaleParameters['highestX'] = 19;
-      else scaleParameters['highestX'] += 3;
-      if(scaleParameters['highestY'] >= 10) scaleParameters['highestY'] = 19;
-      else scaleParameters['highestY'] += 3;
-
+      if(besogo.scaleParameters['highestX'] >= 10) 
+		  besogo.scaleParameters['highestX'] = 19;
+      else 
+		  besogo.scaleParameters['highestX'] += 3;
+      if(besogo.scaleParameters['highestY'] >= 10) 
+		  besogo.scaleParameters['highestY'] = 19;
+      else 
+		  besogo.scaleParameters['highestY'] += 3;
+	  
+	  if(besogo.scaleParameters['highestX']===19 && besogo.scaleParameters['highestY']!==19)
+		besogo.scaleParameters['boardCanvasSize'] = 'horizontal half board';
+	  else if(besogo.scaleParameters['highestX']!==19 && besogo.scaleParameters['highestY']===19)
+		besogo.scaleParameters['boardCanvasSize'] = 'vertical half board';
+	  else
+		besogo.scaleParameters['boardCanvasSize'] = 'regular board';
+		  
       board_margin_x = BOARD_MARGIN - 75;
       board_margin_y = BOARD_MARGIN - 75;
       //boardWidth = 2*board_margin_x + sizeX*CELL_SIZE;
       //boardHeight = 2*board_margin_y + sizeY*CELL_SIZE;
 
-      modifiedSizeX = scaleParameters['highestX'];
-      modifiedSizeY = scaleParameters['highestY'];
+      modifiedSizeX = besogo.scaleParameters['highestX'];
+      modifiedSizeY = besogo.scaleParameters['highestY'];
 
-      if(scaleParameters['highestX'] !== 19)
+      if(besogo.scaleParameters['highestX'] !== 19)
         numberOfXEdges = 1;
       else
         numberOfXEdges = 2;
-      if(scaleParameters['highestY'] !== 19)
+      if(besogo.scaleParameters['highestY'] !== 19)
         numberOfYEdges = 1;
       else
         numberOfYEdges = 2;
@@ -165,6 +179,10 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
       besogoFullBoardWidth = 2*BOARD_MARGIN + 19*CELL_SIZE;
       besogoFullBoardHeight = 2*BOARD_MARGIN + 19*CELL_SIZE;
     }
+	else
+	{
+		besogo.scaleParameters['boardCanvasSize'] = 'full board';
+	}
     svg = besogo.svgEl("svg", { // Initialize the SVG element
         width: "100%",
         height: "100%",
@@ -177,11 +195,11 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
     besogoBoardHeight2 = besogoFullBoardWidth - besogoBoardHeight;
     besogoBoardHeight3 = besogoFullBoardWidth - besogoBoardHeight2;
 
-    if(corner==='top-right' && scaleParameters['orientation']!=='full-board')
+    if(corner==='top-right' && besogo.scaleParameters['orientation']!=='full-board')
       svg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + 0 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
-    else if(corner==='bottom-left' && scaleParameters['orientation']!=='full-board')
+    else if(corner==='bottom-left' && besogo.scaleParameters['orientation']!=='full-board')
       svg.setAttribute('viewBox', 0 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
-    else if(corner==='bottom-right' && scaleParameters['orientation']!=='full-board')
+    else if(corner==='bottom-right' && besogo.scaleParameters['orientation']!=='full-board')
       svg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
     else if(corner==='full-board')
       svg.setAttribute('viewBox', 0 + ' ' + 0 + ' ' + besogoFullBoardWidth + ' ' + besogoBoardHeight);
@@ -205,7 +223,7 @@ besogo.makeBoardDisplay = function(container, editor, scaleParameters, corner)
 
     drawHoshi(); // Draw the hoshi points
     if (coord !== 'none')
-      drawCoords(coord, scaleParameters['orientation']); // Draw the coordinate labels
+      drawCoords(coord, besogo.scaleParameters['orientation']); // Draw the coordinate labels
   }
 
   // Draws coordinate labels on the board
