@@ -91,6 +91,15 @@
 			</li>
 			<br><br>
 		</div>
+		<p class="title4">New Collection: Yi Kuo</p>
+		<div class="new1">
+			Yi Kuo is a classical kifu and tsumego book written by Huang Longshi (1651-1700). It was posthumously published in 1710. 
+			Go Seigen once commented that Longshi's fighting skill 
+			was of 13-dan strength. The problems in this collection are focused mainly on endgame tesujis. 
+			<div align="center"><img width="95%" src="/img/yi-kuo-home.png">
+			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/195">Play</a><br><br></div>
+		</div>
 		<p class="title4">Update 20.07.2023</p>
 		<div class="new1">
 			<b>New board viewer: BesoGo</b><br><br>
@@ -121,22 +130,6 @@
 			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/191">Play</a><br><br></div>
 		</div>
 		
-		<p class="title4">Update 18.06.2023</p>
-		<div class="new1">
-			<b>The website is faster now!</b><br><br>
-			We're working on database and code improvements. The loading time on all pages has been drastically improved. On the most problematic page,
-			the loading time was reduced from 4.4 to 0.6 seconds!<br><br>
-			<div align="center"><img width="60%" src="/img/d-performance.PNG"></div>
-			<br>
-		</div>
-		<p class="title4">Update 05.06.2023</p>
-		<div class="new1">
-			<b>Design improvements</b><br><br>
-			The new menu takes away less space at the top. It also has more navigation options in a drowpdown. Other improvements involve spacing and colors on all pages.<br><br>
-			<img width="100%" src="/img/newMenu1.PNG"><br><br>
-			The Sandbox is now accessible for all premium users and users that reach level 60.<br>
-			<br>
-		</div>
 		
 		
 			<?php
@@ -284,11 +277,10 @@
 			if($ac) $modeActions2 = 'class="modeboxes"';
 			else $modeActions2 = 'class="modeboxes"';
 		
+			/*
 			echo '<div class="egc2023promo">';
 			echo '<a href="https://www.egc2023.de/en/home-en/" target="_blank" alt="EGC 2023 Leipzig" title="EGC 2023 Leipzig">Go to the website >></a>';
 			echo '</div>';
-		
-			/*
 			if(isset($_SESSION['loggedInUser'])){
 				$url1 = '';
 				$url2 = '';
@@ -354,7 +346,7 @@
 			</div>
 		</div>
 		<?php
-		echo '<img src="/img/egc2023.png" width="100%" alt="Tsumego Hero Message of the Day" title="Tsumego Hero Message of the Day">';
+		echo '<img src="/img/'.$quote.'.PNG" width="100%" alt="Tsumego Hero Message of the Day" title="Tsumego Hero Message of the Day">';
 		
 		/*
 		<div class="danielml-bg">
@@ -624,11 +616,11 @@
 		<p class="title4">Recent Donations and Upgrades</p>
 		<div class="new1">
 			<table class="newx">
-		<tr><td width="50%"><h1>Max Byrd</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>John Boger</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>tigertrap500</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td width="50%"><h1>tigertrap500</h1></td><td><h1>10,00 €</h1></td></tr>
 		<tr><td><h1>Martin Python</h1></td><td><h1>10,00 €</h1></td></tr>
 		<tr><td><h1>Pufpuf</h1></td><td><h1>10,00 €</h1></td></tr>	
+		<tr><td><h1>Rene Tammen</h1></td><td><h1>12,00 €</h1></td></tr>
+		<tr><td><h1>gregth</h1></td><td><h1>10,00 €</h1></td></tr>
 		</table>	
 		<br>
 		</div>	

@@ -207,6 +207,7 @@ besogo.makeToolPanel = function(container, editor)
         document.getElementById("theComment").style.cssText = "display:none;";
         $(".besogo-panels").css("display","none");
         $(".besogo-board").css("margin","0 315px");
+		$(".besogo-board").css("box-shadow","0 8px 14px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
         besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
       
       }, 'besogo-reset-button');
@@ -429,6 +430,16 @@ besogo.makeToolPanel = function(container, editor)
   container.appendChild(div);
   $("#author-notice").text('File by '+author);
   return div;
+  }
+  
+  function tedt(){
+	  console.log("asdf");
+	  $(".besogo-panels").css("display","flex");
+	  $(".besogo-board").css("margin","0");
+	  toggleBoardLock(false);
+	  deleteNextMoveGroup = true;
+	  besogo.editor.resetToStart();
+	  editor.setReviewMode(true);
   }
 
   // Callback for updating tool state and label

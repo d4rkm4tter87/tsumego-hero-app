@@ -3,24 +3,24 @@
 	<link rel="stylesheet" type="text/css" href="/besogo/css/besogo.css">
 	<link rel="stylesheet" type="text/css" href="/besogo/css/board-flat.css">
 
-	<script src="/besogo/js/besogo.js?v=1.7"></script>
-	<script src="/besogo/js/transformation.js?v=1.7"></script>
-	<script src="/besogo/js/treeProblemUpdater.js?v=1.7"></script>
-	<script src="/besogo/js/nodeHashTable.js?v=1.7"></script>
-	<script src="/besogo/js/editor.js?v=1.7"></script>
-	<script src="/besogo/js/gameRoot.js?v=1.7"></script>
-	<script src="/besogo/js/status.js?v=1.7"></script>
-	<script src="/besogo/js/svgUtil.js?v=1.7"></script>
-	<script src="/besogo/js/parseSgf.js?v=1.7"></script>
-	<script src="/besogo/js/loadSgf.js?v=1.7"></script>
-	<script src="/besogo/js/saveSgf.js?v=1.7"></script>
-	<script src="/besogo/js/boardDisplay.js?v=1.7"></script>
-	<script src="/besogo/js/coord.js?v=1.7"></script>
-	<script src="/besogo/js/toolPanel.js?v=1.7"></script>
-	<script src="/besogo/js/filePanel.js?v=1.7"></script>
-	<script src="/besogo/js/controlPanel.js?v=1.7"></script>
-	<script src="/besogo/js/commentPanel.js?v=1.7"></script>
-	<script src="/besogo/js/treePanel.js?v=1.7"></script>
+	<script src="/besogo/js/besogo.js"></script>
+	<script src="/besogo/js/transformation.js"></script>
+	<script src="/besogo/js/treeProblemUpdater.js"></script>
+	<script src="/besogo/js/nodeHashTable.js"></script>
+	<script src="/besogo/js/editor.js"></script>
+	<script src="/besogo/js/gameRoot.js"></script>
+	<script src="/besogo/js/status.js"></script>
+	<script src="/besogo/js/svgUtil.js"></script>
+	<script src="/besogo/js/parseSgf.js"></script>
+	<script src="/besogo/js/loadSgf.js"></script>
+	<script src="/besogo/js/saveSgf.js"></script>
+	<script src="/besogo/js/boardDisplay.js"></script>
+	<script src="/besogo/js/coord.js"></script>
+	<script src="/besogo/js/toolPanel.js"></script>
+	<script src="/besogo/js/filePanel.js"></script>
+	<script src="/besogo/js/controlPanel.js"></script>
+	<script src="/besogo/js/commentPanel.js"></script>
+	<script src="/besogo/js/treePanel.js"></script>
 <?php } ?>
 <?php
 	$choice = array();
@@ -3131,12 +3131,15 @@
 
 	<?php if($sgfErrorMessage===''){ ?>
 	function intuition(){
-		if(intuitionEnabled){
+		if(ui==1 && intuitionEnabled){
 			<?php echo 'jboard.setMark(new JGO.Coordinate('.$intuitionMove[0].', '.$intuitionMove[1].'), JGO.MARK.CORRECT);'; ?>
 			document.cookie = "intuition=1";
 			document.getElementById("intuition").src = "/img/hp2x.png";
 			document.getElementById("intuition").style = "cursor: context-menu;";
 			intuitionEnabled = false;
+		}else if(ui==2 && intuitionEnabled){
+			//alert();
+			tedt();
 		}
 	}
 	<?php } ?>
@@ -3486,6 +3489,7 @@
 				document.getElementById("status").style.color = "green";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
 				document.getElementById("xpDisplay").style.color = "white";
+				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(158, 255, 144, 0.6), 0 6px 20px 0 rgba(156, 255, 153, 0.6)");
 				if(set159){document.getElementById("theComment").style.cssText = "visibility:visible;color:green;";
 				document.getElementById("theComment").innerHTML = "xxx";}
 				$("#commentSpace").show();
@@ -3504,7 +3508,7 @@
 					runXPBar(true);
 				}
 				noLastMark = true;
-        besogo.editor.setReviewEnabled(true);
+				besogo.editor.setReviewEnabled(true);
 				$("#besogo-review-button-inactive").attr("id","besogo-review-button");
 				if(!noXP){
 					if(!doubleXP){
@@ -3551,11 +3555,12 @@
 				document.getElementById("status").style.color = "green";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
 				document.getElementById("xpDisplay").style.color = "white";
+				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(158, 255, 144, 0.6), 0 6px 20px 0 rgba(156, 255, 153, 0.6)");
 				$("#commentSpace").show();
 				//locked = true;
 				noLastMark = true;
 				besogoMode2Solved = true;
-        besogo.editor.setReviewEnabled(true);
+				besogo.editor.setReviewEnabled(true);
 				$("#besogo-review-button-inactive").attr("id","besogo-review-button");
 				$("#besogo-next-button-inactive").attr("id","besogo-next-button");
 				if(!noXP){
@@ -3587,6 +3592,7 @@
 				branch = "no";
 				document.getElementById("status").style.color = "#e03c4b";
 				document.getElementById("status").innerHTML = "<h2>Incorrect</h2>";
+				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(183, 19, 19, 0.35), 0 6px 20px 0 rgba(183, 19, 19, 0.35)");
 				if(mode==3){
 					document.cookie = "rank=<?php echo $mode3ScoreArray[1]; ?>";
 					//locked = true;
@@ -3634,6 +3640,7 @@
 				document.getElementById("status").innerHTML = "<h2>Incorrect</h2>";
 				noLastMark = true;
 				$("#besogo-next-button-inactive").attr("id","besogo-next-button");
+				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(183, 19, 19, 0.35), 0 6px 20px 0 rgba(183, 19, 19, 0.35)");
 				if(!noXP){
 					sequence += "incorrect|";
 					document.cookie = "sequence="+sequence;
@@ -3704,7 +3711,7 @@
 	  options.corner = shuffledCornerArray[0];
 	  
 	  besogoCorner = options.corner;
-    options.rootPath = '/besogo/';
+      options.rootPath = '/besogo/';
 	  options.theme = '<?php echo $choice[0][1]; ?>';
 	  options.themeParameters = ['<?php echo $choice[0][2]; ?>', '<?php echo $choice[0][3]; ?>'];
 	  options.coord = 'western';
