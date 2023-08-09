@@ -3138,8 +3138,11 @@
 			document.getElementById("intuition").style = "cursor: context-menu;";
 			intuitionEnabled = false;
 		}else if(ui==2 && intuitionEnabled){
-			//alert();
-			tedt();
+			document.cookie = "intuition=1";
+			document.getElementById("intuition").src = "/img/hp2x.png";
+			document.getElementById("intuition").style = "cursor: context-menu;";
+			intuitionEnabled = false;
+			besogo.editor.intuitionHeroPower();
 		}
 	}
 	<?php } ?>

@@ -81,6 +81,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     setReviewMode: setReviewMode,
     getReviewEnabled: getReviewEnabled,
     setReviewEnabled: setReviewEnabled,
+    intuitionHeroPower: intuitionHeroPower,
     isPerformingAutoPlay: isPerformingAutoPlay,
     setSoundEnabled: setSoundEnabled,
     registerDisplayResult: registerDisplayResult,
@@ -712,7 +713,16 @@ besogo.makeEditor = function(sizeX, sizeY, options)
   {
     reviewEnabled = value
   }
-
+  
+  function intuitionHeroPower()
+  {
+	besogo.intuitionActive = true;
+	deleteNextMoveGroup = true;
+	besogo.editor.resetToStart();
+	besogo.editor.setReviewMode(true);
+	besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+  }
+  
   function isPerformingAutoPlay()
   {
     return performingAutoPlay;

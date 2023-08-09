@@ -5,6 +5,7 @@
   besogo.editor = null;
   var rootPath = '';
   besogo.scaleParameters = [];
+  besogo.intuitionActive = false;
   let corner;
 
   function getMakers()

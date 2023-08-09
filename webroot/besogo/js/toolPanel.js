@@ -272,26 +272,23 @@ besogo.makeToolPanel = function(container, editor)
         }
         else
         {
-        $(".besogo-panels").css("display","none");
+			$(".besogo-panels").css("display","none");
 		
-		if(besogo.scaleParameters['boardCanvasSize'] === 'full board'){
-			$(".besogo-board").css("width", "60%");
-			$(".besogo-board").css("margin", "0 252px");
-		}else if(besogo.scaleParameters['boardCanvasSize'] === 'horizontal half board'){
-			$(".besogo-board").css("width", "78%");
-			$(".besogo-board").css("margin", "0 138px");
-		}else if(besogo.scaleParameters['boardCanvasSize'] === 'vertical half board'){
-			$(".besogo-board").css("width", "30%");
-			$(".besogo-board").css("margin", "0 443px");
-		}else{
-			$(".besogo-board").css("width", "50%");
-			$(".besogo-board").css("margin", "0 315px");
-		}
-		 
-		  
-		  
-          deleteNextMoveGroup = false;
-          editor.setReviewMode(false);
+			if(besogo.scaleParameters['boardCanvasSize'] === 'full board'){
+				$(".besogo-board").css("width", "60%");
+				$(".besogo-board").css("margin", "0 252px");
+			}else if(besogo.scaleParameters['boardCanvasSize'] === 'horizontal half board'){
+				$(".besogo-board").css("width", "78%");
+				$(".besogo-board").css("margin", "0 138px");
+			}else if(besogo.scaleParameters['boardCanvasSize'] === 'vertical half board'){
+				$(".besogo-board").css("width", "30%");
+				$(".besogo-board").css("margin", "0 443px");
+			}else{
+				$(".besogo-board").css("width", "50%");
+				$(".besogo-board").css("margin", "0 315px");
+			}
+			deleteNextMoveGroup = false;
+			editor.setReviewMode(false);
         }
         besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
       }
@@ -460,16 +457,6 @@ besogo.makeToolPanel = function(container, editor)
   container.appendChild(div);
   $("#author-notice").text('File by '+author);
   return div;
-  }
-  
-  function tedt(){
-	  console.log("asdf");
-	  $(".besogo-panels").css("display","flex");
-	  $(".besogo-board").css("margin","0");
-	  toggleBoardLock(false);
-	  deleteNextMoveGroup = true;
-	  besogo.editor.resetToStart();
-	  editor.setReviewMode(true);
   }
 
   // Callback for updating tool state and label
