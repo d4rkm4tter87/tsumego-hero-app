@@ -2877,7 +2877,7 @@
 
 	<?php } ?>
 	<?php } ?>
-
+	//§
 	function reset(){
 		if(!tryAgainTomorrow) locked = false;
 		hoverLocked = false;
@@ -3492,7 +3492,7 @@
 				document.getElementById("status").style.color = "green";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
 				document.getElementById("xpDisplay").style.color = "white";
-				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(158, 255, 144, 0.6), 0 6px 20px 0 rgba(156, 255, 153, 0.6)");
+				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(158, 255, 144, 0.5), 0 6px 20px 0 rgba(156, 255, 153, 0.5)");
 				if(set159){document.getElementById("theComment").style.cssText = "visibility:visible;color:green;";
 				document.getElementById("theComment").innerHTML = "xxx";}
 				$("#commentSpace").show();
@@ -3558,7 +3558,7 @@
 				document.getElementById("status").style.color = "green";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
 				document.getElementById("xpDisplay").style.color = "white";
-				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(158, 255, 144, 0.6), 0 6px 20px 0 rgba(156, 255, 153, 0.6)");
+				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(158, 255, 144, 0.5), 0 6px 20px 0 rgba(156, 255, 153, 0.5)");
 				$("#commentSpace").show();
 				//locked = true;
 				noLastMark = true;
@@ -3595,11 +3595,10 @@
 				branch = "no";
 				document.getElementById("status").style.color = "#e03c4b";
 				document.getElementById("status").innerHTML = "<h2>Incorrect</h2>";
-				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(183, 19, 19, 0.35), 0 6px 20px 0 rgba(183, 19, 19, 0.35)");
+				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(183, 19, 19, 0.25), 0 6px 20px 0 rgba(183, 19, 19, 0.25)");
 				if(mode==3){
 					document.cookie = "rank=<?php echo $mode3ScoreArray[1]; ?>";
 					//locked = true;
-					document.cookie = "misplay=1";
 					seconds = seconds.toFixed(1);
 					secondsy = seconds*10*<?php echo $t['Tsumego']['id']; ?>;
 					document.cookie = "seconds="+secondsy;
@@ -3643,7 +3642,7 @@
 				document.getElementById("status").innerHTML = "<h2>Incorrect</h2>";
 				noLastMark = true;
 				$("#besogo-next-button-inactive").attr("id","besogo-next-button");
-				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(183, 19, 19, 0.35), 0 6px 20px 0 rgba(183, 19, 19, 0.35)");
+				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(183, 19, 19, 0.25), 0 6px 20px 0 rgba(183, 19, 19, 0.25)");
 				if(!noXP){
 					sequence += "incorrect|";
 					document.cookie = "sequence="+sequence;
@@ -3680,6 +3679,23 @@
 			$("#targetLockOverlay").css("width", "0");
 			$("#targetLockOverlay").css("height", "0");
 			$("#targetLockOverlay").css("z-index", "-1");
+		}
+	}
+	//§
+	function resetParameters(isAtStart){
+		tStatus = "<?php echo $t['Tsumego']['status']; ?>";
+		if(tStatus=="setS2"||tStatus=="setC2") heartLoss = false;
+		else heartLoss = true;
+		if(isAtStart) heartLoss = false;
+		if(noXP==true||freePlayMode==true||locked==true||authorProblem==true) heartLoss = false;
+		if(mode==2) heartLoss = false;
+
+		freePlayMode = false;
+		if(heartLoss){
+			misplays++;
+			document.cookie = "misplay="+misplays;
+			document.cookie = "preId=<?php echo $t['Tsumego']['id']; ?>";
+			updateHealth();
 		}
 	}
 

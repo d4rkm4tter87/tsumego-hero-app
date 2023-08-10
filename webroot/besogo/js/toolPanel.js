@@ -200,8 +200,10 @@ besogo.makeToolPanel = function(container, editor)
       
       makeButtonText('Reset', 'reset the problem', function()
       {
+		resetParameters(besogo.editor.getCurrent().parent===null);
         besogo.editor.resetToStart();
         toggleBoardLock(false);
+        
         besogo.editor.setReviewMode(false);
         document.getElementById("status").innerHTML = "";
         document.getElementById("theComment").style.cssText = "display:none;";
@@ -219,6 +221,9 @@ besogo.makeToolPanel = function(container, editor)
 			$(".besogo-board").css("width", "50%");
 			$(".besogo-board").css("margin", "0 315px");
 		}
+		
+		
+		
 		$(".besogo-board").css("box-shadow","0 8px 14px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
         besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
       
@@ -265,6 +270,7 @@ besogo.makeToolPanel = function(container, editor)
 		  if(besogo.scaleParameters['boardCanvasSize'] !== 'vertical half board')
 			  $(".besogo-board").css("width", "50%");
           $(".besogo-board").css("margin","0");
+		  $(".besogo-board").css("box-shadow","0 8px 14px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
           toggleBoardLock(false);
           deleteNextMoveGroup = true;
           besogo.editor.resetToStart();
