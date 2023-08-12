@@ -4,8 +4,11 @@
   besogo.VERSION = '0.0.2-alpha';
   besogo.editor = null;
   var rootPath = '';
+  besogo.boardParameters = [];
   besogo.scaleParameters = [];
+  besogo.boardCanvasSvg = null;
   besogo.intuitionActive = false;
+  besogo.playerColor = "black";
   let corner;
 
   function getMakers()
@@ -59,7 +62,7 @@
   {
     boardDiv = makeDiv('besogo-board', container); // Create div for board display
     boardDisplay = besogo.makeBoardDisplay(boardDiv, besogo.editor, corner); // Create board display
-
+	
     if (!options.nokeys) // Add keypress handler unless nokeys option is truthy
       addKeypressHandler(container, besogo.editor, boardDisplay);
 
@@ -207,6 +210,7 @@
 
     //globalTreePanel = tree;
     //besogo.editor.addListener(globalTreePanel.treeUpdate);
+	besogo.boardParameters['corner'] = options.corner;
     if(options.corner=='top-left') $("#boardOrientationTL").css("opacity","1");
     else if(options.corner=='top-right') $("#boardOrientationTR").css("opacity","1");
     else if(options.corner=='bottom-left') $("#boardOrientationBL").css("opacity","1");
@@ -263,6 +267,7 @@
     options.size = besogo.parseSize(options.size || 19);
     options.coord = options.coord || 'none';
     options.tool = options.tsumegoPlayTool || 'auto';
+	besogo.playerColor = options.playerColor;
     if(options.tsumegoPlayTool) options.tsumegoPlayTool = options.tsumegoPlayTool || 'auto';
     if (options.panels === '')
       options.panels = [];
@@ -548,7 +553,8 @@
         besogo.scaleParameters['orientation'] = 'bottom-right';
       }
     }
-    if(besogoPlayerColor=='white')
+	
+    if(besogo.playerColor==="white")
     {
       let transformation = besogo.makeTransformation();
       transformation.invertColors = true;

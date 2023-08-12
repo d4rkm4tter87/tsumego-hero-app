@@ -616,11 +616,11 @@
 		<p class="title4">Recent Donations and Upgrades</p>
 		<div class="new1">
 			<table class="newx">
-		<tr><td width="50%"><h1>tigertrap500</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>Martin Python</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>Pufpuf</h1></td><td><h1>10,00 €</h1></td></tr>	
-		<tr><td><h1>Rene Tammen</h1></td><td><h1>12,00 €</h1></td></tr>
-		<tr><td><h1>gregth</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td width="50%"><h1>Reesha</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>Luciano - Palmas</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>maxfrog</h1></td><td><h1>10,00 €</h1></td></tr>	
+		<tr><td><h1>Psymar</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>tigertrap500</h1></td><td><h1>10,00 €</h1></td></tr>
 		</table>	
 		<br>
 		</div>	

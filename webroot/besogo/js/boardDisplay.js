@@ -25,9 +25,21 @@ besogo.makeBoardDisplay = function(container, editor, corner)
     if(sizeX != 19)
     {
       besogo.scaleParameters['orientation'] = 'full-board';
-      besogoFullBoard = true;
+      besogo.boardParameters['fullBoard'] = true;
     }
   var isEmbedded = typeof mode === "number"; //check if embedded in the website
+  
+  besogo.boardParameters['fullBoard'] = false;
+  besogo.boardParameters['corner'] = null;
+  besogo.boardParameters['fullBoardWidth'] = 0;
+  besogo.boardParameters['fullBoardHeight'] = 0;
+  besogo.boardParameters['boardWidth'] = 0;
+  besogo.boardParameters['boardHeight'] = 0;
+  besogo.boardParameters['boardWidth2'] = 0;
+  besogo.boardParameters['boardHeight2'] = 0;
+  besogo.boardParameters['boardWidth3'] = 0;
+  besogo.boardParameters['boardHeight3'] = 0;
+  besogo.boardParameters['playerColor'] = 'black';
 
   initializeBoard(editor.getCoordStyle()); // Initialize SVG element and draw the board
   container.appendChild(svg); // Add the SVG element to the document
@@ -174,10 +186,10 @@ besogo.makeBoardDisplay = function(container, editor, corner)
 
       boardWidth = numberOfXEdges*BOARD_MARGIN + modifiedSizeX*CELL_SIZE;
       boardHeight = numberOfYEdges*BOARD_MARGIN + modifiedSizeY*CELL_SIZE;
-      besogoBoardWidth = boardWidth;
-      besogoBoardHeight = boardHeight;
-      besogoFullBoardWidth = 2*BOARD_MARGIN + 19*CELL_SIZE;
-      besogoFullBoardHeight = 2*BOARD_MARGIN + 19*CELL_SIZE;
+      besogo.boardParameters['boardWidth'] = boardWidth;
+      besogo.boardParameters['boardHeight'] = boardHeight;
+      besogo.boardParameters['fullBoardWidth'] = 2*BOARD_MARGIN + 19*CELL_SIZE;
+      besogo.boardParameters['fullBoardHeight'] = 2*BOARD_MARGIN + 19*CELL_SIZE;
     }
 	else
 	{
@@ -188,21 +200,21 @@ besogo.makeBoardDisplay = function(container, editor, corner)
         height: "100%",
         viewBox: "0 0 " + boardWidth + " " + boardHeight //top-left
     });
-    globalSvg = svg;
-    besogoBoardWidth2 = besogoFullBoardWidth - besogoBoardWidth;
-    besogoBoardWidth3 = besogoFullBoardWidth - besogoBoardWidth2;
+    besogo.boardCanvasSvg = svg;
+    besogo.boardParameters['boardWidth2'] = besogo.boardParameters['fullBoardWidth'] - besogo.boardParameters['boardWidth'];
+    besogo.boardParameters['boardWidth3'] = besogo.boardParameters['fullBoardWidth'] - besogo.boardParameters['boardWidth2'];
 
-    besogoBoardHeight2 = besogoFullBoardWidth - besogoBoardHeight;
-    besogoBoardHeight3 = besogoFullBoardWidth - besogoBoardHeight2;
+    besogo.boardParameters['boardHeight2'] = besogo.boardParameters['fullBoardWidth'] - besogo.boardParameters['boardHeight'];
+    besogo.boardParameters['boardHeight3'] = besogo.boardParameters['fullBoardWidth'] - besogo.boardParameters['boardHeight2'];
 
     if(corner==='top-right' && besogo.scaleParameters['orientation']!=='full-board')
-      svg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + 0 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+      svg.setAttribute('viewBox', besogo.boardParameters['boardWidth2'] + ' ' + 0 + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
     else if(corner==='bottom-left' && besogo.scaleParameters['orientation']!=='full-board')
-      svg.setAttribute('viewBox', 0 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+      svg.setAttribute('viewBox', 0 + ' ' + besogo.boardParameters['boardHeight2'] + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
     else if(corner==='bottom-right' && besogo.scaleParameters['orientation']!=='full-board')
-      svg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+      svg.setAttribute('viewBox', besogo.boardParameters['boardWidth2'] + ' ' + besogo.boardParameters['boardHeight2'] + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
     else if(corner==='full-board')
-      svg.setAttribute('viewBox', 0 + ' ' + 0 + ' ' + besogoFullBoardWidth + ' ' + besogoBoardHeight);
+      svg.setAttribute('viewBox', 0 + ' ' + 0 + ' ' + besogo.boardParameters['fullBoardWidth'] + ' ' + besogo.boardParameters['boardHeight']);
     svg.appendChild(besogo.svgEl("rect", { // Draw outer square of board
           width: CELL_SIZE*(sizeX - 1),
           height: CELL_SIZE*(sizeY - 1),

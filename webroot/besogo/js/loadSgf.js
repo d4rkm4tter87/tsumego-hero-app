@@ -85,7 +85,7 @@ besogo.loadSgf = function(sgf, editor)
 
   if(besogo.scaleParameters['distToX19']<10 && besogo.scaleParameters['distToY19']<10){
     besogo.scaleParameters['orientation'] = 'full-board';
-    besogoFullBoard = true;
+    besogo.boardParameters['fullBoard'] = true;
   }
   return besogo.scaleParameters;
 

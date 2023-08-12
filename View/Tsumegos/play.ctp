@@ -1732,18 +1732,19 @@
 	var clearFile = "<?php echo $set['Set']['title'].' - '.$t['Tsumego']['num']; ?>";
 	var tsumegoFileLink = "<?php echo $t['Tsumego']['id']; ?>";
 	var author = "<?php echo $t['Tsumego']['author']; ?>";
-	var globalSvg = null;
-	var besogoFullBoard = false;
-	var besogoCorner = null;
-	var besogoFullBoardWidth = 0;
-	var besogoFullBoardHeight = 0;
-	var besogoBoardWidth = 0;
-	var besogoBoardHeight = 0;
-	var besogoBoardWidth2 = 0;
-	var besogoBoardHeight2 = 0;
-	var besogoBoardWidth3 = 0;
-	var besogoBoardHeight3 = 0;
+	
+	//var besogoFullBoard = false;
+	//var besogoCorner = null;
+	//var besogoFullBoardWidth = 0;
+	//var besogoFullBoardHeight = 0;
+	//var besogoBoardWidth = 0;
+	//var besogoBoardHeight = 0;
+	//var besogoBoardWidth2 = 0;
+	//var besogoBoardHeight2 = 0;
+	//var besogoBoardWidth3 = 0;
+	//var besogoBoardHeight3 = 0;
 	var besogoPlayerColor = "black";
+	
 	var disableAutoplay = false;
 	var globalTreePanel = null;
 	var favorite = "<?php echo $favorite; ?>";
@@ -3492,7 +3493,7 @@
 				document.getElementById("status").style.color = "green";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
 				document.getElementById("xpDisplay").style.color = "white";
-				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(158, 255, 144, 0.5), 0 6px 20px 0 rgba(156, 255, 153, 0.5)");
+				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(158, 255, 144, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
 				if(set159){document.getElementById("theComment").style.cssText = "visibility:visible;color:green;";
 				document.getElementById("theComment").innerHTML = "xxx";}
 				$("#commentSpace").show();
@@ -3728,8 +3729,8 @@
 	  const cornerArray = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
 	  shuffledCornerArray = cornerArray.sort((a, b) => 0.5 - Math.random());
 	  options.corner = shuffledCornerArray[0];
+	  options.playerColor = besogoPlayerColor;
 	  
-	  besogoCorner = options.corner;
       options.rootPath = '/besogo/';
 	  options.theme = '<?php echo $choice[0][1]; ?>';
 	  options.themeParameters = ['<?php echo $choice[0][2]; ?>', '<?php echo $choice[0][3]; ?>'];

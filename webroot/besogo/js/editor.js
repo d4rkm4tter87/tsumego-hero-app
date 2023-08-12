@@ -548,8 +548,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 
         if (isEmbedded)
         {
-          if (soundEnabled && !reviewMode)
-            document.getElementsByTagName("audio")[0].play();
+          if (soundsEnabled && !reviewMode)  document.getElementsByTagName("audio")[0].play();
           setTimeout(function()
           {
             if(!reviewMode && displayResult)

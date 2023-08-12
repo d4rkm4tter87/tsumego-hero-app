@@ -25,26 +25,26 @@ besogo.makeToolPanel = function(container, editor)
     transformation.invertColors = true;
     besogo.editor.applyTransformation(transformation);
     });
-    if(!besogoFullBoard){
+    if(!besogo.boardParameters['fullBoard']){
       makeImageButton('/img/boardOrientationTL.png', 'top-left', 'boardOrientationTL', function()
       {
-      if(besogoCorner==='top-left')
+      if(besogo.boardParameters['corner']==='top-left')
       {
         //already there
       }
-      else if(besogoCorner==='top-right')
+      else if(besogo.boardParameters['corner']==='top-right')
       {
         let transformation = besogo.makeTransformation();
         transformation.hFlip = true;
         besogo.editor.applyTransformation(transformation);
       }
-      else if(besogoCorner==='bottom-left')
+      else if(besogo.boardParameters['corner']==='bottom-left')
       {
         let transformation = besogo.makeTransformation();
         transformation.vFlip = true;
         besogo.editor.applyTransformation(transformation);
       }
-      else if(besogoCorner==='bottom-right')
+      else if(besogo.boardParameters['corner']==='bottom-right')
       {
         let transformation = besogo.makeTransformation();
         transformation.hFlip = true;
@@ -53,27 +53,27 @@ besogo.makeToolPanel = function(container, editor)
         transformation.vFlip = true;
         besogo.editor.applyTransformation(transformation);
       }
-      globalSvg.setAttribute('viewBox', '0 0 ' + besogoBoardWidth + ' ' + besogoBoardHeight);
+      besogo.boardCanvasSvg.setAttribute('viewBox', '0 0 ' + besogo.boardParameters['boardWidth'] + ' ' + besogo.boardParameters['boardHeight']);
       $("#boardOrientationTL").css("opacity","1");
       $("#boardOrientationTR").css("opacity",".62");
       $("#boardOrientationBL").css("opacity",".62");
       $("#boardOrientationBR").css("opacity",".62");
-      besogoCorner='top-left';
+      besogo.boardParameters['corner']='top-left';
       });
       
       makeImageButton('/img/boardOrientationTR.png', 'top-right', 'boardOrientationTR', function()
       {
-        if(besogoCorner==='top-left')
+        if(besogo.boardParameters['corner']==='top-left')
         {
           let transformation = besogo.makeTransformation();
           transformation.hFlip = true;
           besogo.editor.applyTransformation(transformation);
         }
-        else if(besogoCorner==='top-right')
+        else if(besogo.boardParameters['corner']==='top-right')
         {
           //already there
         }
-        else if(besogoCorner==='bottom-left')
+        else if(besogo.boardParameters['corner']==='bottom-left')
         {
           let transformation = besogo.makeTransformation();
           transformation.hFlip = true;
@@ -82,29 +82,29 @@ besogo.makeToolPanel = function(container, editor)
           transformation.vFlip = true;
           besogo.editor.applyTransformation(transformation);
         }
-        else if (besogoCorner==='bottom-right')
+        else if (besogo.boardParameters['corner']==='bottom-right')
         {
           let transformation = besogo.makeTransformation();
           transformation.vFlip = true;
           besogo.editor.applyTransformation(transformation);
         }
-        globalSvg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + 0 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+        besogo.boardCanvasSvg.setAttribute('viewBox', besogo.boardParameters['boardWidth2'] + ' ' + 0 + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
         $("#boardOrientationTL").css("opacity",".62");
         $("#boardOrientationTR").css("opacity","1");
         $("#boardOrientationBL").css("opacity",".62");
         $("#boardOrientationBR").css("opacity",".62");
-        besogoCorner='top-right';
+        besogo.boardParameters['corner']='top-right';
         });
       
       makeImageButton('/img/boardOrientationBL.png', 'bottom-left', 'boardOrientationBL', function()
       {
-        if (besogoCorner === 'top-left')
+        if (besogo.boardParameters['corner'] === 'top-left')
         {
           let transformation = besogo.makeTransformation();
           transformation.vFlip = true;
           besogo.editor.applyTransformation(transformation);
         }
-        else if (besogoCorner === 'top-right')
+        else if (besogo.boardParameters['corner'] === 'top-right')
         {
           let transformation = besogo.makeTransformation();
           transformation.hFlip = true;
@@ -113,27 +113,27 @@ besogo.makeToolPanel = function(container, editor)
           transformation.vFlip = true;
           besogo.editor.applyTransformation(transformation);
         }
-        else if (besogoCorner==='bottom-left')
+        else if (besogo.boardParameters['corner']==='bottom-left')
         {
           //already there
         }
-        else if(besogoCorner==='bottom-right')
+        else if(besogo.boardParameters['corner']==='bottom-right')
         {
           let transformation = besogo.makeTransformation();
           transformation.hFlip = true;
           besogo.editor.applyTransformation(transformation);
         }
-        globalSvg.setAttribute('viewBox', 0 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+        besogo.boardCanvasSvg.setAttribute('viewBox', 0 + ' ' + besogo.boardParameters['boardHeight2'] + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
         $("#boardOrientationTL").css("opacity",".62");
         $("#boardOrientationTR").css("opacity",".62");
         $("#boardOrientationBL").css("opacity","1");
         $("#boardOrientationBR").css("opacity",".62");
-        besogoCorner='bottom-left';
+        besogo.boardParameters['corner']='bottom-left';
       });
       
       makeImageButton('/img/boardOrientationBR.png', 'bottom-right', 'boardOrientationBR', function()
       {
-        if(besogoCorner === 'top-left')
+        if(besogo.boardParameters['corner'] === 'top-left')
         {
           let transformation = besogo.makeTransformation();
           transformation.hFlip = true;
@@ -142,28 +142,28 @@ besogo.makeToolPanel = function(container, editor)
           transformation.vFlip = true;
           besogo.editor.applyTransformation(transformation);
         }
-        else if(besogoCorner==='top-right')
+        else if(besogo.boardParameters['corner']==='top-right')
         {
           let transformation = besogo.makeTransformation();
           transformation.vFlip = true;
           besogo.editor.applyTransformation(transformation);
         }
-        else if(besogoCorner==='bottom-left')
+        else if(besogo.boardParameters['corner']==='bottom-left')
         {
           let transformation = besogo.makeTransformation();
           transformation.hFlip = true;
           besogo.editor.applyTransformation(transformation);
         }
-        else if(besogoCorner==='bottom-right')
+        else if(besogo.boardParameters['corner']==='bottom-right')
         {
           //already there
         }
-        globalSvg.setAttribute('viewBox', besogoBoardWidth2 + ' ' + besogoBoardHeight2 + ' ' + besogoBoardWidth3 + ' ' + besogoBoardHeight3);
+        besogo.boardCanvasSvg.setAttribute('viewBox', besogo.boardParameters['boardWidth2'] + ' ' + besogo.boardParameters['boardHeight2'] + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
         $("#boardOrientationTL").css("opacity",".62");
         $("#boardOrientationTR").css("opacity",".62");
         $("#boardOrientationBL").css("opacity",".62");
         $("#boardOrientationBR").css("opacity","1");
-        besogoCorner='bottom-right';
+        besogo.boardParameters['corner']='bottom-right';
         });
     }
     
@@ -267,13 +267,12 @@ besogo.makeToolPanel = function(container, editor)
         if (!editor.getReviewMode())
         {
           $(".besogo-panels").css("display","flex");
-		  if(besogo.scaleParameters['boardCanvasSize'] !== 'vertical half board')
+		  if(besogo.scaleParameters['boardCanvasSize'] !== 'vertical half board') //only case where width < 50%
 			  $(".besogo-board").css("width", "50%");
           $(".besogo-board").css("margin","0");
 		  $(".besogo-board").css("box-shadow","0 8px 14px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
           toggleBoardLock(false);
           deleteNextMoveGroup = true;
-          besogo.editor.resetToStart();
           editor.setReviewMode(true);
         }
         else
@@ -296,6 +295,8 @@ besogo.makeToolPanel = function(container, editor)
 			deleteNextMoveGroup = false;
 			editor.setReviewMode(false);
         }
+		besogo.editor.resetToStart();
+		document.getElementById("status").innerHTML = "";
         besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
       }
     }, reviewButtonId);
