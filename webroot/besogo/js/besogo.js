@@ -2,6 +2,7 @@
   'use strict';
   var besogo = window.besogo = window.besogo || {}; // Establish our namespace
   besogo.VERSION = '0.0.2-alpha';
+  besogo.isEmbedded = false;
   besogo.editor = null;
   var rootPath = '';
   besogo.boardParameters = [];
@@ -9,6 +10,7 @@
   besogo.boardCanvasSvg = null;
   besogo.intuitionActive = false;
   besogo.playerColor = "black";
+  besogo.soundsEnabled = false;
   let corner;
 
   function getMakers()
@@ -207,27 +209,26 @@
       window.addEventListener("resize", resizer);
       resizer(); // Initial div sizing
     }
-
-    //globalTreePanel = tree;
-    //besogo.editor.addListener(globalTreePanel.treeUpdate);
-	besogo.boardParameters['corner'] = options.corner;
-    if(options.corner=='top-left') $("#boardOrientationTL").css("opacity","1");
-    else if(options.corner=='top-right') $("#boardOrientationTR").css("opacity","1");
-    else if(options.corner=='bottom-left') $("#boardOrientationBL").css("opacity","1");
-    else if(options.corner=='bottom-right') $("#boardOrientationBR").css("opacity","1");
-	
-	if(besogo.scaleParameters['boardCanvasSize'] === 'full board'){
-		$(".besogo-board").css("width", "60%");
-		$(".besogo-board").css("margin", "0 252px");
-	}else if(besogo.scaleParameters['boardCanvasSize'] === 'horizontal half board'){
-		$(".besogo-board").css("width", "78%");
-		$(".besogo-board").css("margin", "0 138px");
-	}else if(besogo.scaleParameters['boardCanvasSize'] === 'vertical half board'){
-		$(".besogo-board").css("width", "30%");
-		$(".besogo-board").css("margin", "0 443px");
-	}else{
-		$(".besogo-board").css("width", "50%");
-		$(".besogo-board").css("margin", "0 315px");
+	if(besogo.isEmbedded){
+		besogo.boardParameters['corner'] = options.corner;
+		if(options.corner=='top-left') $("#boardOrientationTL").css("opacity","1");
+		else if(options.corner=='top-right') $("#boardOrientationTR").css("opacity","1");
+		else if(options.corner=='bottom-left') $("#boardOrientationBL").css("opacity","1");
+		else if(options.corner=='bottom-right') $("#boardOrientationBR").css("opacity","1");
+		
+		if(besogo.scaleParameters['boardCanvasSize'] === 'full board'){
+			$(".besogo-board").css("width", "60%");
+			$(".besogo-board").css("margin", "0 252px");
+		}else if(besogo.scaleParameters['boardCanvasSize'] === 'horizontal half board'){
+			$(".besogo-board").css("width", "78%");
+			$(".besogo-board").css("margin", "0 138px");
+		}else if(besogo.scaleParameters['boardCanvasSize'] === 'vertical half board'){
+			$(".besogo-board").css("width", "30%");
+			$(".besogo-board").css("margin", "0 443px");
+		}else{
+			$(".besogo-board").css("width", "50%");
+			$(".besogo-board").css("margin", "0 315px");
+		}
 	}
   }
 
@@ -237,8 +238,9 @@
         boardDisplay,
         boardDiv, // Board display container
         insideText = container.textContent || container.innerText || '';
-
-    let sgfLoaded =
+	if(typeof options.tsumegoPlayTool === 'string') 
+		besogo.isEmbedded = true;
+	let sgfLoaded =
     {
       aInternal: 10,
       aListener: function(val) {},

@@ -27,7 +27,6 @@ besogo.makeBoardDisplay = function(container, editor, corner)
       besogo.scaleParameters['orientation'] = 'full-board';
       besogo.boardParameters['fullBoard'] = true;
     }
-  var isEmbedded = typeof mode === "number"; //check if embedded in the website
   
   besogo.boardParameters['fullBoard'] = false;
   besogo.boardParameters['corner'] = null;
@@ -122,7 +121,7 @@ besogo.makeBoardDisplay = function(container, editor, corner)
   {
     redrawStones(current);
     redrawMarkup(current);
-    redrawNextMoves(current, isEmbedded && !editor.getReviewMode());
+    redrawNextMoves(current, besogo.isEmbedded && !editor.getReviewMode());
     redrawHover(current);
   }
 

@@ -37,12 +37,11 @@ besogo.makeEditor = function(sizeX, sizeY, options)
       reviewMode = typeof options.reviewMode === 'boolean' ? options.reviewMode : true,
       performingAutoPlay = false,
       reviewEnabled = typeof options.reviewEnabled === 'boolean' ? options.reviewEnabled : true,
-      soundEnabled = false,
+      soundEnabled = false, //not used
       remainingRequiredNodes = [],
-      isEmbedded = typeof mode === "number", //check if embedded in the website
       displayResult = null,
       showComment = null;
-
+	  
   return {
     addListener: addListener,
     click: click,
@@ -235,9 +234,10 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     notifyListeners({ navChange: true }, true); // Preserve history
 
     //opponent move and end of variant
-    if (isEmbedded && !current.hasChildIncludingVirtual())
+    if (besogo.isEmbedded && !current.hasChildIncludingVirtual())
     {
-      if (soundEnabled && !reviewMode)
+	  besogo.soundsEnabled = soundsEnabled;
+      if (besogo.soundsEnabled && !reviewMode)
         document.getElementsByTagName("audio")[0].play();
       if (displayResult)
         displayResult(current.correct ? 'S' : 'F');
@@ -424,7 +424,9 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 
   function navigateToNode(node, byClicking = false)
   {
-    if (byClicking && soundsEnabled && !reviewMode)
+	if(besogo.isEmbedded) besogo.soundsEnabled = soundsEnabled;
+	
+    if (byClicking && besogo.soundsEnabled && !reviewMode)
       document.getElementsByTagName("audio")[0].play();
     current = node; // Navigate to child if found
     if (autoPlay && !reviewMode && node.move.color == node.getRoot().firstMove && node.hasChildIncludingVirtual())
@@ -438,7 +440,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
         performingAutoPlay = false;
         if (!isMutable)
           return;
-        if (soundsEnabled && !reviewMode)
+        if (besogo.soundsEnabled && !reviewMode)
           document.getElementsByTagName("audio")[0].play();
 
         let firstSkipped = false;
@@ -533,6 +535,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
   function playMove(i, j, color, allowAll)
   {
     allowAll = false;
+	if(besogo.isEmbedded) besogo.soundsEnabled = soundsEnabled;
     // Check if current node is immutable or root
     if (!current.isMutable('move') || !current.parent)
     {
@@ -546,9 +549,9 @@ besogo.makeEditor = function(sizeX, sizeY, options)
         notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
         edited = true;
 
-        if (isEmbedded)
+        if (besogo.isEmbedded)
         {
-          if (soundsEnabled && !reviewMode)  document.getElementsByTagName("audio")[0].play();
+          if (besogo.soundsEnabled && !reviewMode)  document.getElementsByTagName("audio")[0].play();
           setTimeout(function()
           {
             if(!reviewMode && displayResult)

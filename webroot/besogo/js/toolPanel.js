@@ -5,7 +5,6 @@ besogo.makeToolPanel = function(container, editor)
       svg, // Scratch for building SVG images
       labelText, // Text area for next label input
       selectors = {}; // Holds selection rects
-    var isEmbedded = typeof mode === "number"; //check if embedded in the website
 
   var reviewButton = null;
   if (container.className == 'besogo-tsumegoPlayTool')

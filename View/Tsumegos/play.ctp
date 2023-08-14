@@ -1725,7 +1725,7 @@
 	var userXP = <?php echo $user['User']['xp']; ?>;
 	var prevButtonLink = <?php echo $prev; ?>;
 	var nextButtonLink = <?php echo $next; ?>;
-	var soundsEnabled2 = true;
+	//var soundsEnabled2 = true;
 	var isMutable = true;
 	var deleteNextMoveGroup = false;
 	var file = "<?php echo $file; ?>";
@@ -1733,6 +1733,8 @@
 	var tsumegoFileLink = "<?php echo $t['Tsumego']['id']; ?>";
 	var author = "<?php echo $t['Tsumego']['author']; ?>";
 	
+	var inFavorite = "<?php echo $inFavorite; ?>";
+	var besogoPlayerColor = "black";
 	//var besogoFullBoard = false;
 	//var besogoCorner = null;
 	//var besogoFullBoardWidth = 0;
@@ -1743,16 +1745,14 @@
 	//var besogoBoardHeight2 = 0;
 	//var besogoBoardWidth3 = 0;
 	//var besogoBoardHeight3 = 0;
-	var besogoPlayerColor = "black";
+	//var globalTreePanel = null;
 	
-	var disableAutoplay = false;
-	var globalTreePanel = null;
 	var favorite = "<?php echo $favorite; ?>";
 	var besogoMode2Solved = false;
 	var disableAutoplay = false;
 	var besogoNoLogin = false;
 	var soundParameterForCorrect = false;
-	var inFavorite = "<?php echo $inFavorite; ?>";
+	
 	
 	<?php
 	if(isset($_SESSION['loggedInUser']['User']['id'])){

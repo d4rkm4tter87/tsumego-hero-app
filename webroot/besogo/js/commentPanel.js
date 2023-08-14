@@ -55,8 +55,6 @@ besogo.makeCommentPanel = function(container, editor)
           CP: 'Copyright'
       };
 
-  var isEmbedded = typeof mode === "number"; //check if embedded in the website
-
   statusLabel = createStatusLabel();
   statusTable = createStatusTable();
   let parentDiv = document.createElement('div');
@@ -75,11 +73,11 @@ besogo.makeCommentPanel = function(container, editor)
   statusBasedCheckbox.type = 'checkbox';
   correctButtonSpan.appendChild(correctButton);
   correctButtonSpan.appendChild(requiredButton);
-  if (!isEmbedded)
+  if (!besogo.isEmbedded)
     parentDiv.appendChild(correctButtonSpan);
 
   parentDiv.appendChild(createGoalTable());
-  if (!isEmbedded)
+  if (!besogo.isEmbedded)
   {
 	  parentDiv.appendChild(statusLabel);
 	  parentDiv.appendChild(statusTable);

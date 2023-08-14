@@ -4,9 +4,7 @@ besogo.makeFilePanel = function(container, editor) {
         element, // Scratch variable for creating elements
         WARNING = "Everything not saved will be lost";
 
-	var isEmbedded = typeof mode === "number";  //check if embedded in the website
-
-	if(!isEmbedded){
+	if(!besogo.isEmbedded){
 		makeNewBoardButton(9); // New 9x9 board button
 		makeNewBoardButton(13); // New 13x13 board button
 		makeNewBoardButton(19); // New 19x19 board button
@@ -17,7 +15,7 @@ besogo.makeFilePanel = function(container, editor) {
     fileChooser = makeFileChooser();
     container.appendChild(fileChooser);
 
-	if(!isEmbedded){
+	if(!besogo.isEmbedded){
 		// Load file button
 		element = document.createElement('input');
 		element.type = 'button';
@@ -36,7 +34,7 @@ besogo.makeFilePanel = function(container, editor) {
     element.type = 'button';
     element.value = 'Save';
     element.title = 'Export SGF';
-	if(!isEmbedded){
+	if(!besogo.isEmbedded){
 		element.onclick = function()
 		{
 		  var fileName = prompt('Save file as', 'export');
@@ -59,7 +57,7 @@ besogo.makeFilePanel = function(container, editor) {
 	}
     container.appendChild(element);
 	
-	if(!isEmbedded){
+	if(!besogo.isEmbedded){
 		// Save file button
 		element = document.createElement('input');
 		element.type = 'button';
