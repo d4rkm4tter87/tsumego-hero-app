@@ -2,7 +2,8 @@
 	<h1>Purge</h1><br>
 	<a class="new-button new-buttonx" href="/users/purge?p=1">purge</a>
 	<br><br>
-	<a href="/users/countlist">purge2</a>
+	<a href="/users/countlist">purge2</a><br>
+	<a href="/users/set_full_tsumego_scores?t=0">set_full_tsumego_scores</a>
 	<br><br><br>
 	<?php
 		//echo $t;

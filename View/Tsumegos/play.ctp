@@ -1964,8 +1964,10 @@
 
 	if($firstPlayer=='w') echo 'player = JGO.'.$playerColor[1].';';
 
-	if($t['Tsumego']['status'] == 'setF2' || $t['Tsumego']['status'] == 'setX2') echo 'var locked=true; tryAgainTomorrow = true;';
-	else echo 'var locked=false;';
+	if($t['Tsumego']['status'] == 'setF2' || $t['Tsumego']['status'] == 'setX2'){
+		echo 'var locked=true; tryAgainTomorrow = true;';
+		echo 'toggleBoardLock(true, true);';
+	}else echo 'var locked=false;';
 
 	if($dailyMaximum){
 		echo 'var locked=true; tryAgainTomorrow = true;';
@@ -3628,6 +3630,7 @@
 							document.getElementById("currentElement").style.backgroundColor = "#e03c4b";
 							document.getElementById("status").innerHTML = "<h2>Try again tomorrow</h2>";
 							tryAgainTomorrow = true;
+							toggleBoardLock(true);
 							//locked = true;
 						}
 					}
@@ -3669,20 +3672,20 @@
 		document.cookie = "preId=<?php echo $t['Tsumego']['id']; ?>";
 	}
 
-	function toggleBoardLock(t){
+	function toggleBoardLock(t, customHeight=false){
 		if(t){
 			let besogoBoardHeight = $('.besogo-board').height() + "px";
 			$("#targetLockOverlay").css("width", "633px");
-			$("#targetLockOverlay").css("height", besogoBoardHeight);
+			if(!customHeight) $("#targetLockOverlay").css("height", besogoBoardHeight);
+			else $("#targetLockOverlay").css("height", "633px");
 			$("#targetLockOverlay").css("z-index", "1000");
-			
 		}else{
 			$("#targetLockOverlay").css("width", "0");
 			$("#targetLockOverlay").css("height", "0");
 			$("#targetLockOverlay").css("z-index", "-1");
 		}
 	}
-	//§
+	
 	function resetParameters(isAtStart){
 		tStatus = "<?php echo $t['Tsumego']['status']; ?>";
 		if(tStatus=="setS2"||tStatus=="setC2") heartLoss = false;
@@ -3776,6 +3779,7 @@
 	
 	</script>
 	<?php } ?>
+	
 	<style>
 	.besogo-panels{
 		display: none;
