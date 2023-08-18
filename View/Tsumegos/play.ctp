@@ -3381,7 +3381,6 @@
 				}
 			?>
 			
-			
 			opponent = (player == JGO.BLACK) ? JGO.WHITE : JGO.BLACK;
 			ko = false, lastMove = false;
 			lastHover = false, lastX = -1, lastY = -1;
@@ -3515,6 +3514,7 @@
 				}
 				noLastMark = true;
 				besogo.editor.setReviewEnabled(true);
+				besogo.editor.setControlButtonLock(false);
 				$("#besogo-review-button-inactive").attr("id","besogo-review-button");
 				if(!noXP){
 					if(!doubleXP){
@@ -3567,6 +3567,7 @@
 				noLastMark = true;
 				besogoMode2Solved = true;
 				besogo.editor.setReviewEnabled(true);
+				besogo.editor.setControlButtonLock(false);
 				$("#besogo-review-button-inactive").attr("id","besogo-review-button");
 				$("#besogo-next-button-inactive").attr("id","besogo-next-button");
 				if(!noXP){

@@ -57,10 +57,10 @@ besogo.makeControlPanel = function(container, editor)
                                     function() { editor.prevNode(1); }));
     rightElements.push(makeNavButton('Next node',
                                      '15,10 15,90 85,50',
-                                     function() { editor.nextNode(1); }));
+                                     function() { if(!besogo.controlButtonLock) editor.nextNode(1); }));
     rightElements.push(makeNavButton('Last node',
                                      '95,10 95,90 75,90 75,50 5,90 5,10 75,50 75,10',
-                                     function() { editor.nextNode(-1); }));
+                                     function() { if(!besogo.controlButtonLock) editor.nextNode(-1); }));
     function makeNavButton(tooltip, pointString, action) // Creates a navigation button
     {
       var button = document.createElement('button'),

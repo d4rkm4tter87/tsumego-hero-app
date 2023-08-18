@@ -80,6 +80,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     setReviewMode: setReviewMode,
     getReviewEnabled: getReviewEnabled,
     setReviewEnabled: setReviewEnabled,
+    setControlButtonLock: setControlButtonLock,
     intuitionHeroPower: intuitionHeroPower,
     isPerformingAutoPlay: isPerformingAutoPlay,
     setSoundEnabled: setSoundEnabled,
@@ -713,7 +714,12 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 
   function setReviewEnabled(value)
   {
-    reviewEnabled = value
+    reviewEnabled = value;
+  }
+  
+  function setControlButtonLock(value)
+  {
+    besogo.controlButtonLock = value;
   }
   
   function intuitionHeroPower()

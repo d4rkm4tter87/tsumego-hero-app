@@ -11,6 +11,7 @@
   besogo.intuitionActive = false;
   besogo.playerColor = "black";
   besogo.soundsEnabled = false;
+  besogo.controlButtonLock = true;
   let corner;
 
   function getMakers()

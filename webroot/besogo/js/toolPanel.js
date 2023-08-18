@@ -273,6 +273,7 @@ besogo.makeToolPanel = function(container, editor)
           toggleBoardLock(false);
           deleteNextMoveGroup = true;
           editor.setReviewMode(true);
+		  besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });//fixes tree showing after solve
         }
         else
         {
@@ -294,6 +295,7 @@ besogo.makeToolPanel = function(container, editor)
 			deleteNextMoveGroup = false;
 			editor.setReviewMode(false);
         }
+		besogo.editor.setControlButtonLock(false);
 		besogo.editor.resetToStart();
 		document.getElementById("status").innerHTML = "";
         besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
