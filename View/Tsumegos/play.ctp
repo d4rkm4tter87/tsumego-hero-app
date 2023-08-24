@@ -3646,6 +3646,7 @@
 				document.getElementById("status").style.color = "#e03c4b";
 				document.getElementById("status").innerHTML = "<h2>Incorrect</h2>";
 				noLastMark = true;
+				besogoMode2Solved = true;
 				$("#besogo-next-button-inactive").attr("id","besogo-next-button");
 				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(183, 19, 19, 0.25), 0 6px 20px 0 rgba(183, 19, 19, 0.25)");
 				if(!noXP){
@@ -3722,7 +3723,7 @@
 	  
 	  options.panels = "tree+control";
 	  <?php 
-	  if($_SESSION['loggedInUser']['User']['isAdmin']>0) echo 'options.panels = "tree+control";';//echo 'options.panels = "tree+control+tool+comment+file";';
+	  if($_SESSION['loggedInUser']['User']['isAdmin']>0) echo 'options.panels = "tree+control+tool+comment+file";';//echo 'options.panels = "tree+control";';
 	  
 	  ?> 
 	  options.tsumegoPlayTool = 'auto';

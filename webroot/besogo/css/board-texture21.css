@@ -12,13 +12,13 @@
 }
 
 .besogo-svg-lines {
-    stroke: #151515;
+    stroke: #222!important;
     stroke-width: 2.5;
     fill: none;
 }
 
 .besogo-svg-hoshi {
-    stroke: #151515;
+    stroke: #222!important;
     stroke-width: 12;
 }
 

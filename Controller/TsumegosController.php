@@ -1155,6 +1155,7 @@ class TsumegosController extends AppController{
 				$requestProblem = str_replace('@', ';', $requestProblem);
 				$requestProblem = str_replace('€', "\n", $requestProblem);
 				$requestProblem = str_replace('C[  ]', "C[+]", $requestProblem);
+				$requestProblem = str_replace('C[ ]', "C[+]", $requestProblem);
 				$requestProblem = str_replace('C[x]', "C[+]", $requestProblem);
 				file_put_contents('6473k339312/'.$set['Set']['folder'].'/'.$t['Tsumego']['num'].'.sgf', $requestProblem);
 				//echo '<pre>'; print_r($requestProblem); echo '</pre>';

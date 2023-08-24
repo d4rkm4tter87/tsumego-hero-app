@@ -356,10 +356,9 @@ besogo.makeToolPanel = function(container, editor)
     });
     container.appendChild(labelText);
 	
-	  makeButtonText('Cut', 'Remove branch', function() { editor.cutCurrent(); });
+	makeButtonText('Cut', 'Remove branch', function() { editor.cutCurrent(); });
     makeButtonText('Raise', 'Raise variation', function() { editor.promote(); });
     makeButtonText('Lower', 'Lower variation', function() { editor.demote(); });
-    makeButtonText('Cut', 'Remove branch', function() { editor.cutCurrent(); });
     makeButtonText('H Flip', 'Flip horizontally', function()
     {
       let transformation = besogo.makeTransformation();

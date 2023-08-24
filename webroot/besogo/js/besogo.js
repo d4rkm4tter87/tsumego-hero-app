@@ -12,6 +12,7 @@
   besogo.playerColor = "black";
   besogo.soundsEnabled = false;
   besogo.controlButtonLock = true;
+  besogo.theme = '';
   let corner;
 
   function getMakers()
@@ -74,7 +75,7 @@
       addWheelHandler(boardDiv, besogo.editor);
 
     let panelsDiv;
-
+	
     if (options.panels.length > 0) // Only create if there are panels to add
     {
       panelsDiv = makeDiv('besogo-panels', container);
@@ -259,6 +260,8 @@
         this.aListener = listener;
       }
     }
+
+	besogo.theme = options.theme;
 
     if (typeof options.rootPath === 'string')
       besogo.rootPath = options.rootPath;

@@ -233,6 +233,7 @@ besogo.makeBoardDisplay = function(container, editor, corner)
     }) );
 
     drawHoshi(); // Draw the hoshi points
+	
     if (coord !== 'none')
       drawCoords(coord, besogo.scaleParameters['orientation']); // Draw the coordinate labels
   }
@@ -240,6 +241,22 @@ besogo.makeBoardDisplay = function(container, editor, corner)
   // Draws coordinate labels on the board
   function drawCoords(coord, corner)
   {
+	console.log(besogo.theme);
+	let fill = 'black';
+	if(besogo.theme==='texture26')
+		fill = '#bbb';
+	else if(besogo.theme==='texture25')
+		fill = '#000';
+	else if(besogo.theme==='texture54')
+		fill = '#aaa';
+	else if(besogo.theme==='texture41')
+		fill = '#bbb';
+	else if(besogo.theme==='texture40')
+		fill = '#bbb';
+	else if(besogo.theme==='texture38')
+		fill = '#bbb';
+	else if(besogo.theme==='texture22')
+		fill = '#bbb';
     var labels = besogo.coord[coord](sizeX, sizeY),
         labelXa = labels.x, // Top edge labels
         labelXb = labels.xb || labels.x, // Bottom edge
@@ -251,17 +268,17 @@ besogo.makeBoardDisplay = function(container, editor, corner)
     for (let i = 1; i <= sizeX; i++) // Draw column coordinate labels
     {
       x = svgPos(i);
-      drawCoordLabel(x, svgPos(1) - shift, labelXa[i]);
-      drawCoordLabel(x, svgPos(sizeY) + shift, labelXb[i]);
+      drawCoordLabel(x, svgPos(1) - shift, labelXa[i], fill);
+      drawCoordLabel(x, svgPos(sizeY) + shift, labelXb[i], fill);
     }
     for (let i = 1; i <= sizeY; i++) // Draw row coordinate labels
     {
       y = svgPos(i);
-      drawCoordLabel(svgPos(1) - shift, y, labelYa[i]);
-      drawCoordLabel(svgPos(sizeX) + shift, y, labelYb[i]);
+      drawCoordLabel(svgPos(1) - shift, y, labelYa[i], fill);
+      drawCoordLabel(svgPos(sizeX) + shift, y, labelYb[i], fill);
     }
 
-    function drawCoordLabel(x, y, label)
+    function drawCoordLabel(x, y, label, color)
     {
       var element = besogo.svgEl("text", {
           x: x,
@@ -270,7 +287,7 @@ besogo.makeBoardDisplay = function(container, editor, corner)
           "font-size": 32,
           "text-anchor": "middle", // Horizontal centering
           "font-family": "Helvetica, Arial, sans-serif",
-          fill: 'black'
+          fill: color
       });
       element.appendChild( document.createTextNode(label) );
       svg.appendChild(element);
