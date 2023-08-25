@@ -2981,13 +2981,16 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.besogo-control {
 		width: 33%!important;
 	}
+	.besogo-tool{
+		width:auto!important;
+	}
 	.besogo-tree {
 		flex: none!important;
 		width: auto!important;
 	}
 	.besogo-comment {
 	  flex: none!important;
-	  height: 115px;
+	  width:auto!important;
 	}
 	.besogo-comment table{
 		display:none;

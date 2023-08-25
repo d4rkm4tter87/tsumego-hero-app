@@ -7,11 +7,16 @@ besogo.makeToolPanel = function(container, editor)
       selectors = {}; // Holds selection rects
 
   var reviewButton = null;
-  if (container.className == 'besogo-tsumegoPlayTool')
+  
+  console.log(besogo.isEmbedded);
+  if(container.className == 'besogo-tsumegoPlayTool'){
     makeReviewToolButtons(container, editor);
-  else
-    makeEditorToolButtons(container, editor);
-
+  }else{
+    if(!besogo.isEmbedded)
+		makeEditorToolButtons(container, editor);
+	else
+		makeEditorToolButtons2(container, editor);
+  }
   besogo.editor.addListener(toolStateUpdate); // Set up listener for tool state updates
   
   toolStateUpdate({ label: besogo.editor.getLabel(), tool: besogo.editor.getTool(), tsumegoPlayTool: besogo.editor.getTool() }); // Initialize
@@ -52,7 +57,8 @@ besogo.makeToolPanel = function(container, editor)
         transformation.vFlip = true;
         besogo.editor.applyTransformation(transformation);
       }
-      besogo.boardCanvasSvg.setAttribute('viewBox', '0 0 ' + besogo.boardParameters['boardWidth'] + ' ' + besogo.boardParameters['boardHeight']);
+	  if(besogo.scaleParameters['orientation']!=='full-board')
+		besogo.boardCanvasSvg.setAttribute('viewBox', '0 0 ' + besogo.boardParameters['boardWidth'] + ' ' + besogo.boardParameters['boardHeight']);
       $("#boardOrientationTL").css("opacity","1");
       $("#boardOrientationTR").css("opacity",".62");
       $("#boardOrientationBL").css("opacity",".62");
@@ -87,7 +93,8 @@ besogo.makeToolPanel = function(container, editor)
           transformation.vFlip = true;
           besogo.editor.applyTransformation(transformation);
         }
-        besogo.boardCanvasSvg.setAttribute('viewBox', besogo.boardParameters['boardWidth2'] + ' ' + 0 + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
+		if(besogo.scaleParameters['orientation']!=='full-board')
+			besogo.boardCanvasSvg.setAttribute('viewBox', besogo.boardParameters['boardWidth2'] + ' ' + 0 + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
         $("#boardOrientationTL").css("opacity",".62");
         $("#boardOrientationTR").css("opacity","1");
         $("#boardOrientationBL").css("opacity",".62");
@@ -122,7 +129,8 @@ besogo.makeToolPanel = function(container, editor)
           transformation.hFlip = true;
           besogo.editor.applyTransformation(transformation);
         }
-        besogo.boardCanvasSvg.setAttribute('viewBox', 0 + ' ' + besogo.boardParameters['boardHeight2'] + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
+		if(besogo.scaleParameters['orientation']!=='full-board')
+			besogo.boardCanvasSvg.setAttribute('viewBox', 0 + ' ' + besogo.boardParameters['boardHeight2'] + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
         $("#boardOrientationTL").css("opacity",".62");
         $("#boardOrientationTR").css("opacity",".62");
         $("#boardOrientationBL").css("opacity","1");
@@ -157,7 +165,8 @@ besogo.makeToolPanel = function(container, editor)
         {
           //already there
         }
-        besogo.boardCanvasSvg.setAttribute('viewBox', besogo.boardParameters['boardWidth2'] + ' ' + besogo.boardParameters['boardHeight2'] + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
+        if(besogo.scaleParameters['orientation']!=='full-board')
+			besogo.boardCanvasSvg.setAttribute('viewBox', besogo.boardParameters['boardWidth2'] + ' ' + besogo.boardParameters['boardHeight2'] + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
         $("#boardOrientationTL").css("opacity",".62");
         $("#boardOrientationTR").css("opacity",".62");
         $("#boardOrientationBL").css("opacity",".62");
@@ -394,6 +403,61 @@ besogo.makeToolPanel = function(container, editor)
       editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
       editor.edited = true;
     });
+  }
+
+  function makeEditorToolButtons2(container, editor)
+  {
+    svg = makeButtonSVG('auto', 'Auto-play/navigate\n' +
+        'crtl+click to force ko, suicide, overwrite\n' +
+        'shift+click to jump to move'); // Auto-play/nav tool button
+    svg.appendChild(makeYinYang(0, 0));
+
+    svg = makeButtonSVG('addB', 'Set black\nshift+click addWhite\nctrl+click to play'); // Add black button
+    element = besogo.svgEl('g');
+    element.appendChild(besogo.svgStone(-15, -15, -1, 15)); // Black stone
+    element.appendChild(besogo.svgStone(15, -15, 1, 15)); // White stone
+    element.appendChild(besogo.svgStone(-15, 15, 1, 15)); // White stone
+    element.appendChild(besogo.svgStone(15, 15, -1, 15)); // Black stone
+    svg.appendChild(element);
+
+    svg = makeButtonSVG('circle', 'Circle'); // Circle markup button
+    svg.appendChild(besogo.svgCircle(0, 0, 'black'));
+
+    svg = makeButtonSVG('square', 'Square'); // Square markup button
+    svg.appendChild(besogo.svgSquare(0, 0, 'black'));
+
+    svg = makeButtonSVG('triangle', 'Triangle'); // Triangle markup button
+    svg.appendChild(besogo.svgTriangle(0, 0, 'black'));
+
+    svg = makeButtonSVG('cross', 'Cross'); // Cross markup button
+    svg.appendChild(besogo.svgCross(0, 0, 'black'));
+
+    svg = makeButtonSVG('block', 'Block'); // Block markup button
+    svg.appendChild(besogo.svgBlock(0, 0, 'black'));
+
+    svg = makeButtonSVG('clrMark', 'Clear mark'); // Clear markup button
+    element = besogo.svgEl('g');
+    element.appendChild(besogo.svgTriangle(0, 0, besogo.GREY));
+    element.appendChild(besogo.svgCross(0, 0, besogo.RED));
+    svg.appendChild(element);
+
+    svg = makeButtonSVG('label', 'Label'); // Label markup button
+    svg.appendChild(besogo.svgLabel(0, 0, 'black', 'A1'));
+
+    labelText = document.createElement("input"); // Label entry text field
+    labelText.type = "text";
+    labelText.title = 'Next label';
+    labelText.onblur = function() { editor.setLabel(labelText.value); };
+    labelText.addEventListener('keydown', function(evt)
+    {
+      evt = evt || window.event;
+      evt.stopPropagation(); // Stop keydown propagation when in focus
+    });
+    container.appendChild(labelText);
+	
+	makeButtonText('Cut', 'Remove branch', function() { editor.cutCurrent(); });
+    makeButtonText('Raise', 'Raise variation', function() { editor.promote(); });
+    makeButtonText('Lower', 'Lower variation', function() { editor.demote(); });
   }
 
   // Creates a button holding an SVG image
