@@ -241,7 +241,6 @@ besogo.makeBoardDisplay = function(container, editor, corner)
   // Draws coordinate labels on the board
   function drawCoords(coord, corner)
   {
-	console.log(besogo.theme);
 	let fill = 'black';
 	if(besogo.theme==='texture26')
 		fill = '#bbb';

@@ -8,7 +8,6 @@ besogo.makeToolPanel = function(container, editor)
 
   var reviewButton = null;
   
-  console.log(besogo.isEmbedded);
   if(container.className == 'besogo-tsumegoPlayTool'){
     makeReviewToolButtons(container, editor);
   }else{

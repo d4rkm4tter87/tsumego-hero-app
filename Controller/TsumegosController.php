@@ -329,12 +329,7 @@ class TsumegosController extends AppController{
 				shuffle($range);
 				$nextMode = $range[0];
 				
-				if(isset($_COOKIE['preId']) && $_COOKIE['preId']!=0){
-					$id = $nextMode['Tsumego']['id'];
-				}else{
-					if(isset($_COOKIE['skip']) && $_COOKIE['skip']!='0') $id = $nextMode['Tsumego']['id'];
-					else $id = $_SESSION['lastVisit'];
-				}
+				$id = $nextMode['Tsumego']['id'];
 			}
 		}
 		if(isset($this->params['url']['refresh'])) $refresh = $this->params['url']['refresh'];
@@ -1524,8 +1519,6 @@ class TsumegosController extends AppController{
 			$sgfx = file_get_contents($file);
 			$requestProblem = '?v='.strlen($sgfx);
 		}
-		
-		//echo '<pre>'; print_r($favorite); echo '</pre>';
 		
 		if($t['Tsumego']['set_id']==42) $ui = 1;
 		

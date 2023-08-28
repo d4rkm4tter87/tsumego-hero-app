@@ -13,6 +13,7 @@
   besogo.soundsEnabled = false;
   besogo.controlButtonLock = true;
   besogo.theme = '';
+  besogo.vChildrenEnabled = true;
   let corner;
 
   function getMakers()
@@ -73,7 +74,7 @@
     if (!options.nowheel)
     // Add mousewheel handler unless nowheel option is truthy
       addWheelHandler(boardDiv, besogo.editor);
-
+	
     let panelsDiv;
 	
     if (options.panels.length > 0) // Only create if there are panels to add
@@ -262,7 +263,8 @@
     }
 
 	besogo.theme = options.theme;
-
+	if(typeof options.vChildrenEnabled === 'boolean')
+		besogo.vChildrenEnabled = options.vChildrenEnabled;
     if (typeof options.rootPath === 'string')
       besogo.rootPath = options.rootPath;
     else

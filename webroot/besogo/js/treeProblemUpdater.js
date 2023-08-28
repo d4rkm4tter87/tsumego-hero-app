@@ -30,44 +30,46 @@ besogo.addRelevantMoves = function(root, node)
 
 besogo.addVirtualChildren = function(root, node, addHash = true)
 {
-  if (addHash)
-    root.nodeHashTable.push(node);
+  if(besogo.vChildrenEnabled){
+	  if (addHash)
+		root.nodeHashTable.push(node);
 
-  var sizeX = root.getSize().x;
-  var sizeY = root.getSize().y;
-  for (let i = 0; i < root.relevantMoves.length; ++i)
-  {
-    if (!root.relevantMoves[i])
-      continue;
-    var move = root.toXY(i);
-    if (!node.getStone(move.x, move.y))
-    {
-      var testChild = node.makeChild()
-      if (!testChild.playMove(move.x, move.y))
-      {
-        node.removeChild(testChild);
-        continue;
-      }
+	  var sizeX = root.getSize().x;
+	  var sizeY = root.getSize().y;
+	  for (let i = 0; i < root.relevantMoves.length; ++i)
+	  {
+		if (!root.relevantMoves[i])
+		  continue;
+		var move = root.toXY(i);
+		if (!node.getStone(move.x, move.y))
+		{
+		  var testChild = node.makeChild()
+		  if (!testChild.playMove(move.x, move.y))
+		  {
+			node.removeChild(testChild);
+			continue;
+		  }
 
-      var sameNode = root.nodeHashTable.getSameNode(testChild);
-      if (sameNode && sameNode.parent != node)
-      {
-        var redirect = [];
-        redirect.target = sameNode;
-        redirect.move = [];
-        redirect.move.x = move.x;
-        redirect.move.y = move.y;
-        redirect.move.captures = testChild.move.captures;
-        redirect.move.color = node.nextMove();
-        node.virtualChildren.push(redirect);
-        redirect.target.virtualParents.push(node);
-        node.correctSource = false;
-      }
-    }
+		  var sameNode = root.nodeHashTable.getSameNode(testChild);
+		  if (sameNode && sameNode.parent != node)
+		  {
+			var redirect = [];
+			redirect.target = sameNode;
+			redirect.move = [];
+			redirect.move.x = move.x;
+			redirect.move.y = move.y;
+			redirect.move.captures = testChild.move.captures;
+			redirect.move.color = node.nextMove();
+			node.virtualChildren.push(redirect);
+			redirect.target.virtualParents.push(node);
+			node.correctSource = false;
+		  }
+		}
+	  }
+
+	  for (let i = 0; i < node.children.length; ++i)
+		besogo.addVirtualChildren(root, node.children[i], addHash);
   }
-
-  for (let i = 0; i < node.children.length; ++i)
-    besogo.addVirtualChildren(root, node.children[i], addHash);
 }
 
 besogo.pruneTree = function(root, node)

@@ -3730,7 +3730,9 @@
 	  options.realstones = true;
 	  options.nowheel = true;
 	  options.nokeys = true;
-	  
+	  options.vChildrenEnabled = true;
+	  if(tsumegoFileLink==21680) options.vChildrenEnabled = false;
+	 
 	  const cornerArray = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
 	  shuffledCornerArray = cornerArray.sort((a, b) => 0.5 - Math.random());
 	  options.corner = shuffledCornerArray[0];
