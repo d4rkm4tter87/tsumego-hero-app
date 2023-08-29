@@ -70,10 +70,6 @@ class TsumegosController extends AppController{
 			$potionAlert = true;
 		}
 		
-		if(isset($this->params['url']['ui'])){
-			if($this->params['url']['ui']==2) $ui = 2;
-			else $ui = 1;
-		}
 		if(isset($_COOKIE['ui']) && $_COOKIE['ui'] != '0'){
 			$ui = $_COOKIE['ui'];
 			unset($_COOKIE['ui']);
@@ -563,11 +559,12 @@ class TsumegosController extends AppController{
 			array_push($commentCoordinates, $array[1]);
 			$counter1++;
 		}
+		$idMap = array();
+		$statusMap = array();
 		if($mode==1){
 			if(isset($_SESSION['loggedInUser']) && !isset($_SESSION['noLogin'])){
 				$allUts = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => $u['User']['id'])));
-				$idMap = array();
-				$statusMap = array();
+				
 				for($i=0; $i<count($allUts); $i++){
 					array_push($idMap, $allUts[$i]['TsumegoStatus']['tsumego_id']);
 					array_push($statusMap, $allUts[$i]['TsumegoStatus']['status']);
@@ -720,7 +717,7 @@ class TsumegosController extends AppController{
 					$u['User']['damage'] += $_COOKIE['misplay'];
 					$u['User']['rejuvenation'] = 0;
 					$rejuvenation = true;
-				}					
+				}
 			}else{
 				if($mode==1 && $u['User']['id']!=33){
 					if(isset($_SESSION['loggedInUser']['User']['id'])){
@@ -1121,10 +1118,10 @@ class TsumegosController extends AppController{
 			$u['User']['mode'] = $_SESSION['loggedInUser']['User']['mode'];
 			$u['User']['created'] = date('Y-m-d H:i:s');
 			$this->User->save($u);
-		}		
+		}
 		
 		if($mode==1 || $mode==3){
-			if($ut==null && isset($_SESSION['loggedInUser'])){
+			if($ut==null && isset($_SESSION['loggedInUser']['User']['id'])){
 				$this->TsumegoStatus->create();
 				$ut['TsumegoStatus'] = array();
 				$ut['TsumegoStatus']['user_id'] = $u['User']['id'];
@@ -1354,6 +1351,7 @@ class TsumegosController extends AppController{
 			}
 		}
 		
+		/*
 		$masterArrayBW = $this->processSGF(
 			$file, 
 			$t['Tsumego']['minLib'], 
@@ -1364,7 +1362,7 @@ class TsumegosController extends AppController{
 			$t['Tsumego']['set_id'], 
 			$orientation,
 			$checkBSize
-		);
+		);*/
 
 		if(!isset($_SESSION['loggedInUser'])) $u['User'] = $noUser;
 		
@@ -1488,7 +1486,6 @@ class TsumegosController extends AppController{
 			if(!isset($_SESSION['loggedInUser']['User']['id']) && isset($_SESSION['loggedInUser']['User']['premium'])){
 				unset($_SESSION['loggedInUser']);
 			}
-			//if($_SESSION['loggedInUser']['User']['isAdmin']<1) $ui = 2;
 		}
 		
 		$admins = $this->User->find('all', array('conditions' => array('isAdmin' => 1)));
@@ -1521,6 +1518,7 @@ class TsumegosController extends AppController{
 		}
 		
 		if($t['Tsumego']['set_id']==42) $ui = 1;
+		else $ui = 2;
 		
 		$this->set('raName', $raName);
 		$this->set('crs', $crs);
@@ -1538,18 +1536,18 @@ class TsumegosController extends AppController{
 		$this->set('suspiciousBehavior', $suspiciousBehavior);
 		$this->set('isSandbox', $isSandbox);
 		$this->set('goldenTsumego', $goldenTsumego);
-		$this->set('masterArray', $masterArrayBW[0]);
-		$this->set('black', $masterArrayBW[1]);
-		$this->set('white', $masterArrayBW[2]);
-		$this->set('corner', $masterArrayBW[3]);
-		$this->set('intuitionMove', $masterArrayBW[4]);
+		//$this->set('masterArray', $masterArrayBW[0]);
+		//$this->set('black', $masterArrayBW[1]);
+		//$this->set('white', $masterArrayBW[2]);
+		//$this->set('corner', $masterArrayBW[3]);
+		//$this->set('intuitionMove', $masterArrayBW[4]);
 		$this->set('fullHeart', $fullHeart);
 		$this->set('emptyHeart', $emptyHeart);
-		$this->set('isSemeai', $masterArrayBW[5]);
-		$this->set('blackSubtractedLiberties', $masterArrayBW[6]);
-		$this->set('whiteSubtractedLiberties', $masterArrayBW[7]);
-		$this->set('firstPlayer', $masterArrayBW[9]);
-		$this->set('additionalInfo', $masterArrayBW[10]);
+		//$this->set('isSemeai', $masterArrayBW[5]);
+		//$this->set('blackSubtractedLiberties', $masterArrayBW[6]);
+		//$this->set('whiteSubtractedLiberties', $masterArrayBW[7]);
+		//$this->set('firstPlayer', $masterArrayBW[9]);
+		//$this->set('additionalInfo', $masterArrayBW[10]);
 		$this->set('libertyCount', $t['Tsumego']['libertyCount']);
 		$this->set('semeaiType', $t['Tsumego']['semeaiType']);
 		$this->set('insideLiberties', $t['Tsumego']['insideLiberties']);
@@ -1577,14 +1575,14 @@ class TsumegosController extends AppController{
 		$this->set('potion', $potion);
 		$this->set('potionSuccess', $potionSuccess);
 		$this->set('potionActive', $potionActive);
-		$this->set('visual', $masterArrayBW[11]);
-		$this->set('visuals', $masterArrayBW[12]);
+		//$this->set('visual', $masterArrayBW[11]);
+		//$this->set('visuals', $masterArrayBW[12]);
 		$this->set('reviewCheat', $reviewCheat);
-		$this->set('coordMarkers', $masterArrayBW[13]);
-		$this->set('coordPlaces', $masterArrayBW[14]);
+		//$this->set('coordMarkers', $masterArrayBW[13]);
+		//$this->set('coordPlaces', $masterArrayBW[14]);
 		$this->set('commentCoordinates', $commentCoordinates);
 		$this->set('part', $t['Tsumego']['part']);
-		$this->set('sT', $masterArrayBW[15]);
+		//$this->set('sT', $masterArrayBW[15]);
 		$this->set('josekiLevel', $josekiLevel);
 		$this->set('checkBSize', $checkBSize);
 		$this->set('rankTs', $rankTs);
@@ -1597,7 +1595,7 @@ class TsumegosController extends AppController{
 		$this->set('stopParameter2', $stopParameter2);
 		$this->set('mode3ScoreArray', $mode3ScoreArray);
 		$this->set('potionAlert', $potionAlert);
-		$this->set('sgfErrorMessage', $masterArrayBW[16]);
+		//$this->set('sgfErrorMessage', $masterArrayBW[16]);
 		$this->set('file', $file);
 		$this->set('ui', $ui);
 		$this->set('requestProblem', $requestProblem);

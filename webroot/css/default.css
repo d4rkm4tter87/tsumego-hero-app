@@ -3034,7 +3034,8 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		background-color: #c63c3c!important;
 	}
 	#besogo-review-button-inactive{
-		display:none;
+		background-color: #8f9092!important;
+		cursor:context-menu;
 	}
 	#besogo-next-button:hover, #besogo-reset-button:hover, #besogo-back-button:hover{
 		background-color:#737477!important;
