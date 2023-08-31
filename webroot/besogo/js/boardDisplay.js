@@ -20,7 +20,7 @@ besogo.makeBoardDisplay = function(container, editor, corner)
       randIndex, // Random index for stone images
       lastHoverPosition = null,
       TOUCH_FLAG = false; // Flag for touch interfaces
-
+	
 	//Not a 19x19 board, so it should be full board view
     if(sizeX != 19)
     {
@@ -50,6 +50,7 @@ besogo.makeBoardDisplay = function(container, editor, corner)
 
   return {
       redrawHover: redrawHover,
+	  displayHoverCoord: displayHoverCoord
     };
 
   // Function for setting the flag for touch interfaces
@@ -143,11 +144,11 @@ besogo.makeBoardDisplay = function(container, editor, corner)
     {
       if(!besogo.scaleParameters['hFlip'] && !besogo.scaleParameters['vFlip']) 
 		  besogo.scaleParameters['orientation'] = 'top-left';
-      else if(besogo.scaleParameters['hFlip'] && !besogo.scaleParameters['vFlip']) 
+      else if(besogo.scaleParameters['hFlip'] && !besogo.scaleParameters['vFlip'])
 		  besogo.scaleParameters['orientation'] = 'top-right';
-      else if(!besogo.scaleParameters['hFlip'] && besogo.scaleParameters['vFlip']) 
+      else if(!besogo.scaleParameters['hFlip'] && besogo.scaleParameters['vFlip'])
 		  besogo.scaleParameters['orientation'] = 'bottom-left';
-      else if(besogo.scaleParameters['hFlip'] && besogo.scaleParameters['vFlip']) 
+      else if(besogo.scaleParameters['hFlip'] && besogo.scaleParameters['vFlip'])
 		  besogo.scaleParameters['orientation'] = 'bottom-right';
 
       if(besogo.scaleParameters['highestX'] >= 10) 
@@ -546,6 +547,39 @@ besogo.makeBoardDisplay = function(container, editor, corner)
     for (let i = 0; i < current.virtualChildren.length; ++i)
       redrawNextMoveStatus(group, current.virtualChildren[i].target, current.virtualChildren[i].move);
   }
+	
+	function displayHoverCoord(x,y)
+  {
+    var group = besogo.svgEl("g");
+    var circleSize = 15;
+    
+	if(editor.getReviewMode()){
+		var current = editor.getCurrent();
+		for (let i = 0; i < current.children.length; ++i)
+		{
+		  var child = current.children[i];
+		  var element = besogo.svgFilledCircle(svgPos(child.move.x), svgPos(child.move.y), child.getCorrectColor(), circleSize);
+		  group.appendChild(element);
+		}
+		if (current.virtualChildren)
+		  for (let i = 0; i < current.virtualChildren.length; ++i)
+		  {
+			var redirect = current.virtualChildren[i];
+			var element = besogo.svgFilledCircle(svgPos(redirect.move.x), svgPos(redirect.move.y), redirect.target.getCorrectColor(), virtualCircleSize);
+			group.appendChild(element);
+		  }
+	} 
+	if(x!=-1){
+		x+=1;
+		y+=1;
+		var element = besogo.svgFilledCircle(svgPos(x), svgPos(y), "blue", circleSize); 
+	}else{
+		var element = besogo.svgFilledCircle(1, 1, "red", 0); 
+	}		
+    group.appendChild(element);
+    svg.replaceChild(group, nextMoveGroup); // Replace the markup group
+    nextMoveGroup = group;
+  }
 
   function redrawNextMoves(current, clear = false)
   {
@@ -692,4 +726,6 @@ besogo.makeBoardDisplay = function(container, editor, corner)
   {
     return (x - 1)*sizeY + (y - 1);
   }
+  
+  
 };

@@ -4,6 +4,7 @@
   besogo.VERSION = '0.0.2-alpha';
   besogo.isEmbedded = false;
   besogo.editor = null;
+  besogo.boardDisplay = null;
   var rootPath = '';
   besogo.boardParameters = [];
   besogo.scaleParameters = [];
@@ -67,6 +68,7 @@
   {
     boardDiv = makeDiv('besogo-board', container); // Create div for board display
     boardDisplay = besogo.makeBoardDisplay(boardDiv, besogo.editor, corner); // Create board display
+	besogo.boardDisplay = boardDisplay;
 	
     if (!options.nokeys) // Add keypress handler unless nokeys option is truthy
       addKeypressHandler(container, besogo.editor, boardDisplay);
@@ -233,6 +235,7 @@
 			$(".besogo-board").css("margin", "0 315px");
 		}
 	}
+	besogo.boardDisplay = boardDisplay;
   }
 
   besogo.create = function(container, options)

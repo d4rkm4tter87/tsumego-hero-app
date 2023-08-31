@@ -87,10 +87,16 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     registerDisplayResult: registerDisplayResult,
     resetToStart: resetToStart,
     registerShowComment: registerShowComment,
+    displayHoverCoord: displayHoverCoord
   };
 
   // Returns the active tool
   function getTool() { return tool; }
+  
+  function displayHoverCoord(x, y) { 
+	besogo.boardDisplay.displayHoverCoord(x, y);
+  }
+  
 
   // Sets the active tool, returns false if failed
   function setTool(set)

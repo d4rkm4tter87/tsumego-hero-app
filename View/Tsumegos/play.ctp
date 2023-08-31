@@ -26,8 +26,9 @@
 	for($i=1;$i<=count($enabledBoards);$i++){
 		if($enabledBoards[$i]=='checked') array_push($choice, $boardPositions[$i]);
 	}
-	if($corner=='full board') $boardSize = 'medium';
-	else $boardSize = 'large';
+	$boardSize = 'large';
+	//if($corner=='full board') $boardSize = 'medium';
+	//else $boardSize = 'large';
 	shuffle($choice);
 
 	$authorx = $t['Tsumego']['author'];
@@ -120,8 +121,7 @@
 	$d1 = '';
 	$x2 = '';
 	$multipleChoiceCorrect = '';
-	if($corner=='full board') $ansDisplay = 'ansBig';
-	else $ansDisplay = 'ans';
+	$ansDisplay = 'ans';
 
 	$blackLiberties = $libertyCount - $blackSubtractedLiberties;
 	$whiteLiberties = $libertyCount - $whiteSubtractedLiberties;
@@ -395,8 +395,8 @@
 	</table>
 	<?php
 		$xpDisplayTableWidth = 70;
-		if($corner=='t' || $corner=='b') $xpDisplayTableWidth = 79;
-		if($corner=='tl' || $corner=='tr' || $corner=='bl' || $corner=='br') $xpDisplayTableWidth = 55;
+		//if($corner=='t' || $corner=='b') $xpDisplayTableWidth = 79;
+		//if($corner=='tl' || $corner=='tr' || $corner=='bl' || $corner=='br') $xpDisplayTableWidth = 55;
 	?>
 
 	<div align="center">
@@ -858,9 +858,8 @@
 
 	echo '<audio><source src="/sounds/newStone.ogg"></audio>';
 	echo '';
-
-	if($corner=='full board') $boardSize='medium';
-	else $boardSize='large';
+	//if($corner=='full board') $boardSize='medium';
+	//else $boardSize='large';
 	?>
 
 	<script type="text/javascript">
@@ -1712,23 +1711,13 @@
 		}
 	}
 
-	<?php if($sgfErrorMessage===''){ ?>
 	function intuition(){
-		if(ui==1 && intuitionEnabled){
-			<?php echo 'jboard.setMark(new JGO.Coordinate('.$intuitionMove[0].', '.$intuitionMove[1].'), JGO.MARK.CORRECT);'; ?>
-			document.cookie = "intuition=1";
-			document.getElementById("intuition").src = "/img/hp2x.png";
-			document.getElementById("intuition").style = "cursor: context-menu;";
-			intuitionEnabled = false;
-		}else if(ui==2 && intuitionEnabled){
-			document.cookie = "intuition=1";
-			document.getElementById("intuition").src = "/img/hp2x.png";
-			document.getElementById("intuition").style = "cursor: context-menu;";
-			intuitionEnabled = false;
-			besogo.editor.intuitionHeroPower();
-		}
+		document.cookie = "intuition=1";
+		document.getElementById("intuition").src = "/img/hp2x.png";
+		document.getElementById("intuition").style = "cursor: context-menu;";
+		intuitionEnabled = false;
+		besogo.editor.intuitionHeroPower();
 	}
-	<?php } ?>
 
 	function rejuvenation(){
 		if(rejuvenationEnabled){
@@ -2008,8 +1997,8 @@
 			//echo 'alert("!'.$e[$j].'");';
 			if(strlen($coordMarkers[$i][$j])>2){
 				$c = explode('-', $coordMarkers[$i][$j]);
-				echo 'function commentCoordinateIn'.$fn.'(){jboard.setMark(new JGO.Coordinate('.$c[0].', '.$c[1].'), JGO.MARK.SELECTED);}';
-				echo 'function commentCoordinateOut'.$fn.'(){jboard.setMark(new JGO.Coordinate('.$c[0].', '.$c[1].'), JGO.MARK.NONE);}';
+				echo 'function commentCoordinateIn'.$fn.'(){besogo.editor.displayHoverCoord('.$c[0].', '.$c[1].');}';
+				echo 'function commentCoordinateOut'.$fn.'(){besogo.editor.displayHoverCoord(-1, -1);}';
 				$fn++;
 			}
 		}
@@ -2022,8 +2011,8 @@
 			for($j=count($n2x)-1; $j>=0; $j--){
 				$n2xx = explode('-', $n2x[$j]);
 				if(strlen($n2xx[0])>0 && strlen($n2xx[1])>0){
-					echo 'function ccIn'.$fn1.$fn2.'(){jboard.setMark(new JGO.Coordinate('.$n2xx[0].', '.$n2xx[1].'), JGO.MARK.SELECTED);}';
-					echo 'function ccOut'.$fn1.$fn2.'(){jboard.setMark(new JGO.Coordinate('.$n2xx[0].', '.$n2xx[1].'), JGO.MARK.NONE);}';
+					echo 'function ccIn'.$fn1.$fn2.'(){besogo.editor.displayHoverCoord('.$n2xx[0].', '.$n2xx[1].');}';
+					echo 'function ccOut'.$fn1.$fn2.'(){besogo.editor.displayHoverCoord(-1, -1);}';
 					$fn2++;
 				}
 			}
@@ -2038,8 +2027,8 @@
 		for($j=count($n2x)-1; $j>=0; $j--){
 			$n2xx = explode('-', $n2x[$j]);
 			if(strlen($n2xx[0])>0 && strlen($n2xx[1])>0){
-				echo 'function ccIn'.$fn1.$fn2.'(){jboard.setMark(new JGO.Coordinate('.$n2xx[0].', '.$n2xx[1].'), JGO.MARK.SELECTED);}';
-				echo 'function ccOut'.$fn1.$fn2.'(){jboard.setMark(new JGO.Coordinate('.$n2xx[0].', '.$n2xx[1].'), JGO.MARK.NONE);}';
+				echo 'function ccIn'.$fn1.$fn2.'(){besogo.editor.displayHoverCoord('.$n2xx[0].', '.$n2xx[1].');}';
+				echo 'function ccOut'.$fn1.$fn2.'(){besogo.editor.displayHoverCoord(-1, -1);}';
 				$fn2++;
 			}
 		}

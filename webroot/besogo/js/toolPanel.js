@@ -427,7 +427,7 @@ besogo.makeToolPanel = function(container, editor)
 
     svg = makeButtonSVG('triangle', 'Triangle'); // Triangle markup button
     svg.appendChild(besogo.svgTriangle(0, 0, 'black'));
-
+	
     svg = makeButtonSVG('cross', 'Cross'); // Cross markup button
     svg.appendChild(besogo.svgCross(0, 0, 'black'));
 
