@@ -123,12 +123,6 @@ besogo.composeSgf = function(editor, expand = false)
       string += 'S[' + node.statusSource.str() + ']';
     }
 
-    if (node.required)
-    {
-      string += (string ? '\n' : '');
-      string += 'R[]';
-    }
-
     if (node.parent == null && node.goal != GOAL_NONE)
     {
       string += (string ? '\n' : '');

@@ -457,7 +457,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
             firstSkipped = true;
             continue;
           }
-          else if (current.children[i].required)
+          else
             remainingRequiredNodes.push(current.children[i]);
         for (let i = 0; i < current.virtualChildren.length; i++)
           if (!firstSkipped)
@@ -465,7 +465,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
             firstSkipped = true;
             continue;
           }
-          else if (current.virtualChildren[i].required)
+          else
             remainingRequiredNodes.push(current.virtualChildren[i]);
         nextNode(1);
       }, 360);

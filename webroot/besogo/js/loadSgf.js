@@ -168,9 +168,6 @@ besogo.loadSgf = function(sgf, editor)
       case 'G':
         node.goal = besogo.loadGoalFromString(prop.values.join().trim());
         break;
-      case 'R':
-        node.required = true;
-        break;
     }
   }
 

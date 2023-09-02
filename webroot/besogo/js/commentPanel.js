@@ -10,7 +10,6 @@ besogo.makeCommentPanel = function(container, editor)
       commentEdit = document.createElement('textarea'),
       statusBasedCheckbox = null,
       correctButton = makeCorrectVariantButton(),
-      requiredButton = makeRequiredVariantButton(),
       playerInfoOrder = 'PW WR WT PB BR BT'.split(' '),
       infoOrder = 'HA KM RU TM OT GN EV PC RO DT RE ON GC AN US SO CP'.split(' '),
       noneSelection = null,
@@ -72,7 +71,6 @@ besogo.makeCommentPanel = function(container, editor)
   });
   statusBasedCheckbox.type = 'checkbox';
   correctButtonSpan.appendChild(correctButton);
-  correctButtonSpan.appendChild(requiredButton);
   if (!besogo.isEmbedded)
     parentDiv.appendChild(correctButtonSpan);
 
@@ -343,7 +341,6 @@ besogo.makeCommentPanel = function(container, editor)
     }
 
     updateCorrectButton();
-    updateRequiredButton();
     updateJumpToBranchWithoutStatusButton();
     statusBasedCheckbox.checked = (editor.getCurrent().getRoot().goal != GOAL_NONE);
   }
@@ -502,22 +499,6 @@ besogo.makeCommentPanel = function(container, editor)
     return button;
   }
 
-  function makeRequiredVariantButton()
-  {
-    var button = document.createElement('input');
-    button.type = 'button';
-    button.value = 'Make required';
-    button.title = 'Change if this variant needs to be always played';
-    button.addEventListener('focus', preventFocus);
-
-    button.onclick = function()
-    {
-      editor.getCurrent().required = !editor.getCurrent().required;
-      updateRequiredButton();
-    };
-    return button;
-  }
-
   function createGoalRadioButton(parent, name, goal)
   {
     return createRadioButton(parent,
@@ -561,16 +542,6 @@ besogo.makeCommentPanel = function(container, editor)
       correctButton.value = 'Make incorrect';
     else
       correctButton.value = 'Make correct';
-  }
-
-  function updateRequiredButton()
-  {
-    let current = editor.getCurrent();
-    requiredButton.disabled = current.getRoot().firstMove != current.nextMove()
-    if (current.required)
-      requiredButton.value = 'Make not required';
-    else
-      requiredButton.value = 'Make required';
   }
 
   function createJumpToBranchWithoutStatusButton()
