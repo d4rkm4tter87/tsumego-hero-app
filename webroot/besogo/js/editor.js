@@ -466,7 +466,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
             continue;
           }
           else
-            remainingRequiredNodes.push(current.virtualChildren[i]);
+            remainingRequiredNodes.push(current.virtualChildren[i].target);
         nextNode(1);
       }, 360);
     }
