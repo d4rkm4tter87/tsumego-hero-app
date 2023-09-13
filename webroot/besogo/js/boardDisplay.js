@@ -584,27 +584,25 @@ besogo.makeBoardDisplay = function(container, editor, corner)
   function redrawNextMoves(current, clear = false)
   {
     var group = besogo.svgEl("g");
-    var circleSize = 15;
-    var virtualCircleSize = 8;
-    if(clear)
+    if (!clear)
     {
-      circleSize = 0;
-      virtualCircleSize = 0;
-    }
-    for (let i = 0; i < current.children.length; ++i)
-    {
-      var child = current.children[i];
-      var element = besogo.svgFilledCircle(svgPos(child.move.x), svgPos(child.move.y), child.getCorrectColor(), circleSize);
-      group.appendChild(element);
-    }
-    if (current.virtualChildren)
-      for (let i = 0; i < current.virtualChildren.length; ++i)
+      var circleSize = 15;
+      var virtualCircleSize = 8;
+      for (let i = 0; i < current.children.length; ++i)
       {
-        var redirect = current.virtualChildren[i];
-        var element = besogo.svgFilledCircle(svgPos(redirect.move.x), svgPos(redirect.move.y), redirect.target.getCorrectColor(), virtualCircleSize);
+        var child = current.children[i];
+        var element = besogo.svgFilledCircle(svgPos(child.move.x), svgPos(child.move.y), child.getCorrectColor(), circleSize);
         group.appendChild(element);
       }
-    redrawNextMoveStatuses(group, current);
+      if (current.virtualChildren)
+        for (let i = 0; i < current.virtualChildren.length; ++i)
+        {
+          var redirect = current.virtualChildren[i];
+          var element = besogo.svgFilledCircle(svgPos(redirect.move.x), svgPos(redirect.move.y), redirect.target.getCorrectColor(), virtualCircleSize);
+          group.appendChild(element);
+        }
+      redrawNextMoveStatuses(group, current);
+    }
     svg.replaceChild(group, nextMoveGroup); // Replace the markup group
     nextMoveGroup = group;
   }
