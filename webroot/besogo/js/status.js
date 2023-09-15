@@ -15,6 +15,11 @@ besogo.makeStatusInternal = function(type)
   status.type = type;
   if (type == STATUS_SEKI)
     status.sente = false;
+  else if (type == STATUS_KO)
+  {
+    status.approaches = 0;
+    status.extraThreats = 0;
+  }
 
   status.str = function()
   {
