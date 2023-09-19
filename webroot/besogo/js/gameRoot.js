@@ -29,6 +29,7 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
     node.cameFrom = null;
     node.statusSource = null;
     node.status = null;
+    node.visited = false;
   }
   initNode(root, null); // Initialize root node with null parent
   root.relevantMoves = [];
@@ -696,6 +697,13 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
         return result;
     }
     return null;
+  }
+
+  root.unvisit = function()
+  {
+    this.visited = false;
+    for (let i = 0; i < this.children.length; ++i)
+      this.children[i].unvisit();
   }
 
   return root;

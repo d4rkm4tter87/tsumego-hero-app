@@ -41,7 +41,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
       remainingRequiredNodes = [],
       displayResult = null,
       showComment = null;
-	  
+
   return {
     addListener: addListener,
     click: click,
@@ -92,11 +92,11 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 
   // Returns the active tool
   function getTool() { return tool; }
-  
-  function displayHoverCoord(x, y) { 
-	besogo.boardDisplay.displayHoverCoord(x, y);
+
+  function displayHoverCoord(x, y)
+  {
+    besogo.boardDisplay.displayHoverCoord(x, y);
   }
-  
 
   // Sets the active tool, returns false if failed
   function setTool(set)
@@ -223,18 +223,19 @@ besogo.makeEditor = function(sizeX, sizeY, options)
         current = navHistory.pop();
       else // Empty navigation history
       {
-        if (current.children.length)
+        if (current.children.length > select)
         {
           current.children[select].cameFrom = null;
-          current = current.children[select]; // Go to selected child
+          current = current.children[select]; // Go to the selected child
         }
         else
         {
-          var target = current.virtualChildren[0].target;
+          var target = current.virtualChildren[select - current.children.length].target;
           target.cameFrom = current;
           current = target;
         }
       }
+      current.visited = true;
       num--;
     }
     // Notify listeners of navigation (with no tree edits)
@@ -243,7 +244,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     //opponent move and end of variant
     if (besogo.isEmbedded && !current.hasChildIncludingVirtual())
     {
-	  besogo.soundsEnabled = soundsEnabled;
+    besogo.soundsEnabled = soundsEnabled;
       if (besogo.soundsEnabled && !reviewMode)
         document.getElementsByTagName("audio")[0].play();
       if (displayResult)
@@ -431,11 +432,13 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 
   function navigateToNode(node, byClicking = false)
   {
-	if(besogo.isEmbedded) besogo.soundsEnabled = soundsEnabled;
-	
+    if (besogo.isEmbedded)
+      besogo.soundsEnabled = soundsEnabled;
+
     if (byClicking && besogo.soundsEnabled && !reviewMode)
       document.getElementsByTagName("audio")[0].play();
     current = node; // Navigate to child if found
+    current.visited = true;
     if (autoPlay && !reviewMode && node.move.color == node.getRoot().firstMove && node.hasChildIncludingVirtual())
     {
       performingAutoPlay = true;
@@ -450,22 +453,15 @@ besogo.makeEditor = function(sizeX, sizeY, options)
         if (besogo.soundsEnabled && !reviewMode)
           document.getElementsByTagName("audio")[0].play();
 
-		let selectOpponentMove = 0;  
-	    if(current.children.length > 1)
-	    {
-		  selectOpponentMove = Math.floor(Math.random() * current.children.length);
-	    }
-		//console.log(selectOpponentMove);
+        let selectOpponentMove = 0;
+        if (current.children.length > 1)
+          selectOpponentMove = Math.floor(Math.random() * current.children.length + current.virtualChildren.length);
         for (let i = 0; i < current.children.length; i++)
           if (i !== selectOpponentMove)
-          {
-            remainingRequiredNodes.push(current.children[i]);
-          }
+            addToRequired(current.children[i], current);
         for (let i = 0; i < current.virtualChildren.length; i++)
-          if (i !== selectOpponentMove)
-          {
-            remainingRequiredNodes.push(current.virtualChildren[i].target);
-          }
+          if (i + current.children.length !== selectOpponentMove)
+            addToRequired(current.virtualChildren[i].target, current);
         nextNode(1, selectOpponentMove);
       }, 360);
     }
@@ -541,7 +537,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
   function playMove(i, j, color, allowAll)
   {
     allowAll = false;
-	if(besogo.isEmbedded) besogo.soundsEnabled = soundsEnabled;
+  if(besogo.isEmbedded) besogo.soundsEnabled = soundsEnabled;
     // Check if current node is immutable or root
     if (!current.isMutable('move') || !current.parent)
     {
@@ -721,21 +717,21 @@ besogo.makeEditor = function(sizeX, sizeY, options)
   {
     reviewEnabled = value;
   }
-  
+
   function setControlButtonLock(value)
   {
     besogo.controlButtonLock = value;
   }
-  
+
   function intuitionHeroPower()
   {
-	besogo.intuitionActive = true;
-	deleteNextMoveGroup = true;
-	besogo.editor.resetToStart();
-	besogo.editor.setReviewMode(true);
-	besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+  besogo.intuitionActive = true;
+  deleteNextMoveGroup = true;
+  besogo.editor.resetToStart();
+  besogo.editor.setReviewMode(true);
+  besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
   }
-  
+
   function isPerformingAutoPlay()
   {
     return performingAutoPlay;
@@ -751,16 +747,23 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     displayResult = value;
   }
 
-  function addToRequired(node)
+  function addToRequired(node, cameFrom)
   {
-    remainingRequiredNodes.push(node);
+    let element = [];
+    element.node = node;
+    element.cameFrom = cameFrom;
+    remainingRequiredNodes.push(element);
   }
 
   function navigateToRemainingRequiredIfNeeded()
   {
+    // remove visited nodes from the "to-do" list
+    while (remainingRequiredNodes.length > 0 && remainingRequiredNodes[0].node.visited)
+      remainingRequiredNodes.pop();
     if (remainingRequiredNodes.length == 0)
       return false;
     performingAutoPlay = true;
+
     setTimeout(function()
     {
       // when autoplay was cancelled, it was reset in the meantime, so we forget about this
@@ -768,12 +771,11 @@ besogo.makeEditor = function(sizeX, sizeY, options)
         return;
 
       performingAutoPlay = false;
-	  //console.log(remainingRequiredNodes[0]);
-	  //console.log(remainingRequiredNodes[1]);
-      let node = remainingRequiredNodes.pop();
-      navigateToNode(node);
+      let element = remainingRequiredNodes.pop();
+      element.node.cameFrom = element.cameFrom;
+      navigateToNode(element.node);
       if (showComment)
-        showComment("Correct, but what about this answer?\n" + node.comment);
+        showComment("Correct, but what about this answer?\n" + element.node.comment);
     }, 720);
     notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
     return true;
@@ -784,6 +786,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     performingAutoPlay = false;
     prevNode(-1);
     remainingRequiredNodes = [];
+    root.unvisit();
   }
 
   function registerShowComment(value)

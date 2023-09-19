@@ -207,7 +207,7 @@ besogo.makeToolPanel = function(container, editor)
       
       makeButtonText('Reset', 'reset the problem', function()
       {
-		resetParameters(besogo.editor.getCurrent().parent===null);
+		    resetParameters(besogo.editor.getCurrent().parent===null);
         besogo.editor.resetToStart();
         toggleBoardLock(false);
         
