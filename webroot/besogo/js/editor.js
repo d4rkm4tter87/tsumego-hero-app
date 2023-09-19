@@ -213,7 +213,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
   }
 
   // Navigates forward num nodes (to the end if num === -1)
-  function nextNode(num)
+  function nextNode(num, select = 0)
   {
     if (!current.hasChildIncludingVirtual()) // Check if no children
       return; // Do nothing if no children (avoid notification)
@@ -225,8 +225,8 @@ besogo.makeEditor = function(sizeX, sizeY, options)
       {
         if (current.children.length)
         {
-          current.children[0].cameFrom = null;
-          current = current.children[0]; // Go to first child
+          current.children[select].cameFrom = null;
+          current = current.children[select]; // Go to selected child
         }
         else
         {
@@ -450,24 +450,23 @@ besogo.makeEditor = function(sizeX, sizeY, options)
         if (besogo.soundsEnabled && !reviewMode)
           document.getElementsByTagName("audio")[0].play();
 
-        let firstSkipped = false;
+		let selectOpponentMove = 0;  
+	    if(current.children.length > 1)
+	    {
+		  selectOpponentMove = Math.floor(Math.random() * current.children.length);
+	    }
+		//console.log(selectOpponentMove);
         for (let i = 0; i < current.children.length; i++)
-          if (!firstSkipped)
+          if (i !== selectOpponentMove)
           {
-            firstSkipped = true;
-            continue;
-          }
-          else
             remainingRequiredNodes.push(current.children[i]);
-        for (let i = 0; i < current.virtualChildren.length; i++)
-          if (!firstSkipped)
-          {
-            firstSkipped = true;
-            continue;
           }
-          else
+        for (let i = 0; i < current.virtualChildren.length; i++)
+          if (i !== selectOpponentMove)
+          {
             remainingRequiredNodes.push(current.virtualChildren[i].target);
-        nextNode(1);
+          }
+        nextNode(1, selectOpponentMove);
       }, 360);
     }
     notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
@@ -769,6 +768,8 @@ besogo.makeEditor = function(sizeX, sizeY, options)
         return;
 
       performingAutoPlay = false;
+	  //console.log(remainingRequiredNodes[0]);
+	  //console.log(remainingRequiredNodes[1]);
       let node = remainingRequiredNodes.pop();
       navigateToNode(node);
       if (showComment)
@@ -787,6 +788,6 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 
   function registerShowComment(value)
   {
-    showComment = value
+    showComment = value;
   }
 };

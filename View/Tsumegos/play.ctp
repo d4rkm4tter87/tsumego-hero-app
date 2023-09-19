@@ -555,7 +555,9 @@
 			//if($_SESSION['loggedInUser']['User']['premium']>=1){
 			//if($t['Tsumego']['set_id']!=122 && $t['Tsumego']['set_id']!=124 && $t['Tsumego']['set_id']!=127 && $t['Tsumego']['set_id']!=139){
 			if(isset($_SESSION['loggedInUser']['User']['id'])){
-				echo '<div id="msg1">Leave a <a id="show">message<img id="greyArrow1" src="/img/greyArrow1.png"></a></div>';
+				if($_SESSION['loggedInUser']['User']['id']!=10653){
+					echo '<div id="msg1">Leave a <a id="show">message<img id="greyArrow1" src="/img/greyArrow1.png"></a></div>';
+				}
 			}
 			echo '<br>';
 			echo '<div id="msg2">';

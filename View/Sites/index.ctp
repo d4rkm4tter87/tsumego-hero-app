@@ -91,6 +91,14 @@
 			</li>
 			<br><br>
 		</div>
+		<p class="title4">New Collection: Sacrifical Tsumego</p>
+		<div class="new1">
+			Sometimes sacrifices are necessary in order to kill, but how many stones can you sacrifice before killing? 
+			That's the question this collection aims to answer. 
+			<div align="center"><img width="95%" src="/img/sacrifical-tsumego-home.png">
+			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/197">Play</a><br><br></div>
+		</div>
 		<p class="title4">New Collection: Yi Kuo</p>
 		<div class="new1">
 			Yi Kuo is a classical kifu and tsumego book written by Huang Longshi (1651-1700). It was posthumously published in 1710. 
@@ -121,13 +129,6 @@
 			<div align="center"><img width="95%" src="/img/french-go-review-promotion.png">
 			
 			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/192">Play</a><br><br></div>
-		</div>
-		<p class="title4">New Collection: 4x4 problems</p>
-		<div class="new1">
-			This collection features problems on a 4x4 board.<br><br>
-			<div align="center"><img width="95%" src="/img/4x4.PNG">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/191">Play</a><br><br></div>
 		</div>
 		
 		
@@ -469,14 +470,6 @@
 			}
 		?>
 		
-		<p class="title4">Info Pages</p>
-		<div class="new1">
-			There are new info pages about the functions on the website and in the three different modes. 
-			<a href="/sites/websitefunctions">Functions & Modes</a><br><br>
-			Another info pages shows guidelines about go rules and what they mean on Tsumego Hero in regards of solving or failing a problem.
-			<a href="/sites/gotutorial">Go Rules</a><br><br>
-		
-		</div>
 		
 		<?php if(isset($_SESSION['loggedInUser'])){ ?>
 		<?php if($_SESSION['loggedInUser']['User']['premium']==0 && $user['User']['id']!=1165){ ?>
@@ -616,11 +609,11 @@
 		<p class="title4">Recent Donations and Upgrades</p>
 		<div class="new1">
 			<table class="newx">
-		<tr><td width="50%"><h1>Reesha</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td width="50%"><h1>Malachi Sigmund</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>Peter Román</h1></td><td><h1>10,00 €</h1></td></tr>
+		<tr><td><h1>Reesha</h1></td><td><h1>10,00 €</h1></td></tr>
 		<tr><td><h1>Luciano - Palmas</h1></td><td><h1>10,00 €</h1></td></tr>
 		<tr><td><h1>maxfrog</h1></td><td><h1>10,00 €</h1></td></tr>	
-		<tr><td><h1>Psymar</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>tigertrap500</h1></td><td><h1>10,00 €</h1></td></tr>
 		</table>	
 		<br>
 		</div>	
@@ -713,7 +706,7 @@
 		</table>
 		-->
 		</font>
-		
+		<br><br><br><br><br><br><br><br><br><br><br>
 		<?php if(!isset($loggedInUser)) echo '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>'; ?>
 	</div>
 	
