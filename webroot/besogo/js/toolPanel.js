@@ -269,6 +269,7 @@ besogo.makeToolPanel = function(container, editor)
 
     makeButtonText('Review', 'review mode', function()
     {
+	  let trueBoardHeight = $(".besogo-board").height();
       if (editor.getReviewEnabled())
       {
         if (!editor.getReviewMode())
@@ -278,6 +279,7 @@ besogo.makeToolPanel = function(container, editor)
 			  $(".besogo-board").css("width", "50%");
           $(".besogo-board").css("margin","0");
 		  $(".besogo-board").css("box-shadow","0 8px 14px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
+		  $(".besogo-board").css("height",trueBoardHeight);
           toggleBoardLock(false);
           deleteNextMoveGroup = true;
           editor.setReviewMode(true);

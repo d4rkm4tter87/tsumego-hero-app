@@ -2987,6 +2987,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.besogo-tree {
 		flex: none!important;
 		width: auto!important;
+		max-width:625px;
 	}
 	.besogo-comment {
 	  flex: none!important;
@@ -3503,14 +3504,19 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	#theComment{
 	  display: none;
 	  justify-content: center;
-	  width:63%;
-	  background-color: #ddd;
-	  text-align:left;
+	  background-color: #f0f0f0;
+	  text-align:center;
+	  font-weight:bold;
 	  padding:10px;
 	  margin-bottom:5px;
-	  border: thick double grey;
+	  border:thick double grey;
+	  width:fit-content;
+	  min-width:300px;
 	}
-	
+	#xpDisplayDiv{
+		height:48px;
+		margin-bottom: 5px;
+	}
 	.commentBox1{
 	}
 	.commentBox2{

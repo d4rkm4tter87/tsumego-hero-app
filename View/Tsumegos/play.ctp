@@ -393,14 +393,9 @@
 	</td>
 	</tr>
 	</table>
-	<?php
-		$xpDisplayTableWidth = 70;
-		//if($corner=='t' || $corner=='b') $xpDisplayTableWidth = 79;
-		//if($corner=='tl' || $corner=='tr' || $corner=='bl' || $corner=='br') $xpDisplayTableWidth = 55;
-	?>
 
-	<div align="center">
-		<table class="xpDisplayTable" border="0" width="<?php echo $xpDisplayTableWidth; ?>%">
+	<div align="center" id="xpDisplayDiv">
+		<table class="xpDisplayTable" border="0" width="70%">
 			<tr>
 			<td width="33%">
 				<?php if($mode!=3){ ?>
@@ -455,6 +450,11 @@
 			</tr>
 		</table>
 	</div>
+	<div align="center">
+		<div id="theComment">
+
+		</div>
+	</div>
 
 	<?php if($dailyMaximum) echo '<style>.upgradeLink{display:block;}</style>'; ?>
 	<div class="upgradeLink" align="center">
@@ -463,7 +463,6 @@
 
 	<!-- BOARD -->
 	<?php if($ui==2){ ?>
-		<br>
 		<div id="target"></div>
 		<div id="targetLockOverlay"></div>
 	<?php }else{ ?>
@@ -479,14 +478,6 @@
 		$naviAdjust1 = 25;
 	}
 	?>
-	<div align="center">
-		<div id="theComment" >
-
-		</div>
-	</div>
-	
-	<div align="center">
-	</div>
 	
 	<?php if($firstRanks==0){ ?>
 	<div class="tsumegoNavi1">
@@ -2315,6 +2306,7 @@
     besogo.editor.registerShowComment(function(commentText)
     {
       $("#theComment").css("display", commentText.length == 0 ? "none" : "block");
+      $("#xpDisplayDiv").css("display", commentText.length == 0 ? "block" : "none");
       $('#theComment').text(commentText);
     });
 
@@ -2329,12 +2321,10 @@
 	  }
 	})();
 	
-			//$(".besogo-tsumegoPlayTool input:nth-last-child(1)").attr('id', 'besogo-tsumegoPlayTool-rButton');
-		
-		if(mode==2) $("#targetLockOverlay").css('top', '235px');
-		//$(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('id', 'besogo-tsumegoPlayTool-rButton');
-		//$(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('class', 'besogo-tsumegoPlayTool-rButton2');
-		//if(nextButtonLink==0) $(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('class', 'besogo-tsumegoPlayTool-rButton2');
+	if(mode==2) $("#targetLockOverlay").css('top', '235px');
+	//$(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('id', 'besogo-tsumegoPlayTool-rButton');
+	//$(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('class', 'besogo-tsumegoPlayTool-rButton2');
+	//if(nextButtonLink==0) $(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('class', 'besogo-tsumegoPlayTool-rButton2');
 	
 	</script>
 	<?php } ?>
