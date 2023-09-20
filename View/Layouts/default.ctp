@@ -221,7 +221,7 @@
 								if($_SESSION['loggedInUser']['User']['isAdmin']>=1){
 									echo '<li><a class="adminLink" href="/users/adminstats">Admin Activities</a></li>';
 									echo '<li><a class="adminLink" href="/users/userstats">User Activities</a></li>';
-									echo '<li><a class="adminLink" href="https://kovarex.github.io/besogo/testing.html">Editor</a></li>';
+									echo '<li><a class="adminLink" href="/app/webroot/editor">Editor</a></li>';
 									echo '<li><a class="adminLink" href="/users/publish">Publish Schedule</a></li>';
 									echo '<li><a class="adminLink" href="/users/likesview">Likes/Dislikes</a></li>';
 								}
