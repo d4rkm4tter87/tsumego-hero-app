@@ -132,7 +132,7 @@
 	elseif($colorOrientation=='white') $pl = 1;
 	else $pl = rand(0,1);
 	
-	if($firstPlayer=='w' || $t['Tsumego']['set_id']==109 || $checkBSize!=19 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161) $pl=0;
+	if($firstPlayer=='w' || $checkBSize!=19 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161) $pl=0;
 	if($pl==0){
 		$playerColor[0] = 'BLACK';
 		$playerColor[1] = 'WHITE';
@@ -208,7 +208,7 @@
 				?>
 				<br>
 				<?php
-				if($t['Tsumego']['set_id']==109 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161){
+				if($t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161){
 					if($additionalInfo['mode']==0){
 				?>
 						<table class="gameInfo" style="padding-top:7px;">
@@ -275,7 +275,7 @@
 		<?php 
 		if($mode==1) echo '<div id="titleDescription" class="titleDescription1">';
 		elseif($mode==2  || $mode==3) echo '<div id="titleDescription" class="titleDescription2">';
-			if($t['Tsumego']['set_id']==109 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161) echo '<b>'.$t['Tsumego']['description'].'</b> '; 
+			if($t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161) echo '<b>'.$t['Tsumego']['description'].'</b> '; 
 			else echo $t['Tsumego']['description'].' '; 
 			if(isset($t['Tsumego']['hint']) && $t['Tsumego']['hint']!='') echo '<font color="grey" style="font-style:italic;">('.$t['Tsumego']['hint'].')</font>'; 
 		if($_SESSION['loggedInUser']['User']['isAdmin']>0 || $set['Set']['public']==0 && $_SESSION['loggedInUser']['User']['isAdmin']==2){
@@ -1180,7 +1180,7 @@
 		}
 	}
 
-	if($t['Tsumego']['set_id']==109 || $t['Tsumego']['set_id']==156 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161){
+	if($t['Tsumego']['set_id']==156 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161){
 		if($additionalInfo['lastPlayed'][0]!=99) echo 'jboard.setMark(new JGO.Coordinate('.$additionalInfo['lastPlayed'][0].', '.$additionalInfo['lastPlayed'][1].'), JGO.MARK.CIRCLE);';
 		for($i=0; $i<count($additionalInfo['triangle']); $i++){
 			echo 'jboard.setMark(new JGO.Coordinate('.$additionalInfo['triangle'][$i][0].', '.$additionalInfo['triangle'][$i][1].'), JGO.MARK.TRIANGLE);';
@@ -1522,7 +1522,7 @@
 		?>}
 
 		<?php
-		if($t['Tsumego']['set_id']==109 || $t['Tsumego']['set_id']==156 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161){
+		if($t['Tsumego']['set_id']==156 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161){
 			echo 'jboard.setMark(new JGO.Coordinate('.$additionalInfo['lastPlayed'][0].', '.$additionalInfo['lastPlayed'][1].'), JGO.MARK.CIRCLE);';
 			for($i=0; $i<count($additionalInfo['triangle']); $i++){
 				echo 'jboard.setMark(new JGO.Coordinate('.$additionalInfo['triangle'][$i][0].', '.$additionalInfo['triangle'][$i][1].'), JGO.MARK.TRIANGLE);';
@@ -1962,7 +1962,7 @@
 			?>
 
 			<?php
-			if($t['Tsumego']['set_id']==109 || $t['Tsumego']['set_id']==156 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161){
+			if($t['Tsumego']['set_id']==156 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161){
 				echo 'jboard.setMark(new JGO.Coordinate('.$additionalInfo['lastPlayed'][0].', '.$additionalInfo['lastPlayed'][1].'), JGO.MARK.CIRCLE);';
 				for($i=0; $i<count($additionalInfo['triangle']); $i++){
 					echo 'jboard.setMark(new JGO.Coordinate('.$additionalInfo['triangle'][$i][0].', '.$additionalInfo['triangle'][$i][1].'), JGO.MARK.TRIANGLE);';
