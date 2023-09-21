@@ -518,9 +518,8 @@ besogo.makeBoardDisplay = function(container, editor, corner)
     {
       var color = checkVariants(variants, current, lastMove.x, lastMove.y) ? besogo.PURP : besogo.BLUE;
       var moveToUse = lastMove;
-	  //throws an error
-      //if (current.cameFrom)
-        //moveToUse = current.cameFrom.getMoveToGetToVirtualChild(current);
+      if (current.cameFrom)
+        moveToUse = current.cameFrom.getMoveToGetToVirtualChild(current);
       var element = besogo.svgCircle(svgPos(moveToUse.x),
                                      svgPos(moveToUse.y),
                                      current.nextIsBlack() ? "black" : "white",

@@ -225,7 +225,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
       {
         if (current.children.length > select)
         {
-          current.children[select].cameFrom = null; //there is an issue with this in boardDisplay
+          current.children[select].cameFrom = null;
           current = current.children[select]; // Go to the selected child
         }
         else
