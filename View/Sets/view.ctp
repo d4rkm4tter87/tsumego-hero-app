@@ -70,7 +70,7 @@
 				
 				echo '<li class="set'.$ts[$i]['Tsumego']['status'].'1" '.$josekiButton.'>
 					<a '.$josekiThumb2.' href="/tsumegos/play/'
-					.$ts[$i]['Tsumego']['id'].$fav.'?mode=1">'.$num.$num2.$num3.$josekiThumb.'</a></li>';
+					.$ts[$i]['Tsumego']['id'].$fav.'">'.$num.$num2.$num3.$josekiThumb.'</a></li>';
 			}
 		}
 		
@@ -148,7 +148,7 @@
 					if($set['Set']['image'][2]!='-'){
 						echo '
 						<td width="195px" style="vertical-align:top;"><div align="center">
-						<a href="/tsumegos/play/'.$set['Set']['t'].'?mode=1">
+						<a href="/tsumegos/play/'.$set['Set']['t'].'">
 						<img height="252" width="182" style="border:1px solid black" src="/img/'. $set['Set']['image'].'" 
 						alt="Tsumego Collection: '.$set['Set']['title'].'" title="Tsumego Collection: '.$set['Set']['title'].'">
 						</a>
@@ -158,7 +158,7 @@
 					}else{
 						echo '
 						<td width="195px" style="vertical-align:bottom;padding-bottom:17px;"><div align="center">
-						<a href="/tsumegos/play/'.$set['Set']['t'].'?mode=1">
+						<a href="/tsumegos/play/'.$set['Set']['t'].'">
 						<img height="252" width="182" style="border:1px solid black" src="/img/'. $set['Set']['image'].'" 
 						alt="Tsumego Collection: '.$set['Set']['title'].'" title="Tsumego Collection: '.$set['Set']['title'].'" width="210">
 						</a>
@@ -209,7 +209,7 @@
 				<div align="center"> 
 				<br><br>
 					<?php		
-					echo '<a class="new-button new-buttonx" style="top:-16px;position:relative;" href="/tsumegos/play/'.$set['Set']['t'].'?mode=1">Start</a>';
+					echo '<a class="new-button new-buttonx" style="top:-16px;position:relative;" href="/tsumegos/play/'.$set['Set']['t'].'">Start</a>';
 					?>
 				</div>
 			</td>

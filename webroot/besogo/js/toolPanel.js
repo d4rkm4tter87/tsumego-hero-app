@@ -198,12 +198,15 @@ besogo.makeToolPanel = function(container, editor)
     if(mode==1)
     {
       let prevButtonId;
-      if(prevButtonLink!=0) prevButtonId = 'besogo-back-button';
-      else prevButtonId = 'besogo-back-button-inactive';
-      makeButtonText('Back', 'previous problem', function()
-      {
-        if(prevButtonLink!=0) window.location.href = "/tsumegos/play/"+prevButtonLink;
-      }, prevButtonId);
+	  if(prevButtonLink!=0)
+	  {
+		prevButtonId = 'besogo-back-button';
+		prevButtonLink = '/tsumegos/play/'+prevButtonLink;
+	  }
+      else
+		prevButtonId = 'besogo-back-button-inactive';
+
+	  makeHyperlinkText('Back', 'previous problem', prevButtonLink, prevButtonId);
       
       makeButtonText('Reset', 'reset the problem', function()
       {
@@ -229,20 +232,21 @@ besogo.makeToolPanel = function(container, editor)
 			$(".besogo-board").css("margin", "0 315px");
 		}
 		
-		
-		
 		$(".besogo-board").css("box-shadow","0 8px 14px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
         besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
       
       }, 'besogo-reset-button');
       
       let nextButtonId;
-      if(nextButtonLink!=0) nextButtonId = 'besogo-next-button';
-      else nextButtonId = 'besogo-next-button-inactive';
-      makeButtonText('Next', 'next problem', function()
-      {
-        if(nextButtonLink!=0) window.location.href = "/tsumegos/play/"+nextButtonLink;
-      }, nextButtonId);
+      if(nextButtonLink!=0)
+	  {
+		nextButtonId = 'besogo-next-button';
+		nextButtonLink = '/tsumegos/play/'+nextButtonLink;
+	  }
+      else
+		nextButtonId = 'besogo-next-button-inactive';
+	  
+	  makeHyperlinkText('Next', 'next problem', nextButtonLink, nextButtonId);
     }
     else if(mode == 2)
     {
@@ -274,12 +278,17 @@ besogo.makeToolPanel = function(container, editor)
       {
         if (!editor.getReviewMode())
         {
+		  console.log(besogo.scaleParameters['boardCanvasSize']);
           $(".besogo-panels").css("display","flex");
 		  if(besogo.scaleParameters['boardCanvasSize'] !== 'vertical half board') //only case where width < 50%
 			  $(".besogo-board").css("width", "50%");
           $(".besogo-board").css("margin","0");
 		  $(".besogo-board").css("box-shadow","0 8px 14px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
-		  $(".besogo-board").css("height",trueBoardHeight);
+		  //if(besogo.scaleParameters['boardCanvasSize'] !== "horizontal half board")
+		    //$(".besogo-board").css("height",trueBoardHeight);
+		  //if(trueBoardHeight > $(".besogo-board").height())
+		  if(besogo.scaleParameters['boardCanvasSize'] !== "horizontal half board")
+			$(".besogo-board").css("height",trueBoardHeight);  
           toggleBoardLock(false);
           deleteNextMoveGroup = true;
           editor.setReviewMode(true);
@@ -504,13 +513,27 @@ besogo.makeToolPanel = function(container, editor)
     button.type = 'button';
     button.value = text;
     button.title = tip;
-  if(id!==null) button.id = id;
+    if(id!==null) 
+	  button.id = id;
     button.onclick = callback;
     container.appendChild(button);
     return button;
   }
   
-   // Creates image button
+  // Creates hyperlink button
+  function makeHyperlinkText(text, tip, link, id)
+  {
+    var button = document.createElement('a');
+    if(link !== 0)
+	  button.href = link;
+    button.title = tip;
+	button.id = id;
+	button.text = text;
+    container.appendChild(button);
+    return button;
+  }
+  
+  // Creates image button
   function makeImageButton(src, tip, id, callback)
   {
     var img = document.createElement('img');
@@ -524,11 +547,11 @@ besogo.makeToolPanel = function(container, editor)
     
   function makeAuthorText(id, name)
   {
-  var div = document.createElement('div');
-  div.id = id;
-  container.appendChild(div);
-  $("#author-notice").text('File by '+author);
-  return div;
+    var div = document.createElement('div');
+    div.id = id;
+    container.appendChild(div);
+    $("#author-notice").text('File by '+author);
+    return div;
   }
 
   // Callback for updating tool state and label

@@ -2300,7 +2300,14 @@
 	  }
     options.reviewMode = false;
     options.reviewEnabled = <?php echo $reviewEnabled ? 'true' : 'false'; ?>;
-	  besogo.create(div, options);
+	<?php
+		//review always unlocked for d4rkm4tter and kovarex
+		if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72||$_SESSION['loggedInUser']['User']['id']==13282){
+			echo 'options.reviewEnabled = true;';
+		}}
+	?>
+	options.reviewEnabled = true;
+	besogo.create(div, options);
     besogo.editor.setAutoPlay(true);
     besogo.editor.registerDisplayResult(displayResult);
     besogo.editor.registerShowComment(function(commentText)

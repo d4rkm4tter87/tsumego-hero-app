@@ -725,11 +725,11 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 
   function intuitionHeroPower()
   {
-  besogo.intuitionActive = true;
-  deleteNextMoveGroup = true;
-  besogo.editor.resetToStart();
-  besogo.editor.setReviewMode(true);
-  besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+	besogo.intuitionActive = true;
+	deleteNextMoveGroup = true;
+	besogo.editor.resetToStart();
+	besogo.editor.setReviewMode(true);
+	besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
   }
 
   function isPerformingAutoPlay()
