@@ -15,6 +15,7 @@
   besogo.controlButtonLock = true;
   besogo.theme = '';
   besogo.vChildrenEnabled = true;
+  besogo.alternativeResponse = true;
   let corner;
 
   function getMakers()
@@ -268,6 +269,8 @@
 	besogo.theme = options.theme;
 	if(typeof options.vChildrenEnabled === 'boolean')
 		besogo.vChildrenEnabled = options.vChildrenEnabled;
+	if(typeof options.alternativeResponse === 'boolean')
+		besogo.alternativeResponse = options.alternativeResponse;
     if (typeof options.rootPath === 'string')
       besogo.rootPath = options.rootPath;
     else

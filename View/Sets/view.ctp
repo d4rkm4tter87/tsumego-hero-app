@@ -25,6 +25,7 @@
 			echo '<script type="text/javascript">window.location.href = "/";</script>';
 		}
 	}
+	if(isset($formRedirect)) echo '<script type="text/javascript">window.location.href = "/sets/view/'.$set['Set']['id'].'";</script>';
 ?>
 	<div class="homeRight">
 		<p class="title4">Problems</p>
@@ -276,7 +277,8 @@
 		</td>
 		</tr>
 		<?php
-		if($set['Set']['public']==0){
+		//if($set['Set']['public']==0){
+		if(true){
 			if($_SESSION['loggedInUser']['User']['isAdmin']==1){
 				echo '<tr><td colspan="2">
 				<div class="admin-panel">
@@ -284,29 +286,77 @@
 				<br>
 				<table width="100%">
 				<tr>
-				<td>
-				<a id="show">Edit Title<img id="greyArrow2" src="/img/greyArrow1.png"></a><br>
-				<div id="msg1">';
-					echo $this->Form->create('Set');
-					echo $this->Form->input('title', array('label' => '', 'type' => 'text', 'placeholder' => 'Title', 'value' => $set['Set']['title']));
-					echo $this->Form->input('title2', array('label' => '', 'type' => 'text', 'placeholder' => 'Title2', 'value' => $set['Set']['title2']));
-					echo '<div class="submit"><input style="margin:0px;" value="Submit" type="submit"></div><br>';
-				echo '</div>';
-				echo '<a id="show2">Edit Description<img id="greyArrow3" src="/img/greyArrow1.png"></a><br>
-				<div id="msg2">';
-					echo $this->Form->create('Set');
-					echo $this->Form->input('description', array('label' => '', 'type' => 'textarea', 'placeholder' => 'Description', 'value' => $set['Set']['description']));
-					echo '<div class="submit"><input style="margin:0px;" value="Submit" type="submit"></div><br>';
-				echo '</div>';
-				echo '<a id="show3">Edit Color<img id="greyArrow4" src="/img/greyArrow1.png"></a><br>
-				<div id="msg3">';
-					echo $this->Form->create('Set');
-					echo $this->Form->input('color', array('label' => '', 'type' => 'text', 'placeholder' => 'color', 'value' => $set['Set']['color']));
-					echo '<div class="submit"><input style="margin:0px;" value="Submit" type="submit"></div><br>';
-					echo '<i><a href="https://www.w3schools.com/colors/colors_picker.asp" target="_blank">hex color picker</a>&nbsp;(external link)</i><br>';
-				echo '</div>';
-				echo '<a href="/sets/ui/'.$set['Set']['id'].'">Upload Image</a><br><br>';
-				echo '<h1>Add Problem</h1>';
+				<td>';
+				if($set['Set']['public']==0){
+					echo '<a id="show">Edit Title<img id="greyArrow2" src="/img/greyArrow1.png"></a><br>
+					<div id="msg1">';
+						echo $this->Form->create('Set');
+						echo $this->Form->input('title', array('label' => '', 'type' => 'text', 'placeholder' => 'Title', 'value' => $set['Set']['title']));
+						echo $this->Form->input('title2', array('label' => '', 'type' => 'text', 'placeholder' => 'Title2', 'value' => $set['Set']['title2']));
+						echo '<div class="submit"><input style="margin:0px;" value="Submit" type="submit"></div><br>';
+					echo '</div>';
+					echo '<a id="show2">Edit Description<img id="greyArrow3" src="/img/greyArrow1.png"></a><br>
+					<div id="msg2">';
+						echo $this->Form->create('Set');
+						echo $this->Form->input('description', array('label' => '', 'type' => 'textarea', 'placeholder' => 'Description', 'value' => $set['Set']['description']));
+						echo '<div class="submit"><input style="margin:0px;" value="Submit" type="submit"></div><br>';
+					echo '</div>';
+					echo '<a id="show3">Edit Color<img id="greyArrow4" src="/img/greyArrow1.png"></a><br>
+					<div id="msg3">';
+						echo $this->Form->create('Set');
+						echo $this->Form->input('color', array('label' => '', 'type' => 'text', 'placeholder' => 'color', 'value' => $set['Set']['color']));
+						echo '<div class="submit"><input style="margin:0px;" value="Submit" type="submit"></div><br>';
+						echo '<i><a href="https://www.w3schools.com/colors/colors_picker.asp" target="_blank">hex color picker</a>&nbsp;(external link)</i><br>';
+					echo '</div>';
+					echo '<a href="/sets/ui/'.$set['Set']['id'].'">Upload Image</a><br>';
+				}
+				echo '<a id="show5" class="selectable-text">Settings<img id="greyArrow5" src="/img/greyArrow1.png"></a>';
+					$vcOn = '';
+					$vcOff = '';
+					$arOn = '';
+					$arOff = '';
+					$vcMessage = '';
+					$arMessage = '';
+					if($allVcActive){
+						$vcMessage = '<font color="#717171">[Merge recurring positions activated on all problems]</font><br>';
+						$vcOn = 'checked="checked"';
+					}elseif($allVcInactive){
+						$vcMessage = '<font color="#717171">[Merge recurring positions deactivated on all problems]</font><br>';
+						$vcOff = 'checked="checked"';
+					}
+					if($allArActive){
+						$arMessage = '<font color="#717171">[Alternative Respone Mode activated on all problems]</font><br>';
+						$arOn = 'checked="checked"';
+					}elseif($allArInactive){
+						$arMessage = '<font color="#717171">[Alternative Respone Mode deactivated on all problems]</font><br>';
+						$arOff = 'checked="checked"';
+					}
+					echo '
+						<div id="msg5">
+							<br>
+							'.$vcMessage.'
+							'.$arMessage.'
+							<form action="" method="POST" enctype="multipart/form-data">
+								<table>
+									<tr>
+										<td>Merge recurring positions</td>
+										<td><input type="radio" id="r38" name="data[Settings][r38]" value="on" ><label for="r38">on</label></td>
+										<td><input type="radio" id="r38" name="data[Settings][r38]" value="off" ><label for="r38">off</label></td>
+									</tr>
+									<tr>
+										<td>Alternative Response Mode</td>
+										<td><input type="radio" id="r39" name="data[Settings][r39]" value="on" ><label for="r39">on</label></td>
+										<td><input type="radio" id="r39" name="data[Settings][r39]" value="off" ><label for="r39">off</label></td>
+									</tr>
+								</table>
+								<br>
+								<input value="Submit" type="submit"/>
+							</form>
+						</div>
+						<br><br>
+					';
+				if($set['Set']['public']==0){
+					echo '<h1>Add Problem</h1>';
 					echo $this->Form->create('Tsumego');
 					echo $this->Form->input('num', array('value' => $tfs['Tsumego']['num']+1, 'label' => 'Number: ', 'type' => 'text', 'placeholder' => 'number'));
 					echo $this->Form->input('set_id', array('type' => 'hidden', 'value' => $tfs['Tsumego']['set_id']));
@@ -320,11 +370,15 @@
 						echo $this->Form->input('thumb', array('value' => $tfs['Tsumego']['num']+1, 'label' => 'Thumb: ', 'type' => 'text', 'placeholder' => 'thumb'));
 					}
 					echo $this->Form->end('Submit');
-				echo '</td><td>
-				<div align="right">
-				<a class="new-button new-buttonx" href="/users/userstats3/'.$set['Set']['id'].'">Activities</a>
-				</div>
-				</td>
+				}
+				echo '</td>';
+				echo '<td>';
+				if($set['Set']['public']==0){
+					echo '<div align="right">
+					<a class="new-button new-buttonx" href="/users/userstats3/'.$set['Set']['id'].'">Activities</a>
+					</div>';
+				}
+				echo '</td>
 				</tr>
 				</table>
 				</div>
@@ -343,15 +397,16 @@
 
 	
 	
-	<?php if($set['Set']['public']==0){ if($_SESSION['loggedInUser']['User']['isAdmin']==1){?>
+	<?php if($_SESSION['loggedInUser']['User']['isAdmin']==1){?>
 	<script>
 	var t1 = false;
 	var t2 = false;
 	var t3 = false;
+	var msg5selected = false;
 	$("#msg1").hide();
 	$("#msg2").hide();
 	$("#msg3").hide();
-	
+	$("#msg5").hide();
 	
 	$("#show").click(function(){
 		if(!t1){
@@ -383,9 +438,18 @@
 		}
 		t3=!t3;
 	});
-	
+	$("#show5").click(function(){
+		if(!msg5selected){
+			$("#msg5").fadeIn(250);
+			document.getElementById("greyArrow5").src = "/img/greyArrow2.png";
+		}else{
+			$("#msg5").fadeOut(250);
+			document.getElementById("greyArrow5").src = "/img/greyArrow1.png";
+		}
+		msg5selected = !msg5selected;
+	});
 	</script>
-	<?php }} ?>
+	<?php } ?>
 	
 	<script>
 		var msg2selected = false;

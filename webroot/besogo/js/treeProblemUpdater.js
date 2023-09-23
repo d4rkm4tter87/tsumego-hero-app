@@ -30,7 +30,8 @@ besogo.addRelevantMoves = function(root, node)
 
 besogo.addVirtualChildren = function(root, node, addHash = true)
 {
-  if(besogo.vChildrenEnabled){
+  if(besogo.vChildrenEnabled)
+  {
 	  if (addHash)
 		root.nodeHashTable.push(node);
 

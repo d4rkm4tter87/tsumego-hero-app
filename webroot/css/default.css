@@ -2590,7 +2590,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		border-color: #8f9092!important;
 		cursor:pointer;
 	}
-	#besogo-next-button, #besogo-back-button{
+	#besogo-next-button, #besogo-back-button, #history-button{
 		font-family: Times New Roman,verdana,helvetica,arial,sans-serif;
 		font-size: 16px;
 		font-style: normal;

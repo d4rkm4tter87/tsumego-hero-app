@@ -238,20 +238,21 @@ besogo.makeToolPanel = function(container, editor)
       }, 'besogo-reset-button');
       
       let nextButtonId;
+	  let nextButtonLink2 = 0;
       if(nextButtonLink!=0)
 	  {
 		nextButtonId = 'besogo-next-button';
-		nextButtonLink = '/tsumegos/play/'+nextButtonLink;
+		nextButtonLink2 = '/tsumegos/play/'+nextButtonLink;
 	  }
       else
 		nextButtonId = 'besogo-next-button-inactive';
 	  
-	  makeHyperlinkText('Next', 'next problem', nextButtonLink, nextButtonId);
+	  makeHyperlinkText('Next', 'next problem', nextButtonLink2, nextButtonId);
     }
     else if(mode == 2)
     {
-      makeButtonText('History', 'history of rating mode', function()
-      { window.location.href = "/tsumego_rating_attempts/user/"+besogoUserId; }, 'history-button');
+	  makeHyperlinkText('History', 'history of rating mode', "/tsumego_rating_attempts/user/"+besogoUserId, 'history-button');
+	  
       makeButtonText('Next', 'next problem', function()
       {
         if (besogoMode2Solved) window.location.href = "/tsumegos/play/"+nextButtonLink;

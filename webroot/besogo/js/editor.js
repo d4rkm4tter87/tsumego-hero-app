@@ -456,12 +456,16 @@ besogo.makeEditor = function(sizeX, sizeY, options)
         let selectOpponentMove = 0;
         if (current.children.length > 1)
           selectOpponentMove = Math.floor(Math.random() * current.children.length + current.virtualChildren.length);
-        for (let i = 0; i < current.children.length; i++)
-          if (i !== selectOpponentMove)
-            addToRequired(current.children[i], current);
-        for (let i = 0; i < current.virtualChildren.length; i++)
-          if (i + current.children.length !== selectOpponentMove)
-            addToRequired(current.virtualChildren[i].target, current);
+	    //if alternative response mode is turned on
+		if(besogo.alternativeResponse)
+		{
+			for (let i = 0; i < current.children.length; i++)
+			  if (i !== selectOpponentMove)
+				addToRequired(current.children[i], current);
+			for (let i = 0; i < current.virtualChildren.length; i++)
+			  if (i + current.children.length !== selectOpponentMove)
+				addToRequired(current.virtualChildren[i].target, current);
+	    }
         nextNode(1, selectOpponentMove);
       }, 360);
     }

@@ -735,7 +735,24 @@ class SetsController extends AppController{
 
 		if($id!=1){
 			$set = $this->Set->find('first', array('conditions' =>  array('id' => $id)));
-			$ts = $this->Tsumego->find('all', array('order' => 'num',	'direction' => 'DESC', 'conditions' =>  array('set_id' => $id)));
+			$ts = $this->Tsumego->find('all', array('order' => 'num', 'direction' => 'DESC', 'conditions' => array('set_id' => $id)));
+			
+			$allVcActive = true;
+			$allVcInactive = true;
+			$allArActive = true;
+			$allArInactive = true;
+			
+			for($i=0; $i<count($ts); $i++){
+				if($ts[$i]['Tsumego']['virtual_children']==0) 
+					$allVcActive = false;
+				if($ts[$i]['Tsumego']['virtual_children']==1) 
+					$allVcInactive = false;
+				if($ts[$i]['Tsumego']['alternative_response']==0) 
+					$allArActive = false;
+				if($ts[$i]['Tsumego']['alternative_response']==1) 
+					$allArInactive = false;
+			}
+			
 			for($i=0; $i<count($ts); $i++) array_push($tsIds, $ts[$i]['Tsumego']['id']);
 			
 			if($set['Set']['public']==0) $_SESSION['page'] = 'sandbox';
@@ -815,6 +832,11 @@ class SetsController extends AppController{
 				$this->set('data', $changeSet['Set']['title']);
 				$this->Set->save($changeSet, true);
 				$set = $this->Set->findById($id);
+				$adminActivity = array();
+				$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+				$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+				$adminActivity['AdminActivity']['file'] = 'settings';
+				$adminActivity['AdminActivity']['answer'] = 'Edited meta data for set '.$set['Set']['title'];
 			}
 			if(isset($this->data['Set']['description'])){
 				if($set['Set']['description']!=$this->data['Set']['description']) $formChange = true;
@@ -824,6 +846,11 @@ class SetsController extends AppController{
 				$this->set('data', $changeSet['Set']['description']);
 				$this->Set->save($changeSet, true);
 				$set = $this->Set->findById($id);
+				$adminActivity = array();
+				$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+				$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+				$adminActivity['AdminActivity']['file'] = 'settings';
+				$adminActivity['AdminActivity']['answer'] = 'Edited meta data for set '.$set['Set']['title'];
 			}
 			if(isset($this->data['Set']['color'])){
 				if($set['Set']['color']!=$this->data['Set']['color']) $formChange = true;
@@ -833,7 +860,70 @@ class SetsController extends AppController{
 				$this->set('data', $changeSet['Set']['color']);
 				$this->Set->save($changeSet, true);
 				$set = $this->Set->findById($id);
+				$adminActivity = array();
+				$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+				$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+				$adminActivity['AdminActivity']['file'] = 'settings';
+				$adminActivity['AdminActivity']['answer'] = 'Edited meta data for set '.$set['Set']['title'];
+				$this->AdminActivity->save($adminActivity);
 			}
+			if(isset($this->data['Settings'])){
+				if($this->data['Settings']['r38'] == 'on'){
+					for($i=0; $i<count($ts); $i++){
+						$ts[$i]['Tsumego']['virtual_children'] = 1;
+						$this->Tsumego->save($ts[$i]);
+					}
+					$allVcActive = true;
+					$adminActivity = array();
+					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+					$adminActivity['AdminActivity']['file'] = 'settings';
+					$adminActivity['AdminActivity']['answer'] = 'Turned on merge recurring positions for set '.$set['Set']['title'];
+					$this->AdminActivity->save($adminActivity);
+					
+				}
+				if($this->data['Settings']['r38'] == 'off'){
+					for($i=0; $i<count($ts); $i++){
+						$ts[$i]['Tsumego']['virtual_children'] = 0;
+						$this->Tsumego->save($ts[$i]);
+					}
+					$allVcInactive = true;
+					$adminActivity = array();
+					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+					$adminActivity['AdminActivity']['file'] = 'settings';
+					$adminActivity['AdminActivity']['answer'] = 'Turned off merge recurring positions for set '.$set['Set']['title'];
+					$this->AdminActivity->save($adminActivity);
+				}
+				if($this->data['Settings']['r39'] == 'on'){
+					for($i=0; $i<count($ts); $i++){
+						$ts[$i]['Tsumego']['alternative_response'] = 1;
+						$this->Tsumego->save($ts[$i]);
+					}
+					$allArActive = true;
+					$adminActivity = array();
+					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+					$adminActivity['AdminActivity']['file'] = 'settings';
+					$adminActivity['AdminActivity']['answer'] = 'Turned on alternative response mode for set '.$set['Set']['title'];
+					$this->AdminActivity->save($adminActivity);
+				}
+				if($this->data['Settings']['r39'] == 'off'){
+					for($i=0; $i<count($ts); $i++){
+						$ts[$i]['Tsumego']['alternative_response'] = 0;
+						$this->Tsumego->save($ts[$i]);
+					}
+					$allArInactive = true;
+					$adminActivity = array();
+					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+					$adminActivity['AdminActivity']['file'] = 'settings';
+					$adminActivity['AdminActivity']['answer'] = 'Turned off alternative response mode for set '.$set['Set']['title'];
+					$this->AdminActivity->save($adminActivity);
+				}
+				$this->set('formRedirect', true);
+			}
+			
 			if(isset($this->data['Tsumego'])){
 				if(!$formChange){
 					$tf = array();
@@ -1071,6 +1161,10 @@ class SetsController extends AppController{
 		$this->set('accuracy', $accuracy);
 		$this->set('delNum', $delNum);
 		$this->set('scoring', $scoring);
+        $this->set('allVcActive', $allVcActive);
+        $this->set('allVcInactive', $allVcInactive);
+        $this->set('allArActive', $allArActive);
+        $this->set('allArInactive', $allArInactive);
     }
 
 	public function beta2(){
@@ -1235,7 +1329,6 @@ class SetsController extends AppController{
 		}
 		$this->set('sortOrder', $sortOrder);
 		$this->set('sortColor', $sortColor);
-        $this->set('sets', $sets);
     }
 
 	private function findUt($id=null, $allUts=null, $map=null){

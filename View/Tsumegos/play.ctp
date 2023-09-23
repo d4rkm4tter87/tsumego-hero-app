@@ -2313,15 +2313,22 @@
 	  options.panels = "tree+control";
 	  <?php 
 	  if($_SESSION['loggedInUser']['User']['isAdmin']>0) echo 'options.panels = "tree+control+tool+comment+file";';//echo 'options.panels = "tree+control";';
-	  
 	  ?> 
 	  options.tsumegoPlayTool = 'auto';
 	  options.realstones = true;
 	  options.nowheel = true;
 	  options.nokeys = true;
 	  options.vChildrenEnabled = true;
-	  if(tsumegoFileLink==21680) options.vChildrenEnabled = false;
-	 
+	  if(mode!=3) 
+		options.alternativeResponse = true;
+	  else
+		options.alternativeResponse = false;
+	  <?php
+		if($virtual_children!=1)
+			echo 'options.vChildrenEnabled = false;';
+		if($alternative_response!=1)
+			echo 'options.alternativeResponse = false;';
+	  ?>
 	  const cornerArray = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
 	  shuffledCornerArray = cornerArray.sort((a, b) => 0.5 - Math.random());
 	  options.corner = shuffledCornerArray[0];
