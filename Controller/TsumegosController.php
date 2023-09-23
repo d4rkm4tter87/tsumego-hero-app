@@ -335,9 +335,8 @@ class TsumegosController extends AppController{
 		$fSet = $this->Set->find('first', array('conditions' => array('id' => $t['Tsumego']['set_id'])));
 		if($t==null) $t = $this->Tsumego->findById($_SESSION['lastVisit']);
 		
-		if($mode==1 || $mode==3){
+		if($mode==1 || $mode==3)
 			$nextMode = $t;
-		}
 		
 		if(isset($this->params['url']['rcheat'])) if($this->params['url']['rcheat']==1) $reviewCheat = true;
 		
@@ -372,6 +371,44 @@ class TsumegosController extends AppController{
 				$study = $this->data['Study']['study1'].';'.$this->data['Study']['study2'].';'.$this->data['Study']['study3'].';'.$this->data['Study']['study4'];
 				$t['Tsumego']['semeaiType'] = $this->data['Study']['studyCorrect'];
 				$t['Tsumego']['part'] = $study;
+				$this->Tsumego->save($t, true);
+			}elseif(isset($this->data['Settings'])){
+				if($this->data['Settings']['r38']=='on' && $t['Tsumego']['virtual_children']!=1){
+					$adminActivity = array();
+					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$adminActivity['AdminActivity']['tsumego_id'] = $t['Tsumego']['id'];
+					$adminActivity['AdminActivity']['file'] = 'settings';
+					$adminActivity['AdminActivity']['answer'] = 'turned on merge recurring positions';
+					$this->AdminActivity->save($adminActivity);
+				}
+				if($this->data['Settings']['r38']=='off' && $t['Tsumego']['virtual_children']!=0){
+					$adminActivity = array();
+					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$adminActivity['AdminActivity']['tsumego_id'] = $t['Tsumego']['id'];
+					$adminActivity['AdminActivity']['file'] = 'settings';
+					$adminActivity['AdminActivity']['answer'] = 'turned off merge recurring positions';
+					$this->AdminActivity->save($adminActivity);
+				}
+				if($this->data['Settings']['r39']=='on' && $t['Tsumego']['alternative_response']!=1){
+					$adminActivity2 = array();
+					$adminActivity2['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$adminActivity2['AdminActivity']['tsumego_id'] = $t['Tsumego']['id'];
+					$adminActivity2['AdminActivity']['file'] = 'settings';
+					$adminActivity2['AdminActivity']['answer'] = 'turned on alternative response mode';
+					$this->AdminActivity->save($adminActivity2);
+				}
+				if($this->data['Settings']['r39']=='off' && $t['Tsumego']['alternative_response']!=0){
+					$adminActivity2 = array();
+					$adminActivity2['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$adminActivity2['AdminActivity']['tsumego_id'] = $t['Tsumego']['id'];
+					$adminActivity2['AdminActivity']['file'] = 'settings';
+					$adminActivity2['AdminActivity']['answer'] = 'turned off alternative response mode';
+					$this->AdminActivity->save($adminActivity2);
+				}
+				if($this->data['Settings']['r38'] == 'on') $t['Tsumego']['virtual_children'] = 1;
+				else $t['Tsumego']['virtual_children'] = 0;
+				if($this->data['Settings']['r39'] == 'on') $t['Tsumego']['alternative_response'] = 1;
+				else $t['Tsumego']['alternative_response'] = 0;
 				$this->Tsumego->save($t, true);
 			}else{
 				$this->Comment->create();
@@ -1601,6 +1638,8 @@ class TsumegosController extends AppController{
 		$this->set('file', $file);
 		$this->set('ui', $ui);
 		$this->set('requestProblem', $requestProblem);
+		$this->set('alternative_response', $t['Tsumego']['alternative_response']);
+		$this->set('virtual_children', $t['Tsumego']['virtual_children']);
     }
 	
 	private function findUt($id=null, $allUts=null, $map=null){

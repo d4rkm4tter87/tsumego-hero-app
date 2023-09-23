@@ -278,7 +278,6 @@ besogo.makeToolPanel = function(container, editor)
       {
         if (!editor.getReviewMode())
         {
-		  console.log(besogo.scaleParameters['boardCanvasSize']);
           $(".besogo-panels").css("display","flex");
 		  if(besogo.scaleParameters['boardCanvasSize'] !== 'vertical half board') //only case where width < 50%
 			  $(".besogo-board").css("width", "50%");

@@ -521,12 +521,46 @@
 			}
 			if($_SESSION['loggedInUser']['User']['isAdmin']==1){
 				echo '<a href="/download.php?key='.$hash.'&title=" style="margin-right:20px;" class="selectable-text">Admin-Download SGF</a>';
-					echo '<a id="show4" class="selectable-text">Admin-Upload SGF<img id="greyArrow4" src="/img/greyArrow1.png"></a>';
+					echo '<a id="show4" style="margin-right:20px;" class="selectable-text">Admin-Upload SGF<img id="greyArrow4" src="/img/greyArrow1.png"></a>';
+					echo '<a id="show5" class="selectable-text">Settings<img id="greyArrow5" src="/img/greyArrow1.png"></a>';
+					if($virtual_children==1){
+						$vcOn = 'checked="checked"';
+						$vcOff = '';
+					}else{
+						$vcOn = '';
+						$vcOff = 'checked="checked"';
+					}
+					if($alternative_response==1){
+						$arOn = 'checked="checked"';
+						$arOff = '';
+					}else{
+						$arOn = '';
+						$arOff = 'checked="checked"';
+					}
 					echo '
 						<div id="msg4">
 							<br>
 							<form action="" method="POST" enctype="multipart/form-data">
 								<input type="file" name="adminUpload" />
+								<input value="Submit" type="submit"/>
+							</form>
+						</div>
+						<div id="msg5">
+							<br>
+							<form action="" method="POST" enctype="multipart/form-data">
+								<table>
+									<tr>
+										<td>Merge recurring positions</td>
+										<td><input type="radio" id="r38" name="data[Settings][r38]" value="on" '.$vcOn.'><label for="r38">on</label></td>
+										<td><input type="radio" id="r38" name="data[Settings][r38]" value="off" '.$vcOff.'><label for="r38">off</label></td>
+									</tr>
+									<tr>
+										<td>Alternative Response Mode</td>
+										<td><input type="radio" id="r39" name="data[Settings][r39]" value="on" '.$arOn.'><label for="r39">on</label></td>
+										<td><input type="radio" id="r39" name="data[Settings][r39]" value="off" '.$arOff.'><label for="r39">off</label></td>
+									</tr>
+								</table>
+								<br>
 								<input value="Submit" type="submit"/>
 							</form>
 						</div>
@@ -882,6 +916,7 @@
 	var msg2xselected = false;
 	var msg3selected = false;
 	var msg4selected = false;
+	var msg5selected = false;
 	var playedWrong = false;
 	var seconds = 0;
 	var difficulty = <?php echo $difficulty; ?>;
@@ -1448,6 +1483,17 @@
 				document.getElementById("greyArrow4").src = "/img/greyArrow1.png";
 			}
 			msg4selected = !msg4selected;
+		});
+		$("#msg5").hide();
+		$("#show5").click(function(){
+			if(!msg5selected){
+				$("#msg5").fadeIn(250);
+				document.getElementById("greyArrow5").src = "/img/greyArrow2.png";
+			}else{
+				$("#msg5").fadeOut(250);
+				document.getElementById("greyArrow5").src = "/img/greyArrow1.png";
+			}
+			msg5selected = !msg5selected;
 		});
 		$('#targetLockOverlay').click(function(){
 			if(nextButtonLink!==0) window.location.href = "/tsumegos/play/"+nextButtonLink;
@@ -2306,7 +2352,6 @@
 			echo 'options.reviewEnabled = true;';
 		}}
 	?>
-	options.reviewEnabled = true;
 	besogo.create(div, options);
     besogo.editor.setAutoPlay(true);
     besogo.editor.registerDisplayResult(displayResult);
