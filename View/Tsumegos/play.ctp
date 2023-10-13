@@ -589,7 +589,7 @@
 			echo $this->Form->input('tsumego_id', array('type' => 'hidden', 'value' => $t['Tsumego']['id']));
 			echo $this->Form->input('user_id', array('type' => 'hidden', 'value' => $user['User']['id']));
 			echo $this->Form->input('message', array('label' => '', 'type' => 'textarea', 'placeholder' => 'Message'));
-			echo $this->Form->input('position', array('label' => '', 'type' => 'text'));
+			echo $this->Form->input('position', array('label' => '', 'type' => 'hidden'));
 			echo $this->Form->end('Submit');
 
 		?>
@@ -1514,15 +1514,24 @@
 		});
 		$("#commentPosition").click(function(){
 		  let commentContent = $("#CommentMessage").val();
-		  if(commentContent.includes("[current position]")){
-			 commentContent = commentContent.replace('[current position]','');
-		  }
-		  $("#CommentMessage").val(commentContent + "[current position]");
-		  
+		  let additionalCoords = "";
 		  let current = besogo.editor.getCurrent();
 		  let besogoOrientation = besogo.editor.getOrientation();
 		  if(besogoOrientation[1]=="full-board")
 			besogoOrientation[0] = besogoOrientation[1];
+		  
+		  let isInTree = besogo.editor.isMoveInTree(current);
+		  current = isInTree[0];
+		  
+		  if(isInTree[1]['x'].length>0){
+			  for(let i=isInTree[1]['x'].length-1;i>=0;i--)
+				additionalCoords += isInTree[1]['x'][i] + isInTree[1]['y'][i] + " ";
+			  additionalCoords = " + " + additionalCoords;
+		  }
+		  if(commentContent.includes("[current position]")){
+			 commentContent = commentContent.replace('[current position]','');
+		  }
+		  $("#CommentMessage").val(commentContent + "[current position]" + additionalCoords);
 		  
 		  if(current.move===null){
 			$("#CommentPosition").val(
@@ -1811,16 +1820,6 @@
 		positionParams[6] = mNum;
 		positionParams[7] = cNum;
 		positionParams[8] = orientation;
-		//positionParams['orientation'] = orientation;
-		//console.log(positionParams);
-		/*
-		positionParams['moveNum'] = 5;
-		positionParams['x'] = 3;
-		positionParams['y'] = 2;
-		positionParams['xParent'] = 1;
-		positionParams['yParent'] = 3;
-		positionParams['numChildren'] = 1;
-		*/
 		besogo.editor.commentPosition(positionParams);
 	}
 
@@ -2427,6 +2426,7 @@
 	<?php
 		//review always unlocked for d4rkm4tter and kovarex
 		if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72||$_SESSION['loggedInUser']['User']['id']==13282){
+		//if(isset($_SESSION['loggedInUser'])){if(false){
 			echo 'options.reviewEnabled = true;';
 		}}
 	?>

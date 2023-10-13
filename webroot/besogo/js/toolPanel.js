@@ -338,7 +338,6 @@ besogo.makeToolPanel = function(container, editor)
         else
         {
 			$(".besogo-panels").css("display","none");
-		
 			if(besogo.scaleParameters['boardCanvasSize'] === 'full board'){
 				$(".besogo-board").css("width", "60%");
 				$(".besogo-board").css("margin", "0 252px");
@@ -356,14 +355,13 @@ besogo.makeToolPanel = function(container, editor)
 			editor.setReviewMode(false);
         }
 		besogo.editor.setControlButtonLock(false);
-		besogo.editor.resetToStart();
+		//besogo.editor.resetToStart();
 		document.getElementById("status").innerHTML = "";
         besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
       }
     }, reviewButtonId);
   
     makeAuthorText('author-notice');
-    //reviewButton.disabled = true; 
   }
 
   function makeEditorToolButtons(container, editor)

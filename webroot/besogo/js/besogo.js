@@ -6,10 +6,11 @@
   besogo.editor = null;
   besogo.boardDisplay = null;
   var rootPath = '';
-  besogo.boardParameters = [];//parameters of the board the refer to pixels
-  besogo.scaleParameters = [];//parameters of the board the refer to coordinates
-  besogo.coordArea = [];//the square of valid visible coordinates
-  besogo.dynamicCommentCoords = [];//the comment coord texts that need to be inside the visible area
+  besogo.nodes = []; //the nodes that are initially in the tree
+  besogo.boardParameters = []; //parameters of the board the refer to pixels
+  besogo.scaleParameters = []; //parameters of the board the refer to coordinates
+  besogo.coordArea = []; //the square of valid visible coordinates
+  besogo.dynamicCommentCoords = []; //the comment coord texts that need to be inside the visible area
   besogo.boardCanvasSvg = null;
   besogo.intuitionActive = false;
   besogo.playerColor = "black";

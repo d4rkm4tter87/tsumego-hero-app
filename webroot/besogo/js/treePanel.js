@@ -5,9 +5,11 @@ besogo.makeTreePanel = function(container, editor)
       pathGroup,
       bottomLayer,
       currentMarker,
+	  nodeCounter = 0,
+	  nodesInitialized = false,
       SCALE = 0.25; // Tree size scaling factor
 
-  if (editor.getReviewMode())
+  if (editor.getReviewEnabled())
     rebuildNavTree();
   editor.addListener(treeUpdate);
 
@@ -94,6 +96,7 @@ besogo.makeTreePanel = function(container, editor)
     svg.appendChild(pathGroup); // Navigation path third
 
     path = recursiveTreeBuild(root, 0, 0, nextOpen); // Build the tree
+	nodesInitialized = true;
     pathGroup.appendChild(finishPath(path, 'black')); // Finish and add root path
 
     width = 120 * nextOpen.length; // Compute height and width of nav tree
@@ -119,6 +122,11 @@ besogo.makeTreePanel = function(container, editor)
         childPath,
         i; // Scratch iteration variable
 
+	if(!nodesInitialized)
+	{
+		besogo.nodes.push(node);
+		nodeCounter++;
+	}
 
     if (children.length === 0) // Reached end of branch
       path = 'm' + svgPos(x) + ',' + svgPos(y); // Start path at end of branch
@@ -143,10 +151,8 @@ besogo.makeTreePanel = function(container, editor)
         pathGroup.appendChild(finishPath(childPath, 'black'));
       }
     }
-	//console.log(x+" "+y);
     svg.appendChild(makeNodeIcon(node, x, y));
     addSelectionMarker(node, x, y);
-
     nextOpen[x] = y + 1; // Claims (x, y)
     return path;
   }

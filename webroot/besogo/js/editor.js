@@ -94,6 +94,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     dynamicCommentCoords: dynamicCommentCoords,
     adjustCommentCoords: adjustCommentCoords,
     isMoveInTree: isMoveInTree,
+    searchNodesForTreePosition: searchNodesForTreePosition,
     test: test
   };
 
@@ -807,14 +808,11 @@ besogo.makeEditor = function(sizeX, sizeY, options)
   
   function commentPosition(positionParams)
   {
-	//console.log(positionParams);
-	
 	let hasParent = true;
     if(positionParams[2]==-1)
 		hasParent = false;
 	
 	let counter = 0;
-	
 	if(positionParams[8]==='top-right')
 	{
 		counter = 0;
@@ -844,7 +842,6 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 		  counter++;
 		}
 	}
-	
 	//---
 	if(besogo.scaleParameters['orientation']!=='full-board')
 	{
@@ -878,7 +875,6 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 			}
 		}
 	}
-	
 	if(positionParams[8]!=="0")
 		commentTreeSearch(root, 0, 0, nextOpen, positionParams);
 	else
@@ -923,7 +919,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 		childrenMoveX = node.children[0].move.x;
 		childrenMoveY = node.children[0].move.y;
 	}
-	
+	//this is not well written, maybe I improve it later
 	if(node.parent!==null && node.parent.move!==null)
 	{
 		if(node.move.x==positionParams[0] 
@@ -994,55 +990,95 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 	let found = false;
 	let spin = 0;
 	let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
-	if(besogo.coordArea['lowestX']>besogo.coordArea['highestX'])
-	{
-		buffer = besogo.coordArea['lowestX'];
-		besogo.coordArea['lowestX'] = besogo.coordArea['highestX'];
-		besogo.coordArea['highestX'] = buffer;
-	}
-	if(besogo.coordArea['lowestY']>besogo.coordArea['highestY'])
-	{
-		buffer = besogo.coordArea['lowestY'];
-		besogo.coordArea['lowestY'] = besogo.coordArea['highestY'];
-		besogo.coordArea['highestY'] = buffer;
-	}  
-	for(let i=0;i<besogo.dynamicCommentCoords[0].length;i++)
-	{
-		c1 = besogo.dynamicCommentCoords[1][i].charAt(0).toUpperCase();
-		c2 = besogo.dynamicCommentCoords[1][i].substring(1);
-		c1 = c1.charCodeAt(0)-65;
-		if(c1>7) c1--;
-		c2 = besogo.scaleParameters['boardCoordSize']-c2;
-		found = false;
-		spin = 0;
-		while(spin<4)
+	if(typeof besogo.dynamicCommentCoords[0] !== 'undefined'){
+		if(besogo.coordArea['lowestX']>besogo.coordArea['highestX'])
 		{
-			if(!found)
-			{
-				if(spin==1 || spin==3)
-				{
-					if(besogo.scaleParameters['boardCanvasSize']!=='horizontal half board')
-						c1 = besogo.scaleParameters['boardCoordSize'] - c1 - 1;
-					else
-						c2 = besogo.scaleParameters['boardCoordSize'] - c2 - 1;
-				}
-				else if(spin==2)
-					c2 = besogo.scaleParameters['boardCoordSize'] - c2 - 1;
-				if(c1>=besogo.coordArea['lowestX'] && c1<=besogo.coordArea['highestX'] && c2>=besogo.coordArea['lowestY'] && c2<=besogo.coordArea['highestY'])
-					found = true;
-			}
-			spin++;
+			buffer = besogo.coordArea['lowestX'];
+			besogo.coordArea['lowestX'] = besogo.coordArea['highestX'];
+			besogo.coordArea['highestX'] = buffer;
 		}
-		c1 = convertedCoords.x[c1+1];
-		c2 = convertedCoords.y[c2+1];
-		$('#'+besogo.dynamicCommentCoords[0][i]).text(c1+c2);
+		if(besogo.coordArea['lowestY']>besogo.coordArea['highestY'])
+		{
+			buffer = besogo.coordArea['lowestY'];
+			besogo.coordArea['lowestY'] = besogo.coordArea['highestY'];
+			besogo.coordArea['highestY'] = buffer;
+		}  
+		for(let i=0;i<besogo.dynamicCommentCoords[0].length;i++)
+		{
+			c1 = besogo.dynamicCommentCoords[1][i].charAt(0).toUpperCase();
+			c2 = besogo.dynamicCommentCoords[1][i].substring(1);
+			c1 = c1.charCodeAt(0)-65;
+			if(c1>7) c1--;
+			c2 = besogo.scaleParameters['boardCoordSize']-c2;
+			found = false;
+			spin = 0;
+			while(spin<4)
+			{
+				if(!found)
+				{
+					if(spin==1 || spin==3)
+					{
+						if(besogo.scaleParameters['boardCanvasSize']!=='horizontal half board')
+							c1 = besogo.scaleParameters['boardCoordSize'] - c1 - 1;
+						else
+							c2 = besogo.scaleParameters['boardCoordSize'] - c2 - 1;
+					}
+					else if(spin==2)
+						c2 = besogo.scaleParameters['boardCoordSize'] - c2 - 1;
+					if(c1>=besogo.coordArea['lowestX'] && c1<=besogo.coordArea['highestX'] && c2>=besogo.coordArea['lowestY'] && c2<=besogo.coordArea['highestY'])
+						found = true;
+				}
+				spin++;
+			}
+			c1 = convertedCoords.x[c1+1];
+			c2 = convertedCoords.y[c2+1];
+			$('#'+besogo.dynamicCommentCoords[0][i]).text(c1+c2);
+		}
 	}
   }
   
-  function isMoveInTree()
+  function isMoveInTree(cu)
   {
-	  console.log("hello world");
-	  return "x";
+	  let moveX;
+	  let moveY;
+	  let treeX = cu.navTreeX;
+	  let treeY = cu.navTreeY;
+	  let depth = -1;
+	  let found = null;
+	  let notInTreeCoords = [];
+	  notInTreeCoords['x'] = [];
+	  notInTreeCoords['y'] = [];
+	  let returnArray = [];
+	  let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
+	
+	  while(found===null)
+	  {
+		  found = searchNodesForTreePosition(treeX, treeY);
+		  treeX--;
+		  depth++;
+	  }
+	  while(depth>0)
+	  {
+		  moveX = convertedCoords.x[cu.move.x];
+		  moveY = convertedCoords.y[cu.move.y];
+		  notInTreeCoords['x'].push(moveX);
+		  notInTreeCoords['y'].push(moveY);
+		  cu = cu.parent;
+		  depth--;
+	  }
+	  
+	  returnArray[0] = found;
+	  returnArray[1] = notInTreeCoords;
+	  
+	  return returnArray;
+  }
+  
+  function searchNodesForTreePosition(x, y){
+	  let found = null;
+	  for(let i=0;i<besogo.nodes.length;i++)
+		  if(x===besogo.nodes[i].navTreeX && y===besogo.nodes[i].navTreeY)
+			  found = besogo.nodes[i];
+	  return found;
   }
   
   function test()
