@@ -194,6 +194,7 @@
 								echo '<a id="playTitleA" href="/sets/view/'.$set['Set']['id'].'">'.$set['Set']['title'].$di.$t['Tsumego']['file'].$di2.$anz.'</a>';
 							}
 						}elseif($mode==2){
+							//echo '<a id="playTitleA" href="/sets/view/'.$set['Set']['id'].'">'.$set['Set']['title'].$di.$t['Tsumego']['file'].$di2.$anz.'</a>';
 							echo '<div class="slidecontainer">
 							  <input type="range" min="1" max="7" value="'.$difficulty.'" class="slider" id="rangeInput" name="rangeInput">
 							  <div id="sliderText">regular</div>
@@ -580,16 +581,15 @@
 			//if($_SESSION['loggedInUser']['User']['premium']>=1){
 			//if($t['Tsumego']['set_id']!=122 && $t['Tsumego']['set_id']!=124 && $t['Tsumego']['set_id']!=127 && $t['Tsumego']['set_id']!=139){
 			if(isset($_SESSION['loggedInUser']['User']['id'])){
-				if($_SESSION['loggedInUser']['User']['id']!=10653){
-					echo '<div id="msg1">Leave a <a id="show">message<img id="greyArrow1" src="/img/greyArrow1.png"></a></div>';
-				}
+				echo '<div id="msg1">Leave a <a id="show">message<img id="greyArrow1" src="/img/greyArrow1.png"></a></div>';
 			}
-			echo '<br>';
 			echo '<div id="msg2">';
+			echo '<div id="commentPosition">Link current position</div>';
 			echo $this->Form->create('Comment');
 			echo $this->Form->input('tsumego_id', array('type' => 'hidden', 'value' => $t['Tsumego']['id']));
 			echo $this->Form->input('user_id', array('type' => 'hidden', 'value' => $user['User']['id']));
 			echo $this->Form->input('message', array('label' => '', 'type' => 'textarea', 'placeholder' => 'Message'));
+			echo $this->Form->input('position', array('label' => '', 'type' => 'text'));
 			echo $this->Form->end('Submit');
 
 		?>
@@ -610,6 +610,7 @@
 		<table class="sandboxTable" width="62%">
 		<tr>
 		<td>
+		
 		<?php
 		echo '<div id="commentSpace">';
 			$showComment2 = array();
@@ -635,10 +636,23 @@
 					}
 					if($commentColorCheck) $commentColor = 'commentBox2';
 					else $commentColor = 'commentBox1';
+					
+					$cpArray = null;
+					if($showComment[$i]['Comment']['position']!=null){
+						$cp = explode('/', $showComment[$i]['Comment']['position']);
+						$cpArray = $cp[0].','.$cp[1].','.$cp[2].','.$cp[3].','.$cp[4].','.$cp[5].','.$cp[6].','.$cp[7].',\''.$cp[8].'\'';
+						$cpArray = '<img src="/img/positionIcon1.png" class="positionIcon1" onclick="commentPosition('.$cpArray.');">';
+					}
+					$showComment[$i]['Comment']['message'] = '|'.$showComment[$i]['Comment']['message'];
+					if(strpos($showComment[$i]['Comment']['message'], '[current position]')!=0){
+						$showComment[$i]['Comment']['message'] = str_replace('[current position]', $cpArray, $showComment[$i]['Comment']['message']);
+					}
+					$showComment[$i]['Comment']['message'] = substr($showComment[$i]['Comment']['message'], 1);
+					
 					echo '<div class="sandboxComment">';
 					echo '<table class="sandboxTable2" width="100%" border="0"><tr><td>';
 					echo '<div class="'.$commentColor.'">'.$showComment[$i]['Comment']['user'].':<br>';
-					echo $showComment[$i]['Comment']['message'].'</div>';
+					echo $showComment[$i]['Comment']['message'].' </div>';
 					if($showComment[$i]['Comment']['status']!=0 && $showComment[$i]['Comment']['status']!=97 && $showComment[$i]['Comment']['status']!=98 && $showComment[$i]['Comment']['status']!=96){
 						echo '<div class="commentAnswer">';
 							echo '<div style="padding-top:7px;"></div>'.$showComment[$i]['Comment']['admin'].':<br>';
@@ -1498,6 +1512,42 @@
 		$('#targetLockOverlay').click(function(){
 			if(nextButtonLink!==0) window.location.href = "/tsumegos/play/"+nextButtonLink;
 		});
+		$("#commentPosition").click(function(){
+		  let commentContent = $("#CommentMessage").val();
+		  if(commentContent.includes("[current position]")){
+			 commentContent = commentContent.replace('[current position]','');
+		  }
+		  $("#CommentMessage").val(commentContent + "[current position]");
+		  
+		  let current = besogo.editor.getCurrent();
+		  let besogoOrientation = besogo.editor.getOrientation();
+		  if(besogoOrientation[1]=="full-board")
+			besogoOrientation[0] = besogoOrientation[1];
+		  
+		  if(current.move===null){
+			$("#CommentPosition").val(
+				"-1/-1/0/0/0/0/0/0/0"
+			);
+		  }else{
+		    pX = -1;
+		    pY = -1;
+			if(current.moveNumber>1){
+				pX = current.parent.move.x;
+				pY = current.parent.move.y;
+			}
+			if(current.children.length===0){
+				cX = -1;
+				cY = -1;
+			}else{
+				cX = current.children[0].move.x;
+				cY = current.children[0].move.y;
+			}
+			
+			$("#CommentPosition").val(
+			  current.move.x+"/"+current.move.y+"/"+pX+"/"+pY+"/"+cX+"/"+cY+"/"+current.moveNumber+"/"+current.children.length+"/"+besogoOrientation[0]
+			);
+		  }
+		}); 
 	});
 
 	function reset(){
@@ -1748,6 +1798,30 @@
 
 			sprintEnabled = false;
 		}
+	}
+	
+	function commentPosition(x, y, pX, pY, cX, cY, mNum, cNum, orientation){
+		positionParams = [];
+		positionParams[0] = x;
+		positionParams[1] = y;
+		positionParams[2] = pX;
+		positionParams[3] = pY;
+		positionParams[4] = cX;
+		positionParams[5] = cY;
+		positionParams[6] = mNum;
+		positionParams[7] = cNum;
+		positionParams[8] = orientation;
+		//positionParams['orientation'] = orientation;
+		//console.log(positionParams);
+		/*
+		positionParams['moveNum'] = 5;
+		positionParams['x'] = 3;
+		positionParams['y'] = 2;
+		positionParams['xParent'] = 1;
+		positionParams['yParent'] = 3;
+		positionParams['numChildren'] = 1;
+		*/
+		besogo.editor.commentPosition(positionParams);
 	}
 
 	function intuition(){
@@ -2029,19 +2103,10 @@
 	}
 
 	<?php
-	$fn = 1;
-	for($i=0; $i<count($coordMarkers); $i++){
-		//for($j=0; $j<count($coordMarkers[$i]); $j++){
-		for($j=count($coordMarkers[$i])-1; $j>=0; $j--){
-			//echo 'alert("!'.$e[$j].'");';
-			if(strlen($coordMarkers[$i][$j])>2){
-				$c = explode('-', $coordMarkers[$i][$j]);
-				echo 'function commentCoordinateIn'.$fn.'(){besogo.editor.displayHoverCoord('.$c[0].', '.$c[1].');}';
-				echo 'function commentCoordinateOut'.$fn.'(){besogo.editor.displayHoverCoord(-1, -1);}';
-				$fn++;
-			}
-		}
-	}
+	$dynamicCommentCoords = array();
+	$dynamicCommentCoords[0] = array();
+	$dynamicCommentCoords[1] = array();
+	
 	$fn1 = 1;
 	for($i=0; $i<count($commentCoordinates); $i++){
 		$n2x = explode(' ', $commentCoordinates[$i]);
@@ -2050,8 +2115,10 @@
 			for($j=count($n2x)-1; $j>=0; $j--){
 				$n2xx = explode('-', $n2x[$j]);
 				if(strlen($n2xx[0])>0 && strlen($n2xx[1])>0){
-					echo 'function ccIn'.$fn1.$fn2.'(){besogo.editor.displayHoverCoord('.$n2xx[0].', '.$n2xx[1].');}';
-					echo 'function ccOut'.$fn1.$fn2.'(){besogo.editor.displayHoverCoord(-1, -1);}';
+					echo 'function ccIn'.$fn1.$fn2.'(){besogo.editor.displayHoverCoord("'.$n2xx[2].'");}';
+					echo 'function ccOut'.$fn1.$fn2.'(){besogo.editor.displayHoverCoord(-1);}';
+					array_push($dynamicCommentCoords[0], 'ccIn'.$fn1.$fn2);
+					array_push($dynamicCommentCoords[1], $n2xx[2]);
 					$fn2++;
 				}
 			}
@@ -2066,14 +2133,15 @@
 		for($j=count($n2x)-1; $j>=0; $j--){
 			$n2xx = explode('-', $n2x[$j]);
 			if(strlen($n2xx[0])>0 && strlen($n2xx[1])>0){
-				echo 'function ccIn'.$fn1.$fn2.'(){besogo.editor.displayHoverCoord('.$n2xx[0].', '.$n2xx[1].');}';
-				echo 'function ccOut'.$fn1.$fn2.'(){besogo.editor.displayHoverCoord(-1, -1);}';
+				echo 'function ccIn'.$fn1.$fn2.'(){besogo.editor.displayHoverCoord("'.$n2xx[2].'");}';
+				echo 'function ccOut'.$fn1.$fn2.'(){besogo.editor.displayHoverCoord(-1);}';
+				array_push($dynamicCommentCoords[0], 'ccIn'.$fn1.$fn2);
+				array_push($dynamicCommentCoords[1], $n2xx[2]);
 				$fn2++;
 			}
 		}
 	}
 	$fn1++;
-
 	?>
 
 	function displayResult(result){
@@ -2319,6 +2387,7 @@
 	  options.nowheel = true;
 	  options.nokeys = true;
 	  options.vChildrenEnabled = true;
+	  options.multipleChoice = false;
 	  if(mode!=3) 
 		options.alternativeResponse = true;
 	  else
@@ -2328,6 +2397,8 @@
 			echo 'options.vChildrenEnabled = false;';
 		if($alternative_response!=1)
 			echo 'options.alternativeResponse = false;';
+		if($t['Tsumego']['set_id']==42)
+			echo 'options.multipleChoice = true;';
 	  ?>
 	  const cornerArray = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
 	  shuffledCornerArray = cornerArray.sort((a, b) => 0.5 - Math.random());
@@ -2384,7 +2455,13 @@
 	//$(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('id', 'besogo-tsumegoPlayTool-rButton');
 	//$(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('class', 'besogo-tsumegoPlayTool-rButton2');
 	//if(nextButtonLink==0) $(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('class', 'besogo-tsumegoPlayTool-rButton2');
+	<?php
 	
+	for($i=0; $i<count($dynamicCommentCoords[0]); $i++){
+		echo 'besogo.editor.dynamicCommentCoords("'.$dynamicCommentCoords[0][$i].'", "'.$dynamicCommentCoords[1][$i].'");';
+	}
+	//echo 'besogo.editor.adjustCommentCoords();';
+	?>
 	</script>
 	<?php } ?>
 	

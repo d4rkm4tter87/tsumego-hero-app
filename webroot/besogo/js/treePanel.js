@@ -119,6 +119,7 @@ besogo.makeTreePanel = function(container, editor)
         childPath,
         i; // Scratch iteration variable
 
+
     if (children.length === 0) // Reached end of branch
       path = 'm' + svgPos(x) + ',' + svgPos(y); // Start path at end of branch
     else  // Current node has children
@@ -142,6 +143,7 @@ besogo.makeTreePanel = function(container, editor)
         pathGroup.appendChild(finishPath(childPath, 'black'));
       }
     }
+	//console.log(x+" "+y);
     svg.appendChild(makeNodeIcon(node, x, y));
     addSelectionMarker(node, x, y);
 
@@ -198,7 +200,10 @@ besogo.makeTreePanel = function(container, editor)
         height: 110,
         fill: besogo.TURQ
     });
-    element.onclick = function() { editor.setCurrent(node); };
+    element.onclick = function() {
+		//console.log(node);
+		editor.setCurrent(node);
+	};
 
     node.navTreeMarker = element; // Save selection marker in node
     setSelectionMarker(element); // Add as and set selection marker properties

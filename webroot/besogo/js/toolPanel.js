@@ -7,6 +7,10 @@ besogo.makeToolPanel = function(container, editor)
       selectors = {}; // Holds selection rects
 
   var reviewButton = null;
+  var tlIcon = null;
+  var trIcon = null;
+  var blIcon = null;
+  var brIcon = null;
   
   if(container.className == 'besogo-tsumegoPlayTool'){
     makeReviewToolButtons(container, editor);
@@ -24,154 +28,191 @@ besogo.makeToolPanel = function(container, editor)
   {
     makeImageButton('/img/colorOrientation.png', 'change the color of your stones', 'colorOrientation', function()
     {
-    let transformation = besogo.makeTransformation();
-    transformation.invertColors = true;
-    besogo.editor.applyTransformation(transformation);
+		let transformation = besogo.makeTransformation();
+		transformation.invertColors = true;
+		besogo.editor.applyTransformation(transformation);
     });
-    if(!besogo.boardParameters['fullBoard']){
-      makeImageButton('/img/boardOrientationTL.png', 'top-left', 'boardOrientationTL', function()
+    if(besogo.scaleParameters['orientation']!=='full-board'){
+	  if(besogo.scaleParameters['boardCanvasSize']==='horizontal half board')
+		tlIcon = 'boardOrientationT';
+	  else if(besogo.scaleParameters['boardCanvasSize']==='vertical half board')
+		tlIcon = 'boardOrientationL';
+	  else
+		tlIcon = 'boardOrientationTL';
+      makeImageButton('/img/'+tlIcon+'.png', 'top-left', 'boardOrientationTL', function()
       {
-      if(besogo.boardParameters['corner']==='top-left')
-      {
-        //already there
-      }
-      else if(besogo.boardParameters['corner']==='top-right')
-      {
-        let transformation = besogo.makeTransformation();
-        transformation.hFlip = true;
-        besogo.editor.applyTransformation(transformation);
-      }
-      else if(besogo.boardParameters['corner']==='bottom-left')
-      {
-        let transformation = besogo.makeTransformation();
-        transformation.vFlip = true;
-        besogo.editor.applyTransformation(transformation);
-      }
-      else if(besogo.boardParameters['corner']==='bottom-right')
-      {
-        let transformation = besogo.makeTransformation();
-        transformation.hFlip = true;
-        besogo.editor.applyTransformation(transformation);
-        transformation = besogo.makeTransformation();
-        transformation.vFlip = true;
-        besogo.editor.applyTransformation(transformation);
-      }
-	  if(besogo.scaleParameters['orientation']!=='full-board')
-		besogo.boardCanvasSvg.setAttribute('viewBox', '0 0 ' + besogo.boardParameters['boardWidth'] + ' ' + besogo.boardParameters['boardHeight']);
-      $("#boardOrientationTL").css("opacity","1");
-      $("#boardOrientationTR").css("opacity",".62");
-      $("#boardOrientationBL").css("opacity",".62");
-      $("#boardOrientationBR").css("opacity",".62");
-      besogo.boardParameters['corner']='top-left';
+		  if(besogo.boardParameters['corner']==='top-left')
+		  {
+			//already there
+		  }
+		  else if(besogo.boardParameters['corner']==='top-right')
+		  {
+			let transformation = besogo.makeTransformation();
+			transformation.hFlip = true;
+			besogo.editor.applyTransformation(transformation);
+			updateCoordArea('x', false);
+		  }
+		  else if(besogo.boardParameters['corner']==='bottom-left')
+		  {
+			let transformation = besogo.makeTransformation();
+			transformation.vFlip = true;
+			besogo.editor.applyTransformation(transformation);
+			updateCoordArea(false, 'y');
+		  }
+		  else if(besogo.boardParameters['corner']==='bottom-right')
+		  {
+			let transformation = besogo.makeTransformation();
+			transformation.hFlip = true;
+			besogo.editor.applyTransformation(transformation);
+			transformation = besogo.makeTransformation();
+			transformation.vFlip = true;
+			besogo.editor.applyTransformation(transformation);
+			updateCoordArea('x', 'y');
+		  }
+		  if(besogo.scaleParameters['orientation']!=='full-board')
+			besogo.boardCanvasSvg.setAttribute('viewBox', '0 0 ' + besogo.boardParameters['boardWidth'] + ' ' + besogo.boardParameters['boardHeight']);
+		  $("#boardOrientationTL").css("opacity","1");
+		  $("#boardOrientationTR").css("opacity",".62");
+		  $("#boardOrientationBL").css("opacity",".62");
+		  $("#boardOrientationBR").css("opacity",".62");
+		  besogo.boardParameters['corner']='top-left';
+		  besogo.editor.adjustCommentCoords();
       });
       
-      makeImageButton('/img/boardOrientationTR.png', 'top-right', 'boardOrientationTR', function()
-      {
-        if(besogo.boardParameters['corner']==='top-left')
-        {
-          let transformation = besogo.makeTransformation();
-          transformation.hFlip = true;
-          besogo.editor.applyTransformation(transformation);
-        }
-        else if(besogo.boardParameters['corner']==='top-right')
-        {
-          //already there
-        }
-        else if(besogo.boardParameters['corner']==='bottom-left')
-        {
-          let transformation = besogo.makeTransformation();
-          transformation.hFlip = true;
-          besogo.editor.applyTransformation(transformation);
-          transformation = besogo.makeTransformation();
-          transformation.vFlip = true;
-          besogo.editor.applyTransformation(transformation);
-        }
-        else if (besogo.boardParameters['corner']==='bottom-right')
-        {
-          let transformation = besogo.makeTransformation();
-          transformation.vFlip = true;
-          besogo.editor.applyTransformation(transformation);
-        }
-		if(besogo.scaleParameters['orientation']!=='full-board')
-			besogo.boardCanvasSvg.setAttribute('viewBox', besogo.boardParameters['boardWidth2'] + ' ' + 0 + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
-        $("#boardOrientationTL").css("opacity",".62");
-        $("#boardOrientationTR").css("opacity","1");
-        $("#boardOrientationBL").css("opacity",".62");
-        $("#boardOrientationBR").css("opacity",".62");
-        besogo.boardParameters['corner']='top-right';
-        });
-      
-      makeImageButton('/img/boardOrientationBL.png', 'bottom-left', 'boardOrientationBL', function()
-      {
-        if (besogo.boardParameters['corner'] === 'top-left')
-        {
-          let transformation = besogo.makeTransformation();
-          transformation.vFlip = true;
-          besogo.editor.applyTransformation(transformation);
-        }
-        else if (besogo.boardParameters['corner'] === 'top-right')
-        {
-          let transformation = besogo.makeTransformation();
-          transformation.hFlip = true;
-          besogo.editor.applyTransformation(transformation);
-          transformation = besogo.makeTransformation();
-          transformation.vFlip = true;
-          besogo.editor.applyTransformation(transformation);
-        }
-        else if (besogo.boardParameters['corner']==='bottom-left')
-        {
-          //already there
-        }
-        else if(besogo.boardParameters['corner']==='bottom-right')
-        {
-          let transformation = besogo.makeTransformation();
-          transformation.hFlip = true;
-          besogo.editor.applyTransformation(transformation);
-        }
-		if(besogo.scaleParameters['orientation']!=='full-board')
-			besogo.boardCanvasSvg.setAttribute('viewBox', 0 + ' ' + besogo.boardParameters['boardHeight2'] + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
-        $("#boardOrientationTL").css("opacity",".62");
-        $("#boardOrientationTR").css("opacity",".62");
-        $("#boardOrientationBL").css("opacity","1");
-        $("#boardOrientationBR").css("opacity",".62");
-        besogo.boardParameters['corner']='bottom-left';
-      });
-      
-      makeImageButton('/img/boardOrientationBR.png', 'bottom-right', 'boardOrientationBR', function()
-      {
-        if(besogo.boardParameters['corner'] === 'top-left')
-        {
-          let transformation = besogo.makeTransformation();
-          transformation.hFlip = true;
-          besogo.editor.applyTransformation(transformation);
-          transformation = besogo.makeTransformation();
-          transformation.vFlip = true;
-          besogo.editor.applyTransformation(transformation);
-        }
-        else if(besogo.boardParameters['corner']==='top-right')
-        {
-          let transformation = besogo.makeTransformation();
-          transformation.vFlip = true;
-          besogo.editor.applyTransformation(transformation);
-        }
-        else if(besogo.boardParameters['corner']==='bottom-left')
-        {
-          let transformation = besogo.makeTransformation();
-          transformation.hFlip = true;
-          besogo.editor.applyTransformation(transformation);
-        }
-        else if(besogo.boardParameters['corner']==='bottom-right')
-        {
-          //already there
-        }
-        if(besogo.scaleParameters['orientation']!=='full-board')
-			besogo.boardCanvasSvg.setAttribute('viewBox', besogo.boardParameters['boardWidth2'] + ' ' + besogo.boardParameters['boardHeight2'] + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
-        $("#boardOrientationTL").css("opacity",".62");
-        $("#boardOrientationTR").css("opacity",".62");
-        $("#boardOrientationBL").css("opacity",".62");
-        $("#boardOrientationBR").css("opacity","1");
-        besogo.boardParameters['corner']='bottom-right';
-        });
+	  if(besogo.scaleParameters['boardCanvasSize']!=='horizontal half board')
+	  {
+		  if(besogo.scaleParameters['boardCanvasSize']==='vertical half board')
+			trIcon = 'boardOrientationR';
+		  else
+			trIcon = 'boardOrientationTR';
+		  makeImageButton('/img/'+trIcon+'.png', 'top-right', 'boardOrientationTR', function()
+		  {
+			if(besogo.boardParameters['corner']==='top-left')
+			{
+			  let transformation = besogo.makeTransformation();
+			  transformation.hFlip = true;
+			  besogo.editor.applyTransformation(transformation);
+			  updateCoordArea('x', false);
+			}
+			else if(besogo.boardParameters['corner']==='top-right')
+			{
+			  //already there
+			}
+			else if(besogo.boardParameters['corner']==='bottom-left')
+			{
+			  let transformation = besogo.makeTransformation();
+			  transformation.hFlip = true;
+			  besogo.editor.applyTransformation(transformation);
+			  transformation = besogo.makeTransformation();
+			  transformation.vFlip = true;
+			  besogo.editor.applyTransformation(transformation);
+			  updateCoordArea('x', 'y');
+			}
+			else if (besogo.boardParameters['corner']==='bottom-right')
+			{
+			  let transformation = besogo.makeTransformation();
+			  transformation.vFlip = true;
+			  besogo.editor.applyTransformation(transformation);
+			  updateCoordArea(false, 'y');
+			}
+			if(besogo.scaleParameters['orientation']!=='full-board')
+				besogo.boardCanvasSvg.setAttribute('viewBox', besogo.boardParameters['boardWidth2'] + ' ' + 0 + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
+			$("#boardOrientationTL").css("opacity",".62");
+			$("#boardOrientationTR").css("opacity","1");
+			$("#boardOrientationBL").css("opacity",".62");
+			$("#boardOrientationBR").css("opacity",".62");
+			besogo.boardParameters['corner']='top-right';
+			besogo.editor.adjustCommentCoords();
+		  });
+      }
+	  if(besogo.scaleParameters['boardCanvasSize']!=='vertical half board')
+	  {
+		  if(besogo.scaleParameters['boardCanvasSize']==='horizontal half board')
+			blIcon = 'boardOrientationB';
+		  else
+			blIcon = 'boardOrientationBL';
+		  makeImageButton('/img/'+blIcon+'.png', 'bottom-left', 'boardOrientationBL', function()
+		  {
+			if (besogo.boardParameters['corner'] === 'top-left')
+			{
+			  let transformation = besogo.makeTransformation();
+			  transformation.vFlip = true;
+			  besogo.editor.applyTransformation(transformation);
+			  updateCoordArea(false, 'y');
+			}
+			else if (besogo.boardParameters['corner'] === 'top-right')
+			{
+			  let transformation = besogo.makeTransformation();
+			  transformation.hFlip = true;
+			  besogo.editor.applyTransformation(transformation);
+			  transformation = besogo.makeTransformation();
+			  transformation.vFlip = true;
+			  besogo.editor.applyTransformation(transformation);
+			  updateCoordArea('x', 'y');
+			}
+			else if (besogo.boardParameters['corner']==='bottom-left')
+			{
+			  //already there
+			}
+			else if(besogo.boardParameters['corner']==='bottom-right')
+			{
+			  let transformation = besogo.makeTransformation();
+			  transformation.hFlip = true;
+			  besogo.editor.applyTransformation(transformation);
+			  updateCoordArea('x', false);
+			}
+			if(besogo.scaleParameters['orientation']!=='full-board')
+				besogo.boardCanvasSvg.setAttribute('viewBox', 0 + ' ' + besogo.boardParameters['boardHeight2'] + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
+			$("#boardOrientationTL").css("opacity",".62");
+			$("#boardOrientationTR").css("opacity",".62");
+			$("#boardOrientationBL").css("opacity","1");
+			$("#boardOrientationBR").css("opacity",".62");
+			besogo.boardParameters['corner']='bottom-left';
+			besogo.editor.adjustCommentCoords();
+		  });
+      }
+	  if(besogo.scaleParameters['boardCanvasSize']!=='vertical half board' && besogo.scaleParameters['boardCanvasSize']!=='horizontal half board')
+	  {
+		  makeImageButton('/img/boardOrientationBR.png', 'bottom-right', 'boardOrientationBR', function()
+		  {
+			if(besogo.boardParameters['corner'] === 'top-left')
+			{
+			  let transformation = besogo.makeTransformation();
+			  transformation.hFlip = true;
+			  besogo.editor.applyTransformation(transformation);
+			  transformation = besogo.makeTransformation();
+			  transformation.vFlip = true;
+			  besogo.editor.applyTransformation(transformation);
+			  updateCoordArea('x', 'y');
+			}
+			else if(besogo.boardParameters['corner']==='top-right')
+			{
+			  let transformation = besogo.makeTransformation();
+			  transformation.vFlip = true;
+			  besogo.editor.applyTransformation(transformation);
+			  updateCoordArea(false, 'y');
+			}
+			else if(besogo.boardParameters['corner']==='bottom-left')
+			{
+			  let transformation = besogo.makeTransformation();
+			  transformation.hFlip = true;
+			  besogo.editor.applyTransformation(transformation);
+			  updateCoordArea('x', false);
+			}
+			else if(besogo.boardParameters['corner']==='bottom-right')
+			{
+			  //already there
+			}
+			if(besogo.scaleParameters['orientation']!=='full-board')
+				besogo.boardCanvasSvg.setAttribute('viewBox', besogo.boardParameters['boardWidth2'] + ' ' + besogo.boardParameters['boardHeight2'] + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
+			$("#boardOrientationTL").css("opacity",".62");
+			$("#boardOrientationTR").css("opacity",".62");
+			$("#boardOrientationBL").css("opacity",".62");
+			$("#boardOrientationBR").css("opacity","1");
+			besogo.boardParameters['corner']='bottom-right';
+			besogo.editor.adjustCommentCoords();
+		  });
+	  }
     }
     
     if (!besogoNoLogin)
@@ -193,7 +234,7 @@ besogo.makeToolPanel = function(container, editor)
         }
         $("#favButton").attr('src',favImage);
         });
-    } 
+    }
     
     if(mode==1)
     {
@@ -596,5 +637,23 @@ besogo.makeToolPanel = function(container, editor)
       }));
 
       return element;
+  }
+  // updates the area of valid coordinates
+  function updateCoordArea(x=false, y=false) {
+	let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);  
+    if(x!=false)
+	{
+		besogo.coordArea['lowestX'] = besogo.scaleParameters['boardCoordSize'] - besogo.coordArea['lowestX'] - 1;
+		besogo.coordArea['highestX'] = besogo.scaleParameters['boardCoordSize'] - besogo.coordArea['highestX'] - 1;
+		besogo.coordArea['lowestXconverted'] = convertedCoords.x[besogo.coordArea['lowestX'] + 1];
+		besogo.coordArea['highestXconverted'] = convertedCoords.x[besogo.coordArea['highestX'] + 1];
+	}
+	if(y!=false)
+	{
+		besogo.coordArea['lowestY'] = besogo.scaleParameters['boardCoordSize'] - besogo.coordArea['lowestY'] - 1;
+		besogo.coordArea['highestY'] = besogo.scaleParameters['boardCoordSize'] - besogo.coordArea['highestY'] - 1;
+		besogo.coordArea['lowestYconverted'] = convertedCoords.y[besogo.coordArea['lowestY'] + 1];
+		besogo.coordArea['highestYconverted'] = convertedCoords.y[besogo.coordArea['highestY'] + 1];
+	}
   }
 };

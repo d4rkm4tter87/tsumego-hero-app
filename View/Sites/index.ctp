@@ -540,8 +540,6 @@
 		
 		$sum = 0;
 		for($j=0; $j<count($td); $j++){
-		
-		
 			$td[$j]['num'] = $td[$j]['num'] + $sum;
 			$date = date_create($td[$j]['date']);
 			
@@ -550,9 +548,10 @@
 			if($date==date_create('2019-05-01')) $td[$j]['num'] -= 32;
 			if($date==date_create('2019-05-19')) $td[$j]['num'] -= 40;
 			if($date==date_create('2020-02-22')) $td[$j]['num'] -= 364;
+			if($date==date_create('2023-09-01')) $td[$j]['num'] -= 141;
+			if($date==date_create('2023-10-04')) $td[$j]['num'] -= 10;
 			$x = $td[$j]['num'];
 			$sum = $x;
-			
 			
 			//echo '<pre>';print_r($date);echo '</pre>';
 			$td[$j]['y'] = $date->format('Y');
@@ -608,13 +607,33 @@
 		</div>
 		<p class="title4">Recent Donations and Upgrades</p>
 		<div class="new1">
-			<table class="newx">
-		<tr><td width="50%"><h1>Malachi Sigmund</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>Peter Román</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>Reesha</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>Luciano - Palmas</h1></td><td><h1>10,00 €</h1></td></tr>
-		<tr><td><h1>maxfrog</h1></td><td><h1>10,00 €</h1></td></tr>	
-		</table>	
+			<table class="newx" border="0">
+				<tr>
+					<td><h1>02.10.2023</h1></td>
+					<td><h1>Tomislav Sokec</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>02.10.2023</h1></td>
+					<td><h1>Daniil Plakhov</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>01.10.2023</h1></td>
+					<td><h1>korni</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>24.09.2023</h1></td>
+					<td><h1>matt-noonan</h1></td>
+					<td><h1>30,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>21.09.2023</h1></td>
+					<td><h1>Michael Vondung</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>	
+			</table>	
 		<br>
 		</div>	
 		<p class="title4">Tsumego Hero Videos</p>

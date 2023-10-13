@@ -1021,6 +1021,7 @@ class SetsController extends AppController{
 				'user_id' => $_SESSION['loggedInUser']['User']['id'],
 				'tsumego_id' => $tsIds
 			)));
+			
 			for($i=0; $i<count($uts); $i++){
 				for($j=0; $j<count($ts); $j++){
 					if($uts[$i]['TsumegoStatus']['tsumego_id'] == $ts[$j]['Tsumego']['id']){
@@ -1126,7 +1127,6 @@ class SetsController extends AppController{
 			}
 
 			$delNum = $pdCounter;
-
 			$urSecCounter = 0;
 			$urSecAvg = 0;
 			$pSsum = 0;
@@ -1144,9 +1144,14 @@ class SetsController extends AppController{
 				$pSsum += $pS;
 				$pFsum += $pF;
 			}
-			$avgTime = round($urSecAvg/$urSecCounter, 2);
-			$accuracy = round($pSsum/($pSsum+$pFsum)*100, 2);
-
+			if($urSecCounter==0)
+				$avgTime = 0;
+			else
+				$avgTime = round($urSecAvg/$urSecCounter, 2);
+			if($pSsum+$pFsum == 0)
+				$accuracy = 0;
+			else
+				$accuracy = round($pSsum/($pSsum+$pFsum)*100, 2);
 		}else{
 			$delNum = 5;
 			$scoring = false;

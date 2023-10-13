@@ -4,7 +4,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
   // Creates an associated game state tree
   var root = besogo.makeGameRoot(sizeX, sizeY),
       current = root, // Navigation cursor
-
+		
       listeners = [], // Listeners of general game/editor state changes
 
       // Enumeration of editor tools/modes
@@ -22,9 +22,8 @@ besogo.makeEditor = function(sizeX, sizeY, options)
       label = "1", // Next label that will be applied
 
       navHistory = [], // Navigation history
-
       gameInfo = {}, // Game info properties
-
+	  nextOpen = [],
       // Order of coordinate systems
       COORDS = 'none numeric western eastern pierre corner eastcor'.split(' '),
       coord = 'none', // Selected coordinate system
@@ -87,15 +86,23 @@ besogo.makeEditor = function(sizeX, sizeY, options)
     registerDisplayResult: registerDisplayResult,
     resetToStart: resetToStart,
     registerShowComment: registerShowComment,
-    displayHoverCoord: displayHoverCoord
+    displayHoverCoord: displayHoverCoord,
+    commentPosition: commentPosition,
+    commentTreeSearch: commentTreeSearch,
+    commentTreeSearchExtendPath: commentTreeSearchExtendPath,
+    getOrientation: getOrientation,
+    dynamicCommentCoords: dynamicCommentCoords,
+    adjustCommentCoords: adjustCommentCoords,
+    isMoveInTree: isMoveInTree,
+    test: test
   };
 
   // Returns the active tool
   function getTool() { return tool; }
 
-  function displayHoverCoord(x, y)
+  function displayHoverCoord(c)
   {
-    besogo.boardDisplay.displayHoverCoord(x, y);
+    besogo.boardDisplay.displayHoverCoord(c);
   }
 
   // Sets the active tool, returns false if failed
@@ -796,5 +803,250 @@ besogo.makeEditor = function(sizeX, sizeY, options)
   function registerShowComment(value)
   {
     showComment = value;
+  }
+  
+  function commentPosition(positionParams)
+  {
+	//console.log(positionParams);
+	
+	let hasParent = true;
+    if(positionParams[2]==-1)
+		hasParent = false;
+	
+	let counter = 0;
+	
+	if(positionParams[8]==='top-right')
+	{
+		counter = 0;
+		while(counter<=5)
+		{
+		  if(counter%2==0)
+			  positionParams[counter] = 20-positionParams[counter];
+		  counter++;
+		}
+	}
+	else if(positionParams[8]==='bottom-left')
+	{
+		counter = 0;
+		while(counter<=5)
+		{
+		  if(counter%2!=0)
+			  positionParams[counter] = 20-positionParams[counter];
+		  counter++;
+		}
+	}
+	else if(positionParams[8]==='bottom-right')
+	{
+		counter = 0;
+		while(counter<=5)
+		{
+		  positionParams[counter] = 20-positionParams[counter];
+		  counter++;
+		}
+	}
+	
+	//---
+	if(besogo.scaleParameters['orientation']!=='full-board')
+	{
+		if(besogo.boardParameters['corner']==='top-right')
+		{
+			counter = 0;
+			while(counter<=5)
+			{
+			  if(counter%2==0)
+				  positionParams[counter] = 20-positionParams[counter];
+			  counter++;
+			}
+		}
+		else if(besogo.boardParameters['corner']==='bottom-left')
+		{
+			counter = 0;
+			while(counter<=5)
+			{
+			  if(counter%2!=0)
+				  positionParams[counter] = 20-positionParams[counter];
+			  counter++;
+			}
+		}
+		else if(besogo.boardParameters['corner']==='bottom-right')
+		{
+			counter = 0;
+			while(counter<=5)
+			{
+			  positionParams[counter] = 20-positionParams[counter];
+			  counter++;
+			}
+		}
+	}
+	
+	if(positionParams[8]!=="0")
+		commentTreeSearch(root, 0, 0, nextOpen, positionParams);
+	else
+		setCurrent(root);
+  }
+  
+  function commentTreeSearch(node, x, y, nextOpen, positionParams, hasParent=true)
+  {
+    var children = node.children,
+        position,
+        path,
+        childPath,
+        i; // Scratch iteration variable
+    if (children.length === 0) // Reached end of branch
+      path = 'm' + x + ',' + y; // Start path at end of branch
+    else  // Current node has children
+    {
+      position = (nextOpen[x + 1] || 0); // First open spot in next column
+      position = (position < y) ? y : position; // Bring level with current y
+      if (y < position - 1) // Check if first child natural drop > 1
+        y = position - 1; // Bring current y within 1 of first child drop
+      // Place first child and extend path
+      path = commentTreeSearch(children[0], x + 1, position, nextOpen, positionParams, hasParent) + commentTreeSearchExtendPath(x, y, nextOpen);
+      // Place other children (intentionally starting at i = 1)
+      for (i = 1; i < children.length; i++)
+      {
+        position = nextOpen[x + 1];
+        childPath = commentTreeSearch(children[i], x + 1, position, nextOpen, positionParams, hasParent) + commentTreeSearchExtendPath(x, y, nextOpen, position - 1);
+        // End path at beginning of branch
+      }
+    }
+	
+	let childrenMoveX = 0;
+	let childrenMoveY = 0;
+	if(node.children.length===0)
+	{
+		childrenMoveX = positionParams[4];
+		childrenMoveY = positionParams[5];
+	}
+	else
+	{
+		childrenMoveX = node.children[0].move.x;
+		childrenMoveY = node.children[0].move.y;
+	}
+	
+	if(node.parent!==null && node.parent.move!==null)
+	{
+		if(node.move.x==positionParams[0] 
+		&& node.move.y==positionParams[1] 
+		&& node.parent.move.x==positionParams[2] 
+		&& node.parent.move.y==positionParams[3] 
+		&& childrenMoveX==positionParams[4] 
+		&& childrenMoveY==positionParams[5]
+		&& node.moveNumber==positionParams[6])
+		{
+			setCurrent(node);
+		}
+	}
+	else if(node.move!==null)
+	{
+		if(node.move.x==positionParams[0] 
+		&& node.move.y==positionParams[1] 
+		&& childrenMoveX==positionParams[4] 
+		&& childrenMoveY==positionParams[5]
+		&& node.moveNumber==positionParams[6])
+		{
+			setCurrent(node);
+		}
+	}
+	
+    nextOpen[x] = y + 1;
+    return path;
+  }
+  
+  function commentTreeSearchExtendPath(x, y, nextOpen, prevChildPos) // Extends path from child to current
+  {
+    var childPos = nextOpen[x + 1] - 1; // Position of child
+    if (childPos === y) // Child is horizontally level with current
+      return 'h-120'; // Horizontal line back to current
+    else if (childPos === y + 1) // Child is one drop from current
+      return 'l-120,-120'; // Diagonal drop line back to current
+    else if (prevChildPos && prevChildPos !== y)
+      // Previous is already dropped, extend back to previous child drop line
+      return 'l-60,-60v-' + (120 * (childPos - prevChildPos));
+    else // Extend double-bend drop line back to parent
+      return 'l-60,-60v-' + (120 * (childPos - y - 1)) + 'l-60,-60';
+  }
+  
+  function getOrientation()
+  {
+	  let array = [];
+	  array[0] = besogo.boardParameters['corner'];
+	  array[1] = besogo.scaleParameters['orientation'];
+	  return array;
+  }
+  
+  function dynamicCommentCoords(id, content)
+  {
+	  if(besogo.dynamicCommentCoords.length===0)
+	  {
+		besogo.dynamicCommentCoords[0] = [];  
+		besogo.dynamicCommentCoords[1] = [];  
+	  }
+	  besogo.dynamicCommentCoords[0].push(id);
+	  besogo.dynamicCommentCoords[1].push(content);
+  }
+  
+  function adjustCommentCoords()
+  {
+	let buffer;
+	let c1;
+	let c2;
+	let found = false;
+	let spin = 0;
+	let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
+	if(besogo.coordArea['lowestX']>besogo.coordArea['highestX'])
+	{
+		buffer = besogo.coordArea['lowestX'];
+		besogo.coordArea['lowestX'] = besogo.coordArea['highestX'];
+		besogo.coordArea['highestX'] = buffer;
+	}
+	if(besogo.coordArea['lowestY']>besogo.coordArea['highestY'])
+	{
+		buffer = besogo.coordArea['lowestY'];
+		besogo.coordArea['lowestY'] = besogo.coordArea['highestY'];
+		besogo.coordArea['highestY'] = buffer;
+	}  
+	for(let i=0;i<besogo.dynamicCommentCoords[0].length;i++)
+	{
+		c1 = besogo.dynamicCommentCoords[1][i].charAt(0).toUpperCase();
+		c2 = besogo.dynamicCommentCoords[1][i].substring(1);
+		c1 = c1.charCodeAt(0)-65;
+		if(c1>7) c1--;
+		c2 = besogo.scaleParameters['boardCoordSize']-c2;
+		found = false;
+		spin = 0;
+		while(spin<4)
+		{
+			if(!found)
+			{
+				if(spin==1 || spin==3)
+				{
+					if(besogo.scaleParameters['boardCanvasSize']!=='horizontal half board')
+						c1 = besogo.scaleParameters['boardCoordSize'] - c1 - 1;
+					else
+						c2 = besogo.scaleParameters['boardCoordSize'] - c2 - 1;
+				}
+				else if(spin==2)
+					c2 = besogo.scaleParameters['boardCoordSize'] - c2 - 1;
+				if(c1>=besogo.coordArea['lowestX'] && c1<=besogo.coordArea['highestX'] && c2>=besogo.coordArea['lowestY'] && c2<=besogo.coordArea['highestY'])
+					found = true;
+			}
+			spin++;
+		}
+		c1 = convertedCoords.x[c1+1];
+		c2 = convertedCoords.y[c2+1];
+		$('#'+besogo.dynamicCommentCoords[0][i]).text(c1+c2);
+	}
+  }
+  
+  function isMoveInTree()
+  {
+	  console.log("hello world");
+	  return "x";
+  }
+  
+  function test()
+  {
+	  console.log("hello world");
   }
 };

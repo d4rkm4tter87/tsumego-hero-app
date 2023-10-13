@@ -225,7 +225,6 @@
 		echo '<div class="setViewCompleted"><b>Completed: '.$set['Set']['solved'].'%</b></div><br>';
 		echo '<div class="setViewAccuracy"><b>Accuracy: '.$accuracy.'%</b></div><br>';
 		echo '<div class="setViewTime"><b>Avg. Time: '.$avgTime.'s</b></div>';
-		
 		} ?>
 		</div>
 		</td>
@@ -253,11 +252,9 @@
 		</div>
 		<div id="ratioInfo">
 			The solved and failed (s/f) attempts are displayed.
-			<p style="color:grey;">Data that is older than one year is missing.</p>
 		</div>
 		<div id="timeInfo">
 			The time (in seconds) for solving is displayed.
-			<p style="color:grey;">Data that is older than one year is missing.</p>
 		</div>
 		</div>
 		<br>

@@ -297,6 +297,19 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	li.setV2:hover{
 		background-color:#2d98e0;
 	}
+	li.set2{
+		background-color:#005c99;
+		background-image:url("/img/viewButton1.png");
+		border:1px solid black;
+		height:29px;
+		margin:1px;
+		-moz-border-radius-bottomleft:9px;-moz-border-radius-bottomright:9px;border-radius-bottomleft:9px;border-radius-bottomright:9px;
+		-moz-border-radius-bottomright:9px;-moz-border-radius-bottomleft:9px;border-bottom-right-radius:9px;border-bottom-left-radius:9px;
+		-moz-border-radius-topright:9px;-moz-border-radius-topleft:9px;border-top-right-radius:9px;border-top-left-radius:9px;
+	}
+	li.set2:hover{
+		background-color:#2d98e0;
+	}
 	li.setS1{
 		background-color:#3ecf78;
 		background-image:url("/img/viewButton1.png");
@@ -2885,7 +2898,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		margin:0;
 	}
 	.newx td{
-		padding:0;
+		padding:0 8px;
 		margin:0;
 	}
 	.thumbs-small{
@@ -3109,6 +3122,22 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.egc2023promo a{
 		color: white!important;
 	}
+	#commentPosition{
+		margin-top:10px;
+		margin-bottom:17px;
+		font-size: 16px;
+		color: #717171;
+		text-decoration: underline;
+		cursor: pointer;
+	}
+	.positionIcon1{
+		position: relative;
+		top: 2px;
+		cursor: pointer;
+	}
+	
+	
+	
 	
 	
 	

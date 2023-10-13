@@ -741,14 +741,14 @@ class TsumegosController extends AppController{
 			unset($_COOKIE['sound']);
 		}
 		
-		if(isset($_COOKIE['rank']) && $_COOKIE['rank'] != '0'){
+		if(isset($_COOKIE['rank']) && $_COOKIE['rank']!='0'){
 			$drCookie = $this->decrypt($_COOKIE['rank']);
 			$drCookie2 = explode('-', $drCookie);
 			$_COOKIE['rank'] = $drCookie2[1];
 		}
 		
 		//Incorrect
-		if(isset($_COOKIE['misplay']) && $_COOKIE['misplay'] != 0){
+		if(isset($_COOKIE['misplay']) && $_COOKIE['misplay']!=0){
 			if($_COOKIE['misplay']<0 && $mode!=3){
 				if($u['User']['usedRejuvenation'] == 0){
 					$u['User']['damage'] += $_COOKIE['misplay'];
@@ -760,7 +760,6 @@ class TsumegosController extends AppController{
 					if(isset($_SESSION['loggedInUser']['User']['id'])){
 						$this->TsumegoAttempt->create();
 						$ur1 = array();
-
 						$ur1['TsumegoAttempt']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
 						$ur1['TsumegoAttempt']['tsumego_id'] = $_COOKIE['preId'];
 						$ur1['TsumegoAttempt']['gain'] = 0;
@@ -768,7 +767,6 @@ class TsumegosController extends AppController{
 						$ur1['TsumegoAttempt']['solved'] = '0';
 						$ur1['TsumegoAttempt']['misplays'] = $_COOKIE['misplay'];
 						$this->TsumegoAttempt->save($ur1);
-
 					}
 				}
 				if($mode==1 || $mode==3){
@@ -886,7 +884,7 @@ class TsumegosController extends AppController{
 			if($isNum && $isSet){
 				if($mode==1 || $mode==3){
 					if(isset($_SESSION['loggedInUser']) && !isset($_SESSION['noLogin'])){
-						$exploit = $this->UserBoard->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'b1' => $_COOKIE['preId'])));
+						//$exploit = $this->UserBoard->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'b1' => $_COOKIE['preId'])));
 						$ub = array();
 						$ub['UserBoard']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
 						$ub['UserBoard']['b1'] = $_COOKIE['preId'];
@@ -913,6 +911,7 @@ class TsumegosController extends AppController{
 						$exploit=null;
 						$suspiciousBehavior=false;
 					}
+					
 					if($exploit==null && $suspiciousBehavior==false){
 						if($mode==1){
 							$xpOld = $u['User']['xp'] + (intval($_COOKIE['score']));
@@ -1187,7 +1186,6 @@ class TsumegosController extends AppController{
 				$requestProblem = str_replace('C[ ]', "C[+]", $requestProblem);
 				$requestProblem = str_replace('C[x]', "C[+]", $requestProblem);
 				file_put_contents('6473k339312/'.$set['Set']['folder'].'/'.$t['Tsumego']['num'].'.sgf', $requestProblem);
-				//echo '<pre>'; print_r($requestProblem); echo '</pre>';
 				$this->AdminActivity->create();
 				$adminActivity = array();
 				$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
@@ -1554,11 +1552,20 @@ class TsumegosController extends AppController{
 			$requestProblem = '?v='.strlen($sgfx);
 		}
 		
-		if($t['Tsumego']['set_id']==42) $ui = 1;
-		else $ui = 2;
-		
-		//echo '<pre>'; print_r($commentCoordinates); echo '</pre>'; 
-		
+		$ui = 2;
+		//echo '<pre>'; print_r($co); echo '</pre>'; 
+		//echo '<pre>'; print_r($commentCoordinates); echo '</pre>';
+		//echo '<pre>'; print_r($co); echo '</pre>';
+		/*
+		echo '<pre>minLib '.$t['Tsumego']['minLib'].'</pre>';
+		echo '<pre>maxLib '.$t['Tsumego']['maxLib'].'</pre>';
+		echo '<pre>variance '.$t['Tsumego']['variance'].'</pre>';
+		echo '<pre>libertyCount '.$t['Tsumego']['libertyCount'].'</pre>';
+		echo '<pre>insideLiberties '.$t['Tsumego']['insideLiberties'].'</pre>';
+		echo '<pre>eyeLiberties1 '.$t['Tsumego']['eyeLiberties1'].'</pre>';
+		echo '<pre>eyeLiberties2 '.$t['Tsumego']['eyeLiberties2'].'</pre>';
+		echo '<pre>semeaiType '.$t['Tsumego']['semeaiType'].'</pre>';
+		*/
 		$this->set('raName', $raName);
 		$this->set('crs', $crs);
 		$this->set('admins', $admins);
@@ -1783,6 +1790,7 @@ class TsumegosController extends AppController{
 		if(substr($n2, -1)==' ') $n2 = substr($n2, 0, -1);
 		
 		if($hasLink) $n2=array();
+		$coordForBesogo = array();
 		
 		if(strlen($n2)>1){
 			$n2x = explode(' ', $n2);
@@ -1790,15 +1798,13 @@ class TsumegosController extends AppController{
 			for($i=count($n2x)-1; $i>=0; $i--){
 				$n2xx = explode('/', $n2x[$i]);
 				$a = substr($c, 0, $n2xx[0]);
-				//echo $a.'<br>';
-				if($noSyntax) $b = '<a href="#" onmouseover="ccIn'.$counter.$fn.'()" onmouseout="ccOut'.$counter.$fn.'()" return false;>';
-				else $b = '<a href=\"#\" onmouseover=\"ccIn'.$counter.$fn.'()\" onmouseout=\"ccOut'.$counter.$fn.'()\" return false;>';
-				//echo $b.'<br>';
 				$cx = substr($c, $n2xx[0], $n2xx[1]-$n2xx[0]+1);
-				//echo $c.'<br>';
+				if($noSyntax) $b = '<a href="#" title="original: '.$cx.'" id="ccIn'.$counter.$fn.'" onmouseover="ccIn'.$counter.$fn.'()" onmouseout="ccOut'.$counter.$fn.'()" return false;>';
+				else $b = '<a href=\"#\" title="original: '.$cx.'" id="ccIn'.$counter.$fn.'" onmouseover=\"ccIn'.$counter.$fn.'()\" onmouseout=\"ccOut'.$counter.$fn.'()\" return false;>';
+				
 				$d = '</a>';
 				$e = substr($c, $n2xx[1]+1, strlen($c)-1);
-				//echo $e.'<br>';
+				$coordForBesogo[$i] = $cx;
 				$c = $a.$b.$cx.$d.$e;
 				$fn++;
 			}
@@ -1816,7 +1822,7 @@ class TsumegosController extends AppController{
 					if(preg_match('/[a-tA-T]/', $xxx[$j])) $coord1 = $this->convertCoord($xxx[$j]);
 				}
 				$coord2 = $this->convertCoord2(implode($xxxx));
-				if($coord1!=-1 &&$coord2!=-1) $finalCoord .= $coord1.'-'.$coord2.' ';
+				if($coord1!=-1 &&$coord2!=-1) $finalCoord .= $coord1.'-'.$coord2.'-'.$coordForBesogo[$i].' ';
 			}
 		}
 		if(substr($finalCoord, -1)==' ') $finalCoord = substr($finalCoord, 0, -1);
