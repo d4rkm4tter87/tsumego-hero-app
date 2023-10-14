@@ -1050,23 +1050,27 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 	  notInTreeCoords['y'] = [];
 	  let returnArray = [];
 	  let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
-	
-	  while(found===null)
-	  {
-		  found = searchNodesForTreePosition(treeX, treeY);
-		  treeX--;
-		  depth++;
-	  }
-	  while(depth>0)
-	  {
-		  moveX = convertedCoords.x[cu.move.x];
-		  moveY = convertedCoords.y[cu.move.y];
-		  notInTreeCoords['x'].push(moveX);
-		  notInTreeCoords['y'].push(moveY);
-		  cu = cu.parent;
-		  depth--;
-	  }
 	  
+	  if(treeX!==0){
+		  while(found===null)
+		  {
+			  found = searchNodesForTreePosition(treeX, treeY);
+			  treeX--;
+			  depth++;
+		  }
+		  while(depth>0)
+		  {
+			  moveX = convertedCoords.x[cu.move.x];
+			  moveY = convertedCoords.y[cu.move.y];
+			  notInTreeCoords['x'].push(moveX);
+			  notInTreeCoords['y'].push(moveY);
+			  cu = cu.parent;
+			  depth--;
+		  }
+	  }
+	  else
+		  found = null;
+	
 	  returnArray[0] = found;
 	  returnArray[1] = notInTreeCoords;
 	  

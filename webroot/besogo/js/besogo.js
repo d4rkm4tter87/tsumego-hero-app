@@ -633,11 +633,11 @@
 	besogo.coordArea['highestXconverted'] = convertedCoords.x[besogo.coordArea['highestX']+1];
 	besogo.coordArea['lowestYconverted'] = convertedCoords.y[besogo.coordArea['lowestY']+1];
 	besogo.coordArea['highestYconverted'] = convertedCoords.y[besogo.coordArea['highestY']+1];  
-	
-	//console.log(besogo.scaleParameters);
-	//console.log(besogo.boardParameters);
-	//console.log(besogo.coordArea);
-	
+	/*
+	console.log(besogo.scaleParameters);
+	console.log(besogo.boardParameters);
+	console.log(besogo.coordArea);
+	*/
 	if(besogo.isEmbedded) besogo.editor.adjustCommentCoords();
 	
     if(besogo.playerColor==="white")

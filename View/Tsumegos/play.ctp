@@ -1533,7 +1533,7 @@
 		  }
 		  $("#CommentMessage").val(commentContent + "[current position]" + additionalCoords);
 		  
-		  if(current.move===null){
+		  if(current===null || current.move===null){
 			$("#CommentPosition").val(
 				"-1/-1/0/0/0/0/0/0/0"
 			);

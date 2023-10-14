@@ -302,6 +302,18 @@ class CommentsController extends AppController{
 							'NOT' => array('user_id' => 0)
 						))))));
 		}
+		
+		$currentPositionPlaceholder = '<img src="/img/positionIcon1.png" class="positionIcon1" style="cursor:context-menu;">';
+		
+		for($i=0; $i<count($c); $i++){
+			$c[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $c[$i]['Comment']['message']);
+		}
+		for($i=0; $i<count($comments); $i++){
+			$comments[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $comments[$i]['Comment']['message']);
+		}
+		for($i=0; $i<count($yourc); $i++){
+			$yourc[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $yourc[$i]['Comment']['message']);
+		}
 		$admins = $this->User->find('all', array('conditions' => array('isAdmin' => 1))); 
 		$this->set('admins', $admins);
 		$this->set('paramindex', $paramindex);

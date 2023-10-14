@@ -93,9 +93,9 @@ besogo.loadSgf = function(sgf, editor)
 	besogo.coordArea['lowestY'] = 0;
 	besogo.coordArea['highestX'] = boardCoordSize-besogo.scaleParameters['distToX19']+3;
 	besogo.coordArea['highestY'] = boardCoordSize-besogo.scaleParameters['distToY19']+3;
-	if(besogo.coordArea['highestX']>=10)
+	if(besogo.coordArea['highestX']>11)
 		besogo.coordArea['highestX'] = boardCoordSize;
-	if(besogo.coordArea['highestY']>=10)
+	if(besogo.coordArea['highestY']>11)
 		besogo.coordArea['highestY'] = boardCoordSize;
 	
 	if(size.x!==19)

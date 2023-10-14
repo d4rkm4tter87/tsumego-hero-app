@@ -313,9 +313,19 @@ besogo.makeToolPanel = function(container, editor)
     else
       reviewButtonId = 'besogo-review-button-inactive';
 
+	let trueBoardWidth = null;
+	let trueBoardHeight = null;
+	let reviewBoardWidth = null;
+	let reviewBoardHeight = null;
+	let trueRatio = null;
+
     makeButtonText('Review', 'review mode', function()
     {
-	  let trueBoardHeight = $(".besogo-board").height();
+	  if(trueBoardHeight===null)
+	  {
+		  trueBoardWidth = $(".besogo-board").width();
+		  trueBoardHeight = $(".besogo-board").height();
+	  }
       if (editor.getReviewEnabled())
       {
         if (!editor.getReviewMode())
@@ -325,11 +335,16 @@ besogo.makeToolPanel = function(container, editor)
 			  $(".besogo-board").css("width", "50%");
           $(".besogo-board").css("margin","0");
 		  $(".besogo-board").css("box-shadow","0 8px 14px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
-		  //if(besogo.scaleParameters['boardCanvasSize'] !== "horizontal half board")
-		    //$(".besogo-board").css("height",trueBoardHeight);
-		  //if(trueBoardHeight > $(".besogo-board").height())
-		  if(besogo.scaleParameters['boardCanvasSize'] !== "horizontal half board")
-			$(".besogo-board").css("height",trueBoardHeight);  
+		  
+		if(reviewBoardHeight===null)
+		{
+			reviewBoardWidth = $(".besogo-board").width();
+			reviewBoardHeight = $(".besogo-board").height();
+			trueRatio = trueBoardWidth/trueBoardHeight;
+			reviewBoardHeight = reviewBoardWidth/trueRatio;
+		}	
+		$(".besogo-board").css("height",reviewBoardHeight);
+	  
           toggleBoardLock(false);
           deleteNextMoveGroup = true;
           editor.setReviewMode(true);
@@ -351,6 +366,7 @@ besogo.makeToolPanel = function(container, editor)
 				$(".besogo-board").css("width", "50%");
 				$(".besogo-board").css("margin", "0 315px");
 			}
+			$(".besogo-board").css("height",trueBoardHeight);
 			deleteNextMoveGroup = false;
 			editor.setReviewMode(false);
         }

@@ -91,6 +91,24 @@
 			</li>
 			<br><br>
 		</div>
+		<p class="title4">Update 14.10.2023</p>
+		<div class="new1">
+			<b>Improved comments</b><br><br>
+			• <b>Link position in comments</b>: It is now possible to link board positions by clicking "Link current position".
+			<br>
+			<div align="center"><img width="90%" src="/img/commentPositionExample1.JPG"></div>
+			<br>
+			The position can be accessed by selecting the icon in the comment.
+			<br>
+			<div align="center"><img width="50%" src="/img/commentPositionExample2.png"></div>
+			<br>
+			• <b>Dynamic coordinates</b>: The coordinates written in the comments adjust according to the visible board area.
+			<br>
+			<div align="center"><img width="90%" src="/img/dynCommentsExample.png"></div>
+			<br>
+			Example: <a href="/tsumegos/play/25881">1000 Weiqi problems - 58</a>
+			
+		</div>
 		<p class="title4">New Collection: Sacrifical Tsumego</p>
 		<div class="new1">
 			Sometimes sacrifices are necessary in order to kill, but how many stones can you sacrifice before killing? 
@@ -122,14 +140,7 @@
 			with a separate editor which was the starting point to make this possible. <a href="https://kovarex.github.io/besogo/testing.html" target="_blank">Editor</a>
 			<br><br>
 		</div>
-		<p class="title4">New Collection: French Go Review</p>
-		<div class="new1">
-			The french Go review is a magazine published currently 3 times a year which started in 1979. The first issue for 2023 is N° 158. In each issue, some tsumego or tesuji 
-			problems are proposed with several levels : beginner, intermediate and advanced. Many problems were proposed by Fan Hui, 2 Dan professional. <br><br>
-			<div align="center"><img width="95%" src="/img/french-go-review-promotion.png">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/192">Play</a><br><br></div>
-		</div>
+		
 		
 		
 		
