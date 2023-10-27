@@ -680,14 +680,18 @@ class SetsController extends AppController{
 		$this->LoadModel('Joseki');
 		$this->LoadModel('TsumegoAttempt');
 		$this->LoadModel('ProgressDeletion');
+		$this->LoadModel('Achievement');
+		$this->LoadModel('AchievementStatus');
+		$this->LoadModel('AchievementCondition');
 		$_SESSION['page'] = 'set';
-
+		
 		$josekiOrder = 0;
 		$tsIds = array();
 		$refreshView = false;
 		$avgTime = 0;
 		$accuracy = 0;
 		$formChange = false;
+		$achievementUpdate = array();
 
 		if($id==161){
 			$x = 1;
@@ -1097,7 +1101,6 @@ class SetsController extends AppController{
 
 		$tfs = $this->Tsumego->find('all', array('order' => 'num DESC', 'conditions' => array('set_id' => $id)));
 
-		$delNum = 0;
 		$scoring = true;
 
 		if(isset($_SESSION['loggedInUser'])){
@@ -1118,7 +1121,10 @@ class SetsController extends AppController{
 				}
 			}
 
-			$pd = $this->ProgressDeletion->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+			$pd = $this->ProgressDeletion->find('all', array('conditions' => array(
+			'user_id' => $_SESSION['loggedInUser']['User']['id'],
+			'set_id' => $id
+			)));
 			$pdCounter = 0;
 			for($i=0; $i<count($pd); $i++){
 				$date = date_create($pd[$i]['ProgressDeletion']['created']);
@@ -1126,7 +1132,6 @@ class SetsController extends AppController{
 				if(date('Y-m')==$pd[$i]['ProgressDeletion']['d']) $pdCounter++;
 			}
 
-			$delNum = $pdCounter;
 			$urSecCounter = 0;
 			$urSecAvg = 0;
 			$pSsum = 0;
@@ -1134,10 +1139,11 @@ class SetsController extends AppController{
 			for($i=0; $i<count($ts); $i++){
 				$tss = 0;
 				if($ts[$i]['Tsumego']['seconds']!=''){
+					if($ts[$i]['Tsumego']['seconds']==0) $ts[$i]['Tsumego']['seconds'] = 60;
 					$tss = $ts[$i]['Tsumego']['seconds'];
 					$urSecAvg += $ts[$i]['Tsumego']['seconds'];
+					$urSecCounter++;
 				}
-				if($tss!=0) $urSecCounter++;
 
 				$pS = substr_count($ts[$i]['Tsumego']['performance'], '1');
 				$pF = substr_count($ts[$i]['Tsumego']['performance'], 'F');
@@ -1145,15 +1151,26 @@ class SetsController extends AppController{
 				$pFsum += $pF;
 			}
 			if($urSecCounter==0)
-				$avgTime = 0;
+				$avgTime = 60;
 			else
 				$avgTime = round($urSecAvg/$urSecCounter, 2);
 			if($pSsum+$pFsum == 0)
 				$accuracy = 0;
 			else
 				$accuracy = round($pSsum/($pSsum+$pFsum)*100, 2);
+			
+			if($urSecCounter<100) $avgTime2 = 60;
+			else $avgTime2 = $avgTime;
+			
+			if($set['Set']['solved']>=100){
+				$this->updateAchievementConditions($set['Set']['id'], $avgTime2, $accuracy);
+				$achievementUpdate = $this->checkSetAchievements($set['Set']['id']);
+			}
+			if(count($achievementUpdate)>0) $this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
+			
+			$acS = $this->AchievementCondition->find('first', array('order' => 'value ASC', 'conditions' => array('set_id' => $id, 'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 's')));
+			$acA = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array('set_id' => $id, 'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => '%')));
 		}else{
-			$delNum = 5;
 			$scoring = false;
 		}
 		
@@ -1164,14 +1181,52 @@ class SetsController extends AppController{
 		$this->set('refreshView', $refreshView);
 		$this->set('avgTime', $avgTime);
 		$this->set('accuracy', $accuracy);
-		$this->set('delNum', $delNum);
 		$this->set('scoring', $scoring);
         $this->set('allVcActive', $allVcActive);
         $this->set('allVcInactive', $allVcInactive);
         $this->set('allArActive', $allArActive);
         $this->set('allArInactive', $allArInactive);
+        $this->set('pdCounter', $pdCounter);
+		$this->set('acS', $acS);
+		$this->set('acA', $acA);
+		$this->set('achievementUpdate', $achievementUpdate);
     }
-
+	
+	public function updateAchievementConditions($sid, $avgTime, $accuracy){
+		$uid = $_SESSION['loggedInUser']['User']['id'];
+		$acS = $this->AchievementCondition->find('first', array('order' => 'value ASC', 'conditions' => array('set_id' => $sid, 'user_id' => $uid, 'category' => 's')));
+		$acA = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array('set_id' => $sid, 'user_id' => $uid, 'category' => '%')));
+		
+		if($acS==null){
+			$aCond = array();
+			$aCond['AchievementCondition']['user_id'] = $uid;
+			$aCond['AchievementCondition']['set_id'] = $sid;
+			$aCond['AchievementCondition']['value'] = $avgTime;
+			$aCond['AchievementCondition']['category'] = 's';
+			$this->AchievementCondition->create();
+			$this->AchievementCondition->save($aCond);
+		}else{
+			if($avgTime < $acS['AchievementCondition']['value']){
+				$acS['AchievementCondition']['value'] = $avgTime;
+				$this->AchievementCondition->save($acS);
+			}
+		}
+		if($acA==null){
+			$aCond = array();
+			$aCond['AchievementCondition']['user_id'] = $uid;
+			$aCond['AchievementCondition']['set_id'] = $sid;
+			$aCond['AchievementCondition']['value'] = $accuracy;
+			$aCond['AchievementCondition']['category'] = '%';
+			$this->AchievementCondition->create();
+			$this->AchievementCondition->save($aCond);
+		}else{
+			if($accuracy > $acA['AchievementCondition']['value']){
+				$acA['AchievementCondition']['value'] = $accuracy;
+				$this->AchievementCondition->save($acA);
+			}
+		}
+	}
+	
 	public function beta2(){
 		$this->LoadModel('User');
 		$this->LoadModel('Tsumego');

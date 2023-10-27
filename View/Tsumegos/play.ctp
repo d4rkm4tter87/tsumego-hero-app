@@ -56,6 +56,7 @@
 			echo '<script type="text/javascript">window.location.href = "/";</script>';
 		}
 	}else $sandboxComment = '';
+	if($sandboxComment2) $sandboxComment = '(reduced)';
 
 	if($t['Tsumego']['set_id']==6473 ||$t['Tsumego']['set_id']==11969 || $t['Tsumego']['set_id']==29156 || $t['Tsumego']['set_id']==31813 || $t['Tsumego']['set_id']==33007
 	|| $t['Tsumego']['set_id']==71790 || $t['Tsumego']['set_id']==74761 || $t['Tsumego']['set_id']==81578 || $t['Tsumego']['set_id']==88156){
@@ -972,6 +973,7 @@
 	var userXP = <?php echo $user['User']['xp']; ?>;
 	var prevButtonLink = <?php echo $prev; ?>;
 	var nextButtonLink = <?php echo $next; ?>;
+	var nextButtonLinkSet = <?php echo $t['Tsumego']['set_id']; ?>;
 	var isMutable = true;
 	var deleteNextMoveGroup = false;
 	var file = "<?php echo $file; ?>";
@@ -1511,6 +1513,7 @@
 		});
 		$('#targetLockOverlay').click(function(){
 			if(nextButtonLink!==0) window.location.href = "/tsumegos/play/"+nextButtonLink;
+			else window.location.href = "/sets/view/"+<?php echo $t['Tsumego']['set_id']; ?>;
 		});
 		$("#commentPosition").click(function(){
 		  let commentContent = $("#CommentMessage").val();
@@ -2150,7 +2153,8 @@
 				document.getElementById("status").style.color = "green";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
 				document.getElementById("xpDisplay").style.color = "white";
-				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(158, 255, 144, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
+				$(".besogo-board").css("box-shadow","rgba(67, 255, 40, 0.8) 0px 2px 14px 0px, rgba(0, 0, 0, 0.3) 0px 6px 20px 0px");
+				
 				if(set159){document.getElementById("theComment").style.cssText = "visibility:visible;color:green;";
 				document.getElementById("theComment").innerHTML = "xxx";}
 				$("#commentSpace").show();
@@ -2217,7 +2221,7 @@
 				document.getElementById("status").style.color = "green";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
 				document.getElementById("xpDisplay").style.color = "white";
-				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(158, 255, 144, 0.5), 0 6px 20px 0 rgba(156, 255, 153, 0.5)");
+				$(".besogo-board").css("box-shadow","rgba(67, 255, 40, 0.8) 0px 2px 14px 0px, rgba(0, 0, 0, 0.3) 0px 6px 20px 0px");
 				$("#commentSpace").show();
 				//locked = true;
 				noLastMark = true;
@@ -2255,7 +2259,7 @@
 				branch = "no";
 				document.getElementById("status").style.color = "#e03c4b";
 				document.getElementById("status").innerHTML = "<h2>Incorrect</h2>";
-				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(183, 19, 19, 0.25), 0 6px 20px 0 rgba(183, 19, 19, 0.25)");
+				$(".besogo-board").css("box-shadow","rgba(183, 19, 19, 0.8) 0px 2px 14px 0px, rgba(183, 19, 19, 0.2) 0px 6px 20px 0px");
 				if(mode==3){
 					document.cookie = "rank=<?php echo $mode3ScoreArray[1]; ?>";
 					//locked = true;
@@ -2304,7 +2308,7 @@
 				noLastMark = true;
 				besogoMode2Solved = true;
 				$("#besogo-next-button-inactive").attr("id","besogo-next-button");
-				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(183, 19, 19, 0.25), 0 6px 20px 0 rgba(183, 19, 19, 0.25)");
+				$(".besogo-board").css("box-shadow","rgba(183, 19, 19, 0.8) 0px 2px 14px 0px, rgba(183, 19, 19, 0.2) 0px 6px 20px 0px");
 				if(!noXP){
 					sequence += "incorrect|";
 					document.cookie = "sequence="+sequence;

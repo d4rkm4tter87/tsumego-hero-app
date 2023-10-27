@@ -11,10 +11,12 @@
 		if($url['path']=='www.') echo '<script type="text/javascript">window.location.href = "https://tsumego-hero.com'.$_SERVER['REQUEST_URI'].'";</script>';
 		if(isset($_SESSION['redirect']) && $_SESSION['redirect']=='sets'){
 			unset($_SESSION['redirect']);
+			$_SESSION['achievements'] = 'true';
 			echo '<script type="text/javascript">window.location.href = "/";</script>';
 		}
 		if(isset($_SESSION['redirect']) && $_SESSION['redirect']=='loading'){
 			unset($_SESSION['redirect']);
+			$_SESSION['achievements'] = 'true';
 			echo '<script type="text/javascript">window.location.href = "/users/loading";</script>';
 		}
 		//if($_SERVER['REMOTE_ADDR'] != '188.104.244.212') echo '<script type="text/javascript">window.location.href = "https://tsumego-hero.com/";</script>';
@@ -340,6 +342,9 @@
 				<div id="heroProfile" onmouseover="xpHover()" onmouseout="xpNoHover()">
 					<li><a href="/users/view/'.$_SESSION['loggedInUser']['User']['id'].'">Profile</a></li>
 				</div>
+				<div id="heroAchievements" onmouseover="xpHover()" onmouseout="xpNoHover()">
+					<li><a href="/achievements">Achievements</a></li>
+				</div>
 				<div id="heroLogout" onmouseover="xpHover()" onmouseout="xpNoHover()">
 					<li><a href="/users/logout">Sign Out</a></li>
 				</div>
@@ -364,9 +369,8 @@
 	</div>
 	</div>
 	<div id="footer" class="footerLinks"><br>
-
-
-
+	
+	
 	<?php if(isset($_SESSION['loggedInUser'])){ ?>
 	<?php if($_SESSION['loggedInUser']['User']['premium']==0 && $user['User']['id']!=1165){ ?>
 		<div align="center"><a href="/users/donate"><img id="donateH2" onmouseover="donateHover2()" onmouseout="donateNoHover2()" width="180px" src="/img/donateButton1.png"></a><br></div><br>
@@ -374,14 +378,49 @@
 	<?php }else{ ?>
 		<div align="center"><a href="/users/donate"><img id="donateH2" onmouseover="donateHover2()" onmouseout="donateNoHover2()" width="180px" src="/img/donateButton1.png"></a><br></div><br>
 	<?php } ?>
-	Tsumego Hero © 2023<br>
-		<a href="mailto:me@joschkazimdars.com">me@joschkazimdars.com</a><br><br>
+	Tsumego Hero © <?php echo date('Y'); ?>
+	<br>
+		<a href="mailto:joschka.zimdars@googlemail.com">joschka.zimdars@googlemail.com</a><br><br>
 		<a href="/sites/impressum">Legal notice</a><br>
 		<a href="/users/authors">About</a><br><br><br>
 	</div>
-
+	<?php
+		$xpBonus = 0;
+		for($i=0;$i<count($achievementUpdate);$i++){
+			echo '
+			<label>
+		    <input type="checkbox" class="alertCheckbox1" id="alertCheckbox'.$i.'" autocomplete="off" />
+		    <div class="alertBox alertInfo '.$achievementUpdate[$i][3].'3" id="achievementAlerts'.$i.'">
+			<div class="alertBanner" align="center">
+			New Achievement Unlocked
+			<span class="alertClose">x</span>
+			</div>
+			<span class="alertText"><img id="hpIcon1" src="/img/'.$achievementUpdate[$i][2].'.png">
+			<b>'.$achievementUpdate[$i][0].' - '.$achievementUpdate[$i][1].'</b>&nbsp; ('.$achievementUpdate[$i][4].' XP)&nbsp; <a href="/achievements/view/'.$achievementUpdate[$i][5].'">view</a>
+			<br class="clear1"/></span>
+		    </div>
+			</label>
+			';
+			$xpBonus += $achievementUpdate[$i][4];
+		}
+		
+		if($_SESSION['loggedInUser']['User']['xp']+$xpBonus>=$_SESSION['loggedInUser']['User']['nextlvl']){
+			$increaseValue = 100;
+		}else $increaseValue = 50;
+	?>
 	<script type="text/javascript">
-
+	<?php
+		for($i=0;$i<count($achievementUpdate);$i++){
+			echo '$("#achievementAlerts'.$i.'").fadeIn(600);';
+			echo '
+			$("#alertCheckbox'.$i.'").change(function(){
+				$("#achievementAlerts'.$i.'").fadeOut(500);
+			});
+			';
+		}
+	?>
+	
+	
     function updateSoundValue(value)
     {
       if (typeof besogo !== 'undefined')
@@ -710,6 +749,7 @@
 				?>
 			}
 			document.getElementById("heroProfile").style.display = "inline-block";
+			document.getElementById("heroAchievements").style.display = "inline-block";
 			document.getElementById("heroLogout").style.display = "inline-block";
 		}
 		function xpNoHover(){
@@ -722,6 +762,7 @@
 				<?php } ?>
 			}
 			document.getElementById("heroProfile").style.display = "none";
+			document.getElementById("heroAchievements").style.display = "none";
 			document.getElementById("heroLogout").style.display = "none";
 		}
 		function sandboxHover(){
@@ -749,6 +790,43 @@
 		}
 		function donateNoHover2(){
 			document.getElementById("donateH2").src = "/img/donateButton1.png";
+		}
+		function runXPBar(){
+			<?php
+			if($mode==1){
+			?>
+			newXP2 = 100;
+			newXP = 100;
+			if(newXP2>=100){
+				newXP2=100;
+			}
+			$("#xp-bar-fill").css({"width":newXP2+"%"});
+			$("#xp-bar-fill").css("-webkit-transition","all 1s ease");
+			$("#xp-increase-fx").fadeIn(0);$("#xp-bar-fill").css({"-webkit-transition":"all 1s ease","box-shadow":""});
+			setTimeout(function(){
+				$("#xp-increase-fx").fadeOut(500);
+				$("#xp-bar-fill").css({"-webkit-transition":"all 1s ease","box-shadow":""});
+			},1000);
+			<?php
+			}
+			?>
+		}
+		function runXPNumber(id, start, end, duration, ulvl){
+			userXP = end;
+			userLevel = ulvl;
+			var range = end - start;
+			var current = start;
+			var increment = end > start? 1 : -1;
+			var stepTime = Math.abs(Math.floor(duration / range));
+			var obj = document.getElementById(id);
+			var nextlvl = 0;
+			var timer = setInterval(function(){
+				current += increment;
+				obj.innerHTML = current+nextlvl;
+				if(current == end){
+					clearInterval(timer);
+				}
+			}, stepTime);
 		}
 	</script>
 </body>

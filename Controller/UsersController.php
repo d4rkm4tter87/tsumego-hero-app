@@ -762,8 +762,6 @@ Joschka Zimdars';
 		for($i=0; $i<count($u); $i++){
 			array_push($uArray, $u[$i]['User']['id']);
 		}
-		//echo '<pre>'; print_r($uArray); echo '</pre>'; 
-		
 		
 		$aa = $this->AdminActivity->find('all', array('limit' => 500, 'order' => 'created DESC'));
 		$aa1 = array();
@@ -856,8 +854,9 @@ Joschka Zimdars';
 					$this->Session->setFlash(__('Login successful.', true));
 					
 					$isLoaded = $this->TsumegoStatus->find('first', array('conditions' => array('user_id' => $u['User']['id'])));
-					if(count($isLoaded)==0) $_SESSION['redirect'] = 'loading';
-					else $_SESSION['redirect'] = 'sets';
+					
+					$_SESSION['redirect'] = 'sets';
+					
 				}else{
 					$this->Session->setFlash(__('Login incorrect.', true));
 				}
@@ -885,8 +884,7 @@ Joschka Zimdars';
 					$this->Session->setFlash(__('Login successful.', true));
 					
 					$isLoaded = $this->TsumegoStatus->find('first', array('conditions' => array('user_id' => $u['User']['id'])));
-					if(count($isLoaded)==0) $_SESSION['redirect'] = 'loading';
-					else $_SESSION['redirect'] = 'sets';
+					$_SESSION['redirect'] = 'sets';
 				}else{
 					$this->Session->setFlash(__('Login incorrect.', true));
 				}
@@ -1306,7 +1304,12 @@ Joschka Zimdars';
 		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('Set');
+		$this->LoadModel('Achievement');
+		$this->LoadModel('AchievementStatus');
 		$hideEmail = false;
+		
+		$as = $this->AchievementStatus->find('all', array('limit' => 12, 'order' => 'created DESC', 'conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+		$ach = $this->Achievement->find('all');		
 		
 		$user = $this->User->findById($id);
 		$_SESSION['title'] = 'Profile of '.$user['User']['name'];
@@ -1372,7 +1375,6 @@ Joschka Zimdars';
 			if($i>=101) $xpJump = 0;
 			$sumx+=$startxp;
 			$startxp+=$xpJump;
-			
 		}
 		$sumx += $user['User']['xp'];
 		
@@ -1516,6 +1518,22 @@ Joschka Zimdars';
 		$ux['User']['solved'] = count($solvedUts);
 		$this->User->save($ux);
 		
+		for($i=0; $i<count($as); $i++){
+			$as[$i]['AchievementStatus']['a_title'] = $ach[$as[$i]['AchievementStatus']['achievement_id']-1]['Achievement']['name'];
+			$as[$i]['AchievementStatus']['a_description'] = $ach[$as[$i]['AchievementStatus']['achievement_id']-1]['Achievement']['description'];
+			$as[$i]['AchievementStatus']['a_image'] = $ach[$as[$i]['AchievementStatus']['achievement_id']-1]['Achievement']['image'];
+			$as[$i]['AchievementStatus']['a_color'] = $ach[$as[$i]['AchievementStatus']['achievement_id']-1]['Achievement']['color'];
+			$as[$i]['AchievementStatus']['a_id'] = $ach[$as[$i]['AchievementStatus']['achievement_id']-1]['Achievement']['id'];
+			$as[$i]['AchievementStatus']['a_xp'] = $ach[$as[$i]['AchievementStatus']['achievement_id']-1]['Achievement']['xp'];
+		}
+		
+		$achievementUpdate = array();
+		$achievementUpdate1 = $this->checkLevelAchievements();
+		$achievementUpdate2 = $this->checkProblemNumberAchievements();
+		$achievementUpdate = array_merge($achievementUpdate1, $achievementUpdate2);
+		
+		if(count($achievementUpdate)>0) $this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
+		
 		$this->set('xpSum', $sumx);
 		$this->set('rank', $userPosition);
 		$this->set('uts', $solvedUts2);
@@ -1529,6 +1547,8 @@ Joschka Zimdars';
 		$this->set('allUts', $uts);
 		$this->set('deletedProblems', $deletedProblems);
 		$this->set('hideEmail', $hideEmail);
+		$this->set('as', $as);
+		$this->set('achievementUpdate', $achievementUpdate);
 	}
 	
 	public function donate($id = null){
@@ -2862,7 +2882,7 @@ Joschka Zimdars';
 			array_push($adminIds, $comments[$i]['Comment']['admin_id']);
 		}
 		$adminIds = array_count_values($adminIds);
-		echo '<pre>'; print_r($adminIds); echo '</pre>'; 
+		
 		$users = array_count_values($users);
 		$uValue = array();
 		$uName = array();

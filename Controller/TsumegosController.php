@@ -19,6 +19,10 @@ class TsumegosController extends AppController{
 		$this->LoadModel('Reputation');
 		$this->LoadModel('Rank');
 		$this->LoadModel('RankSetting');
+		$this->loadModel('Achievement');
+		$this->loadModel('AchievementStatus');
+		$this->loadModel('AchievementCondition');
+		$this->loadModel('ProgressDeletion');
 		
 		$noUser;
 		$noLogin;
@@ -65,6 +69,8 @@ class TsumegosController extends AppController{
 		$eloScore = 0;
 		$range2 = array();
 		$requestProblem = '';
+		$achievementUpdate = array();
+		$pdCounter = 0;
 		
 		if(isset($this->params['url']['potionAlert'])){
 			$potionAlert = true;
@@ -519,6 +525,17 @@ class TsumegosController extends AppController{
 			unset($_SESSION['noUser']);
 			unset($_SESSION['noLogin']);
 			unset($_SESSION['noLoginStatus']);
+			
+			$pd = $this->ProgressDeletion->find('all', array('conditions' => array(
+				'user_id' => $_SESSION['loggedInUser']['User']['id'],
+				'set_id' => $t['Tsumego']['set_id']
+			)));
+			for($i=0; $i<count($pd); $i++){
+				$date = date_create($pd[$i]['ProgressDeletion']['created']);
+				$pd[$i]['ProgressDeletion']['d'] = $date->format('Y').'-'.$date->format('m');
+				if(date('Y-m')==$pd[$i]['ProgressDeletion']['d']) $pdCounter++;
+			}
+			
 			if(isset($_COOKIE['sandbox']) && $_COOKIE['sandbox']!='0'){
 				$ux = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
 				$ux['User']['reuse1'] = $_COOKIE['sandbox'];
@@ -601,11 +618,15 @@ class TsumegosController extends AppController{
 		if($mode==1){
 			if(isset($_SESSION['loggedInUser']) && !isset($_SESSION['noLogin'])){
 				$allUts = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => $u['User']['id'])));
-				
+				$correctCounter = 0;
 				for($i=0; $i<count($allUts); $i++){
 					array_push($idMap, $allUts[$i]['TsumegoStatus']['tsumego_id']);
 					array_push($statusMap, $allUts[$i]['TsumegoStatus']['status']);
+					if($allUts[$i]['TsumegoStatus']['status']=='S' || $allUts[$i]['TsumegoStatus']['status']=='W' || $allUts[$i]['TsumegoStatus']['status']=='C')
+						$correctCounter++;
 				}
+				$_SESSION['loggedInUser']['User']['solved'] = $correctCounter;
+				$u['User']['solved'] = $correctCounter;
 				$ut = $this->findUt($id, $allUts, $idMap);
 			}else{
 				$allUts = null;
@@ -882,6 +903,9 @@ class TsumegosController extends AppController{
 			$isSet = $preTsumego['Tsumego']['set_id']==$scoreArr[2];
 			$_COOKIE['score'] = $scoreArr[1];
 			if($isNum && $isSet){
+				if(isset($_COOKIE['preId'])){
+					$tPre = $this->Tsumego->findById($_COOKIE['preId']);
+				}
 				if($mode==1 || $mode==3){
 					if(isset($_SESSION['loggedInUser']) && !isset($_SESSION['noLogin'])){
 						//$exploit = $this->UserBoard->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'b1' => $_COOKIE['preId'])));
@@ -890,8 +914,6 @@ class TsumegosController extends AppController{
 						$ub['UserBoard']['b1'] = $_COOKIE['preId'];
 						$this->UserBoard->create();
 						$this->UserBoard->save($ub);
-						
-						$tPre = $this->Tsumego->find('first', array('conditions' => array('id' => $_COOKIE['preId'])));
 						
 						if($_COOKIE['score']<3000) ;
 						else $_COOKIE['score'] = 0;
@@ -961,7 +983,6 @@ class TsumegosController extends AppController{
 								}
 							}
 						}
-					}else{
 					}
 					if(isset($_SESSION['noLogin'])){
 						for($i=0; $i<count($noLogin); $i++){
@@ -1484,6 +1505,14 @@ class TsumegosController extends AppController{
 		$folderString = $t['Tsumego']['num'].'number'.$set['Set']['folder'];
 		$hash = $this->encrypt($folderString);
 		
+		if($pdCounter==1) $t['Tsumego']['difficulty'] = ceil($t['Tsumego']['difficulty']*.5);
+		else if($pdCounter==2) $t['Tsumego']['difficulty'] = ceil($t['Tsumego']['difficulty']*.2);
+		else if($pdCounter==3) $t['Tsumego']['difficulty'] = ceil($t['Tsumego']['difficulty']*.1);
+		else if($pdCounter>3) $t['Tsumego']['difficulty'] = 1;
+		
+		if($pdCounter>0) $sandboxComment2 = true;
+		else $sandboxComment2 = false;
+		
 		$score1 = $t['Tsumego']['num'].'-'.$t['Tsumego']['difficulty'].'-'.$t['Tsumego']['set_id'];
 		$score1 = $this->encrypt($score1);
 		$t2 = $t['Tsumego']['difficulty']*2;
@@ -1521,6 +1550,12 @@ class TsumegosController extends AppController{
 			if(!isset($_SESSION['loggedInUser']['User']['id']) && isset($_SESSION['loggedInUser']['User']['premium'])){
 				unset($_SESSION['loggedInUser']);
 			}
+			
+			$achievementUpdate1 = $this->checkLevelAchievements();
+			$achievementUpdate2 = $this->checkProblemNumberAchievements();
+			$achievementUpdate = array_merge($achievementUpdate1, $achievementUpdate2);
+			
+			if(count($achievementUpdate)>0) $this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
 		}
 		
 		$admins = $this->User->find('all', array('conditions' => array('isAdmin' => 1)));
@@ -1553,7 +1588,8 @@ class TsumegosController extends AppController{
 		}
 		
 		$ui = 2;
-		//echo '<pre>'; print_r($co); echo '</pre>'; 
+		
+		//echo '<pre>'; print_r($_SESSION['loggedInUser']['User']['coins']); echo '</pre>'; 
 		//echo '<pre>'; print_r($commentCoordinates); echo '</pre>';
 		//echo '<pre>'; print_r($co); echo '</pre>';
 		/*
@@ -1566,6 +1602,8 @@ class TsumegosController extends AppController{
 		echo '<pre>eyeLiberties2 '.$t['Tsumego']['eyeLiberties2'].'</pre>';
 		echo '<pre>semeaiType '.$t['Tsumego']['semeaiType'].'</pre>';
 		*/
+		
+		$this->set('sandboxComment2', $sandboxComment2);
 		$this->set('raName', $raName);
 		$this->set('crs', $crs);
 		$this->set('admins', $admins);
@@ -1647,6 +1685,7 @@ class TsumegosController extends AppController{
 		$this->set('requestProblem', $requestProblem);
 		$this->set('alternative_response', $t['Tsumego']['alternative_response']);
 		$this->set('virtual_children', $t['Tsumego']['virtual_children']);
+		$this->set('achievementUpdate', $achievementUpdate);
     }
 	
 	private function findUt($id=null, $allUts=null, $map=null){

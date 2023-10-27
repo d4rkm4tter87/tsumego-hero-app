@@ -62,9 +62,9 @@
 				elseif($josekiOrder==1) $num = $ts[$i]['Tsumego']['order'];
 				if($set['Set']['id']==161){
 					$jt = 'josekiThumb1.png';
-					if($ts[$i]['Tsumego']['type']==1) $jt = 'josekiThumb1.png';
-					elseif( $ts[$i]['Tsumego']['type']==2) $jt = 'josekiThumb2.png';
-					$josekiThumb = '<br><img src="/img/'.$jt.'" width="45px"><span id="tooltip-span"><img width="200px" alt="" src="/img/thumbs/'.$ts[$i]['Tsumego']['thumbnail'].'.PNG"/></span>';
+					if($ts[$i]['Tsumego']['type']==1) $jt = 'thumbnail-example2.png';
+					elseif( $ts[$i]['Tsumego']['type']==2) $jt = 'thumbnail-example.png';
+					$josekiThumb = '<img src="/img/'.$jt.'"><span id="tooltip-span"><img width="200px" alt="" src="/img/thumbs/'.$ts[$i]['Tsumego']['thumbnail'].'.PNG"/></span>';
 					$josekiThumb2 = 'class="tooltip"';
 					$josekiButton = 'style="background-image: url(\'/img/viewButton3.png\');"';
 				}
@@ -222,18 +222,38 @@
 		<?php if(isset($_SESSION['loggedInUser'])){ ?>
 		<?php
 		if($set['Set']['solved']>100) $set['Set']['solved'] = 100;
-		echo '<div class="setViewCompleted"><b>Completed: '.$set['Set']['solved'].'%</b></div><br>';
-		echo '<div class="setViewAccuracy"><b>Accuracy: '.$accuracy.'%</b></div><br>';
-		echo '<div class="setViewTime"><b>Avg. Time: '.$avgTime.'s</b></div>';
+		
+		echo '
+		<table><tr><td><div class="setViewCompleted"><b>Completed: '.$set['Set']['solved'].'%</b></div></td><td></td></tr></table>
+		<table><tr><td><div class="setViewAccuracy"><b>Accuracy: '.$accuracy.'%</b></div></td><td>';
+		if($acA!=null) echo '<font class="setViewAccuracy">Best completion: '.$acA['AchievementCondition']['value'].'%</font>';
+		echo '</td></tr></table>
+		<table><tr><td><div class="setViewTime"><b>Avg. time: '.$avgTime.'s</b></div></td><td>';
+		if($acS!=null) echo '<font class="setViewTime">Best completion: '.$acS['AchievementCondition']['value'].'s</font>';
+		echo '</td></tr></table>
+		';
+		
 		} ?>
 		</div>
 		</td>
 		
 		<td>
-		<?php if($delNum<=4){ ?>
+		<?php 
+		if($pdCounter>0){
+			$plural = 's';
+			if($pdCounter==1){ $pdCounterValue = 50; $plural = '';
+			}else if($pdCounter==2) $pdCounterValue = 80;
+			else if($pdCounter==3) $pdCounterValue = 90;
+			else $pdCounterValue = 99;
+			
+			echo '<font color="gray">XP reduced by '.$pdCounterValue.'%. ('.$pdCounter.' reset'.$plural.' this month.)</font>';
+		}
+		if($set['Set']['solved']>50){ ?>
 		<div id="msg1x"><a id="showx">Reset<img id="greyArrow1" src="/img/greyArrow1.png"></a></div>
 		<br>
-		<?php } ?>
+		<?php }else{
+			echo '<br><font color="gray">You need to complete 50% to reset.</font>';
+		}?>
 		</td>
 		</tr>
 		<tr>
@@ -261,9 +281,9 @@
 		<?php } ?>
 		</td>
 		<td>
-		<?php if($delNum<=4){ ?>
+		<?php if($set['Set']['solved']>50){ ?>
 		<div id="msg2x">
-		Type "reset" to remove all your progress on this collection. This can be used 4 times per month.<br><br>
+		Type "reset" to remove all your progress on this collection.<br><br>
 		<?php
 			echo $this->Form->create('Comment');
 			echo $this->Form->input('reset', array('label' => '', 'type' => 'text', 'placeholder' => 'reset'));
@@ -276,7 +296,7 @@
 		<?php
 		//if($set['Set']['public']==0){
 		if(true){
-			if($_SESSION['loggedInUser']['User']['isAdmin']==1){
+			if($_SESSION['loggedInUser']['User']['isAdmin']>=1){
 				echo '<tr><td colspan="2">
 				<div class="admin-panel">
 				<div align="center"><h1> Admin Panel </h1></div>
@@ -394,7 +414,7 @@
 
 	
 	
-	<?php if($_SESSION['loggedInUser']['User']['isAdmin']==1){?>
+	<?php if($_SESSION['loggedInUser']['User']['isAdmin']>=1){?>
 	<script>
 	var t1 = false;
 	var t2 = false;

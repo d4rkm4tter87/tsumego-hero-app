@@ -155,7 +155,7 @@
 	?>
 	</table>
 	</div>
-	<?php if(isset($ro['RankOverview']['status']) && $ro['RankOverview']['status']=='s' && $newUnlock){ 
+	<?php if(isset($ro['RankOverview']['status']) && $ro['RankOverview']['status']=='s' && $newUnlock){
 	$alertCategory = '';
 	$alertRank = '';
 	if($ro['RankOverview']['mode']==0) $alertCategory = 'blitz';

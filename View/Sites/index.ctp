@@ -91,6 +91,19 @@
 			</li>
 			<br><br>
 		</div>
+		<p class="title4">Update 27.10.2023</p>
+		<div class="new1">
+			<b>Achievements!</b><br><br>
+			
+			With today's update, the users can hunt for achievements. Achievements give additional XP. There will be a user ranking
+			and possibly other rewards. This update contains the first 46 achievements of many more.
+			<br><br>
+			<a href="/achievements">View Achievements</a>
+			<br><br>
+			<div align="center"><img width="90%" src="/img/achievementExample.png"></div>
+			<br>
+			
+		</div>
 		<p class="title4">Update 14.10.2023</p>
 		<div class="new1">
 			<b>Improved comments</b><br><br>
@@ -275,7 +288,6 @@
 		}	
 			
 		?>
-		
 	</div>
 	
 	<div class="homeLeft">
@@ -481,7 +493,6 @@
 			}
 		?>
 		
-		
 		<?php if(isset($_SESSION['loggedInUser'])){ ?>
 		<?php if($_SESSION['loggedInUser']['User']['premium']==0 && $user['User']['id']!=1165){ ?>
 			<p class="title4">Donations</p>
@@ -681,9 +692,10 @@
 		
 		<br>
 		</div>
-		
-		<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-		
+		</div>
+		<br>
+		<div style="clear:both;"></div> 
+		<br>
 		<!--
 		<p class="title4 ">Contributors</p>
 		<br>
@@ -736,8 +748,7 @@
 		</table>
 		-->
 		</font>
-		<br><br><br><br><br><br><br><br><br><br><br>
-		<?php if(!isset($loggedInUser)) echo '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>'; ?>
+		
 	</div>
 	
 	<script>

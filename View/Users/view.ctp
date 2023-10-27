@@ -1,7 +1,7 @@
 
 	<div class="homeCenter2">
 		<?php
-			echo '<p class="title5">Profile</p>';
+			echo '<p class="title6">Profile</p>';
 			//echo '<pre>';print_r($users2);echo '</pre>';
 			if($hideEmail){
 				$user = null;
@@ -113,10 +113,11 @@
 	else if($size<30) $height = '600';
 	else if($size<50) $height = '900';
 	else $height = '1200';
-	//print_r($size);
 	?>
 	  
 	<script>
+	$(".whitebox2").css("background-color", "#2a2a2a");
+	
 	$("#msg2").hide();
 	$("#show").click(function(){
 		$("#msg2").show();
@@ -171,9 +172,53 @@
 
 	}
 	</script>
+	<div>
+	<br>
+	<table class="profileTable" width="100%">
+		<tr>
+			<td width="50%">
+				<h1 class="h1">Solved Problems</h1>
+				<div id="chartContainer" style="height:<?php echo $height; ?>px;width:100%;"></div>
+			</td>
+			<td width="50%">
+				<table width="95%">
+				<tr><td>
+				<h1 class="h1">Achievements</h1>
+				</td><td style="text-align:right;">
+				<b class="profileTable2"><a href="/achievements">View Achievements</a></b>
+				</td></tr>
+				</table>
+				<?php
+				for($i=0; $i<count($as); $i++){
+				if(strlen($as[$i]['AchievementStatus']['a_title'])>30) $adjust = 'style="font-weight:normal;font-size:17px;"';
+				else $adjust = '';
+				?>
+				<a href="/achievements/view/<?php echo $as[$i]['AchievementStatus']['a_id']; ?>">
+				<div align="center" class="achievementSmall <?php echo $as[$i]['AchievementStatus']['a_color']; ?>">
+					<div class="acTitle2">
+						<b <?php echo $adjust; ?>><?php echo $as[$i]['AchievementStatus']['a_title']; ?></b>
+					</div>
+					<div class="acImg">
+						<img src="/img/<?php echo $as[$i]['AchievementStatus']['a_image']; ?>.png" title="<?php echo $as[$i]['AchievementStatus']['a_description']; ?>">
+						<div class="acImgXp">
+						<?php echo $as[$i]['AchievementStatus']['a_xp']; ?> XP
+						</div>
+					</div>
+					<div class="acDate2">
+						<?php 
+						$date = new DateTime($as[$i]['AchievementStatus']['created']);
+						echo $date->format('d.m.Y H:m');
+						?>
+					</div>
+				</div>
+				</a>
+				<?php
+				}
+				?>
+			</td>
+		</tr>
+	</table>
 	
-	<div align="center">
-	<div id="chartContainer" style="height:<?php echo $height; ?>px;width:100%;"></div>
 	</div>
 	<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 	<div class="homeCenter2" >

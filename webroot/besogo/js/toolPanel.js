@@ -239,13 +239,11 @@ besogo.makeToolPanel = function(container, editor)
     if(mode==1)
     {
       let prevButtonId;
+	  prevButtonId = 'besogo-back-button';
 	  if(prevButtonLink!=0)
-	  {
-		prevButtonId = 'besogo-back-button';
 		prevButtonLink = '/tsumegos/play/'+prevButtonLink;
-	  }
       else
-		prevButtonId = 'besogo-back-button-inactive';
+		prevButtonLink = '/sets/view/'+nextButtonLinkSet;
 
 	  makeHyperlinkText('Back', 'previous problem', prevButtonLink, prevButtonId);
       
@@ -280,13 +278,11 @@ besogo.makeToolPanel = function(container, editor)
       
       let nextButtonId;
 	  let nextButtonLink2 = 0;
+	  nextButtonId = 'besogo-next-button';
       if(nextButtonLink!=0)
-	  {
-		nextButtonId = 'besogo-next-button';
 		nextButtonLink2 = '/tsumegos/play/'+nextButtonLink;
-	  }
       else
-		nextButtonId = 'besogo-next-button-inactive';
+		nextButtonLink2 = '/sets/view/'+nextButtonLinkSet;
 	  
 	  makeHyperlinkText('Next', 'next problem', nextButtonLink2, nextButtonId);
     }
