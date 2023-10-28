@@ -45,7 +45,7 @@
 					<div class="acDate">
 						<?php 
 						$date = new DateTime($a[$i]['Achievement']['created']);
-						if($a[$i]['Achievement']['unlocked']) echo $date->format('d.m.Y H:m');
+						echo $a[$i]['Achievement']['created'];
 						?>
 					</div>
 				</div>

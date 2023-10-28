@@ -974,6 +974,7 @@
 	var prevButtonLink = <?php echo $prev; ?>;
 	var nextButtonLink = <?php echo $next; ?>;
 	var nextButtonLinkSet = <?php echo $t['Tsumego']['set_id']; ?>;
+	var nextButtonLinkLv = <?php echo $lv; ?>;
 	var isMutable = true;
 	var deleteNextMoveGroup = false;
 	var file = "<?php echo $file; ?>";
@@ -2153,7 +2154,7 @@
 				document.getElementById("status").style.color = "green";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
 				document.getElementById("xpDisplay").style.color = "white";
-				$(".besogo-board").css("box-shadow","rgba(67, 255, 40, 0.8) 0px 2px 14px 0px, rgba(0, 0, 0, 0.3) 0px 6px 20px 0px");
+				$(".besogo-board").css("box-shadow","rgba(67, 255, 40, 0.7) 0px 2px 14px 0px, rgba(0, 0, 0, 0.2) 0px 6px 20px 0px");
 				
 				if(set159){document.getElementById("theComment").style.cssText = "visibility:visible;color:green;";
 				document.getElementById("theComment").innerHTML = "xxx";}
@@ -2221,7 +2222,7 @@
 				document.getElementById("status").style.color = "green";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
 				document.getElementById("xpDisplay").style.color = "white";
-				$(".besogo-board").css("box-shadow","rgba(67, 255, 40, 0.8) 0px 2px 14px 0px, rgba(0, 0, 0, 0.3) 0px 6px 20px 0px");
+				$(".besogo-board").css("box-shadow","rgba(67, 255, 40, 0.7) 0px 2px 14px 0px, rgba(0, 0, 0, 0.2) 0px 6px 20px 0px");
 				$("#commentSpace").show();
 				//locked = true;
 				noLastMark = true;
@@ -2429,8 +2430,8 @@
     options.reviewEnabled = <?php echo $reviewEnabled ? 'true' : 'false'; ?>;
 	<?php
 		//review always unlocked for d4rkm4tter and kovarex
-		if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72||$_SESSION['loggedInUser']['User']['id']==13282){
-		//if(isset($_SESSION['loggedInUser'])){if(false){
+		//if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72||$_SESSION['loggedInUser']['User']['id']==13282){
+		if(isset($_SESSION['loggedInUser'])){if(false){
 			echo 'options.reviewEnabled = true;';
 		}}
 	?>

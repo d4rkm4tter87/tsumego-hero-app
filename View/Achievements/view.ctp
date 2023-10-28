@@ -43,7 +43,7 @@
 			<?php 
 			if(!empty($as)){
 				$date = new DateTime($as['Achievement']['created']);
-				echo $date->format('d.m.Y H:m');
+				echo $as['AchievementStatus']['created'];
 			}
 			?>
 		</div>

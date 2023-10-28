@@ -282,7 +282,7 @@ besogo.makeToolPanel = function(container, editor)
       if(nextButtonLink!=0)
 		nextButtonLink2 = '/tsumegos/play/'+nextButtonLink;
       else
-		nextButtonLink2 = '/sets/view/'+nextButtonLinkSet;
+		nextButtonLink2 = '/tsumegos/play/'+nextButtonLinkLv+'?refresh=3';
 	  
 	  makeHyperlinkText('Next', 'next problem', nextButtonLink2, nextButtonId);
     }

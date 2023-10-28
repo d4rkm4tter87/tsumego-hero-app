@@ -1589,7 +1589,6 @@ class TsumegosController extends AppController{
 		
 		$ui = 2;
 		
-		//echo '<pre>'; print_r($_SESSION['loggedInUser']['User']['coins']); echo '</pre>'; 
 		//echo '<pre>'; print_r($commentCoordinates); echo '</pre>';
 		//echo '<pre>'; print_r($co); echo '</pre>';
 		/*

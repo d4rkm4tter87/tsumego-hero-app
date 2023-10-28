@@ -95,7 +95,7 @@
 		<div class="new1">
 			<b>Achievements!</b><br><br>
 			
-			With today's update, the users can hunt for achievements. Achievements give additional XP. There will be a user ranking
+			With today's update, you can hunt for achievements. Achievements give additional XP. There will be a user ranking
 			and possibly other rewards. This update contains the first 46 achievements of many more.
 			<br><br>
 			<a href="/achievements">View Achievements</a>
@@ -631,30 +631,30 @@
 		<div class="new1">
 			<table class="newx" border="0">
 				<tr>
+					<td><h1>20.10.2023</h1></td>
+					<td><h1>Marcel Wiesenhöfer</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>09.10.2023</h1></td>
+					<td><h1>Maksymilian Gaidemski</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>08.10.2023</h1></td>
+					<td><h1>Scotty Reed</h1></td>
+					<td><h1>2,17 € <font size="2px">subscription</font></h1> </td>
+				</tr>
+				<tr>
 					<td><h1>02.10.2023</h1></td>
 					<td><h1>Tomislav Sokec</h1></td>
-					<td><h1>10,00 €</h1></td>
+					<td><h1>10,00 € <font size="2px">subscription</font></h1></td>
 				</tr>
 				<tr>
 					<td><h1>02.10.2023</h1></td>
 					<td><h1>Daniil Plakhov</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
-				<tr>
-					<td><h1>01.10.2023</h1></td>
-					<td><h1>korni</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>24.09.2023</h1></td>
-					<td><h1>matt-noonan</h1></td>
-					<td><h1>30,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>21.09.2023</h1></td>
-					<td><h1>Michael Vondung</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>	
 			</table>	
 		<br>
 		</div>	

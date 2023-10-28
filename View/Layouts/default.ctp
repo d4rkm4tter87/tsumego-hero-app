@@ -791,7 +791,7 @@
 		function donateNoHover2(){
 			document.getElementById("donateH2").src = "/img/donateButton1.png";
 		}
-		function runXPBar(){
+		function runXPBar2(){
 			<?php
 			if($mode==1){
 			?>
@@ -811,7 +811,7 @@
 			}
 			?>
 		}
-		function runXPNumber(id, start, end, duration, ulvl){
+		function runXPNumber2(id, start, end, duration, ulvl){
 			userXP = end;
 			userLevel = ulvl;
 			var range = end - start;

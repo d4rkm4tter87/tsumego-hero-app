@@ -16,12 +16,14 @@ class AchievementsController extends AppController {
 		
 		for($i=0; $i<count($a); $i++){
 			$a[$i]['Achievement']['unlocked'] = false;
+			$a[$i]['Achievement']['created'] = '';
 			if(isset($existingAs[$a[$i]['Achievement']['id']])){
 				$a[$i]['Achievement']['unlocked'] = true;
-				$a[$i]['Achievement']['created'] = $existingAs[$a[$i]['Achievement']['created']];
+				$a[$i]['Achievement']['created'] = $existingAs[$a[$i]['Achievement']['id']]['AchievementStatus']['created'];
+				$date=date_create($a[$i]['Achievement']['created']);
+				$a[$i]['Achievement']['created'] = date_format($date,"d.m.Y H:i");
 			}
 		}
-		
 		$this->set('a', $a);
     }
 	
@@ -33,7 +35,10 @@ class AchievementsController extends AppController {
 		if(isset($_SESSION['loggedInUser'])){
 			$as = $this->AchievementStatus->find('first', array('conditions' => array('achievement_id' => $id, 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
 		}
-		
+		if(!empty($as)){
+			$date = date_create($as['AchievementStatus']['created']);
+			$as['AchievementStatus']['created'] = date_format($date,"d.m.Y H:i");
+		}
 		$this->set('a', $a);
 		$this->set('as', $as);
 		$this->set('aCount', $aCount);

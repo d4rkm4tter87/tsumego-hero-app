@@ -229,7 +229,7 @@
 		if($acA!=null) echo '<font class="setViewAccuracy">Best completion: '.$acA['AchievementCondition']['value'].'%</font>';
 		echo '</td></tr></table>
 		<table><tr><td><div class="setViewTime"><b>Avg. time: '.$avgTime.'s</b></div></td><td>';
-		if($acS!=null) echo '<font class="setViewTime">Best completion: '.$acS['AchievementCondition']['value'].'s</font>';
+		if($acS!=null && $acS['AchievementCondition']['value']!=60) echo '<font class="setViewTime">Best completion: '.$acS['AchievementCondition']['value'].'s</font>';
 		echo '</td></tr></table>
 		';
 		

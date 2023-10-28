@@ -206,8 +206,8 @@
 					</div>
 					<div class="acDate2">
 						<?php 
-						$date = new DateTime($as[$i]['AchievementStatus']['created']);
-						echo $date->format('d.m.Y H:m');
+						$date = date_create($as[$i]['AchievementStatus']['created']);
+						echo date_format($date,"d.m.Y H:i");
 						?>
 					</div>
 				</div>
