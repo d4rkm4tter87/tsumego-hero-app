@@ -1050,6 +1050,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 	  notInTreeCoords['y'] = [];
 	  let returnArray = [];
 	  let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
+	  let exitCounter = 0;
 	  
 	  if(treeX!==0){
 		  while(found===null)
@@ -1057,6 +1058,9 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 			  found = searchNodesForTreePosition(treeX, treeY);
 			  treeX--;
 			  depth++;
+			  exitCounter++;
+			  if(exitCounter>1000)
+				  break;
 		  }
 		  while(depth>0)
 		  {
@@ -1070,7 +1074,9 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 	  }
 	  else
 		  found = null;
-	
+		
+	  if(exitCounter>1000)
+		  found = null;
 	  returnArray[0] = found;
 	  returnArray[1] = notInTreeCoords;
 	  

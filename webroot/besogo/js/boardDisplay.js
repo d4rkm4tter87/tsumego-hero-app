@@ -525,6 +525,9 @@ besogo.makeBoardDisplay = function(container, editor, corner)
 		  if(!besogo.multipleChoice){
 			  group.appendChild(element);
 			  markupLayer[fromXY(i, j)] = element;
+		  }else{
+			//group.appendChild(element);
+			//markupLayer[fromXY(i, j)] = element; 
 		  }
         }
 

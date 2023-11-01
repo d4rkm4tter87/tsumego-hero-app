@@ -19,7 +19,9 @@
   besogo.theme = '';
   besogo.vChildrenEnabled = true;//recurring position merging
   besogo.alternativeResponse = true;//alternative response mode
-  besogo.multipleChoice = false;//multiple choice problems
+  besogo.multipleChoice = null;//multiple choice problems
+  besogo.multipleChoiceSetup = [];//multiple choice random stone placement
+  besogo.onSite = null;
   let corner;
 
   function getMakers()
@@ -233,7 +235,6 @@
 			$(".besogo-board").css("width", "50%");
 			$(".besogo-board").css("margin", "0 315px");
 		}
-		
 		if(besogo.boardParameters['corner']=='top-left') $("#boardOrientationTL").css("opacity","1");
 		else if(besogo.boardParameters['corner']=='top-right') $("#boardOrientationTR").css("opacity","1");
 		else if(besogo.boardParameters['corner']=='bottom-left') $("#boardOrientationBL").css("opacity","1");
@@ -250,6 +251,13 @@
         insideText = container.textContent || container.innerText || '';
 	if(typeof options.tsumegoPlayTool === 'string') 
 		besogo.isEmbedded = true;
+	if(typeof options.onSite === 'string'){
+		besogo.onSite = options.onSite.replaceAll('%20', ' ');
+		let onSiteArray = besogo.onSite.split('$');
+		besogo.onSite = onSiteArray[1];
+		options.sgf = 'https://tsumego-hero/6473k339312/'+onSiteArray[0]+'.sgf';
+	}
+		
 	let sgfLoaded =
     {
       aInternal: 10,
@@ -276,6 +284,7 @@
 		besogo.alternativeResponse = options.alternativeResponse;
 	if(typeof options.multipleChoice === 'boolean')
 		besogo.multipleChoice = options.multipleChoice;
+	besogo.multipleChoiceSetup = options.multipleChoiceSetup;
     if (typeof options.rootPath === 'string')
       besogo.rootPath = options.rootPath;
     else

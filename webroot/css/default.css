@@ -211,6 +211,10 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.sandboxTable2time{vertical-align:top;color:#5e5e5e;}
 	.deleteComment{color:#575757}
 	
+	#showx3,#showx4,#showx5,#show4,#show5{
+		display:none;
+	}
+	
 	#show2{font-size:16px;color:#717171;text-decoration:underline;cursor:pointer;}
 	.commentAnswer{color:#113cd4;}
 	.sandboxComment2{position:absolute;right:0;}
@@ -2828,6 +2832,9 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		justify-content: center;
 		margin: 15px;
 	}
+	.besogo-file #openButton{
+		background-color: #5b5d60!important;
+	}
 	
 	.besogo-tsumegoPlayTool input[type="button"], .besogo-file input[type="button"]{
 		font-family: Times New Roman,verdana,helvetica,arial,sans-serif;
@@ -2836,7 +2843,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		font-variant: normal;
 		font-weight: 800;
 		text-decoration: none;
-		background-color: #5b5d60!important;
+		background-color: #5b5d60;
 		color: #fff;
 		padding: 10px 13px;
 		margin: 5px;
@@ -2892,6 +2899,41 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		border-top-left-radius: 9px;
 		border-color: #8f9092!important;
 		cursor:pointer;
+	}
+	#besogo-multipleChoice1, #besogo-multipleChoice2, #besogo-multipleChoice3, #besogo-multipleChoice4{
+		font-family: Times New Roman,verdana,helvetica,arial,sans-serif;
+		font-size: 16px;
+		font-style: normal;
+		font-variant: normal;
+		font-weight: 800;
+		text-decoration: none;
+		background-color: #4b2bc4;
+		color: #fff;
+		padding: 10px 13px;
+		margin: 5px;
+		border-top: 1px solid #CCCCCC;
+		border-right: 1px solid #333333;
+		border-bottom: 1px solid #333333;
+		border-left: 1px solid #CCCCCC;
+		border-color: #5b5d60!important;
+		text-transform: none!important;
+		-moz-border-radius-bottomleft: 9px;
+		-moz-border-radius-bottomright: 9px;
+		border-radius-bottomleft: 9px;
+		border-radius-bottomright: 9px;
+		-moz-border-radius-bottomright: 9px;
+		-moz-border-radius-bottomleft: 9px;
+		border-bottom-right-radius: 9px;
+		border-bottom-left-radius: 9px;
+		-moz-border-radius-topright: 9px;
+		-moz-border-radius-topleft: 9px;
+		border-top-right-radius: 9px;
+		border-top-left-radius: 9px;
+		border-color: #8f9092!important;
+		cursor:pointer;
+	}
+	#besogo-reset-button{
+		background-color:#5b5d60 !important;
 	}
 	.besogo-tsumegoPlayTool input:nth-last-child(1){
 		background-color: #8f9092!important;
@@ -3116,6 +3158,15 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	  width:100%;
 	  text-align: center;
 	  font-size: 16px;
+	}
+	.alertText2{
+	  display: table;
+	  margin: 10px;
+	  text-align: left;
+	  font-size: 16px;
+	}
+	.alertBox2{
+		
 	}
 	.alertClose {
 	  float: right;

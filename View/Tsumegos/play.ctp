@@ -121,11 +121,7 @@
 	$c1 = '';
 	$d1 = '';
 	$x2 = '';
-	$multipleChoiceCorrect = '';
 	$ansDisplay = 'ans';
-
-	$blackLiberties = $libertyCount - $blackSubtractedLiberties;
-	$whiteLiberties = $libertyCount - $whiteSubtractedLiberties;
 
 	$playerColor = array();
 	$pl = 0;
@@ -137,9 +133,6 @@
 	if($pl==0){
 		$playerColor[0] = 'BLACK';
 		$playerColor[1] = 'WHITE';
-		$e = $blackLiberties;
-		$blackLiberties = $whiteLiberties;
-		$whiteLiberties = $e;
 	}else{
 		$playerColor[0] = 'WHITE';
 		$playerColor[1] = 'BLACK';
@@ -395,7 +388,20 @@
 	</td>
 	</tr>
 	</table>
-
+	<div align="center">
+	<?php
+		/*
+		echo ' semeaiType:'.$t['Tsumego']['semeaiType'];
+		echo ' minLib:'.$t['Tsumego']['minLib'];
+		echo ' maxLib:'.$t['Tsumego']['maxLib'];
+		echo ' variance:'.$t['Tsumego']['variance'];
+		echo ' libertyCount:'.$t['Tsumego']['libertyCount'];
+		echo ' insideLiberties:'.$t['Tsumego']['insideLiberties'];
+		echo ' eyeLiberties1:'.$t['Tsumego']['eyeLiberties1'];
+		echo ' eyeLiberties2:'.$t['Tsumego']['eyeLiberties2'];
+		*/
+	?>
+	</div>	
 	<div align="center" id="xpDisplayDiv">
 		<table class="xpDisplayTable" border="0" width="70%">
 			<tr>
@@ -513,17 +519,18 @@
 		echo '<div id="currentElement"></div>';
 	}		?>
 	<div align="center">
+	<br>
 	<?php 
 	
 	if(isset($_SESSION['loggedInUser'])){
 		if($firstRanks==0){
-			if(($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2' || $t['Tsumego']['status']=='setW2') || $_SESSION['loggedInUser']['User']['isAdmin']==1 || $isSandbox){
-					$getTitle = str_replace('&','and',$set['Set']['title']);
-					echo '<a href="/download.php?key='.$hash.'&title='.$getTitle.'" class="selectable-text">Download SGF</a><br><br>';
-			}
+			$getTitle = str_replace('&','and',$set['Set']['title']);
+			echo '<a id="showx3" class="selectable-text">Download SGF</a><br><br>';
+			
 			if($_SESSION['loggedInUser']['User']['isAdmin']==1){
-				echo '<a href="/download.php?key='.$hash.'&title=" style="margin-right:20px;" class="selectable-text">Admin-Download SGF</a>';
+					echo '<a id="showx4" href="/download.php?key='.$hash.'&title=" style="margin-right:20px;" class="selectable-text">Admin-Download SGF</a>';
 					echo '<a id="show4" style="margin-right:20px;" class="selectable-text">Admin-Upload SGF<img id="greyArrow4" src="/img/greyArrow1.png"></a>';
+					echo '<a id="showx5" href="/app/webroot/editor/?onSite='.$set['Set']['folder'].'/'.$t['Tsumego']['num'].'$'.$t['Tsumego']['id'].'" style="margin-right:20px;" class="selectable-text">Open</a>';
 					echo '<a id="show5" class="selectable-text">Settings<img id="greyArrow5" src="/img/greyArrow1.png"></a>';
 					if($virtual_children==1){
 						$vcOn = 'checked="checked"';
@@ -592,7 +599,6 @@
 			echo $this->Form->input('message', array('label' => '', 'type' => 'textarea', 'placeholder' => 'Message'));
 			echo $this->Form->input('position', array('label' => '', 'type' => 'hidden'));
 			echo $this->Form->end('Submit');
-
 		?>
 		<br>
 			<a id="show3">Upload SGF<img id="greyArrow2" src="/img/greyArrow1.png"></a>
@@ -867,11 +873,21 @@
 
 	<?php
 	}
-	
-	
 	?>
-
-
+	<?php if($t['Tsumego']['set_id']==42){ ?>
+		<label>
+		<input type="checkbox" class="alertCheckbox1" id="alertCheckbox" autocomplete="off" />
+		<div class="alertBox alertInfo" id="multipleChoiceAlerts">
+		<div class="alertBanner">
+		Capturing race infomation
+		<span class="alertClose">x</span>
+		</div>
+		<span class="alertText2">
+		<div id="multipleChoiceText"></div>
+		<br class="clear1"/></span>
+		</div>
+		</label>
+	<?php }	?>
 	<?php if($potionAlert){
 	?>
 		<label>
@@ -979,6 +995,7 @@
 	var deleteNextMoveGroup = false;
 	var file = "<?php echo $file; ?>";
 	var clearFile = "<?php echo $set['Set']['title'].' - '.$t['Tsumego']['num']; ?>";
+	var clearFile2 = "<?php echo $set['Set']['folder'].'/'.$t['Tsumego']['num']; ?>";
 	var tsumegoFileLink = "<?php echo $t['Tsumego']['id']; ?>";
 	var author = "<?php echo $t['Tsumego']['author']; ?>";
 	var inFavorite = "<?php echo $inFavorite; ?>";
@@ -988,6 +1005,18 @@
 	var disableAutoplay = false;
 	var besogoNoLogin = false;
 	var soundParameterForCorrect = false;
+	let multipleChoiceLibertiesB = 0;
+	let multipleChoiceLibertiesW = 0;
+	let multipleChoiceVariance = <?php echo $t['Tsumego']['variance']; ?>+"";
+	let multipleChoiceLibertyCount = <?php echo $t['Tsumego']['libertyCount']; ?>+"";
+	let multipleChoiceSemeaiType = <?php echo $t['Tsumego']['semeaiType']; ?>+"";
+	let multipleChoiceInsideLiberties = <?php echo $t['Tsumego']['insideLiberties']; ?>+"";
+	let multipleChoiceEnabled = false;
+	let hasChosen = false;
+	<?php
+	echo 'var downloadLink = "/download.php?key='.$hash.'&title='.$getTitle.'";';
+	?>
+	
 	
 	<?php
 	if(isset($_SESSION['loggedInUser']['User']['id'])){
@@ -997,6 +1026,7 @@
 	}
 	
 	if($pl==1) echo 'besogoPlayerColor = "white";';
+	if($t['Tsumego']['set_id']==42) echo 'besogoPlayerColor = "black";';
 
 	if($authorx==$_SESSION['loggedInUser']['User']['name'] && $isSandbox) echo 'authorProblem = true;';
 	if($firstRanks!=0) echo 'document.cookie = "mode=3";';
@@ -1513,8 +1543,10 @@
 			msg5selected = !msg5selected;
 		});
 		$('#targetLockOverlay').click(function(){
-			if(nextButtonLink!==0) window.location.href = "/tsumegos/play/"+nextButtonLink;
-			else window.location.href = "/sets/view/"+<?php echo $t['Tsumego']['set_id']; ?>;
+			if(!multipleChoiceEnabled){
+				if(nextButtonLink!==0) window.location.href = "/tsumegos/play/"+nextButtonLink;
+				else window.location.href = "/sets/view/"+<?php echo $t['Tsumego']['set_id']; ?>;
+			}
 		});
 		$("#commentPosition").click(function(){
 		  let commentContent = $("#CommentMessage").val();
@@ -1523,7 +1555,7 @@
 		  let besogoOrientation = besogo.editor.getOrientation();
 		  if(besogoOrientation[1]=="full-board")
 			besogoOrientation[0] = besogoOrientation[1];
-		  
+		  //let isInTree = null;
 		  let isInTree = besogo.editor.isMoveInTree(current);
 		  current = isInTree[0];
 		  
@@ -1561,17 +1593,30 @@
 			);
 		  }
 		}); 
+		<?php if(($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2' || $t['Tsumego']['status']=='setW2') || $isSandbox){ ?>
+			displaySettings();
+		<?php } ?>
+		<?php if($t['Tsumego']['set_id']==42){ ?>
+		$("#alertCheckbox").change(function(){
+			$("#multipleChoiceAlerts").fadeOut(500);
+		});
+		<?php } ?>
 	});
+
+	function displaySettings(){
+		$("#showx3").css("display", "inline-block");
+		$("#showx3").attr("href", downloadLink);
+		<?php if($_SESSION['loggedInUser']['User']['isAdmin']==1){ ?>
+		$("#showx4").css("display", "inline-block");		
+		$("#showx5").css("display", "inline-block");		
+		$("#show4").css("display", "inline-block");		
+		$("#show5").css("display", "inline-block");	
+		<?php } ?>
+	}
 
 	function reset(){
 		if(!tryAgainTomorrow) locked = false;
 		hoverLocked = false;
-		<?php
-			if($ui!=2){
-				echo 'player = JGO.'.$playerColor[$whoPlays2].';';
-			}
-		?>
-		
 		opponent = (player == JGO.BLACK) ? JGO.WHITE : JGO.BLACK;
 		ko = false, lastMove = false;
 		lastHover = false, lastX = -1, lastY = -1;
@@ -1963,47 +2008,6 @@
 		thumbsUpSelected2 = false;
 	}
 
-	function selectA(){
-		if(!multipleChoiceSelected){
-			<?php
-				echo $a1;
-				echo $x2;
-				echo $multipleChoiceCorrect;
-			?>
-			multipleChoiceSelected = true;
-		}
-	}
-	function selectB(){
-		if(!multipleChoiceSelected){
-			<?php
-				echo $b1;
-				echo $x2;
-				echo $multipleChoiceCorrect;
-			?>
-			multipleChoiceSelected = true;
-		}
-	}
-	function selectC(){
-		if(!multipleChoiceSelected){
-			<?php
-				echo $c1;
-				echo $x2;
-				echo $multipleChoiceCorrect;
-			?>
-			multipleChoiceSelected = true;
-		}
-	}
-	function selectD(){
-		if(!multipleChoiceSelected){
-			<?php
-				echo $d1;
-				echo $x2;
-				echo $multipleChoiceCorrect;
-			?>
-			multipleChoiceSelected = true;
-		}
-	}
-
 	function selectFav(){
 		document.getElementById("ans2").innerHTML = "";
 	}
@@ -2255,6 +2259,7 @@
 					noXP = true;
 				}
 			}
+			displaySettings();
 		}else{//mode 1 and 3 incorrect
 			if(mode!=2){
 				branch = "no";
@@ -2334,19 +2339,144 @@
 		}
 		document.cookie = "preId=<?php echo $t['Tsumego']['id']; ?>";
 	}
+	
+	function displayMultipleChoiceResult(num){
+		let correct = 0;
+		let mText = "";
+		let mText2 = "";
+		let mText3 = 0;
+		let mTextPlural = "s";
+		let libPlural1 = "liberties";
+		let libPlural2 = "liberties";
+		let multipleChoiceLibertiesB2 = multipleChoiceLibertyCount-multipleChoiceLibertiesB;
+		let multipleChoiceLibertiesW2 = multipleChoiceLibertyCount-multipleChoiceLibertiesW;
+		let libCalcB, libCalcW,	libCalcB2, libCalcW2, libCalc3;
+		if(!hasChosen){
+			$("#besogo-multipleChoice1").css("background-color", "#e0747f");
+			$("#besogo-multipleChoice2").css("background-color", "#e0747f");
+			$("#besogo-multipleChoice3").css("background-color", "#e0747f");
+			$("#besogo-multipleChoice4").css("background-color", "#e0747f");
+			if(multipleChoiceSemeaiType==1){
+				if(multipleChoiceLibertiesB<multipleChoiceLibertiesW){
+					correct = 1;
+					$("#besogo-multipleChoice1").css("background-color", "#3ecf78");
+					mText3 = multipleChoiceLibertiesW-multipleChoiceLibertiesB;
+					if(mText3==1) mTextPlural = "";
+					mText2 = "Black is dead. ("+mText3+" move"+mTextPlural+" behind)";
+				}else if(multipleChoiceLibertiesB>multipleChoiceLibertiesW){
+					correct = 2;
+					$("#besogo-multipleChoice2").css("background-color", "#3ecf78");
+					mText3 = multipleChoiceLibertiesB-multipleChoiceLibertiesW;
+					if(mText3==1) mTextPlural = "";
+					mText2 = "White is dead. ("+mText3+" move"+mTextPlural+" behind)";
+				}else{
+					correct = 3;
+					$("#besogo-multipleChoice3").css("background-color", "#3ecf78");
+					mText2 = "The position is unsettled. (Whoever plays first wins.)";
+				}
+				if(multipleChoiceLibertiesB2==1) libPlural1 = "liberty";
+				if(multipleChoiceLibertiesW2==1) libPlural2 = "liberty";
+				mText = "Semeai Type 1: No eyes, less than 2 inside liberties.<br>No Seki possible.<br> Black has "+multipleChoiceLibertiesB2
+				+" "+libPlural1+".<br> White has "+multipleChoiceLibertiesW2+" "+libPlural2+".<br>"+mText2;
+				$(".alertBox").css("height", "196px");
+			}else if(multipleChoiceSemeaiType==2){
+				mText = "Semeai Type 2: No eyes, 2 or more inside liberties.<br>The favorite\'s task is to kill.<br>The favorite counts his outside liberties plus 1 inside liberty.<br>The underdog\'s task is Seki.<br>The underdog counts his outside liberties plus all inside liberties.<br>";
+				let underdog = "Black";
+				if(multipleChoiceLibertiesB<multipleChoiceLibertiesW){
+					mText += "White is the favorite with more outside liberties.<br>";
+					underdog = "Black";
+					libCalcB = parseInt(multipleChoiceLibertyCount)-parseInt(multipleChoiceLibertiesW)+parseInt(multipleChoiceInsideLiberties);
+					libCalcW = parseInt(multipleChoiceLibertyCount)-parseInt(multipleChoiceLibertiesB)+1;
+					libCalcB2 = parseInt(multipleChoiceLibertyCount)-parseInt(multipleChoiceLibertiesW);
+					libCalcW2 = parseInt(multipleChoiceLibertyCount)-parseInt(multipleChoiceLibertiesB);
+					if(libCalcB==1) libPlural1="liberty";
+					if(libCalcW==1) libPlural2="liberty";
+					mText += "Black has "+libCalcB+" "+libPlural1+".(underdog: "+libCalcB2+" outside + "+multipleChoiceInsideLiberties+" inside)<br>";
+					mText += "White has "+libCalcW+" "+libPlural2+".(favorite: "+libCalcW2+" outside + 1 inside)<br>";
+					libCalc3 = libCalcW-libCalcB;
+					if(libCalc3===0){
+						mText += "Unsettled. (whoever plays first accomplishes their task)<br>";
+						$("#besogo-multipleChoice3").css("background-color", "#3ecf78");
+						correct = 3;
+					}else{
+						mText += "Black is dead. ("+libCalc3+" move(s) behind)<br>";
+						$("#besogo-multipleChoice1").css("background-color", "#3ecf78");
+						correct = 1;
+					}
+				}else if(multipleChoiceLibertiesB>multipleChoiceLibertiesW){
+					mText += "Black is the favorite with more outside liberties.<br>";
+					underdog = "White";
+					libCalcB = parseInt(multipleChoiceLibertyCount)-parseInt(multipleChoiceLibertiesW)+1;
+					libCalcW = parseInt(multipleChoiceLibertyCount)-parseInt(multipleChoiceLibertiesB)+parseInt(multipleChoiceInsideLiberties);
+					libCalcB2 = parseInt(multipleChoiceLibertyCount)-parseInt(multipleChoiceLibertiesW);
+					libCalcW2 = parseInt(multipleChoiceLibertyCount)-parseInt(multipleChoiceLibertiesB);
+					if(libCalcB==1) libPlural1="liberty";
+					if(libCalcW==1) libPlural2="liberty";
+					mText += "White has "+libCalcW+" "+libPlural2+".(underdog: "+libCalcW2+" outside + "+multipleChoiceInsideLiberties+" inside)<br>";
+					mText += "Black has "+libCalcB+" "+libPlural1+".(favorite: "+libCalcB2+" outside + 1 inside)<br>";
+					libCalc3 = libCalcB-libCalcW;
+					if(libCalc3===0){
+						mText += "Unsettled. (whoever plays first accomplishes their task)<br>";
+						$("#besogo-multipleChoice3").css("background-color", "#3ecf78");
+						correct = 3;
+					}else{
+						mText += "White is dead. ("+libCalc3+" move(s) behind)<br>";
+						$("#besogo-multipleChoice2").css("background-color", "#3ecf78");
+						correct = 2;
+					}
+				}else{
+					mText += "Seki - same amount of liberties.<br>";
+					$("#besogo-multipleChoice4").css("background-color", "#3ecf78");
+					correct = 4;
+				}
+				
+				//mText += "Black has "+libCalcB+" liberties.("+multipleChoiceLibertiesB+")<br>";
+				//mText += "White has "+libCalcW+" liberties.("+multipleChoiceLibertiesW+")<br>";
+				
+				$(".alertBox").css("height", "310px");
+			}else if(multipleChoiceSemeaiType==3){
+			}else if(multipleChoiceSemeaiType==4){
+			}else if(multipleChoiceSemeaiType==5){
+			}else if(multipleChoiceSemeaiType==6){
+			
+			}
+			if(num==correct){
+				displayResult("S");
+				multipleChoiceEnabled = false;
+				$(".alertBanner").css("background-color", "rgb(18, 121, 59)");
+				$(".alertBanner").html("Correct!<span class=\"alertClose\">x</span>");
+			}else{
+				displayResult("F");
+				multipleChoiceEnabled = false;
+				$(".alertBanner").css("background-color", "rgb(219, 76, 89)");
+				$(".alertBanner").html("Incorrect<span class=\"alertClose\">x</span>");
+			}
+			$('#multipleChoiceText').html(mText);
+			$("#multipleChoiceAlerts").fadeIn(500);
+			hasChosen = true;
+		}
+	}
 
-	function toggleBoardLock(t, customHeight=false){
+	function toggleBoardLock(t, customHeight=false, multipleChoice=false){
 		if(t){
 			let besogoBoardHeight = $('.besogo-board').height() + "px";
+			let besogoBoardWidth = $('.besogo-board').width() + "px";
 			$("#targetLockOverlay").css("width", "633px");
-			if(!customHeight) $("#targetLockOverlay").css("height", besogoBoardHeight);
+			if(!customHeight){ 
+				$("#targetLockOverlay").css("height", besogoBoardHeight);
+				$("#targetLockOverlay").css("width", besogoBoardWidth);
+				$("#targetLockOverlay").css("top", $('.besogo-board').offset().top-71);
+			}
 			else $("#targetLockOverlay").css("height", "633px");
 			$("#targetLockOverlay").css("z-index", "1000");
+			$("#targetLockOverlay").css("background", "blue");
+			//$("#targetLockOverlay").css("opacity", ".5");
 		}else{
 			$("#targetLockOverlay").css("width", "0");
 			$("#targetLockOverlay").css("height", "0");
 			$("#targetLockOverlay").css("z-index", "-1");
 		}
+		if(multipleChoice) multipleChoiceEnabled = true;
 	}
 	
 	function resetParameters(isAtStart){
@@ -2392,6 +2522,7 @@
 	  options.nokeys = true;
 	  options.vChildrenEnabled = true;
 	  options.multipleChoice = false;
+	  options.multipleChoiceSetup = [];
 	  if(mode!=3) 
 		options.alternativeResponse = true;
 	  else
@@ -2401,9 +2532,70 @@
 			echo 'options.vChildrenEnabled = false;';
 		if($alternative_response!=1)
 			echo 'options.alternativeResponse = false;';
-		if($t['Tsumego']['set_id']==42)
+		if($t['Tsumego']['set_id']==42){
+			$sStatusB = '';
+			$sStatusW = '';
+			if($t['Tsumego']['semeaiType'] == 1){
+				$t['Tsumego']['minLib'] += $t['Tsumego']['variance'];
+				$t['Tsumego']['maxLib'] -= $t['Tsumego']['variance'];
+				$sStatusB = rand($t['Tsumego']['minLib'],$t['Tsumego']['maxLib']);
+				$sStatusWmin = $sStatusB - $t['Tsumego']['variance'];
+				$sStatusWmax = $sStatusB + $t['Tsumego']['variance'];
+				$sStatusW = rand($sStatusWmin,$sStatusWmax);
+			}
+			else if($t['Tsumego']['semeaiType'] == 2){
+				$sStatusB = rand(0,$t['Tsumego']['libertyCount']);
+				$sStatusW = rand(0,$t['Tsumego']['libertyCount']);
+			}else if($t['Tsumego']['semeaiType'] == 3){
+				$t['Tsumego']['minLib'] += $t['Tsumego']['variance'];
+				$t['Tsumego']['maxLib'] -= $t['Tsumego']['variance'];
+				$sStatusB = rand($t['Tsumego']['minLib'],$t['Tsumego']['maxLib']);
+				$sStatusWmin = $sStatusB - $t['Tsumego']['variance'];
+				$sStatusWmax = $sStatusB + $t['Tsumego']['variance'];
+				$sStatusW = rand($sStatusWmin,$sStatusWmax);
+			}else if($t['Tsumego']['semeaiType'] == 4){
+				$sStatusB = rand(0,$t['Tsumego']['variance']);
+				$sStatusW = rand(0,$t['Tsumego']['variance']);
+			}else if($t['Tsumego']['semeaiType'] == 5){
+				$t['Tsumego']['minLib'] += $t['Tsumego']['variance'];
+				$t['Tsumego']['maxLib'] -= $t['Tsumego']['variance'];
+				$sStatusB = rand($t['Tsumego']['minLib'],$t['Tsumego']['maxLib']);
+				$sStatusWmin = $sStatusB - $t['Tsumego']['variance'];
+				$sStatusWmax = $sStatusB + $t['Tsumego']['variance'];
+				$sStatusW = rand($sStatusWmin,$sStatusWmax);
+			}else if($t['Tsumego']['semeaiType'] == 6){
+				$sStatusB = rand(0,$t['Tsumego']['variance']);
+				$sStatusW = rand(0,$t['Tsumego']['variance']);
+			}
 			echo 'options.multipleChoice = true;';
+			echo 'let sStatusB = '.$sStatusB.';';
+			echo 'let sStatusW = '.$sStatusW.';';
+			echo 'multipleChoiceLibertiesB = sStatusB;';
+			echo 'multipleChoiceLibertiesW = sStatusW;';
+			echo 'multipleChoiceVariance = '.$t['Tsumego']['variance'].';';
+			echo 'multipleChoiceLibertyCount = '.$t['Tsumego']['libertyCount'].';';
+			echo 'let mVariance = '.$t['Tsumego']['libertyCount'].';';//variance?
+			echo 'let a1 = []; let a2 = [];
+			for(i=0;i<mVariance;i++){
+				if(sStatusB>0) a1.push(1);
+				else a1.push(0);
+				if(sStatusW>0) a2.push(1);
+				else a2.push(0);
+				sStatusB--;
+				sStatusW--;
+			}
+			let a3 = a1.map(value => ({ value, sort: Math.random() })).sort((a, b) => a.sort - b.sort).map(({ value }) => value);
+			let a4 = a2.map(value => ({ value, sort: Math.random() })).sort((a, b) => a.sort - b.sort).map(({ value }) => value);
+			let a5 = [];
+			a5.push(a3);
+			a5.push(a4);
+			';
+			
+			echo 'options.multipleChoiceSetup = a5;';
+		}
 	  ?>
+	  
+	  
 	  const cornerArray = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
 	  shuffledCornerArray = cornerArray.sort((a, b) => 0.5 - Math.random());
 	  options.corner = shuffledCornerArray[0];
@@ -2418,6 +2610,7 @@
 	  options.coord = 'western';
 	  // COORDS = 'none numeric western eastern pierre corner eastcor'.split(' '),
 	  options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/'+'<?php echo $file; ?>';
+	  
 	  //options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/'+'<?php echo $file; ?>'+'<?php echo $requestProblem; ?>';
 	  if (options.theme) addStyleLink('https://<?php echo $_SERVER['HTTP_HOST']; ?>/besogo/css/board-'+options.theme+'.css');
 		//addStyleLink('css/board-' + options.theme + '.css');
@@ -2429,8 +2622,8 @@
     options.reviewMode = false;
     options.reviewEnabled = <?php echo $reviewEnabled ? 'true' : 'false'; ?>;
 	<?php
-		//review always unlocked for d4rkm4tter and kovarex
 		//if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72||$_SESSION['loggedInUser']['User']['id']==13282){
+		//if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72){
 		if(isset($_SESSION['loggedInUser'])){if(false){
 			echo 'options.reviewEnabled = true;';
 		}}
@@ -2445,30 +2638,27 @@
       $('#theComment').text(commentText);
     });
 
-	  function addStyleLink(cssURL)
-	  {
+	function addStyleLink(cssURL)
+	{
 		var element = document.createElement('link');
 		element.href = cssURL;
 		element.type = 'text/css';
 		element.rel = 'stylesheet';
-		
 		document.head.appendChild(element);
-	  }
+	}
 	})();
 	
 	if(mode==2) $("#targetLockOverlay").css('top', '235px');
-	//$(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('id', 'besogo-tsumegoPlayTool-rButton');
-	//$(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('class', 'besogo-tsumegoPlayTool-rButton2');
-	//if(nextButtonLink==0) $(".besogo-tsumegoPlayTool input:nth-last-child(2)").attr('class', 'besogo-tsumegoPlayTool-rButton2');
-	<?php
 	
-	for($i=0; $i<count($dynamicCommentCoords[0]); $i++){
-		echo 'besogo.editor.dynamicCommentCoords("'.$dynamicCommentCoords[0][$i].'", "'.$dynamicCommentCoords[1][$i].'");';
-	}
-	//echo 'besogo.editor.adjustCommentCoords();';
+	<?php
+		for($i=0; $i<count($dynamicCommentCoords[0]); $i++){
+			echo 'besogo.editor.dynamicCommentCoords("'.$dynamicCommentCoords[0][$i].'", "'.$dynamicCommentCoords[1][$i].'");';
+		}
 	?>
 	</script>
-	<?php } ?>
+	<?php 
+	}
+	?>
 	
 	<style>
 	.besogo-panels{

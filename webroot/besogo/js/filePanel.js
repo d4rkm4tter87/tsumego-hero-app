@@ -32,9 +32,9 @@ besogo.makeFilePanel = function(container, editor) {
     // Save file button
     element = document.createElement('input');
     element.type = 'button';
-    element.value = 'Save';
     element.title = 'Export SGF';
 	if(!besogo.isEmbedded){
+		element.value = 'Save';
 		element.onclick = function()
 		{
 		  var fileName = prompt('Save file as', 'export');
@@ -45,12 +45,15 @@ besogo.makeFilePanel = function(container, editor) {
 		  }
 		};
 	}else{
+		element.value = 'Open';
+		element.id = 'openButton';
 		element.onclick = function()
 		{
-		  var fileName = confirm('Save '+clearFile+'?');
+		  //var fileName = confirm('Save '+clearFile+'?');
+		  var fileName = true;
 		  if (fileName) // Canceled or empty string does nothing
 		  {
-			saveFile(file, besogo.composeSgf(editor), true);
+			saveFile(file, besogo.composeSgf(editor), 1);
 			editor.resetEdited();
 		  }
 		};
@@ -81,6 +84,18 @@ besogo.makeFilePanel = function(container, editor) {
 		  }
 		};
 		container.appendChild(element);
+		if(besogo.onSite!==null){
+			element = document.createElement('input');
+			element.type = 'button';
+			element.value = 'Save on Tsumego Hero';
+			element.title = 'Go back to Tsumego Hero and save the problem';
+			element.onclick = function()
+			{
+			  saveFile('export', besogo.composeSgf(editor), 2);
+			  editor.resetEdited();
+			};
+			container.appendChild(element);
+		}
 	}
 
     // Makes a new board button
@@ -157,7 +172,7 @@ besogo.makeFilePanel = function(container, editor) {
     }
 
     // Composes SGF file and initializes download
-    function saveFile(fileName, text, redirect=false)
+    function saveFile(fileName, text, redirect=0)
     {
       var link = document.createElement('a'),
           blob = new Blob([text], { encoding:"UTF-8", type:"text/plain;charset=UTF-8" });
@@ -165,16 +180,23 @@ besogo.makeFilePanel = function(container, editor) {
       link.download = fileName; // Set download file name
       link.href = URL.createObjectURL(blob);
       link.style.display = 'none'; // Make link hidden
-	  if(!redirect){
+	  if(redirect===0){
 		  container.appendChild(link); // Add link to ensure that clicking works
 		  link.click(); // Click on link to initiate download
 		  container.removeChild(link); // Immediately remove the link
+	  }else if(redirect===1){
+		  //text = text.replaceAll(";", "@");
+		  //text = text.replaceAll("ß", "ss");
+		  //text = text.replaceAll("\n", "€");
+		  //document.cookie = "requestProblem="+text;
+		  //window.location.href = "/tsumegos/play/"+tsumegoFileLink+"?requestProblem=true";
+		  //window.location.href = "/editor/?onSite="+text;
+		  window.location.href = "/app/webroot/editor/?onSite="+clearFile2+"$"+tsumegoFileLink;
 	  }else{
 		  text = text.replaceAll(";", "@");
-		  text = text.replaceAll("\n", "€");
-		  document.cookie = "requestProblem="+text;
-		  //console.log(text);
-		  window.location.href = "/tsumegos/play/"+tsumegoFileLink+"?requestProblem=true";
+		  text = text.replaceAll("ß", "ss");
+		  //text = text.replaceAll("\n", "€");
+		  window.location.href = "/tsumegos/play/"+besogo.onSite+"?requestProblem="+besogo.onSite+"&adminSGF="+text;
 	  }
     }
 };

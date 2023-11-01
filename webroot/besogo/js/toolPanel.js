@@ -235,7 +235,7 @@ besogo.makeToolPanel = function(container, editor)
         $("#favButton").attr('src',favImage);
         });
     }
-    
+    if(!besogo.multipleChoice){
     if(mode==1)
     {
       let prevButtonId;
@@ -249,10 +249,9 @@ besogo.makeToolPanel = function(container, editor)
       
       makeButtonText('Reset', 'reset the problem', function()
       {
-		    resetParameters(besogo.editor.getCurrent().parent===null);
+		resetParameters(besogo.editor.getCurrent().parent===null);
         besogo.editor.resetToStart();
         toggleBoardLock(false);
-        
         besogo.editor.setReviewMode(false);
         document.getElementById("status").innerHTML = "";
         document.getElementById("theComment").style.cssText = "display:none;";
@@ -340,7 +339,6 @@ besogo.makeToolPanel = function(container, editor)
 			reviewBoardHeight = reviewBoardWidth/trueRatio;
 		}	
 		$(".besogo-board").css("height",reviewBoardHeight);
-	  
           toggleBoardLock(false);
           deleteNextMoveGroup = true;
           editor.setReviewMode(true);
@@ -372,7 +370,46 @@ besogo.makeToolPanel = function(container, editor)
         besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
       }
     }, reviewButtonId);
-  
+    }else{
+		toggleBoardLock(true, false, true);
+		let prevButtonId;
+		prevButtonId = 'besogo-back-button';
+	    if(prevButtonLink!=0)
+			prevButtonLink = '/tsumegos/play/'+prevButtonLink;
+        else
+			prevButtonLink = '/sets/view/'+nextButtonLinkSet;
+
+	    makeHyperlinkText('Back', 'previous problem', prevButtonLink, prevButtonId);
+	  
+		makeButtonText('Black is dead', '', function()
+        {
+			displayMultipleChoiceResult(1);
+        }, 'besogo-multipleChoice1');
+		
+		makeButtonText('White is dead', '', function()
+        {
+			displayMultipleChoiceResult(2);
+        }, 'besogo-multipleChoice2');
+		
+		makeButtonText('Unsettled', '', function()
+        {
+			displayMultipleChoiceResult(3);
+        }, 'besogo-multipleChoice3');
+		
+		makeButtonText('Seki', '', function()
+        {
+			displayMultipleChoiceResult(4);
+        }, 'besogo-multipleChoice4');
+		let nextButtonId;
+	    let nextButtonLink2 = 0;
+	    nextButtonId = 'besogo-next-button';
+        if(nextButtonLink!=0)
+			nextButtonLink2 = '/tsumegos/play/'+nextButtonLink;
+        else
+			nextButtonLink2 = '/tsumegos/play/'+nextButtonLinkLv+'?refresh=3';
+	  
+	    makeHyperlinkText('Next', 'next problem', nextButtonLink2, nextButtonId);
+	}
     makeAuthorText('author-notice');
   }
 

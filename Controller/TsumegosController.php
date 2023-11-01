@@ -1198,24 +1198,27 @@ class TsumegosController extends AppController{
 		$anzahl = $ts[count($ts)-1]['Tsumego']['num'];
 		$_SESSION['title'] = $set['Set']['title'].' '.$t['Tsumego']['num'].'/'.$anzahl.' on Tsumego Hero';
 		
-		if(isset($_COOKIE['requestProblem']) && $_COOKIE['requestProblem'] != '0'){
-			if($this->params['url']['requestProblem']==true){
-				$requestProblem = $_COOKIE['requestProblem'];
-				$requestProblem = str_replace('@', ';', $requestProblem);
-				$requestProblem = str_replace('€', "\n", $requestProblem);
-				$requestProblem = str_replace('C[  ]', "C[+]", $requestProblem);
-				$requestProblem = str_replace('C[ ]', "C[+]", $requestProblem);
-				$requestProblem = str_replace('C[x]', "C[+]", $requestProblem);
-				file_put_contents('6473k339312/'.$set['Set']['folder'].'/'.$t['Tsumego']['num'].'.sgf', $requestProblem);
-				$this->AdminActivity->create();
-				$adminActivity = array();
-				$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-				$adminActivity['AdminActivity']['tsumego_id'] = $t['Tsumego']['id'];
-				$adminActivity['AdminActivity']['file'] = $t['Tsumego']['num'];
-				$adminActivity['AdminActivity']['answer'] = $t['Tsumego']['num'].'.sgf'.' <font color="grey">(direct save)</font>';
-				$this->AdminActivity->save($adminActivity);
+		if(isset($this->params['url']['adminSGF'])){
+			if(strlen($this->params['url']['adminSGF'])>5){
+				if($_SESSION['loggedInUser']['User']['isAdmin']>=1){
+					if($this->params['url']['requestProblem']==$id){
+						$requestProblem = $this->params['url']['adminSGF'];
+						$requestProblem = str_replace('@', ';', $requestProblem);
+						$requestProblem = str_replace('€', "\n", $requestProblem);
+						$requestProblem = str_replace('C[  ]', "C[+]", $requestProblem);
+						$requestProblem = str_replace('C[ ]', "C[+]", $requestProblem);
+						$requestProblem = str_replace('C[x]', "C[+]", $requestProblem);
+						file_put_contents('6473k339312/'.$set['Set']['folder'].'/'.$t['Tsumego']['num'].'.sgf', $requestProblem);
+						$this->AdminActivity->create();
+						$adminActivity = array();
+						$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+						$adminActivity['AdminActivity']['tsumego_id'] = $t['Tsumego']['id'];
+						$adminActivity['AdminActivity']['file'] = $t['Tsumego']['num'];
+						$adminActivity['AdminActivity']['answer'] = $t['Tsumego']['num'].'.sgf'.' <font color="grey">(direct save)</font>';
+						$this->AdminActivity->save($adminActivity);
+					}
+				}
 			}
-			unset($_COOKIE['requestProblem']);
 		}
 		
 		$prev = 0;
