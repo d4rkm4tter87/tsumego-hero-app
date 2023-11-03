@@ -44,21 +44,9 @@ besogo.makeFilePanel = function(container, editor) {
 			editor.resetEdited();
 		  }
 		};
-	}else{
-		element.value = 'Open';
-		element.id = 'openButton';
-		element.onclick = function()
-		{
-		  //var fileName = confirm('Save '+clearFile+'?');
-		  var fileName = true;
-		  if (fileName) // Canceled or empty string does nothing
-		  {
-			saveFile(file, besogo.composeSgf(editor), 1);
-			editor.resetEdited();
-		  }
-		};
+		 container.appendChild(element);
 	}
-    container.appendChild(element);
+   
 	
 	if(!besogo.isEmbedded){
 		// Save file button

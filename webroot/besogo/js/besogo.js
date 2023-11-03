@@ -23,7 +23,7 @@
   besogo.multipleChoiceSetup = [];//multiple choice random stone placement
   besogo.onSite = null;
   let corner;
-
+  
   function getMakers()
   {
     let makers = [];
@@ -255,7 +255,8 @@
 		besogo.onSite = options.onSite.replaceAll('%20', ' ');
 		let onSiteArray = besogo.onSite.split('$');
 		besogo.onSite = onSiteArray[1];
-		options.sgf = 'https://tsumego-hero/6473k339312/'+onSiteArray[0]+'.sgf';
+		//options.sgf = 'https://tsumego-hero/6473k339312/'+onSiteArray[0]+'.sgf';
+		options.sgf = 'https://'+onSiteArray[2]+'/6473k339312/'+onSiteArray[0]+'.sgf';
 	}
 		
 	let sgfLoaded =

@@ -62,6 +62,19 @@
 	else echo $aCount.' users unlocked this achievement.';
 	
 	?><br><br>
+	<font color="gray">
+	<?php
+	if($aCount>0){
+		echo 'Unlocked by ';
+		for($i=0; $i<count($asAll); $i++){
+			echo $asAll[$i]['AchievementStatus']['name'];
+			if($i<count($asAll)-1) echo ', ';
+			
+		}
+		echo $andMore;
+	}
+	?>
+	</font>
 	</div>
 		
 	</div>

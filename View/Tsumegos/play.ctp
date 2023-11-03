@@ -390,7 +390,7 @@
 	</table>
 	<div align="center">
 	<?php
-		/*
+		/*//§
 		echo ' semeaiType:'.$t['Tsumego']['semeaiType'];
 		echo ' minLib:'.$t['Tsumego']['minLib'];
 		echo ' maxLib:'.$t['Tsumego']['maxLib'];
@@ -530,7 +530,7 @@
 			if($_SESSION['loggedInUser']['User']['isAdmin']==1){
 					echo '<a id="showx4" href="/download.php?key='.$hash.'&title=" style="margin-right:20px;" class="selectable-text">Admin-Download SGF</a>';
 					echo '<a id="show4" style="margin-right:20px;" class="selectable-text">Admin-Upload SGF<img id="greyArrow4" src="/img/greyArrow1.png"></a>';
-					echo '<a id="showx5" href="/app/webroot/editor/?onSite='.$set['Set']['folder'].'/'.$t['Tsumego']['num'].'$'.$t['Tsumego']['id'].'" style="margin-right:20px;" class="selectable-text">Open</a>';
+					echo '<a id="showx5" href="/app/webroot/editor/?onSite='.$set['Set']['folder'].'/'.$t['Tsumego']['num'].'$'.$t['Tsumego']['id'].'$'.$_SERVER['HTTP_HOST'].'" style="margin-right:20px;" class="selectable-text">Open</a>';
 					echo '<a id="show5" class="selectable-text">Settings<img id="greyArrow5" src="/img/greyArrow1.png"></a>';
 					if($virtual_children==1){
 						$vcOn = 'checked="checked"';
@@ -2435,7 +2435,52 @@
 				
 				$(".alertBox").css("height", "310px");
 			}else if(multipleChoiceSemeaiType==3){
+				if(multipleChoiceLibertiesB<multipleChoiceLibertiesW){
+					correct = 1;
+					$("#besogo-multipleChoice1").css("background-color", "#3ecf78");
+					mText3 = multipleChoiceLibertiesW-multipleChoiceLibertiesB;
+					if(mText3==1) mTextPlural = "";
+					mText2 = "Black is dead. ("+mText3+" move"+mTextPlural+" behind)";
+				}else if(multipleChoiceLibertiesB>multipleChoiceLibertiesW){
+					correct = 2;
+					$("#besogo-multipleChoice2").css("background-color", "#3ecf78");
+					mText3 = multipleChoiceLibertiesB-multipleChoiceLibertiesW;
+					if(mText3==1) mTextPlural = "";
+					mText2 = "White is dead. ("+mText3+" move"+mTextPlural+" behind)";
+				}else{
+					correct = 3;
+					$("#besogo-multipleChoice3").css("background-color", "#3ecf78");
+					mText2 = "The position is unsettled. (Whoever plays first wins.)";
+				}
+				if(multipleChoiceLibertiesB2==1) libPlural1 = "liberty";
+				if(multipleChoiceLibertiesW2==1) libPlural2 = "liberty";
+				mText = "Semeai Type 3: Eye vs no eye.<br>No Seki possible.<br> All inside liberties count for the group with the eye.<br>Black has "+multipleChoiceLibertiesB2
+				+" "+libPlural1+".<br> White has "+multipleChoiceLibertiesW2+" "+libPlural2+".<br>"+mText2;
+				$(".alertBox").css("height", "220px");
 			}else if(multipleChoiceSemeaiType==4){
+				mText = "Semeai Type 4: Same sized big eyes.<br>";
+				if(multipleChoiceInsideLiberties==0){
+					mText += "No Seki possible because there are no inside liberties.<br>";
+					console.log(multipleChoiceLibertiesB);
+					console.log(multipleChoiceLibertiesW);
+					multipleChoiceLibertiesB2 = multipleChoiceLibertyCount-multipleChoiceLibertiesB;
+					multipleChoiceLibertiesW2 = multipleChoiceLibertyCount-multipleChoiceLibertiesW;
+					mText += "Black has "+multipleChoiceLibertiesB2+".<br>";
+					mText += "White has "+multipleChoiceLibertiesW2+".<br>";
+					if(multipleChoiceLibertiesB>multipleChoiceLibertiesW){
+						libCalcB = multipleChoiceLibertiesB-multipleChoiceLibertiesW;
+						mText += "White is dead. ("+libCalcB+" moves behind)<br>";
+						correct = 2;
+					}else if(multipleChoiceLibertiesB<multipleChoiceLibertiesW){
+						libCalcW = multipleChoiceLibertiesW-multipleChoiceLibertiesB;
+						mText += "Black is dead. ("+libCalcW+" moves behind)<br>";
+						correct = 1;
+					}else{
+						mText += "Unsettled.<br>";
+						correct = 3;
+					}
+				}
+				$(".alertBox").css("height", "220px");//§
 			}else if(multipleChoiceSemeaiType==5){
 			}else if(multipleChoiceSemeaiType==6){
 			
@@ -2594,7 +2639,6 @@
 			echo 'options.multipleChoiceSetup = a5;';
 		}
 	  ?>
-	  
 	  
 	  const cornerArray = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
 	  shuffledCornerArray = cornerArray.sort((a, b) => 0.5 - Math.random());

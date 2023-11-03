@@ -23,7 +23,8 @@ besogo.makeBoardDisplay = function(container, editor, corner)
 	
 	besogo.scaleParameters['boardCoordSize'] = sizeX;
 	//Not a 19x19 board, so it should be full board view
-    if(sizeX != 19)
+	//or not embedded viewer
+    if(sizeX != 19 || !besogo.isEmbedded)
     {
       besogo.scaleParameters['orientation'] = 'full-board';
       besogo.boardParameters['fullBoard'] = true;
@@ -208,7 +209,7 @@ besogo.makeBoardDisplay = function(container, editor, corner)
 
     besogo.boardParameters['boardHeight2'] = besogo.boardParameters['fullBoardWidth'] - besogo.boardParameters['boardHeight'];
     besogo.boardParameters['boardHeight3'] = besogo.boardParameters['fullBoardWidth'] - besogo.boardParameters['boardHeight2'];
-
+	
     if(corner==='top-right' && besogo.scaleParameters['orientation']!=='full-board')
       svg.setAttribute('viewBox', besogo.boardParameters['boardWidth2'] + ' ' + 0 + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
     else if(corner==='bottom-left' && besogo.scaleParameters['orientation']!=='full-board')

@@ -29,9 +29,11 @@ class AchievementsController extends AppController {
 	
 	public function view($id=null){
 		$this->LoadModel('AchievementStatus');
+		$this->LoadModel('User');
 		$a = $this->Achievement->findById($id);
 		$as = array();
-		$aCount = count($this->AchievementStatus->find('all', array('conditions' => array('achievement_id' => $id))));
+		$asAll = $this->AchievementStatus->find('all', array('order' => 'created DESC','conditions' => array('achievement_id' => $id)));
+		$aCount = count($asAll);
 		if(isset($_SESSION['loggedInUser'])){
 			$as = $this->AchievementStatus->find('first', array('conditions' => array('achievement_id' => $id, 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
 		}
@@ -39,9 +41,23 @@ class AchievementsController extends AppController {
 			$date = date_create($as['AchievementStatus']['created']);
 			$as['AchievementStatus']['created'] = date_format($date,"d.m.Y H:i");
 		}
+		$asAll2 = array();
+		$count = 10;
+		if(count($asAll)<10) $count = count($asAll);
+		if(count($asAll)>10) $andMore = ' and more.';
+		else $andMore = '.';
+		for($i=0; $i<$count; $i++){
+			$u = $this->User->findById($asAll[$i]['AchievementStatus']['user_id']);
+			$asAll[$i]['AchievementStatus']['name'] = $u['User']['name'];
+			array_push($asAll2, $asAll[$i]);
+		}
+		$asAll = $asAll2;
+		
 		$this->set('a', $a);
 		$this->set('as', $as);
+		$this->set('asAll', $asAll);
 		$this->set('aCount', $aCount);
+		$this->set('andMore', $andMore);
 	}
 	
 }
