@@ -118,6 +118,44 @@ besogo.addTest("Status", "SaveLoadApproachKoWithNegativeExtraThreats", function(
   CHECK_EQUALS(statusLoaded.blackFirst.extraThreats, -1);
 });
 
+besogo.addTest("Status", "SaveLoadTenThousandYearsKo", function()
+{
+  let status = besogo.makeStatusSimple(STATUS_TEN_THOUSAND_YEARS_KO);
+  CHECK_EQUALS(status.str(), "10kKO");
+  let statusLoaded = besogo.loadStatusFromString(status.str());
+  CHECK_EQUALS(statusLoaded.str(), "10kKO");
+  CHECK_EQUALS(statusLoaded.blackFirst.type, STATUS_TEN_THOUSAND_YEARS_KO);
+});
+
+besogo.addTest("Status", "TenThousandYearsKoIsWorseThanDirectKo", function()
+{
+  let statusBad = besogo.makeStatusSimple(STATUS_TEN_THOUSAND_YEARS_KO);
+  let statusGood = besogo.makeStatusSimple(STATUS_KO);
+
+  CHECK(statusGood.better(statusBad));
+  CHECK(!statusBad.better(statusGood));
+});
+
+besogo.addTest("Status", "TenThousandYearsKoIsSameAsOneMoveApproachKo", function()
+{
+  let status1 = besogo.makeStatusSimple(STATUS_TEN_THOUSAND_YEARS_KO);
+  let status2 = besogo.makeStatusSimple(STATUS_KO);
+  status2.setApproachKo(-1);
+
+  CHECK(!status1.better(status2));
+  CHECK(!status2.better(status1));
+});
+
+besogo.addTest("Status", "TenThousandYearsKoIsBetterThanTwoMovesApproachKo", function()
+{
+  let statusGood = besogo.makeStatusSimple(STATUS_TEN_THOUSAND_YEARS_KO);
+  let statusBad = besogo.makeStatusSimple(STATUS_KO);
+  statusBad.setApproachKo(-2);
+
+  CHECK(statusGood.better(statusBad));
+  CHECK(!statusBad.better(statusGood));
+});
+
 besogo.addTest("Status", "StatusSekiSimple", function()
 {
   let status1 = besogo.makeStatus();

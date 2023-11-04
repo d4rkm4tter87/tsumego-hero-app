@@ -17,6 +17,7 @@ besogo.makeCommentPanel = function(container, editor)
       koSelection = null,
       koExtraThreats = null,
       koApproaches = null,
+      tenThousandYearsKoSelection = null,
       sekiSelection = null,
       sekiSente = null,
       aliveSelection = null,
@@ -220,6 +221,7 @@ besogo.makeCommentPanel = function(container, editor)
     koSettingsSpan.appendChild(koExtraThreats);
 
     koSelection = createRadioButtonRow(table, 'ko', STATUS_KO, koSettingsSpan);
+    tenThousandYearsKoSelection = createRadioButtonRow(table, '10 000 years ko', STATUS_TEN_THOUSAND_YEARS_KO);
 
     let sekiSenteSpan = document.createElement('span');
     sekiSente = createCheckBox(sekiSenteSpan, 'sente', function(event)
@@ -248,6 +250,7 @@ besogo.makeCommentPanel = function(container, editor)
                        editable &&
                        editor.getCurrent().statusSource &&
                        editor.getCurrent().statusSource.blackFirst.type == STATUS_KO);
+    setEnabledCarefuly(tenThousandYearsKoSelection, editable);
     setEnabledCarefuly(sekiSelection, editable);
     setEnabledCarefuly(sekiSente,
                        editable &&
@@ -295,6 +298,12 @@ besogo.makeCommentPanel = function(container, editor)
     {
       sekiSelection.checked = true;
       sekiSente.checked = editor.getCurrent().status.blackFirst.sente;
+      return;
+    }
+
+    if (editor.getCurrent().status.blackFirst.type == STATUS_TEN_THOUSAND_YEARS_KO)
+    {
+      tenThousandYearsKoSelection.checked = true;
       return;
     }
 

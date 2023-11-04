@@ -1,6 +1,5 @@
-besogo.makeEditor = function(sizeX, sizeY, options)
+besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
 {
-  'use strict';
   // Creates an associated game state tree
   var root = besogo.makeGameRoot(sizeX, sizeY),
       current = root, // Navigation cursor
@@ -23,7 +22,7 @@ besogo.makeEditor = function(sizeX, sizeY, options)
 
       navHistory = [], // Navigation history
       gameInfo = {}, // Game info properties
-    nextOpen = [],
+      nextOpen = [],
       // Order of coordinate systems
       COORDS = 'none numeric western eastern pierre corner eastcor'.split(' '),
       coord = 'none', // Selected coordinate system

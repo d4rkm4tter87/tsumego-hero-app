@@ -1,13 +1,14 @@
 const GOAL_NONE = 0;
-const GOAL_KILL = 1;
+GOAL_KILL = 1;
 const GOAL_LIVE = 2;
 
 const STATUS_NONE = 0;
 const STATUS_DEAD = 1;
-const STATUS_KO = 2;
-const STATUS_SEKI = 3;
-const STATUS_ALIVE = 4;
-const STATUS_ALIVE_NONE = 5;
+const STATUS_TEN_THOUSAND_YEARS_KO = 2;
+const STATUS_KO = 3;
+const STATUS_SEKI = 4;
+const STATUS_ALIVE = 5;
+const STATUS_ALIVE_NONE = 6;
 
 besogo.makeStatusInternal = function(type)
 {
@@ -25,13 +26,12 @@ besogo.makeStatusInternal = function(type)
   {
     if (this.type == STATUS_DEAD)
       return "DEAD";
+    if (this.type == STATUS_TEN_THOUSAND_YEARS_KO)
+      return "10kKO";
     if (this.type == STATUS_KO)
-      return result = this.getKoApproachesStr() + 'KO' + this.getKoStr();
-
+      return this.getKoApproachesStr() + 'KO' + this.getKoStr();
     if (this.type == STATUS_SEKI)
-    {
       return "SEKI" + (this.sente ? '+' : '');
-    }
     if (this.type == STATUS_ALIVE)
       return "ALIVE";
   }
@@ -45,6 +45,8 @@ besogo.makeStatusInternal = function(type)
 
   status.strLong = function()
   {
+    if (this.type == STATUS_TEN_THOUSAND_YEARS_KO)
+      return "Ten thousand years ko";
     if (this.type == STATUS_KO)
       return result = this.str() + ' (' + this.getKoApproachStrLong() + this.getKoStrLong() + ')';
     if (this.type == STATUS_SEKI)
@@ -111,6 +113,8 @@ besogo.makeStatusInternal = function(type)
       return 'Black needs ' + (-this.extraThreats - 1) + ' threat' + (this.extraThreats < -2 ? 's' : '') + ' to start the ko';
   }
 
+
+
   status.setKo = function(extraThreats)
   {
     this.type = STATUS_KO;
@@ -132,6 +136,12 @@ besogo.makeStatusInternal = function(type)
 
   status.better = function(other, goal)
   {
+    if (this.type == STATUS_TEN_THOUSAND_YEARS_KO)
+      if (other.type == STATUS_KO)
+        return other.approaches < -1;
+    if (other.type == STATUS_TEN_THOUSAND_YEARS_KO)
+      if (this.type == STATUS_KO)
+        return this.approaches > -1;
     if (this.type != other.type)
       return goal == GOAL_KILL ? (this.type < other.type) : (this.type > other.type);
     if (this.type == STATUS_KO)
@@ -193,6 +203,9 @@ besogo.loadStatusInternalFromString = function(str)
   }
   if (str == "ALIVE")
     return besogo.makeStatusInternal(STATUS_ALIVE);
+
+  if (str == "10kKO")
+    return besogo.makeStatusInternal(STATUS_TEN_THOUSAND_YEARS_KO);
 
   var approaches = 0;
   if (str[0] == "A" && (str[1] == "+" || str[1] == "-"))
