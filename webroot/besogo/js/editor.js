@@ -440,7 +440,10 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
     setTimeout(function()
     {
       toggleBoardLock(true);
-      displayResult(node.correct ? 'S' : 'F');
+      if (node.localEdit)
+        displayResult('F');
+      else
+        displayResult(node.correct ? 'S' : 'F');
     }, 360);
   }
 
