@@ -30,6 +30,7 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
     node.statusSource = null;
     node.status = null;
     node.visited = false;
+    node.localEdit = false;
   }
   initNode(root, null); // Initialize root node with null parent
   root.relevantMoves = [];
@@ -255,6 +256,8 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
 
   root.getCorrectColor = function()
   {
+    if (this.localEdit)
+      return 'blue';
     if (this.correct)
       return 'green';
     return 'red';
@@ -310,8 +313,11 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
     if (this.statusSource)
       this.statusSource = null;
     this.children.push(child);
-    this.correct = false;
-    this.correctSource = false;
+    if (!child.localEdit)
+    {
+      this.correct = false;
+      this.correctSource = false;
+    }
     return child;
   };
 
@@ -601,7 +607,7 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
 
   root.setStatusSource = function(statusSource)
   {
-    if (this.hasChildIncludingVirtual())
+    if (this.hasNonLocalChildIncludingVirtual())
       return false;
     this.statusSource = statusSource;
     besogo.updateCorrectValues(this.getRoot());
@@ -614,9 +620,9 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
       this.children[i].checkConsistency();
 
     if (this.statusSource)
-      console.assert(!this.hasChildIncludingVirtual());
+      console.assert(!this.hasNonLocalChildIncludingVirtual());
     if (this.correctSource)
-      console.assert(!this.hasChildIncludingVirtual());
+      console.assert(!this.hasNonLocalChildIncludingVirtual());
     if (this.nodeHashTable)
       console.assert(this.parent == null);
     console.assert(this.status != null);
@@ -625,6 +631,57 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
   root.hasChildIncludingVirtual = function()
   {
     return this.children.length != 0 || this.virtualChildren.length != 0;
+  }
+
+  root.hasNonLocalChildIncludingVirtual = function()
+  {
+    if (this.children.length == 0 && this.virtualChildren.length == 0)
+      return false;
+    for (let i = 0; i < this.children.length; ++i)
+      if (!this.children[i].localEdit)
+        return true;
+    for (let i = 0; i < this.virtualChildren.length; ++i)
+      if (!this.virtualChildren[i].localEdit)
+        return true;
+    return false;
+  }
+
+  root.hasChildDependingOnAutoPlay = function(autoPlay)
+  {
+    if (autoPlay)
+      return this.hasNonLocalChildIncludingVirtual();
+    return this.hasChildIncludingVirtual;
+  }
+
+  root.countOfNonLocalChildrenIncludingVirtualWithNoBetterStatus = function()
+  {
+    let result = 0;
+    for (let i = 0; i < this.children.length; ++i)
+      if (!this.children[i].localEdit && (this.correct || !this.children[i].correct)) // don't select correct variant inside incorrect
+        ++result;
+    for (let i = 0; i < this.virtualChildren.length; ++i)
+      if (!this.virtualChildren[i].localEdit && (this.correct || !this.virtualChildren[i].correct))
+        ++result;
+    return false;
+  }
+
+  root.selectNonLocalChildIncludingVirtualWithNoBetterStatus = function(indexToSelect)
+  {
+    let currentIndex = 0;
+    for (let i = 0; i < this.children.length; ++i)
+      if (!this.children[i].localEdit && (this.correct || !this.children[i].correct)) // don't select correct variant inside incorrect
+        if (currentIndex == indexToSelect)
+          return this.children[i];
+        else
+          ++currentIndex;
+    for (let i = 0; i < this.virtualChildren.length; ++i)
+      if (!this.virtualChildren[i].localEdit && (this.correct || !this.virtualChildren[i].correct))
+        if (currentIndex == indexToSelect)
+          return this.virtualChildren[i];
+        else
+          ++currentIndex;
+    assert(false);
+    return null; // this shouldn't happen
   }
 
   root.setGoal = function(goal)
@@ -679,7 +736,7 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
   root.getCountOfLeafsWithoutStatus = function()
   {
     let result = 0;
-    if (!this.hasChildIncludingVirtual() && !this.statusSource)
+    if (!this.hasNonLocalChildIncludingVirtual() && !this.statusSource)
       ++result;
     for (let i = 0; i < this.children.length; ++i)
       result += this.children[i].getCountOfLeafsWithoutStatus();
@@ -688,7 +745,7 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
 
   root.getLeafWithoutStatus = function()
   {
-    if (!this.hasChildIncludingVirtual() && !this.statusSource)
+    if (!this.hasNonLocalChildIncludingVirtual() && !this.statusSource)
       return this;
     for (let i = 0; i < this.children.length; ++i)
     {

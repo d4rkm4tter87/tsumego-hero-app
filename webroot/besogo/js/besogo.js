@@ -1,4 +1,5 @@
-(function() {
+(function()
+{
   'use strict';
   var besogo = window.besogo = window.besogo || {}; // Establish our namespace
   besogo.VERSION = '0.0.2-alpha';
@@ -23,7 +24,7 @@
   besogo.multipleChoiceSetup = [];//multiple choice random stone placement
   besogo.onSite = null;
   let corner;
-  
+
   function getMakers()
   {
     let makers = [];
@@ -35,7 +36,7 @@
     makers['file'] = besogo.makeFilePanel;
     return makers;
   }
-  
+
  // Sets dimensions with optional height param
   function setDimensions(width, height)
   {
@@ -75,17 +76,17 @@
   {
     boardDiv = makeDiv('besogo-board', container); // Create div for board display
     boardDisplay = besogo.makeBoardDisplay(boardDiv, besogo.editor, corner); // Create board display
-	besogo.boardDisplay = boardDisplay;
-	
+    besogo.boardDisplay = boardDisplay;
+
     if (!options.nokeys) // Add keypress handler unless nokeys option is truthy
       addKeypressHandler(container, besogo.editor, boardDisplay);
 
     if (!options.nowheel)
     // Add mousewheel handler unless nowheel option is truthy
       addWheelHandler(boardDiv, besogo.editor);
-	
+
     let panelsDiv;
-	
+
     if (options.panels.length > 0) // Only create if there are panels to add
     {
       panelsDiv = makeDiv('besogo-panels', container);
@@ -104,7 +105,7 @@
     }
 
     // Only create if there are panels to add
-    if(options.tsumegoPlayTool && options.panels2.length > 0)
+    if (options.tsumegoPlayTool && options.panels2.length > 0)
     {
       panelsDiv = makeDiv('besogo-bottom-panels', container);
       for (let i = 0; i < options.panels2.length; i++)
@@ -249,7 +250,7 @@
         boardDisplay,
         boardDiv, // Board display container
         insideText = container.textContent || container.innerText || '';
-	if(typeof options.tsumegoPlayTool === 'string') 
+	if(typeof options.tsumegoPlayTool === 'string')
 		besogo.isEmbedded = true;
 	if(typeof options.onSite === 'string'){
 		besogo.onSite = options.onSite.replaceAll('%20', ' ');
@@ -258,7 +259,7 @@
 		//options.sgf = 'https://tsumego-hero/6473k339312/'+onSiteArray[0]+'.sgf';
 		options.sgf = 'https://'+onSiteArray[2]+'/6473k339312/'+onSiteArray[0]+'.sgf';
 	}
-		
+
 	let sgfLoaded =
     {
       aInternal: 10,
@@ -325,8 +326,11 @@
     besogo.editor = besogo.makeEditor(options.size.x, options.size.y, options);
     container.besogoEditor = besogo.editor;
     besogo.editor.setTool(options.tool);
-    if(options.tsumegoPlayTool) besogo.editor.setTool(options.tsumegoPlayTool);
-      besogo.editor.setCoordStyle(options.coord);
+    if (options.tsumegoPlayTool)
+      besogo.editor.setTool(options.tsumegoPlayTool);
+    if (options.fullEditor)
+      besogo.editor.setFullEditor(true)
+    besogo.editor.setCoordStyle(options.coord);
     if (options.realstones) // Using realistic stones
     {
       besogo.editor.REAL_STONES = true;
@@ -539,7 +543,7 @@
     }
 
     besogo.scaleParameters = besogo.loadSgf(sgf, editor);
-	
+
     //if the setting is not full-board
     if(besogo.scaleParameters['orientation']!=='full-board')
     {
@@ -557,24 +561,24 @@
         besogo.editor.applyTransformation(transformation);
       }
       besogo.scaleParameters['orientation'] = 'top-left';
-      
+
 	  //enlarge area based on places stones
-	  if(besogo.scaleParameters['highestX'] >= 10) 
+	  if(besogo.scaleParameters['highestX'] >= 10)
 		  besogo.scaleParameters['highestX'] = 19;
-      else 
+      else
 		  besogo.scaleParameters['highestX'] += 3;
-      if(besogo.scaleParameters['highestY'] >= 10) 
+      if(besogo.scaleParameters['highestY'] >= 10)
 		  besogo.scaleParameters['highestY'] = 19;
-      else 
+      else
 		  besogo.scaleParameters['highestY'] += 3;
-	  
+
 	  if(besogo.scaleParameters['highestX']===19 && besogo.scaleParameters['highestY']!==19)
 		besogo.scaleParameters['boardCanvasSize'] = 'horizontal half board';
 	  else if(besogo.scaleParameters['highestX']!==19 && besogo.scaleParameters['highestY']===19)
 		besogo.scaleParameters['boardCanvasSize'] = 'vertical half board';
 	  else
 		besogo.scaleParameters['boardCanvasSize'] = 'regular board';
-	  
+
 	  //half boards only have 2 orientations, not 4
 	  if(besogo.scaleParameters['boardCanvasSize']==='horizontal half board')
 	  {
@@ -600,9 +604,9 @@
 		{
 			corner = 'top-right';
 			besogo.scaleParameters['orientation'] = 'top-right';
-		}  
+		}
 	  }
-	  
+
 	  //if another corner than top-left is set
       if(corner=='top-right')
       {
@@ -637,19 +641,19 @@
 	    besogo.coordArea['highestY'] = 18-besogo.coordArea['highestY'];
       }
     }
-	
+
 	let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
 	besogo.coordArea['lowestXconverted'] = convertedCoords.x[besogo.coordArea['lowestX']+1];
 	besogo.coordArea['highestXconverted'] = convertedCoords.x[besogo.coordArea['highestX']+1];
 	besogo.coordArea['lowestYconverted'] = convertedCoords.y[besogo.coordArea['lowestY']+1];
-	besogo.coordArea['highestYconverted'] = convertedCoords.y[besogo.coordArea['highestY']+1];  
+	besogo.coordArea['highestYconverted'] = convertedCoords.y[besogo.coordArea['highestY']+1];
 	/*
 	console.log(besogo.scaleParameters);
 	console.log(besogo.boardParameters);
 	console.log(besogo.coordArea);
 	*/
 	if(besogo.isEmbedded) besogo.editor.adjustCommentCoords();
-	
+
     if(besogo.playerColor==="white")
     {
       let transformation = besogo.makeTransformation();

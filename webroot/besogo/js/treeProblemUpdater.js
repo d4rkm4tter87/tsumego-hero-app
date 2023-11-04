@@ -96,7 +96,7 @@ besogo.clearCorrectValues = function(node)
 {
   delete node.correct;
   node.status = null;
-  if (node.hasChildIncludingVirtual())
+  if (node.hasNonLocalChildIncludingVirtual())
     node.statusSource = null;
   for (let i = 0; i < node.children.length; ++i)
     besogo.clearCorrectValues(node.children[i]);
@@ -124,7 +124,7 @@ besogo.updateStatusValuesInternal = function(root, node, goal)
 {
   if (node.statusSource)
   {
-    console.assert(!node.hasChildIncludingVirtual());
+    console.assert(!node.hasNonLocalChildIncludingVirtual());
     node.status = node.statusSource;
     return;
   }
@@ -178,16 +178,18 @@ besogo.updateCorrectValuesInternal = function(root, node)
   var hasWin = false;
 
   for (let i = 0; i < node.children.length; ++i)
-    if (besogo.updateCorrectValuesInternal(root, node.children[i]))
-      hasWin = true;
-    else
-      hasLoss = true;
+    if (!node.children[i].localEdit)
+      if (besogo.updateCorrectValuesInternal(root, node.children[i]))
+        hasWin = true;
+      else
+        hasLoss = true;
 
   for (let i = 0; i < node.virtualChildren.length; ++i)
-    if (besogo.updateCorrectValuesInternal(root, node.virtualChildren[i].target))
-      hasWin = true;
-    else
-      hasLoss = true;
+    if (!node.virtualChildren[i].localEdit)
+      if (besogo.updateCorrectValuesInternal(root, node.virtualChildren[i].target))
+        hasWin = true;
+      else
+        hasLoss = true;
 
   let solversMove = (node.nextMove() == root.firstMove);
   if (solversMove)
@@ -209,5 +211,6 @@ besogo.updateCorrectValuesBasedOnStatus = function(node, goal, parentStatus, isC
   node.correct = isCorrectBranch && !parentStatus.better(node.status, goal);
 
   for (let i = 0; i < node.children.length; ++i)
-    besogo.updateCorrectValuesBasedOnStatus(node.children[i], goal, node.status, node.correct)
+    if (!node.children[i].localEdit)
+      besogo.updateCorrectValuesBasedOnStatus(node.children[i], goal, node.status, node.correct)
 };
