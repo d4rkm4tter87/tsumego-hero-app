@@ -18,6 +18,9 @@ besogo.makeCommentPanel = function(container, editor)
       koExtraThreats = null,
       koApproaches = null,
       tenThousandYearsKoSelection = null,
+      bent4InTheCornerSelection = null,
+      deadInDoubleKoSelection = null,
+      aliveInDoubleKoSelection = null,
       sekiSelection = null,
       sekiSente = null,
       aliveSelection = null,
@@ -179,6 +182,8 @@ besogo.makeCommentPanel = function(container, editor)
 
     noneSelection = createRadioButtonRow(table, 'none', STATUS_NONE);
     deadSelection = createRadioButtonRow(table, 'dead', STATUS_DEAD);
+    bent4InTheCornerSelection = createRadioButtonRow(table, 'Bent 4 in the corner', STATUS_BENT_FOUR_IN_THE_CORNER);
+    deadInDoubleKoSelection = createRadioButtonRow(table, 'Dead in double ko', STATUS_DEAD_IN_DOUBLE_KO);
 
     let koSettingsSpan = document.createElement('span');
 
@@ -231,6 +236,7 @@ besogo.makeCommentPanel = function(container, editor)
     });
 
     sekiSelection = createRadioButtonRow(table, 'seki', STATUS_SEKI, sekiSenteSpan);
+    aliveInDoubleKoSelection = createRadioButtonRow(table, 'Alive in double ko', STATUS_ALIVE_IN_DOUBLE_KO);
     aliveSelection = createRadioButtonRow(table, 'alive', STATUS_ALIVE);
 
     return table;
@@ -241,6 +247,8 @@ besogo.makeCommentPanel = function(container, editor)
     let editable = !editor.getCurrent().hasChildIncludingVirtual() && editor.getRoot().goal != GOAL_NONE;
     setEnabledCarefuly(noneSelection, editable);
     setEnabledCarefuly(deadSelection, editable);
+    setEnabledCarefuly(bent4InTheCornerSelection, editable);
+    setEnabledCarefuly(deadInDoubleKoSelection, editable);
     setEnabledCarefuly(koSelection, editable);
     setEnabledCarefuly(koExtraThreats,
                        editable &&
@@ -256,6 +264,7 @@ besogo.makeCommentPanel = function(container, editor)
                        editable &&
                        editor.getCurrent().statusSource &&
                        editor.getCurrent().statusSource.blackFirst.type == STATUS_SEKI);
+    setEnabledCarefuly(aliveInDoubleKoSelection, editable);
     setEnabledCarefuly(aliveSelection, editable);
   }
 
@@ -286,6 +295,18 @@ besogo.makeCommentPanel = function(container, editor)
       return;
     }
 
+    if (editor.getCurrent().status.blackFirst.type == STATUS_BENT_FOUR_IN_THE_CORNER)
+    {
+      bent4InTheCornerSelection.checked = true;
+      return;
+    }
+
+    if (editor.getCurrent().status.blackFirst.type == STATUS_DEAD_IN_DOUBLE_KO)
+    {
+      deadInDoubleKoSelection.checked = true;
+      return;
+    }
+
     if (editor.getCurrent().status.blackFirst.type == STATUS_KO)
     {
       koSelection.checked = true;
@@ -304,6 +325,12 @@ besogo.makeCommentPanel = function(container, editor)
     if (editor.getCurrent().status.blackFirst.type == STATUS_TEN_THOUSAND_YEARS_KO)
     {
       tenThousandYearsKoSelection.checked = true;
+      return;
+    }
+
+    if (editor.getCurrent().status.blackFirst.type == STATUS_ALIVE_IN_DOUBLE_KO)
+    {
+      aliveInDoubleKoSelection.checked = true;
       return;
     }
 

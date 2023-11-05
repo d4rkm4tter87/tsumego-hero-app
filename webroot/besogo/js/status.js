@@ -4,11 +4,14 @@ const GOAL_LIVE = 2;
 
 const STATUS_NONE = 0;
 const STATUS_DEAD = 1;
-const STATUS_TEN_THOUSAND_YEARS_KO = 2;
-const STATUS_KO = 3;
-const STATUS_SEKI = 4;
-const STATUS_ALIVE = 5;
-const STATUS_ALIVE_NONE = 6;
+const STATUS_BENT_FOUR_IN_THE_CORNER = 2;
+const STATUS_DEAD_IN_DOUBLE_KO = 3;
+const STATUS_TEN_THOUSAND_YEARS_KO = 4;
+const STATUS_KO = 5;
+const STATUS_SEKI = 6;
+const STATUS_ALIVE_IN_DOUBLE_KO = 7;
+const STATUS_ALIVE = 8;
+const STATUS_ALIVE_NONE = 9;
 
 besogo.makeStatusInternal = function(type)
 {
@@ -26,6 +29,12 @@ besogo.makeStatusInternal = function(type)
   {
     if (this.type == STATUS_DEAD)
       return "DEAD";
+    if (this.type == STATUS_BENT_FOUR_IN_THE_CORNER)
+      return "BENT4";
+    if (this.type == STATUS_DEAD_IN_DOUBLE_KO)
+      return "DDKO";
+    if (this.type == STATUS_ALIVE_IN_DOUBLE_KO)
+      return "ADKO";
     if (this.type == STATUS_TEN_THOUSAND_YEARS_KO)
       return "10kKO";
     if (this.type == STATUS_KO)
@@ -47,6 +56,12 @@ besogo.makeStatusInternal = function(type)
   {
     if (this.type == STATUS_TEN_THOUSAND_YEARS_KO)
       return "Ten thousand years ko";
+    if (this.type == STATUS_BENT_FOUR_IN_THE_CORNER)
+      return "Bent four in the corner";
+    if (this.type == STATUS_DEAD_IN_DOUBLE_KO)
+      return "Dead in double ko";
+    if (this.type == STATUS_ALIVE_IN_DOUBLE_KO)
+      return "Alive in double ko";
     if (this.type == STATUS_KO)
       return result = this.str() + ' (' + this.getKoApproachStrLong() + this.getKoStrLong() + ')';
     if (this.type == STATUS_SEKI)
@@ -206,6 +221,15 @@ besogo.loadStatusInternalFromString = function(str)
 
   if (str == "10kKO")
     return besogo.makeStatusInternal(STATUS_TEN_THOUSAND_YEARS_KO);
+
+  if (str == "BENT4")
+    return besogo.makeStatusInternal(STATUS_BENT_FOUR_IN_THE_CORNER);
+
+  if (str == "DDKO")
+    return besogo.makeStatusInternal(STATUS_DEAD_IN_DOUBLE_KO);
+
+  if (str == "ADKO")
+    return besogo.makeStatusInternal(STATUS_ALIVE_IN_DOUBLE_KO);
 
   var approaches = 0;
   if (str[0] == "A" && (str[1] == "+" || str[1] == "-"))

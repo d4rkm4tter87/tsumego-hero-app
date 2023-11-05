@@ -4,6 +4,33 @@ besogo.addTest("Status", "None", function()
   CHECK_EQUALS(status.blackFirst.type, STATUS_NONE);
 });
 
+besogo.addTest("Status", "SaveLoadBent4InTheCorner", function()
+{
+  let status = besogo.makeStatusSimple(STATUS_BENT_FOUR_IN_THE_CORNER);
+  CHECK_EQUALS(status.str(), "BENT4");
+  let statusLoaded = besogo.loadStatusFromString(status.str());
+  CHECK_EQUALS(statusLoaded.str(), "BENT4");
+  CHECK_EQUALS(statusLoaded.blackFirst.type, STATUS_BENT_FOUR_IN_THE_CORNER);
+});
+
+besogo.addTest("Status", "SaveLoadDeadInDoubleKo", function()
+{
+  let status = besogo.makeStatusSimple(STATUS_DEAD_IN_DOUBLE_KO);
+  CHECK_EQUALS(status.str(), "DDKO");
+  let statusLoaded = besogo.loadStatusFromString(status.str());
+  CHECK_EQUALS(statusLoaded.str(), "DDKO");
+  CHECK_EQUALS(statusLoaded.blackFirst.type, STATUS_DEAD_IN_DOUBLE_KO);
+});
+
+besogo.addTest("Status", "SaveLoadAliveInDoubleKo", function()
+{
+  let status = besogo.makeStatusSimple(STATUS_ALIVE_IN_DOUBLE_KO);
+  CHECK_EQUALS(status.str(), "ADKO");
+  let statusLoaded = besogo.loadStatusFromString(status.str());
+  CHECK_EQUALS(statusLoaded.str(), "ADKO");
+  CHECK_EQUALS(statusLoaded.blackFirst.type, STATUS_ALIVE_IN_DOUBLE_KO);
+});
+
 besogo.addTest("Status", "StatusKoThreatsSimple", function()
 {
   let status1 = besogo.makeStatus();
