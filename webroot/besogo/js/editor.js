@@ -435,7 +435,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
       return;
     if (!displayResult)
       return;
-    if (navigateToRemainingRequiredIfNeeded())
+    if (!node.localEdit && node.correct && navigateToRemainingRequiredIfNeeded())
       return;
     setTimeout(function()
     {
