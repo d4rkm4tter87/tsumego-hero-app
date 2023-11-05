@@ -237,7 +237,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
         if (autoPlay)
           next = current.selectNonLocalChildIncludingVirtualWithNoBetterStatus(select)
         else
-          next = current.children.length == 0 ? current.children[0] : current.virtualChildren[0];
+          next = current.children.length != 0 ? current.children[0] : current.virtualChildren[0];
         if (!next.target)
         {
           next.cameFrom = null;
