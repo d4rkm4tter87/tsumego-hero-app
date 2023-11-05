@@ -261,10 +261,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
       besogo.soundsEnabled = soundsEnabled;
       if (besogo.soundsEnabled && !reviewMode)
         document.getElementsByTagName("audio")[0].play();
-      if (displayResult)
-        displayResult(current.correct ? 'S' : 'F');
-      if (!current.correct && (mode == 2 || mode == 3))
-        toggleBoardLock(true);
+      tryToFinish(current);
     }
   }
 
