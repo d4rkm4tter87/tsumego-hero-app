@@ -65,7 +65,7 @@ besogo.makeStatusInternal = function(type)
     if (this.type == STATUS_KO)
       return result = this.str() + ' (' + this.getKoApproachStrLong() + this.getKoStrLong() + ')';
     if (this.type == STATUS_SEKI)
-      return this.str() + (this.sente ? " in sente" : " in gote");
+      return this.str() + ' (' + (this.sente ? "in sente" : "in gote") + ')';
     return this.str();
   }
 
