@@ -422,6 +422,21 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
     }
   }
 
+  function transformTextColors(root, text)
+  {
+    let result = text;
+    if (root.firstMove != BLACK)
+    {
+      result = result.replaceAll("White", "Bily");
+      result = result.replace("white", "bily");
+      result = result.replace("Black", "White");
+      result = result.replace("black", "white");
+      result = result.replace("Bily", "Black");
+      result = result.replace("bily", "black");
+    }
+    return result;
+  }
+
   function tryToFinish(node)
   {
     if (node.hasNonLocalChildIncludingVirtual())
@@ -444,7 +459,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
         if (root.goal != GOAL_NONE &&
         node.status.blackFirst.type != STATUS_ALIVE && // when the current is clearly dead or alive, we don't say the obvious
         node.status.blackFirst.type != STATUS_DEAD)
-          showComment("It is " + node.status.strLong() + ", but it should be: " + root.status.strLong());
+          showComment(transformTextColors(root, "It is " + node.status.strLong() + ", but it should be: " + root.status.strLong()));
       }
       displayResult(success ? 'S' : 'F');
     }, 360);

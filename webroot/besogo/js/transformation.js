@@ -29,6 +29,5 @@ besogo.makeTransformation = function()
       return -color;
     return color;
   }
-
   return transformation;
 }
