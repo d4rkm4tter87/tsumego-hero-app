@@ -694,7 +694,32 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
   root.applyTransformation = function(rootNode, transformation)
   {
     rootNode.nodeHashTable.erase(this);
+    this.applyTransformationOnSetupStones(transformation);
+    this.applyTransformationOnMove(transformation);
+    this.applyTransformationOnMarkup(transformation);
+    this.updateHash();
+    rootNode.nodeHashTable.push(this);
 
+    for (let i = 0; i < this.children.length; ++i)
+      this.children[i].applyTransformation(rootNode, transformation);
+    for (let i = 0; i < this.virtualChildren.length; ++i)
+      this.virtualChildren[i].move = transformation.apply(this.virtualChildren[i].move, {x: sizeX, y: sizeY});
+  }
+
+  root.applyTransformationOnMove = function(transformation)
+  {
+    let oldMove = this.move;
+    this.move = null;
+    if (oldMove)
+    {
+      let newMove = transformation.apply(oldMove, {x: sizeX, y: sizeY});
+      this.playMoveWithoutMutableCheck(newMove.x, newMove.y, transformation.applyOnColor(oldMove.color));
+      --this.moveNumber;
+    }
+  }
+
+  root.applyTransformationOnSetupStones = function(transformation)
+  {
     let oldSetupStones = this.setupStones;
     this.setupStones = [];
     this.board = this.parent ? Object.create(this.parent.board) : [];
@@ -705,21 +730,19 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
         let newPosition = transformation.apply(position, {x: sizeX, y: sizeY});
         this.placeSetup(newPosition.x, newPosition.y, transformation.applyOnColor(oldSetupStones[i]));
       }
-    let oldMove = this.move;
-    this.move = null;
-    if (oldMove)
-    {
-      let newMove = transformation.apply(oldMove, {x: sizeX, y: sizeY});
-      this.playMoveWithoutMutableCheck(newMove.x, newMove.y, transformation.applyOnColor(oldMove.color));
-      --this.moveNumber;
-    }
-    this.updateHash();
-    rootNode.nodeHashTable.push(this);
+  }
 
-    for (let i = 0; i < this.children.length; ++i)
-      this.children[i].applyTransformation(rootNode, transformation);
-    for (let i = 0; i < this.virtualChildren.length; ++i)
-      this.virtualChildren[i].move = transformation.apply(this.virtualChildren[i].move, {x: sizeX, y: sizeY});
+  root.applyTransformationOnMarkup = function(transformation)
+  {
+    let oldMarkup = this.markup;
+    this.markup = [];
+    for (let i = 0; i < oldMarkup.length; ++i)
+      if (oldMarkup[i])
+      {
+        let position = this.toXY(i);
+        let newPosition = transformation.apply(position, {x: sizeX, y: sizeY});
+        this.markup[this.fromXY(newPosition.x, newPosition.y)] = oldMarkup[i];
+      }
   }
 
   root.figureFirstToMove = function()
