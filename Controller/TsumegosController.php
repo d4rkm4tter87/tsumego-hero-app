@@ -838,6 +838,14 @@ class TsumegosController extends AppController{
 						$this->TsumegoRatingAttempt->save($trFail);
 					}
 				}
+				$aCondition = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array(
+					'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 'err'
+				)));
+				if($aCondition==null) $aCondition = array();
+				$aCondition['AchievementCondition']['category'] = 'err';
+				$aCondition['AchievementCondition']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+				$aCondition['AchievementCondition']['value'] = 0;
+				$this->AchievementCondition->save($aCondition);
 			}
 			if($u['User']['damage']>$u['User']['health']){
 				if($utPre==null){
@@ -1047,6 +1055,14 @@ class TsumegosController extends AppController{
 					$this->Tsumego->save($preTsumego);
 					$this->TsumegoRatingAttempt->save($trSuccess);
 				}
+				$aCondition = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array(
+					'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 'err'
+				)));
+				if($aCondition==null) $aCondition = array();
+				$aCondition['AchievementCondition']['category'] = 'err';
+				$aCondition['AchievementCondition']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+				$aCondition['AchievementCondition']['value']++;
+				$this->AchievementCondition->save($aCondition);
 			}else{
 				$u['User']['penalty'] += 1;
 			}
@@ -1556,7 +1572,9 @@ class TsumegosController extends AppController{
 			
 			$achievementUpdate1 = $this->checkLevelAchievements();
 			$achievementUpdate2 = $this->checkProblemNumberAchievements();
-			$achievementUpdate = array_merge($achievementUpdate1, $achievementUpdate2);
+			$achievementUpdate3 = $this->checkNoErrorAchievements();
+			$achievementUpdate4 = $this->checkRatingAchievements();
+			$achievementUpdate = array_merge($achievementUpdate1, $achievementUpdate2, $achievementUpdate3, $achievementUpdate4);
 			
 			if(count($achievementUpdate)>0) $this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
 		}

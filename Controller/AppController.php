@@ -582,6 +582,300 @@ class AppController extends Controller{
 		return $updated;
 	}
 	
+	public function checkNoErrorAchievements(){
+		$this->loadModel('Set');
+		$this->loadModel('Tsumego');
+		$this->loadModel('Achievement');
+		$this->loadModel('AchievementStatus');
+		$this->loadModel('AchievementCondition');
+		
+		$ac = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array(
+			'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 'err'
+		)));
+		
+		$buffer = $this->AchievementStatus->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+		$existingAs = array();
+		for($i=0; $i<count($buffer); $i++)
+			$existingAs[$buffer[$i]['AchievementStatus']['achievement_id']] = $buffer[$i];
+		$as = array();
+		$as['AchievementStatus']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+		$updated = array();
+		
+		$achievementId = 53;
+		if($ac['AchievementCondition']['value']>=10 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 54;
+		if($ac['AchievementCondition']['value']>=20 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 55;
+		if($ac['AchievementCondition']['value']>=30 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 56;
+		if($ac['AchievementCondition']['value']>=50 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 57;
+		if($ac['AchievementCondition']['value']>=100 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 58;
+		if($ac['AchievementCondition']['value']>=200 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		for($i=0; $i<count($updated); $i++){
+			$a = $this->Achievement->findById($updated[$i]);
+			$updated[$i] = array();
+			$updated[$i][0] = $a['Achievement']['name'];
+			$updated[$i][1] = $a['Achievement']['description'];
+			$updated[$i][2] = $a['Achievement']['image'];
+			$updated[$i][3] = $a['Achievement']['color'];
+			$updated[$i][4] = $a['Achievement']['xp'];
+			$updated[$i][5] = $a['Achievement']['id'];
+		}
+		return $updated;
+	}
+	
+	public function checkTimeModeAchievements(){
+		$this->loadModel('Achievement');
+		$this->loadModel('AchievementStatus');
+		$this->loadModel('RankOverview');
+		
+		$buffer = $this->AchievementStatus->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+		$existingAs = array();
+		for($i=0; $i<count($buffer); $i++)
+			$existingAs[$buffer[$i]['AchievementStatus']['achievement_id']] = $buffer[$i];
+		$as = array();
+		$as['AchievementStatus']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+		$updated = array();
+		
+		$rBlitz = $this->RankOverview->find('all', array('conditions' =>  array('mode' => 0, 'user_id' => $_SESSION['loggedInUser']['User']['id'])));//blitz
+		$rFast = $this->RankOverview->find('all', array('conditions' =>  array('mode' => 1, 'user_id' => $_SESSION['loggedInUser']['User']['id'])));//fast
+		$rSlow = $this->RankOverview->find('all', array('conditions' =>  array('mode' => 2, 'user_id' => $_SESSION['loggedInUser']['User']['id'])));//slow
+		$r = $this->RankOverview->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+		
+		$timeModeAchievements = array();
+		for($i=70;$i<=91;$i++){
+			$timeModeAchievements[$i] = false;
+		}
+		for($i=0;$i<count($r);$i++){
+			if($r[$i]['RankOverview']['status']=='s'){
+				if($r[$i]['RankOverview']['rank']=='5k'){
+					if($r[$i]['RankOverview']['mode']==2) 
+						$timeModeAchievements[70] = true;
+					else if($r[$i]['RankOverview']['mode']==1) 
+						$timeModeAchievements[76] = true;
+					else if($r[$i]['RankOverview']['mode']==0) 
+						$timeModeAchievements[82] = true;
+				}else if($r[$i]['RankOverview']['rank']=='4k'){
+					if($r[$i]['RankOverview']['mode']==2) 
+						$timeModeAchievements[71] = true;
+					else if($r[$i]['RankOverview']['mode']==1) 
+						$timeModeAchievements[77] = true;
+					else if($r[$i]['RankOverview']['mode']==0) 
+						$timeModeAchievements[83] = true;
+				}else if($r[$i]['RankOverview']['rank']=='3k'){
+					if($r[$i]['RankOverview']['mode']==2) 
+						$timeModeAchievements[72] = true;
+					else if($r[$i]['RankOverview']['mode']==1) 
+						$timeModeAchievements[78] = true;
+					else if($r[$i]['RankOverview']['mode']==0) 
+						$timeModeAchievements[84] = true;
+				}else if($r[$i]['RankOverview']['rank']=='2k'){
+					if($r[$i]['RankOverview']['mode']==2) 
+						$timeModeAchievements[73] = true;
+					else if($r[$i]['RankOverview']['mode']==1) 
+						$timeModeAchievements[79] = true;
+					else if($r[$i]['RankOverview']['mode']==0) 
+						$timeModeAchievements[85] = true;
+				}else if($r[$i]['RankOverview']['rank']=='1k'){
+					if($r[$i]['RankOverview']['mode']==2) 
+						$timeModeAchievements[74] = true;
+					else if($r[$i]['RankOverview']['mode']==1) 
+						$timeModeAchievements[80] = true;
+					else if($r[$i]['RankOverview']['mode']==0) 
+						$timeModeAchievements[86] = true;
+				}else if($r[$i]['RankOverview']['rank']=='1d'){
+					if($r[$i]['RankOverview']['mode']==2) 
+						$timeModeAchievements[75] = true;
+					else if($r[$i]['RankOverview']['mode']==1) 
+						$timeModeAchievements[81] = true;
+					else if($r[$i]['RankOverview']['mode']==0) 
+						$timeModeAchievements[87] = true;
+				}
+			}
+			if($r[$i]['RankOverview']['points']>=850 && 
+			($r[$i]['RankOverview']['rank']=='4k'||$r[$i]['RankOverview']['rank']=='3k'||$r[$i]['RankOverview']['rank']=='2k'||$r[$i]['RankOverview']['rank']=='1k'
+			||$r[$i]['RankOverview']['rank']=='1d'||$r[$i]['RankOverview']['rank']=='2d'||$r[$i]['RankOverview']['rank']=='3d'||$r[$i]['RankOverview']['rank']=='4d'
+			||$r[$i]['RankOverview']['rank']=='5d'))
+				$timeModeAchievements[91] = true;
+			if($r[$i]['RankOverview']['points']>=875 && 
+			($r[$i]['RankOverview']['rank']=='4k'||$r[$i]['RankOverview']['rank']=='3k'||$r[$i]['RankOverview']['rank']=='2k'||$r[$i]['RankOverview']['rank']=='1k'
+			||$r[$i]['RankOverview']['rank']=='1d'||$r[$i]['RankOverview']['rank']=='2d'||$r[$i]['RankOverview']['rank']=='3d'||$r[$i]['RankOverview']['rank']=='4d'
+			||$r[$i]['RankOverview']['rank']=='5d'||$r[$i]['RankOverview']['rank']=='5k'||$r[$i]['RankOverview']['rank']=='6k'))
+				$timeModeAchievements[90] = true;
+			if($r[$i]['RankOverview']['points']>=900 && 
+			($r[$i]['RankOverview']['rank']=='4k'||$r[$i]['RankOverview']['rank']=='3k'||$r[$i]['RankOverview']['rank']=='2k'||$r[$i]['RankOverview']['rank']=='1k'
+			||$r[$i]['RankOverview']['rank']=='1d'||$r[$i]['RankOverview']['rank']=='2d'||$r[$i]['RankOverview']['rank']=='3d'||$r[$i]['RankOverview']['rank']=='4d'
+			||$r[$i]['RankOverview']['rank']=='5d'||$r[$i]['RankOverview']['rank']=='5k'||$r[$i]['RankOverview']['rank']=='6k'||$r[$i]['RankOverview']['rank']=='7k'
+			||$r[$i]['RankOverview']['rank']=='8k'))
+				$timeModeAchievements[89] = true;	
+			if($r[$i]['RankOverview']['points']>=950 && 
+			($r[$i]['RankOverview']['rank']=='4k'||$r[$i]['RankOverview']['rank']=='3k'||$r[$i]['RankOverview']['rank']=='2k'||$r[$i]['RankOverview']['rank']=='1k'
+			||$r[$i]['RankOverview']['rank']=='1d'||$r[$i]['RankOverview']['rank']=='2d'||$r[$i]['RankOverview']['rank']=='3d'||$r[$i]['RankOverview']['rank']=='4d'
+			||$r[$i]['RankOverview']['rank']=='5d'||$r[$i]['RankOverview']['rank']=='5k'||$r[$i]['RankOverview']['rank']=='6k'||$r[$i]['RankOverview']['rank']=='7k'
+			||$r[$i]['RankOverview']['rank']=='8k'||$r[$i]['RankOverview']['rank']=='9k'||$r[$i]['RankOverview']['rank']=='10k'))
+				$timeModeAchievements[88] = true;	
+		}
+		
+		for($i=70;$i<=91;$i++){
+			$achievementId = $i;
+			if($timeModeAchievements[$achievementId]==true && !isset($existingAs[$achievementId])){
+				$as['AchievementStatus']['achievement_id'] = $achievementId;
+				$this->AchievementStatus->create();
+				$this->AchievementStatus->save($as);
+				array_push($updated, $achievementId);
+			}
+		}
+		
+		for($i=0; $i<count($updated); $i++){
+			$a = $this->Achievement->findById($updated[$i]);
+			$updated[$i] = array();
+			$updated[$i][0] = $a['Achievement']['name'];
+			$updated[$i][1] = $a['Achievement']['description'];
+			$updated[$i][2] = $a['Achievement']['image'];
+			$updated[$i][3] = $a['Achievement']['color'];
+			$updated[$i][4] = $a['Achievement']['xp'];
+			$updated[$i][5] = $a['Achievement']['id'];
+		}
+		
+		return $updated;
+	}
+	
+	public function checkRatingAchievements(){
+		$this->loadModel('User');
+		$this->loadModel('Achievement');
+		$this->loadModel('AchievementStatus');
+		$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
+		$buffer = $this->AchievementStatus->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+		$existingAs = array();
+		for($i=0; $i<count($buffer); $i++)
+			$existingAs[$buffer[$i]['AchievementStatus']['achievement_id']] = $buffer[$i];
+		$as = array();
+		$as['AchievementStatus']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+		$updated = array();
+		
+		$achievementId = 59;
+		if($u['User']['elo_rating_mode']>=1500 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 60;
+		if($u['User']['elo_rating_mode']>=1600 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 61;
+		if($u['User']['elo_rating_mode']>=1700 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 62;
+		if($u['User']['elo_rating_mode']>=1800 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 63;
+		if($u['User']['elo_rating_mode']>=1900 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 64;
+		if($u['User']['elo_rating_mode']>=2000 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 65;
+		if($u['User']['elo_rating_mode']>=2100 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 66;
+		if($u['User']['elo_rating_mode']>=2200 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 67;
+		if($u['User']['elo_rating_mode']>=2300 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 68;
+		if($u['User']['elo_rating_mode']>=2400 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 69;
+		if($u['User']['elo_rating_mode']>=2500 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		for($i=0; $i<count($updated); $i++){
+			$a = $this->Achievement->findById($updated[$i]);
+			$updated[$i] = array();
+			$updated[$i][0] = $a['Achievement']['name'];
+			$updated[$i][1] = $a['Achievement']['description'];
+			$updated[$i][2] = $a['Achievement']['image'];
+			$updated[$i][3] = $a['Achievement']['color'];
+			$updated[$i][4] = $a['Achievement']['xp'];
+			$updated[$i][5] = $a['Achievement']['id'];
+		}
+		
+		return $updated;
+	}
+	
 	public function checkLevelAchievements(){
 		$this->loadModel('Achievement');
 		$this->loadModel('AchievementStatus');
@@ -658,6 +952,80 @@ class AppController extends Controller{
 		}
 		$achievementId = 45;
 		if($_SESSION['loggedInUser']['User']['level']>=100 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		for($i=0; $i<count($updated); $i++){
+			$a = $this->Achievement->findById($updated[$i]);
+			$updated[$i] = array();
+			$updated[$i][0] = $a['Achievement']['name'];
+			$updated[$i][1] = $a['Achievement']['description'];
+			$updated[$i][2] = $a['Achievement']['image'];
+			$updated[$i][3] = $a['Achievement']['color'];
+			$updated[$i][4] = $a['Achievement']['xp'];
+			$updated[$i][5] = $a['Achievement']['id'];
+		}
+		return $updated;
+	}
+	
+	public function checkSetCompletedAchievements(){
+		$this->loadModel('Set');
+		$this->loadModel('Tsumego');
+		$this->loadModel('Achievement');
+		$this->loadModel('AchievementStatus');
+		$this->loadModel('AchievementCondition');
+		
+		$ac = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array(
+			'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 'set'
+		)));
+		
+		$buffer = $this->AchievementStatus->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+		$existingAs = array();
+		for($i=0; $i<count($buffer); $i++)
+			$existingAs[$buffer[$i]['AchievementStatus']['achievement_id']] = $buffer[$i];
+		$as = array();
+		$as['AchievementStatus']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+		$updated = array();
+		
+		$achievementId = 47;
+		if($ac['AchievementCondition']['value']>=10 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 48;
+		if($ac['AchievementCondition']['value']>=20 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 49;
+		if($ac['AchievementCondition']['value']>=30 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 50;
+		if($ac['AchievementCondition']['value']>=40 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 51;
+		if($ac['AchievementCondition']['value']>=50 && !isset($existingAs[$achievementId])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 52;
+		if($ac['AchievementCondition']['value']>=60 && !isset($existingAs[$achievementId])){
 			$as['AchievementStatus']['achievement_id'] = $achievementId;
 			$this->AchievementStatus->create();
 			$this->AchievementStatus->save($as);
@@ -900,17 +1268,9 @@ class AppController extends Controller{
 		$xpBonus = 0;
 		for($i=0;$i<count($a);$i++){
 			$xpBonus += $a[$i][4];
-			//echo '<pre>'; print_r($a[$i][4].' '.$a[$i][0]); echo '</pre>';
 		}
 		$u = $this->User->findById($id);
-		/*
-		echo '<pre>'; print_r('bonus: '.$xpBonus); echo '</pre>';
-		echo '<pre>'; print_r('______________________'); echo '</pre>';
-		echo '<pre>'; print_r('ulvl: '.$u['User']['level']); echo '</pre>';
-		echo '<pre>'; print_r('uxp: '.$u['User']['xp']); echo '</pre>';
-		echo '<pre>'; print_r('unxtlvl: '.$u['User']['nextlvl']); echo '</pre>';
-		echo '<pre>'; print_r('______________________'); echo '</pre>';
-		*/
+		
 		$jumps = array();
 		$xStart = 40;
 		$xCurrentLvl = 1;
@@ -954,11 +1314,7 @@ class AppController extends Controller{
 		if($uXp+$xpBonus<$firstJump) $u['User']['xp'] += $xpBonus;
 		else $u['User']['xp'] = $next;
 		$u['User']['nextlvl'] = $currentJump;
-		/*
-		echo '<pre>'; print_r('final lvl: '.$uLevel); echo '</pre>';
-		echo '<pre>'; print_r('final xp: '.$next); echo '</pre>';
-		echo '<pre>'; print_r('final nextlvl: '.$currentJump); echo '</pre>';
-		*/
+		
 		$this->User->save($u);
 	}
 	
@@ -1215,14 +1571,13 @@ class AppController extends Controller{
 			$boardPositions[23] = array(22,'texture22','black34.png','white34.png');
 		}
 		
-		$setAchievements = false;
-		$achievementUpdate1 = array();
-		$achievementUpdate2 = array();
 		$achievementUpdate = array();
 		if(isset($_SESSION['achievements'])){
 			$achievementUpdate1 = $this->checkLevelAchievements();
 			$achievementUpdate2 = $this->checkProblemNumberAchievements();
-			$achievementUpdate = array_merge($achievementUpdate1, $achievementUpdate2);
+			$achievementUpdate3 = $this->checkRatingAchievements();
+			$achievementUpdate4 = $this->checkTimeModeAchievements();
+			$achievementUpdate = array_merge($achievementUpdate1, $achievementUpdate2, $achievementUpdate3, $achievementUpdate4);
 			unset($_SESSION['achievements']);
 		}
 		

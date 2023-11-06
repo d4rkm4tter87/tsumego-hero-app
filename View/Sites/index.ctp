@@ -91,6 +91,24 @@
 			</li>
 			<br><br>
 		</div>
+		<p class="title4">Update 06.11.2023</p>
+		<div class="new1">
+			<b>More achievements</b><br><br>
+			
+			The achievements have been stocked up to 91 and there is now an achievement highscore.<br><br>
+			<table width="90%"><tr>
+			<td><a href="/achievements">View Achievements</a></td>
+			<td><a href="/users/achievements">Achievement Highscore</a></td>
+			</tr></table>
+			<br>
+		</div>
+		<p class="title4">New Collection: 9x9 Endgame Problems</p>
+		<div class="new1">
+			There's a saying in Go that your overall strength is limited by your endgame strength. Even if you are leading a lot in the opening and middle game, mistakes in endgame can still lose you the game. This collection allows you to practice and level-up your endgame in a small 9x9 board with real-game examples.   
+			<div align="center"><img width="95%" src="/img/9x9-startpage.png">
+			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/207">Play</a><br><br></div>
+		</div>
 		<p class="title4">Update 27.10.2023</p>
 		<div class="new1">
 			<b>Achievements!</b><br><br>
@@ -631,6 +649,21 @@
 		<div class="new1">
 			<table class="newx" border="0">
 				<tr>
+					<td><h1>05.11.2023</h1></td>
+					<td><h1>Dominik Franěk</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>02.11.2023</h1></td>
+					<td><h1>Tomislav Sokec</h1></td>
+					<td><h1>10,00 € <font size="2px">subscription</font></h1></td>
+				</tr>
+				<tr>
+					<td><h1>28.10.2023</h1></td>
+					<td><h1>Andrew Hlavats</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
 					<td><h1>20.10.2023</h1></td>
 					<td><h1>Marcel Wiesenhöfer</h1></td>
 					<td><h1>10,00 €</h1></td>
@@ -638,21 +671,6 @@
 				<tr>
 					<td><h1>09.10.2023</h1></td>
 					<td><h1>Maksymilian Gaidemski</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>08.10.2023</h1></td>
-					<td><h1>Scotty Reed</h1></td>
-					<td><h1>2,17 € <font size="2px">subscription</font></h1> </td>
-				</tr>
-				<tr>
-					<td><h1>02.10.2023</h1></td>
-					<td><h1>Tomislav Sokec</h1></td>
-					<td><h1>10,00 € <font size="2px">subscription</font></h1></td>
-				</tr>
-				<tr>
-					<td><h1>02.10.2023</h1></td>
-					<td><h1>Daniil Plakhov</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 			</table>	

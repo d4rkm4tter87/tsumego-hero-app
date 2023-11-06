@@ -1545,7 +1545,9 @@
 		$('#targetLockOverlay').click(function(){
 			if(!multipleChoiceEnabled){
 				if(nextButtonLink!==0) window.location.href = "/tsumegos/play/"+nextButtonLink;
-				else window.location.href = "/sets/view/"+<?php echo $t['Tsumego']['set_id']; ?>;
+				else if(mode==1){
+					window.location.href = "/sets/view/"+<?php echo $t['Tsumego']['set_id']; ?>;
+				}
 			}
 		});
 		$("#commentPosition").click(function(){

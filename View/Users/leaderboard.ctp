@@ -3,20 +3,21 @@
 	
 	<table border="0" width="100%">
 		<tr>
-			<td width="33%" valign="top">
+			<td width="23%" valign="top">
 				<font size="3px" style="font-weight:400;">Signed in users today: <?php echo $uNum; ?></font>
 			</td>
-			<td width="33%" valign="top">
+			<td width="53%" valign="top">
 				<div align="center">
 				<br>
 				<a class="new-button new-buttonx" href="/users/highscore">level</a>
 				<a class="new-button new-buttonx" href="/users/rating">rating</a>
 				<a class="new-button new-buttonx" href="/users/highscore3">time</a>
+				<a class="new-button new-buttonx" href="/users/achievements">achievements</a>
 				<a class="new-button buttonx-current" href="/users/leaderboard">daily</a>
 				<br><br>
 				</div>
 			</td>
-			<td width="33%" valign="top">
+			<td width="23%" valign="top">
 				<div align="right">	
 				<font size="3px" style="font-weight:400;font-style:italic;">* Users can't be user of the day two times in a row.</font>
 				</div>

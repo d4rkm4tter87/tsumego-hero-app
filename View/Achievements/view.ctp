@@ -57,15 +57,15 @@
 	<br>
 	<br>
 	<?php 
-	if($aCount==0) echo 'Nobody unlocked this achievement.';
-	else if($aCount==1) echo '1 user unlocked this achievement.';
-	else echo $aCount.' users unlocked this achievement.';
+	if($aCount==0) echo 'Nobody completed this achievement.';
+	else if($aCount==1) echo '1 user completed this achievement.';
+	else echo $aCount.' users completed this achievement.';
 	
 	?><br><br>
 	<font color="gray">
 	<?php
 	if($aCount>0){
-		echo 'Unlocked by ';
+		echo 'Completed by ';
 		for($i=0; $i<count($asAll); $i++){
 			echo $asAll[$i]['AchievementStatus']['name'];
 			if($i<count($asAll)-1) echo ', ';

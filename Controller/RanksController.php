@@ -280,6 +280,9 @@ class RanksController extends AppController {
 			$lowestMode[$i] =$rx[$lowestMode[$i]]; 
 		}
 		
+		$achievementUpdate = $this->checkTimeModeAchievements();
+		if(count($achievementUpdate)>0) $this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
+		
 		$this->set('lastMode', $lastMode);
 		$this->set('lowestMode', $lowestMode);
 		$this->set('modes', $modes);
@@ -288,6 +291,7 @@ class RanksController extends AppController {
 		$this->set('rxxCount', $rxxCount);
 		$this->set('settings', $settings);
 		$this->set('ro', $ro);
+		$this->set('achievementUpdate', $achievementUpdate);
 	}
 	
 	public function result($hash=null){

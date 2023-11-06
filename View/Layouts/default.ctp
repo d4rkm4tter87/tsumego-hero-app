@@ -141,6 +141,7 @@
 				$levelHighscoreA = '';
 				$ratingHighscoreA = '';
 				$timeHighscoreA = '';
+				$achievementHighscoreA = '';
 				$dailyHighscoreA = '';
 				$levelModeA = '';
 				$ratingModeA = '';
@@ -172,6 +173,7 @@
 				else if($_SESSION['page'] == 'about') $aboutA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'levelHighscore') $levelHighscoreA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'ratingHighscore') $ratingHighscoreA = 'style="color:#74d14c;"';
+				else if($_SESSION['page'] == 'achievementHighscore') $achievementHighscoreA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'timeHighscore') $timeHighscoreA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'dailyHighscore') $dailyHighscoreA = 'style="color:#74d14c;"';
 
@@ -244,6 +246,7 @@
 						echo '<li><a id="tutorialLink" href="/users/highscore" '.$levelHighscoreA.'>Level Highscore</a></li>';
 						echo '<li><a id="tutorialLink" href="/users/rating" '.$ratingHighscoreA.'>Rating Highscore</a></li>';
 						echo '<li><a id="tutorialLink" href="/users/highscore3" '.$timeHighscoreA.'>Time Highscore</a></li>';
+						echo '<li><a id="tutorialLink" href="/users/achievements" '.$achievementHighscoreA.'>Achievement Highscore</a></li>';
 						echo '<li><a id="tutorialLink" href="/users/leaderboard" '.$dailyHighscoreA.'>Daily Highscore</a></li>';
 					echo '</ul>';
 					if(isset($_SESSION['loggedInUser'])) echo '<li><a  '.$refreshLinkToDiscuss.'  '.$discussA.'href="/comments'.$discussFilter.'">Discuss</a></li>';

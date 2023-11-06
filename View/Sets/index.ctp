@@ -50,13 +50,6 @@
 		}else{
 			$active0 = 'active';
 		}
-		
-		if(isset($_SESSION['loggedInUser'])){
-			if($_SESSION['loggedInUser']['User']['id']==72){
-				//echo '<pre>';print_r($test1);echo '</pre>';
-			}			
-		}
-		
 	?>
 	<div align="center" class="display1">
 		

@@ -8,10 +8,10 @@
 	<td width="53%" valign="top">
 		<div align="center">
 		<br>
-		<a class="new-button buttonx-current" href="/users/highscore">level</a>
+		<a class="new-button new-buttonx" href="/users/highscore">level</a>
 		<a class="new-button new-buttonx" href="/users/rating">rating</a>
 		<a class="new-button new-buttonx" href="/users/highscore3">time</a>
-		<a class="new-button new-buttonx" href="/users/achievements">achievements</a>
+		<a class="new-button buttonx-current" href="/users/achievements">achievements</a>
 		<a class="new-button new-buttonx" href="/users/leaderboard">daily</a>
 		<br><br>
 		</div>
@@ -21,81 +21,35 @@
 		</div>
 	</td>
 </table>
+
 <table class="highscoreTable" border="0">
 	<tr>
 		<div align="center">	
 				<p class="title">
-					Level Highscore
-				<br><br> 
+					Achievement Highscore
 				</p>
 				</div>
 	</tr>
 	<tr>
-		<!--<th width="55px"></th>-->
-		<th width="60px">Rank</th>
-		<th width="220px" colspan="2" align="left">&nbsp;Name</th>
-		<th width="150px">Level</th>
-		<th width="150px">Solved</th>
-		<th width="150px">XP</th>
+	<br>
+		<th width="60px">Place</th>
+		<th width="220px" align="left">&nbsp;Name</th>
+		<th width="150px">Completed</th>
 	</tr>
 	<?php
-		$statsLink1 = '';
-		$statsLink2 = '';
-		$statsLink3 = '';
-		if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72){
-			$statsLink1 = '<a style="color:black;text-decoration:none;" target="_blank" href="/users/view';
-			$statsLink2 = '">';
-			$statsLink3 = '</a>';
-		}}
 		$place = 1;
-		for($i=count($users)-1;$i>=0;$i--){
-			if($users[$i]['solved'] == 0) $users[$i]['solved'] = 'missing data';
-			$bgColor = '#dddddd';
-			$statsLink4 = '';
-			if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72){
-				$statsLink4 = '/'.$users[$i]['id'];
-			}}
-			$uType = '';
-			if($users[$i]['type']==1) $uType = '<img alt="Account Type" title="Account Type" src="/img/premium1.png" height="16px">';
-			else if($users[$i]['type']==2) $uType = '<img alt="Account Type" title="Account Type" src="/img/premium2.png" height="16px">';
-			if($i>989) $tableRowColor = 'color1';
-			else if($i>969) $tableRowColor = 'color2';
-			else if($i>939) $tableRowColor = 'color3';
-			else if($i>899) $tableRowColor = 'color4';
-			else if($i>799) $tableRowColor = 'color5';
-			else if($i>699) $tableRowColor = 'color6';
-			else if($i>599) $tableRowColor = 'color7';
-			else if($i>499) $tableRowColor = 'color8';
-			else if($i>399) $tableRowColor = 'color9';
-			else if($i>299) $tableRowColor = 'color10';
-			else if($i>199) $tableRowColor = 'color11';
-			else if($i>99) $tableRowColor = 'color12';
-			else $tableRowColor = 'color13';
+		for($i=count($uaNum)-1; $i>=count($uaNum)-100; $i--){
 			echo '
-				<tr class="'.$tableRowColor.'">
-					<!--<td align="center"></td>-->
-					
+				<tr class="color9d">';
+					echo '
 					<td align="center">
 						#'.$place.'
 					</td>
-					
-					<td  align="left">
-						'.$statsLink1.$statsLink4.$statsLink2.$users[$i]['name'].' '.$statsLink3.'
-					</td>
 					<td>
-						'.$uType.'
+						'.$uName[$i].'
 					</td>
-					
 					<td align="center">
-						Level '.$users[$i]['level'].'
-					</td>
-					
-					<td align="center">
-						'.$users[$i]['solved'].'
-					</td>
-					
-					<td align="center">
-						'.$users[$i]['xpSum'].' XP
+						'.$uaNum[$i].'/'.$aNum.'
 					</td>
 				</tr>
 			';
@@ -103,22 +57,6 @@
 		}
 	?>
 	</table>
-	<?php
-	
-	/*
-	if($_SESSION['loggedInUser']['User']['id']==72){
-		echo '<pre>';
-		print_r($users2);
-		echo '</pre>';
-	}
-	if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72){
-		echo '<pre>';
-		print_r($users);
-		echo '</pre>';
-	}}
-	*/
-	?>
-
 	</div>
 	<br><br><br><br><br><br>
 

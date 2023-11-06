@@ -378,6 +378,7 @@ class SetsController extends AppController{
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Favorite');
+		$this->LoadModel('AchievementCondition');
 
 		$_SESSION['page'] = 'set';
 		$_SESSION['title'] = 'Tsumego Hero - Collections';
@@ -390,6 +391,8 @@ class SetsController extends AppController{
 		$secretPoints = 0;
 		$removeMap = array();
 		$favorite = null;
+		$overallCounter = 0;
+		$achievementUpdate = 0;
 
 		$removeMap[6473] = 1;
 
@@ -418,9 +421,7 @@ class SetsController extends AppController{
 			if($_SESSION['loggedInUser']['User']['level'] >= 50){ $secretPoints++; }
 			if($_SESSION['loggedInUser']['User']['level'] >= 45){ $secretPoints++; }
 			if($_SESSION['loggedInUser']['User']['level'] >= 40){ $secretPoints++; }
-
 			//$secretPoints += $_SESSION['loggedInUser']['User']['premium'];
-
 			//if($secretPoints>=7){ $u['User']['secretArea7'] = 1; $_SESSION['loggedInUser']['User']['secretArea7'] = 1; }
 			if($secretPoints>=6){ $u['User']['secretArea6'] = 1; $_SESSION['loggedInUser']['User']['secretArea6'] = 1; }
 			if($secretPoints>=5){ $u['User']['secretArea5'] = 1; $_SESSION['loggedInUser']['User']['secretArea5'] = 1; }
@@ -545,12 +546,24 @@ class SetsController extends AppController{
 			$sets[$i]['Set']['difficultyColor'] = $this->getDifficultyColor($sets[$i]['Set']['difficulty']);
 			$sets[$i]['Set']['sizeColor'] = $this->getSizeColor($sets[$i]['Set']['anz']);
 			$sets[$i]['Set']['dateColor'] = $this->getDateColor($sets[$i]['Set']['created']);
+			
+			if($sets[$i]['Set']['solved']>=100) $overallCounter++;
 		}
-
 		$sortOrder = 'null';
 		$sortColor = 'null';
 
 		if(isset($_SESSION['loggedInUser'])){
+			if($overallCounter>=10){
+				$aCondition = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array(
+					'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 'set'
+				)));
+				if($aCondition==null) $aCondition = array();
+				$aCondition['AchievementCondition']['category'] = 'set';
+				$aCondition['AchievementCondition']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+				$aCondition['AchievementCondition']['value'] = $overallCounter;
+				$this->AchievementCondition->save($aCondition);
+			}
+			
 			if($globalCounter==$globalSolvedCounter){
 				$u['User']['secretArea10'] = 1;
 				$_SESSION['loggedInUser']['User']['secretArea10'] = 1;
@@ -558,7 +571,6 @@ class SetsController extends AppController{
 				$firstGod['User']['secretArea10'] = 1;
 				$this->User->save($firstGod);
 			}
-
 			if(isset($_COOKIE['sortOrder']) && $_COOKIE['sortOrder']!= 'null'){
 				$u['User']['sortOrder'] = $_COOKIE['sortOrder'];
 				$sortOrder = $_COOKIE['sortOrder'];
@@ -575,8 +587,11 @@ class SetsController extends AppController{
 			$this->User->save($u);
 
 			$favorite = $this->Favorite->find('all', array('conditions' => array('user_id' => $u['User']['id'])));
+			
+			$achievementUpdate = $this->checkSetCompletedAchievements();
+			if(count($achievementUpdate)>0) $this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
 		}
-		//debug($sets);
+		
 		if($favorite!=null){
 			$difficultyCount = 0;
 			$solvedCount = 0;
@@ -622,12 +637,12 @@ class SetsController extends AppController{
 			$fav[0]['Set']['dateColor'] = '#eee';
 
 			$sets = array_merge($fav, $sets);
-			//debug($sets);
 		}
-
+		
 		$this->set('sortOrder', $sortOrder);
 		$this->set('sortColor', $sortColor);
         $this->set('sets', $sets);
+        $this->set('achievementUpdate', $achievementUpdate);
     }
 	
 	public function ui($id=null){

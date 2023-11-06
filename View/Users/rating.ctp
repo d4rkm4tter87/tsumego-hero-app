@@ -3,19 +3,20 @@
 
 <table border="0" width="100%">
 <tr>
-	<td width="33%" valign="top">
+	<td width="23%" valign="top">
 	</td>
-	<td width="33%" valign="top">
+	<td width="53%" valign="top">
 		<div align="center">
 		<br>
 		<a class="new-button new-buttonx" href="/users/highscore">level</a>
 		<a class="new-button buttonx-current" href="/users/rating">rating</a>
 		<a class="new-button new-buttonx" href="/users/highscore3">time</a>
+		<a class="new-button new-buttonx" href="/users/achievements">achievements</a>
 		<a class="new-button new-buttonx" href="/users/leaderboard">daily</a>
 		<br><br>
 		</div>
 	</td>
-	<td width="33%" valign="top">
+	<td width="23%" valign="top">
 		<div align="right">	
 		</div>
 	</td>

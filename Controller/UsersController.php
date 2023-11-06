@@ -16,11 +16,25 @@ class UsersController extends AppController{
 		$this->loadModel('Rank');
 		$this->loadModel('RankOverview');
 		$this->loadModel('Comment');
-		
-		//$s = $this->Status->find('all');
-		//echo '<pre>'; print_r(count($s)); echo '</pre>';
+		$this->loadModel('Schedule');
 		
 		/*
+		$ts = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array(
+			'set_id' => 185,
+			'num >=' => 531,
+			'num <=' => 540
+		)));
+		
+		for($i=0; $i<count($ts); $i++){
+			$s = array();
+			$s['Schedule']['published'] = '0';
+			$s['Schedule']['date'] = '2023-11-05';
+			$s['Schedule']['set_id'] = '198';
+			$s['Schedule']['tsumego_id'] = $ts[$i]['Tsumego']['id'];
+			$this->Schedule->create();
+			$this->Schedule->save($s);
+		}
+		
 		$ut = $this->TsumegoStatus->find('all', array('limit' => 10000, 'order' => 'created ASC', 'conditions' => array(
 			'created <' => '2022-05-09 19:19:09'
 		)));
@@ -1056,6 +1070,51 @@ Joschka Zimdars';
 		}
 		*/
 		$this->set('users', $users);
+	}
+	
+	public function achievements(){
+		$_SESSION['page'] = 'achievementHighscore';
+		$_SESSION['title'] = 'Tsumego Hero - Achievements Highscore';
+		
+		$this->LoadModel('TsumegoStatus');
+		$this->LoadModel('Tsumego');
+		$this->LoadModel('AchievementStatus');
+		$this->LoadModel('Achievement');
+		$this->LoadModel('User');
+		
+		$aNum = count($this->Achievement->find('all'));
+		//$as = $this->AchievementStatus->find('all', array('limit' => 300));
+		$as = $this->AchievementStatus->find('all');
+		$as2 = array();
+		for($i=0; $i<count($as); $i++){
+			array_push($as2, $as[$i]['AchievementStatus']['user_id']);
+		}
+		$as3 = array_count_values($as2);
+		
+		$uName = array();
+		$uaNum = array();
+		foreach ($as3 as $key => $value){
+			$u = $this->User->findById($key);
+			array_push($uName, $u['User']['name']);
+			array_push($uaNum, $value);
+			
+		}
+		array_multisort($uaNum, $uName);
+		
+		if(isset($_SESSION['loggedInUser'])){
+			$ux = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
+			$ux['User']['lastHighscore'] = 2;
+			$this->User->save($ux);
+		}
+		
+		$users = $this->User->find('all', array('limit' => 1000, 'order' => 'elo_rating_mode DESC', 'conditions' =>  array(
+			'NOT' => array('id' => array(33, 34, 35))
+		)));
+		
+		$this->set('users', $users);
+		$this->set('uaNum', $uaNum);
+		$this->set('uName', $uName);
+		$this->set('aNum', $aNum);
 	}
 	
 	public function highscore3(){
