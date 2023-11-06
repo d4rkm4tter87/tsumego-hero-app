@@ -1028,7 +1028,8 @@
 	if($pl==1) echo 'besogoPlayerColor = "white";';
 	if($t['Tsumego']['set_id']==42) echo 'besogoPlayerColor = "black";';
 
-	if($authorx==$_SESSION['loggedInUser']['User']['name'] && $isSandbox) echo 'authorProblem = true;';
+	if($authorx==$_SESSION['loggedInUser']['User']['name']) echo 'authorProblem = true;';
+	if($_SESSION['loggedInUser']['User']['id']==72) echo 'authorProblem = true;';
 	if($firstRanks!=0) echo 'document.cookie = "mode=3";';
 	if($mode==3){
 		echo 'seconds = 0.0;';
@@ -1598,6 +1599,8 @@
 		<?php if(($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2' || $t['Tsumego']['status']=='setW2') || $isSandbox){ ?>
 			displaySettings();
 		<?php } ?>
+		if(authorProblem)
+			displaySettings();
 		<?php if($t['Tsumego']['set_id']==42){ ?>
 		$("#alertCheckbox").change(function(){
 			$("#multipleChoiceAlerts").fadeOut(500);
@@ -2279,7 +2282,7 @@
 				}
 				noLastMark = true;
 				if(!noXP){
-					if(!freePlayMode && !authorProblem){
+					if(!freePlayMode){
 						misplays++;
 						document.cookie = "misplay="+misplays;
 						if(mode==1 || mode==2) secondsy = seconds;

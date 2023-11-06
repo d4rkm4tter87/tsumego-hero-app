@@ -395,7 +395,7 @@
 		    <input type="checkbox" class="alertCheckbox1" id="alertCheckbox'.$i.'" autocomplete="off" />
 		    <div class="alertBox alertInfo '.$achievementUpdate[$i][3].'3" id="achievementAlerts'.$i.'">
 			<div class="alertBanner" align="center">
-			New Achievement Unlocked
+			New Achievement Completed
 			<span class="alertClose">x</span>
 			</div>
 			<span class="alertText"><img id="hpIcon1" src="/img/'.$achievementUpdate[$i][2].'.png">
