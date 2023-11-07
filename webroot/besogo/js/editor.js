@@ -518,14 +518,9 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
     for (let i = 0; i < children.length; i++)
     {
       let move = children[i].move;
-      //if (shiftKey)  // Search for move in branch
-      if(false)
+      if (move && move.x === x && move.y === y)
       {
-        if (jumpToMove(x, y, children[i]))
-          return true;
-      }
-      else if (move && move.x === x && move.y === y)
-      {
+        children[i].cameFrom = null;
         navigateToNode(children[i], true /* by clicking */);
         return true;
       }
