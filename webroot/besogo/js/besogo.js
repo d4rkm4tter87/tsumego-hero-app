@@ -567,7 +567,7 @@
 		  besogo.scaleParameters['highestX'] = 19;
       else
 		  besogo.scaleParameters['highestX'] += 3;
-      if(besogo.scaleParameters['highestY'] >= 10)
+      if(besogo.scaleParameters['highestY'] >= 14)
 		  besogo.scaleParameters['highestY'] = 19;
       else
 		  besogo.scaleParameters['highestY'] += 3;

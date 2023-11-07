@@ -28,6 +28,7 @@ besogo.makeBoardDisplay = function(container, editor, corner)
     {
       besogo.scaleParameters['orientation'] = 'full-board';
       besogo.boardParameters['fullBoard'] = true;
+	  besogo.controlButtonLock = false;
     }
   
   besogo.boardParameters['fullBoard'] = false;

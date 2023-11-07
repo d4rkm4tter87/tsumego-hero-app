@@ -9,7 +9,6 @@ besogo.makeFilePanel = function(container, editor) {
 		makeNewBoardButton(13); // New 13x13 board button
 		makeNewBoardButton(19); // New 19x19 board button
 		makeNewBoardButton('?'); // New custom board button
-		besogo.controlButtonLock = false;
 	}
 
     // Hidden file chooser element
