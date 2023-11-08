@@ -238,6 +238,15 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
           next = current.selectNonLocalChildIncludingVirtualWithNoBetterStatus(select)
         else
           next = current.children.length != 0 ? current.children[0] : current.virtualChildren[0];
+
+        // The opponent wants to auto play into a move we already visited, potentially forcing the solver to solve part of a variation already done
+        // in this case, we just stop and call this sub-variation finished and move on.
+        if (next.target && next.target.visited || next.visited)
+        {
+          finish(current);
+          return;
+        }
+
         if (!next.target)
         {
           next.cameFrom = null;
@@ -252,6 +261,9 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
       current.visited = true;
       num--;
     }
+
+    if (besogo.soundsEnabled && !reviewMode)
+      document.getElementsByTagName("audio")[0].play();
     // Notify listeners of navigation (with no tree edits)
     notifyListeners({ navChange: true }, true); // Preserve history
 
@@ -439,8 +451,12 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
 
   function tryToFinish(node)
   {
-    if (node.hasNonLocalChildIncludingVirtual())
-      return;
+    if (!node.hasNonLocalChildIncludingVirtual())
+      finish(node);
+  }
+
+  function finish(node)
+  {
     if (reviewMode)
       return;
     if (!autoPlay)
@@ -485,8 +501,6 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
         performingAutoPlay = false;
         if (!isMutable)
           return;
-        if (besogo.soundsEnabled && !reviewMode)
-          document.getElementsByTagName("audio")[0].play();
 
         let selectOpponentMove = 0;
         if (current.children.length > 1)
