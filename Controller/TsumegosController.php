@@ -1425,20 +1425,6 @@ class TsumegosController extends AppController{
 				$checkBSize = $i;
 			}
 		}
-		
-		/*
-		$masterArrayBW = $this->processSGF(
-			$file, 
-			$t['Tsumego']['minLib'], 
-			$t['Tsumego']['maxLib'], 
-			$t['Tsumego']['variance'], 
-			$t['Tsumego']['libertyCount'], 
-			$t['Tsumego']['semeaiType'], 
-			$t['Tsumego']['set_id'], 
-			$orientation,
-			$checkBSize
-		);*/
-
 		if(!isset($_SESSION['loggedInUser'])) $u['User'] = $noUser;
 		
 		$navi = array();
@@ -1612,6 +1598,8 @@ class TsumegosController extends AppController{
 		
 		//echo '<pre>'; print_r($commentCoordinates); echo '</pre>';
 		//echo '<pre>'; print_r($co); echo '</pre>';
+		
+		
 		/*
 		echo '<pre>minLib '.$t['Tsumego']['minLib'].'</pre>';
 		echo '<pre>maxLib '.$t['Tsumego']['maxLib'].'</pre>';
@@ -1640,18 +1628,8 @@ class TsumegosController extends AppController{
 		$this->set('suspiciousBehavior', $suspiciousBehavior);
 		$this->set('isSandbox', $isSandbox);
 		$this->set('goldenTsumego', $goldenTsumego);
-		//$this->set('masterArray', $masterArrayBW[0]);
-		//$this->set('black', $masterArrayBW[1]);
-		//$this->set('white', $masterArrayBW[2]);
-		//$this->set('corner', $masterArrayBW[3]);
-		//$this->set('intuitionMove', $masterArrayBW[4]);
 		$this->set('fullHeart', $fullHeart);
 		$this->set('emptyHeart', $emptyHeart);
-		//$this->set('isSemeai', $masterArrayBW[5]);
-		//$this->set('blackSubtractedLiberties', $masterArrayBW[6]);
-		//$this->set('whiteSubtractedLiberties', $masterArrayBW[7]);
-		//$this->set('firstPlayer', $masterArrayBW[9]);
-		//$this->set('additionalInfo', $masterArrayBW[10]);
 		$this->set('libertyCount', $t['Tsumego']['libertyCount']);
 		$this->set('semeaiType', $t['Tsumego']['semeaiType']);
 		$this->set('insideLiberties', $t['Tsumego']['insideLiberties']);
@@ -1679,14 +1657,9 @@ class TsumegosController extends AppController{
 		$this->set('potion', $potion);
 		$this->set('potionSuccess', $potionSuccess);
 		$this->set('potionActive', $potionActive);
-		//$this->set('visual', $masterArrayBW[11]);
-		//$this->set('visuals', $masterArrayBW[12]);
 		$this->set('reviewCheat', $reviewCheat);
-		//$this->set('coordMarkers', $masterArrayBW[13]);
-		//$this->set('coordPlaces', $masterArrayBW[14]);
 		$this->set('commentCoordinates', $commentCoordinates);
 		$this->set('part', $t['Tsumego']['part']);
-		//$this->set('sT', $masterArrayBW[15]);
 		$this->set('josekiLevel', $josekiLevel);
 		$this->set('checkBSize', $checkBSize);
 		$this->set('rankTs', $rankTs);

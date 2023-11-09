@@ -918,6 +918,9 @@
 	echo '';
 	//if($corner=='full board') $boardSize='medium';
 	//else $boardSize='large';
+	
+	if($inFavorite!=null) echo $inFavorite;
+	else echo '<x>'
 	?>
 
 	<script type="text/javascript">
@@ -1015,9 +1018,13 @@
 	let hasChosen = false;
 	<?php
 	echo 'var downloadLink = "/download.php?key='.$hash.'&title='.$getTitle.'";';
+	
 	?>
 	
-	
+	if(inFavorite!==''){
+		prevButtonLink += inFavorite;
+		nextButtonLink += inFavorite;
+	}
 	<?php
 	if(isset($_SESSION['loggedInUser']['User']['id'])){
 		echo 'var besogoUserId = '.$_SESSION['loggedInUser']['User']['id'].';';
@@ -1029,7 +1036,7 @@
 	if($t['Tsumego']['set_id']==42) echo 'besogoPlayerColor = "black";';
 
 	if($authorx==$_SESSION['loggedInUser']['User']['name']) echo 'authorProblem = true;';
-	if($_SESSION['loggedInUser']['User']['id']==72) echo 'authorProblem = true;';
+	//if($_SESSION['loggedInUser']['User']['id']==72) echo 'authorProblem = true;';
 	if($firstRanks!=0) echo 'document.cookie = "mode=3";';
 	if($mode==3){
 		echo 'seconds = 0.0;';
@@ -1545,7 +1552,7 @@
 		});
 		$('#targetLockOverlay').click(function(){
 			if(!multipleChoiceEnabled){
-				if(nextButtonLink!==0) window.location.href = "/tsumegos/play/"+nextButtonLink;
+				if(nextButtonLink!==0) window.location.href = "/tsumegos/play/"+nextButtonLink+inFavorite;
 				else if(mode==1){
 					window.location.href = "/sets/view/"+<?php echo $t['Tsumego']['set_id']; ?>;
 				}
