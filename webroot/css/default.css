@@ -211,7 +211,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.sandboxTable2time{vertical-align:top;color:#5e5e5e;}
 	.deleteComment{color:#575757}
 	
-	#showx3,#showx4,#showx5,#show4,#show5{
+	#showx3,#showx4,#showx5,#show4,#show5,#showx6{
 		display:none;
 	}
 	
@@ -871,6 +871,9 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	}
 	.timeTableColor11{
 		font-weight:800;
+		background: linear-gradient(#ddd, #999);
+	}
+	.versionColor{
 		background: linear-gradient(#ddd, #999);
 	}
 	.admin-panel{

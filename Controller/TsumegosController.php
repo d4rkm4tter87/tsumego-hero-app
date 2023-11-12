@@ -23,6 +23,7 @@ class TsumegosController extends AppController{
 		$this->loadModel('AchievementStatus');
 		$this->loadModel('AchievementCondition');
 		$this->loadModel('ProgressDeletion');
+		$this->loadModel('Sgf');
 		
 		$noUser;
 		$noLogin;
@@ -72,9 +73,9 @@ class TsumegosController extends AppController{
 		$achievementUpdate = array();
 		$pdCounter = 0;
 		
-		if(isset($this->params['url']['potionAlert'])){
+		if(isset($this->params['url']['potionAlert']))
 			$potionAlert = true;
-		}
+		
 		
 		if(isset($_COOKIE['ui']) && $_COOKIE['ui'] != '0'){
 			$ui = $_COOKIE['ui'];
@@ -85,7 +86,6 @@ class TsumegosController extends AppController{
 			if($this->params['url']['modelink']==1) $tlength=15;
 			elseif($this->params['url']['modelink']==2) $tlength=16;
 			elseif($this->params['url']['modelink']==3) $tlength=17;
-			
 			if(isset($this->params['url']['modelink'])) $_COOKIE['mode'] = 3;
 			
 			$tcharacters = '0123456789abcdefghijklmnopqrstuvwxyz';
@@ -94,7 +94,6 @@ class TsumegosController extends AppController{
 			for($i=0;$i<$tlength;$i++){
 				$trandomString .= $tcharacters[rand(0, $tcharactersLength - 1)];
 			}
-			
 			$_SESSION['loggedInUser']['User']['activeRank'] = $trandomString;
 			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
 			$u['User']['activeRank'] =  $trandomString;
@@ -177,7 +176,6 @@ class TsumegosController extends AppController{
 					for($i=0; $i<count($rs); $i++){
 						if($rs[$i]['RankSetting']['status']==1) array_push($allowedRs, $rs[$i]['RankSetting']['set_id']);
 					}
-					
 					$rankTs = $this->Tsumego->find('all', array(
 						'conditions' =>  array(
 							'set_id' => $allowedRs,
@@ -185,7 +183,6 @@ class TsumegosController extends AppController{
 							'userWin <=' => $r2
 						)
 					));
-					
 					shuffle($rankTs);
 					for($i=0; $i<$stopParameter; $i++){
 						$rm = array();
@@ -507,17 +504,42 @@ class TsumegosController extends AppController{
 			$adminActivity['AdminActivity']['file'] = $t['Tsumego']['num'];
 			$adminActivity['AdminActivity']['answer'] = $file_name;
 			$this->AdminActivity->save($adminActivity);
-
 			$t['Tsumego']['variance'] = 0;
 			$this->Tsumego->save($t, true);
 
 			if(empty($errors)==true){
-				$uploadfile = $_SERVER['DOCUMENT_ROOT'].'/app/webroot/6473k339312/'.$fSet['Set']['folder'].'/'.$t['Tsumego']['num'].'.sgf';
-				move_uploaded_file($file_tmp, $uploadfile);
+				$lastV = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $id)));
+				$sgf = array();
+				$sgf['Sgf']['sgf'] = file_get_contents($_FILES['adminUpload']['tmp_name']);
+				$sgf['Sgf']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+				$sgf['Sgf']['tsumego_id'] = $id;
+				
+				if($lastV['Sgf']['version']==1){
+					$sgf['Sgf']['version'] = 1.1;
+				}else{
+					if($lastV['Sgf']['user_id']!=$_SESSION['loggedInUser']['User']['id']){
+						$nextV = $lastV['Sgf']['version']*10;
+						if(floor($nextV)==$nextV)
+							$nextV += .01;
+						$nextV = ceil($nextV);
+						$sgf['Sgf']['version'] = $nextV/10;
+					}else{
+						if(strtotime($lastV['Sgf']['created'])<strtotime('-2 days')){
+							$nextV = $lastV['Sgf']['version']*10;
+							if(floor($nextV)==$nextV)
+								$nextV += .01;
+							$nextV = ceil($nextV);
+							$sgf['Sgf']['version'] = $nextV/10;
+						}else{
+							$sgf['Sgf']['version'] = $lastV['Sgf']['version'] + .01;
+						}
+					}
+				}
+				$this->Sgf->save($sgf);
 			}else{
 				print_r($errors);
 			}
-		}
+		} 
 		
 		$t['Tsumego']['difficulty'] = ceil($t['Tsumego']['difficulty']*$fSet['Set']['multiplier']);
 		
@@ -1214,17 +1236,61 @@ class TsumegosController extends AppController{
 		$anzahl = $ts[count($ts)-1]['Tsumego']['num'];
 		$_SESSION['title'] = $set['Set']['title'].' '.$t['Tsumego']['num'].'/'.$anzahl.' on Tsumego Hero';
 		
+		
+		$sgf = array();
+		$sgfdb = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $id)));
+		if($sgfdb==null){
+			$sgf['Sgf']['sgf'] = file_get_contents('6473k339312/'.$set['Set']['folder'].'/'.$t['Tsumego']['num'].'.sgf');
+			$sgf['Sgf']['user_id'] = 33;
+			$sgf['Sgf']['tsumego_id'] = $id;
+			$sgf['Sgf']['version'] = 1;
+			$this->Sgf->save($sgf);
+		}else{
+			$sgf = $sgfdb;
+		}
+		$sgf['Sgf']['sgf'] = str_replace("\n", '"+"\n"+"', $sgf['Sgf']['sgf']);
+		
 		if(isset($this->params['url']['adminSGF'])){
 			if(strlen($this->params['url']['adminSGF'])>5){
 				if($_SESSION['loggedInUser']['User']['isAdmin']>=1){
-					if($this->params['url']['requestProblem']==$id){
+					if(($this->params['url']['requestProblem']/1337)==$id){
 						$requestProblem = $this->params['url']['adminSGF'];
 						$requestProblem = str_replace('@', ';', $requestProblem);
 						$requestProblem = str_replace('€', "\n", $requestProblem);
 						$requestProblem = str_replace('C[  ]', "C[+]", $requestProblem);
 						$requestProblem = str_replace('C[ ]', "C[+]", $requestProblem);
 						$requestProblem = str_replace('C[x]', "C[+]", $requestProblem);
-						file_put_contents('6473k339312/'.$set['Set']['folder'].'/'.$t['Tsumego']['num'].'.sgf', $requestProblem);
+						
+						//file_put_contents('6473k339312/'.$set['Set']['folder'].'/'.$t['Tsumego']['num'].'.sgf', $requestProblem);
+						$lastV = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $id)));
+						$sgf = array();
+						$sgf['Sgf']['sgf'] = $requestProblem;
+						$sgf['Sgf']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+						$sgf['Sgf']['tsumego_id'] = $id;
+						
+						if($lastV['Sgf']['version']==1){
+							$sgf['Sgf']['version'] = 1.1;
+						}else{
+							if($lastV['Sgf']['user_id']!=$_SESSION['loggedInUser']['User']['id']){
+								$nextV = $lastV['Sgf']['version']*10;
+								if(floor($nextV)==$nextV)
+									$nextV += .01;
+								$nextV = ceil($nextV);
+								$sgf['Sgf']['version'] = $nextV/10;
+							}else{
+								if(strtotime($lastV['Sgf']['created'])<strtotime('-2 days')){
+									$nextV = $lastV['Sgf']['version']*10;
+									if(floor($nextV)==$nextV)
+										$nextV += .01;
+									$nextV = ceil($nextV);
+									$sgf['Sgf']['version'] = $nextV/10;
+								}else{
+									$sgf['Sgf']['version'] = $lastV['Sgf']['version'] + .01;
+								}
+							}
+						}
+						$this->Sgf->save($sgf);
+						
 						$this->AdminActivity->create();
 						$adminActivity = array();
 						$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
@@ -1593,12 +1659,7 @@ class TsumegosController extends AppController{
 			$sgfx = file_get_contents($file);
 			$requestProblem = '?v='.strlen($sgfx);
 		}
-		
 		$ui = 2;
-		
-		//echo '<pre>'; print_r($commentCoordinates); echo '</pre>';
-		//echo '<pre>'; print_r($co); echo '</pre>';
-		
 		
 		/*
 		echo '<pre>minLib '.$t['Tsumego']['minLib'].'</pre>';
@@ -1611,6 +1672,7 @@ class TsumegosController extends AppController{
 		echo '<pre>semeaiType '.$t['Tsumego']['semeaiType'].'</pre>';
 		*/
 		
+		$this->set('sgf', $sgf);
 		$this->set('sandboxComment2', $sandboxComment2);
 		$this->set('raName', $raName);
 		$this->set('crs', $crs);

@@ -303,7 +303,7 @@ besogo.makeToolPanel = function(container, editor)
     }
     
     let reviewButtonId;
-    if (editor.getReviewEnabled())
+    if(editor.getReviewEnabled())
       reviewButtonId = 'besogo-review-button';
     else
       reviewButtonId = 'besogo-review-button-inactive';
@@ -365,7 +365,7 @@ besogo.makeToolPanel = function(container, editor)
 			editor.setReviewMode(false);
         }
 		besogo.editor.setControlButtonLock(false);
-		//besogo.editor.resetToStart();
+		besogo.editor.resetToStart();
 		document.getElementById("status").innerHTML = "";
         besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
       }

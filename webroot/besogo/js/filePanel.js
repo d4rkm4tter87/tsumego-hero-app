@@ -75,6 +75,18 @@ besogo.makeFilePanel = function(container, editor) {
 		if(besogo.onSite!==null){
 			element = document.createElement('input');
 			element.type = 'button';
+			element.value = 'Back to Tsumego Hero';
+			element.title = 'Go back without saving';
+			element.onclick = function()
+			{
+			  editor.resetEdited();
+			  window.location.href = "/tsumegos/play/"+(besogo.onSite[1]/1337);
+			 
+			};
+			container.appendChild(element);
+			
+			element = document.createElement('input');
+			element.type = 'button';
 			element.value = 'Save on Tsumego Hero';
 			element.title = 'Go back to Tsumego Hero and save the problem';
 			element.onclick = function()
@@ -181,10 +193,10 @@ besogo.makeFilePanel = function(container, editor) {
 		  //window.location.href = "/editor/?onSite="+text;
 		  window.location.href = "/app/webroot/editor/?onSite="+clearFile2+"$"+tsumegoFileLink;
 	  }else{
-		  text = text.replaceAll(";", "@");
+		  //text = text.replaceAll(";", "@");
 		  text = text.replaceAll("ß", "ss");
 		  //text = text.replaceAll("\n", "€");
-		  window.location.href = "/tsumegos/play/"+besogo.onSite+"?requestProblem="+besogo.onSite+"&adminSGF="+text;
+		  window.location.href = "/tsumegos/play/"+(besogo.onSite[1]/1337)+"?requestProblem="+besogo.onSite[1]+"&adminSGF="+text;
 	  }
     }
 };

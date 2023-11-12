@@ -20,15 +20,13 @@
 <script src="/besogo/js/controlPanel.js"></script>
 <script src="/besogo/js/commentPanel.js"></script>
 <script src="/besogo/js/treePanel.js"></script>
-
+<script src ="/FileSaver.min.js"></script>
 <?php
 	$choice = array();
 	for($i=1;$i<=count($enabledBoards);$i++){
 		if($enabledBoards[$i]=='checked') array_push($choice, $boardPositions[$i]);
 	}
 	$boardSize = 'large';
-	//if($corner=='full board') $boardSize = 'medium';
-	//else $boardSize = 'large';
 	shuffle($choice);
 
 	$authorx = $t['Tsumego']['author'];
@@ -525,12 +523,19 @@
 	if(isset($_SESSION['loggedInUser'])){
 		if($firstRanks==0){
 			$getTitle = str_replace('&','and',$set['Set']['title']);
+			$getTitle .= ' '.$t['Tsumego']['num'];
 			echo '<a id="showx3" class="selectable-text">Download SGF</a><br><br>';
 			
+			if($sgf['Sgf']['user_id']!=33) 
+				$adHighlight = 'color:#c63c3c;';
+			else
+				$adHighlight = '';
+				
 			if($_SESSION['loggedInUser']['User']['isAdmin']==1){
-					echo '<a id="showx4" href="/download.php?key='.$hash.'&title=" style="margin-right:20px;" class="selectable-text">Admin-Download SGF</a>';
-					echo '<a id="show4" style="margin-right:20px;" class="selectable-text">Admin-Upload SGF<img id="greyArrow4" src="/img/greyArrow1.png"></a>';
-					echo '<a id="showx5" href="/app/webroot/editor/?onSite='.$set['Set']['folder'].'/'.$t['Tsumego']['num'].'$'.$t['Tsumego']['id'].'$'.$_SERVER['HTTP_HOST'].'" style="margin-right:20px;" class="selectable-text">Open</a>';
+					echo '<a id="showx4" style="margin-right:20px;" class="selectable-text">Admin-Download</a>';
+					echo '<a id="show4" style="margin-right:20px;" class="selectable-text">Admin-Upload<img id="greyArrow4" src="/img/greyArrow1.png"></a>';
+					echo '<a id="showx5" style="margin-right:20px;" class="selectable-text">Open</a>';
+					echo '<a id="showx6" style="margin-right:20px;'.$adHighlight.'" class="selectable-text">History</a>';
 					echo '<a id="show5" class="selectable-text">Settings<img id="greyArrow5" src="/img/greyArrow1.png"></a>';
 					if($virtual_children==1){
 						$vcOn = 'checked="checked"';
@@ -916,8 +921,15 @@
 
 	echo '<audio><source src="/sounds/newStone.ogg"></audio>';
 	echo '';
-	//if($corner=='full board') $boardSize='medium';
-	//else $boardSize='large';
+	
+	
+	/* 
+	§TESTING AREA
+	§TESTING AREA
+	§TESTING AREA
+	*/
+	
+	
 	
 	if($inFavorite!=null) echo $inFavorite;
 	else echo '<x>'
@@ -1016,10 +1028,7 @@
 	let multipleChoiceInsideLiberties = <?php echo $t['Tsumego']['insideLiberties']; ?>+"";
 	let multipleChoiceEnabled = false;
 	let hasChosen = false;
-	<?php
-	echo 'var downloadLink = "/download.php?key='.$hash.'&title='.$getTitle.'";';
-	
-	?>
+	let enableDownloads = false;
 	
 	if(inFavorite!==''){
 		prevButtonLink += inFavorite;
@@ -1259,17 +1268,6 @@
 		echo 'var noXP=false;';
 	}
 
-	for($i=0; $i<count($black); $i++){
-		if($i%2 == 0){
-			echo 'jboard.setType(new JGO.Coordinate('.$black[$i].', '.$black[$i+1].'), JGO.'.$playerColor[0].');';
-		}
-	}
-	for($i=0; $i<count($white); $i++){
-		if($i%2 == 0){
-			echo 'jboard.setType(new JGO.Coordinate('.$white[$i].', '.$white[$i+1].'), JGO.'.$playerColor[1].');';
-		}
-	}
-
 	if($t['Tsumego']['set_id']==156 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161){
 		if($additionalInfo['lastPlayed'][0]!=99) echo 'jboard.setMark(new JGO.Coordinate('.$additionalInfo['lastPlayed'][0].', '.$additionalInfo['lastPlayed'][1].'), JGO.MARK.CIRCLE);';
 		for($i=0; $i<count($additionalInfo['triangle']); $i++){
@@ -1279,12 +1277,6 @@
 			echo 'jboard.setMark(new JGO.Coordinate('.$additionalInfo['square'][$i][0].', '.$additionalInfo['square'][$i][1].'), JGO.MARK.SQUARE);';
 		}
 	}
-
-	?>if(josekiHero){<?php
-		for($i=0; $i<count($visual); $i++){
-			echo 'if(josekiLevel<3) jboard.setMark(new JGO.Coordinate('.$visual[$i][0].', '.$visual[$i][1].'), JGO.MARK.CIRCLE);';
-		}
-	?>}<?php
 
 	//BOARD ORIENTATION
 	      if($corner=='tl'){echo 'jsetup.view(0, 0, 9, 9);';
@@ -1613,17 +1605,36 @@
 			$("#multipleChoiceAlerts").fadeOut(500);
 		});
 		<?php } ?>
+		
+		$("#showx3").click(function(){
+			jsCreateDownloadFile("<?php echo $getTitle; ?>");
+		});
+		$("#showx4").click(function(){
+			jsCreateDownloadFile("<?php echo $t['Tsumego']['num']; ?>");
+		});
 	});
 
 	function displaySettings(){
+		enableDownloads = true;
 		$("#showx3").css("display", "inline-block");
-		$("#showx3").attr("href", downloadLink);
 		<?php if($_SESSION['loggedInUser']['User']['isAdmin']==1){ ?>
+		$("#showx5").attr("href", "<?php echo '/app/webroot/editor/?onSite='.$_SERVER['HTTP_HOST'].'$'.($t['Tsumego']['id']*1337).'$'.$sgf['Sgf']['sgf']; ?>");
+		$("#showx6").attr("href", "<?php echo '/sgfs/view/'.($t['Tsumego']['id']*1337); ?>");
 		$("#showx4").css("display", "inline-block");		
 		$("#showx5").css("display", "inline-block");		
 		$("#show4").css("display", "inline-block");		
-		$("#show5").css("display", "inline-block");	
+		$("#show5").css("display", "inline-block");
+		$("#showx6").css("display", "inline-block");
 		<?php } ?>
+	}
+	
+	function jsCreateDownloadFile(name){
+		if(enableDownloads){
+			var blob = new Blob(["<?php echo $sgf['Sgf']['sgf']; ?>"],{
+				type: "sgf",
+			});
+			saveAs(blob, name+".sgf");
+		}
 	}
 
 	function reset(){
@@ -1883,7 +1894,7 @@
 		positionParams[8] = orientation;
 		besogo.editor.commentPosition(positionParams);
 	}
-
+	
 	function intuition(){
 		document.cookie = "intuition=1";
 		document.getElementById("intuition").src = "/img/hp2x.png";
@@ -2526,7 +2537,7 @@
 			}
 			else $("#targetLockOverlay").css("height", "633px");
 			$("#targetLockOverlay").css("z-index", "1000");
-			$("#targetLockOverlay").css("background", "blue");
+			//$("#targetLockOverlay").css("background", "blue");
 			//$("#targetLockOverlay").css("opacity", ".5");
 		}else{
 			$("#targetLockOverlay").css("width", "0");
@@ -2664,12 +2675,12 @@
 	  options.theme = '<?php echo $choice[0][1]; ?>';
 	  options.themeParameters = ['<?php echo $choice[0][2]; ?>', '<?php echo $choice[0][3]; ?>'];
 	  options.coord = 'western';
-	  // COORDS = 'none numeric western eastern pierre corner eastcor'.split(' '),
-	  options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/'+'<?php echo $file; ?>';
+	  //options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/'+'<?php echo $file; ?>';
 	  
-	  //options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/'+'<?php echo $file; ?>'+'<?php echo $requestProblem; ?>';
+	  options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/placeholder.sgf';
+	  options.sgf2 = "<?php echo $sgf['Sgf']['sgf']; ?>";
+	  
 	  if (options.theme) addStyleLink('https://<?php echo $_SERVER['HTTP_HOST']; ?>/besogo/css/board-'+options.theme+'.css');
-		//addStyleLink('css/board-' + options.theme + '.css');
 	  if (options.height && options.width && options.resize === 'fixed')
 	  {
 		  div.style.height = options.height + 'px';
@@ -2678,7 +2689,6 @@
     options.reviewMode = false;
     options.reviewEnabled = <?php echo $reviewEnabled ? 'true' : 'false'; ?>;
 	<?php
-		//if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72||$_SESSION['loggedInUser']['User']['id']==13282){
 		//if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72){
 		if(isset($_SESSION['loggedInUser'])){if(false){
 			echo 'options.reviewEnabled = true;';

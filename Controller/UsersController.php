@@ -149,25 +149,6 @@ class UsersController extends AppController{
 		$this->loadModel('Set');
 		$this->loadModel('Schedule');
 		
-		/*
-		$ts = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array(
-			'set_id' => 177,
-			'num >=' => 199,
-			'num <=' => 200
-		)));
-		
-		
-		for($i=0; $i<count($ts); $i++){
-			$s = array();
-			$s['Schedule']['published'] = '0';
-			$s['Schedule']['date'] = '2023-06-10';
-			$s['Schedule']['set_id'] = '186';
-			$s['Schedule']['tsumego_id'] = $ts[$i]['Tsumego']['id'];
-			$this->Schedule->create();
-			$this->Schedule->save($s);
-		}
-		*/
-		
 		$p = $this->Schedule->find('all', array('order' => 'date ASC', 'conditions' => array('published' => 0)));
 		
 		for($i=0; $i<count($p); $i++){
@@ -2192,6 +2173,8 @@ Joschka Zimdars';
 		$this->loadModel('TsumegoAttempt');
 		$this->loadModel('Tsumego');
 		$this->loadModel('PurgeList');
+		$this->loadModel('Set');
+		$this->loadModel('Sgf');
 		
 		$pl = $this->PurgeList->find('first', array('order' => 'id DESC'));
 		$pl['PurgeList']['tsumego_scores'] = date('Y-m-d H:i:s');
@@ -2209,6 +2192,15 @@ Joschka Zimdars';
 		$ts2 = $ts;
 		
 		for($i=0; $i<count($ts); $i++){
+			$set = $this->Set->findById($ts[$i]['Tsumego']['set_id']);
+			$sgf = array();
+			$sgf['Sgf']['sgf'] = file_get_contents('6473k339312/'.$set['Set']['folder'].'/'.$ts[$i]['Tsumego']['num'].'.sgf');
+			$sgf['Sgf']['user_id'] = 33;
+			$sgf['Sgf']['tsumego_id'] = $ts[$i]['Tsumego']['id'];
+			$sgf['Sgf']['version'] = 1.0;
+			$this->Sgf->create();
+			$this->Sgf->save($sgf);
+			
 			$ur = $this->TsumegoAttempt->find('all', array('order' => 'created DESC', 'limit' => 1000, 'conditions' =>  array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
 			$ratio = array();
 			$ratio['s'] = 0;

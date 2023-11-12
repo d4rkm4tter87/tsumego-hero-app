@@ -3,7 +3,7 @@
 					<br> Publish Schedule
 				<br><br> 
 				</p>
-<div align="right"><a href="/sets/beta">back</a></div>
+<div align="left"><a href="/sets/beta">back</a></div>
 	<table class="highscoreTable" border="0">
 	<tbody>
 	<tr>

@@ -254,10 +254,9 @@
 		besogo.isEmbedded = true;
 	if(typeof options.onSite === 'string'){
 		besogo.onSite = options.onSite.replaceAll('%20', ' ');
-		let onSiteArray = besogo.onSite.split('$');
-		besogo.onSite = onSiteArray[1];
-		//options.sgf = 'https://tsumego-hero/6473k339312/'+onSiteArray[0]+'.sgf';
-		options.sgf = 'https://'+onSiteArray[2]+'/6473k339312/'+onSiteArray[0]+'.sgf';
+		besogo.onSite = besogo.onSite.split('$');
+		options.sgf = 'https://'+besogo.onSite[0]+'/placeholder.sgf';
+		options.sgf2 = besogo.onSite[2];
 	}
 
 	let sgfLoaded =
@@ -359,11 +358,16 @@
       try
       {
         if (validURL)
-          fetchParseLoad(options.sgf, besogo.editor, options.path, sgfLoaded);
-        else
+		{
+		  //to load by code, not file, options.sgf contains an empty sgf file and options.sgf2 contains the code
+          fetchParseLoad(options.sgf, besogo.editor, options.path, sgfLoaded, options.sgf2);
+        }
+		else
         {
+		/*doesn't work
           parseAndLoad(options.sgf, besogo.editor);
           navigatePath(besogo.editor, options.path);
+		*/
         }
       }
       catch(e)
@@ -541,7 +545,6 @@
     {
       return; // Silently fail on parse error
     }
-
     besogo.scaleParameters = besogo.loadSgf(sgf, editor);
 
     //if the setting is not full-board
@@ -647,11 +650,7 @@
 	besogo.coordArea['highestXconverted'] = convertedCoords.x[besogo.coordArea['highestX']+1];
 	besogo.coordArea['lowestYconverted'] = convertedCoords.y[besogo.coordArea['lowestY']+1];
 	besogo.coordArea['highestYconverted'] = convertedCoords.y[besogo.coordArea['highestY']+1];
-	/*
-	console.log(besogo.scaleParameters);
-	console.log(besogo.boardParameters);
-	console.log(besogo.coordArea);
-	*/
+	
 	if(besogo.isEmbedded) besogo.editor.adjustCommentCoords();
 
     if(besogo.playerColor==="white")
@@ -664,7 +663,7 @@
   }
 
   // Fetches text file at url from same domain
-  function fetchParseLoad(url, editor, path, sgfLoaded)
+  function fetchParseLoad(url, editor, path, sgfLoaded, sgfText=null)
   {
     var http = new XMLHttpRequest();
 
@@ -672,7 +671,10 @@
     {
       if (http.readyState === 4 && http.status === 200) // Successful fetch
       {
-        sgfLoaded.scaleParameters = parseAndLoad(http.responseText, editor);
+		if(sgfText!==null)
+			sgfLoaded.scaleParameters = parseAndLoad(sgfText, editor);
+        else
+			sgfLoaded.scaleParameters = parseAndLoad(http.responseText, editor);
         navigatePath(editor, path);
       }
     };

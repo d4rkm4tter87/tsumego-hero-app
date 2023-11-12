@@ -2,6 +2,8 @@
 class AchievementsController extends AppController {
 
 	public function index(){
+		$_SESSION['page'] = 'user';
+		$_SESSION['title'] = 'Tsumego Hero - Achievements';
 		$this->LoadModel('AchievementStatus');
 		$existingAs = array();
 		
@@ -28,6 +30,8 @@ class AchievementsController extends AppController {
     }
 	
 	public function view($id=null){
+		$_SESSION['page'] = 'user';
+		$_SESSION['title'] = 'Tsumego Hero - Achievements';
 		$this->LoadModel('AchievementStatus');
 		$this->LoadModel('User');
 		$a = $this->Achievement->findById($id);

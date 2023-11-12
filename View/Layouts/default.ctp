@@ -227,7 +227,6 @@
 									echo '<li><a class="adminLink" href="/users/userstats">User Activities</a></li>';
 									echo '<li><a class="adminLink" href="/app/webroot/editor">Editor</a></li>';
 									echo '<li><a class="adminLink" href="/users/publish">Publish Schedule</a></li>';
-									echo '<li><a class="adminLink" href="/users/likesview">Likes/Dislikes</a></li>';
 								}
 							echo '</ul>';
 						}
@@ -356,7 +355,7 @@
 		}
 	?>
 
-	<div width="100%" align="left" class="whitebox2" <?php if(isset($_SESSION['loggedInUser'])){ echo 'onmouseover="xpNoHover()"'; } ?>>
+	<div width="100%" align="left" class="whitebox2">
 		<?php
 			$setHeight = '';
 			if(isset($set)){
