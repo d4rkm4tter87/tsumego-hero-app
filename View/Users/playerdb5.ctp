@@ -11,5 +11,5 @@
 	//echo '<script type="text/javascript">window.location.href = "/users/playerdb5";</script>';
 ?>
 <script type="text/JavaScript">
-	setTimeout(function () {window.location.href = "/users/playerdb5";}, 100);
+	//setTimeout(function () {window.location.href = "/users/playerdb5";}, 100);
 </script>

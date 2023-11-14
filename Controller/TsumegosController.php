@@ -1248,6 +1248,26 @@ class TsumegosController extends AppController{
 		}else{
 			$sgf = $sgfdb;
 		}
+		
+		if($t['Tsumego']['set_id']==208){
+			$aw = strpos($sgf['Sgf']['sgf'], 'AW');
+			$ab = strpos($sgf['Sgf']['sgf'], 'AB');
+			$tr = strpos($sgf['Sgf']['sgf'], 'TR');
+			$sq = strpos($sgf['Sgf']['sgf'], 'SQ');
+			$seq1 = strpos($sgf['Sgf']['sgf'], ';B');
+			$seq2 = strpos($sgf['Sgf']['sgf'], ';W');
+			$sequencesSign = strpos($sgf['Sgf']['sgf'], ';B');
+			$p4 = substr($sgf['Sgf']['sgf'], $tr, $sq-$tr);
+			$trX = str_split(substr($p4, 2), 4);
+			$p5 = substr($sgf['Sgf']['sgf'], $sq, $sequencesSign-$sq);
+			$sqX = str_split(substr($p5, 2), 4);
+			for($i=0;$i<count($sqX);$i++)
+				if(strlen($sqX[$i])<4)
+					unset($sqX[$i]);
+			$this->set('multipleChoiceTriangles', count($trX));
+			$this->set('multipleChoiceSquares', count($sqX));
+		}
+		
 		$sgf['Sgf']['sgf'] = str_replace("\n", '"+"\n"+"', $sgf['Sgf']['sgf']);
 		
 		if(isset($this->params['url']['adminSGF'])){
@@ -1671,6 +1691,7 @@ class TsumegosController extends AppController{
 		echo '<pre>eyeLiberties2 '.$t['Tsumego']['eyeLiberties2'].'</pre>';
 		echo '<pre>semeaiType '.$t['Tsumego']['semeaiType'].'</pre>';
 		*/
+		//echo '<pre>'; print_r($sgf['Sgf']['sgf']); echo '</pre>'; 
 		
 		$this->set('sgf', $sgf);
 		$this->set('sandboxComment2', $sandboxComment2);

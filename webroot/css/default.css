@@ -3209,6 +3209,12 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	  width:100%;
 	  font-weight:800;
 	}
+	.alertBannerIncorrect{
+		background:linear-gradient(rgb(217, 109, 112), rgb(202, 63, 76)) !important;
+	}
+	.alertBannerCorrect{
+		background:linear-gradient(rgb(26, 181, 88), rgb(18, 121, 59)) !important;
+	}
 	.clear1 {
 	  clear: both;
 	}

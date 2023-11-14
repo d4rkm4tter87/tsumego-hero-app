@@ -1,4 +1,3 @@
-
 <link rel="stylesheet" type="text/css" href="/besogo/css/besogo.css">
 <link rel="stylesheet" type="text/css" href="/besogo/css/board-flat.css">
 
@@ -21,6 +20,14 @@
 <script src="/besogo/js/commentPanel.js"></script>
 <script src="/besogo/js/treePanel.js"></script>
 <script src ="/FileSaver.min.js"></script>
+<?php if($t['Tsumego']['set_id']==208){ ?>
+	<script src="/js/multipleChoice.js"></script>
+	<style>
+		.alertBox{
+			height:auto!important;
+		}
+	</style>
+<?php } ?>
 <?php
 	$choice = array();
 	for($i=1;$i<=count($enabledBoards);$i++){
@@ -32,7 +39,6 @@
 	$authorx = $t['Tsumego']['author'];
 	if($authorx=='Joschka Zimdars') $authorx = 'd4rkm4tter';
 	if($authorx=='Jérôme Hubert') $authorx = 'jhubert';
-
 	$heroPower1 = 'hp1x';
 	$heroPower2 = 'hp2x';
 	$heroPower3 = 'hp3x';
@@ -77,9 +83,7 @@
 		$rejuvenationEnabled = 0;
 		$refinementEnabled = 0;
 
-		echo '
-			<style>#xpDisplay{font-weight:800;color:#60167d;}</style>
-		';
+		echo '<style>#xpDisplay{font-weight:800;color:#60167d;}</style>';
 		$heroPower1 = 'hp1xx';
 		$heroPower2 = 'hp2xx';
 		$heroPower3 = 'hp3xx';
@@ -110,17 +114,14 @@
 	else if($goldenTsumego) $choice[0] = array(46,'texture46','black34.png','white34.png'); //Golden
 	else if($t['Tsumego']['set_id']==6473) $choice[0] = $boardPositions[51]; //Tsumego Grandmaster
 	else echo '<script type="text/javascript" src="/'.$boardSize.'/board'.$choice[0][0].'.js"></script>'; // Regular
-	
 	if(isset($_SESSION['lastVisit'])) $lv = $_SESSION['lastVisit'];
 	else $lv = '15352';
-
 	$a1 = '';
 	$b1 = '';
 	$c1 = '';
 	$d1 = '';
 	$x2 = '';
 	$ansDisplay = 'ans';
-
 	$playerColor = array();
 	$pl = 0;
 	if($colorOrientation=='black') $pl = 0;
@@ -140,9 +141,7 @@
 	else $descriptionColor = 'White ';
 
 	$t['Tsumego']['description'] = str_replace('b ', $descriptionColor, $t['Tsumego']['description']);
-
 ?>
-
 	<table width="100%" border="0">
 	<tr>
 	<td align="center" width="29%">
@@ -197,7 +196,6 @@
 						}
 					}else echo '<a id="playTitleA" href="/sets/view/1">Favorites</a>
 					<font style="font-weight:400;" color="grey" >(<a style="color:grey;" id="playTitleA" href="/sets/view/'.$set['Set']['id'].'">'.$set['Set']['title'].$di.$t['Tsumego']['file'].$di2.$anz.'</a>)</font>';
-
 				?>
 				<br>
 				<?php
@@ -222,11 +220,9 @@
 						</td>
 						</tr>
 						</table>
-
 					<?php }else{
 						if(count($additionalInfo['playerNames'])==4){
 					?>
-
 						<table class="gameInfo" style="padding-top:7px;">
 						<tr>
 						<td>
@@ -235,10 +231,7 @@
 						?>
 						</td>
 						</tr>
-
 						</table>
-
-
 						<table class="gameInfo" style="padding-top:7px;">
 						<tr>
 						<td>
@@ -879,7 +872,7 @@
 	<?php
 	}
 	?>
-	<?php if($t['Tsumego']['set_id']==42){ ?>
+	<?php if($t['Tsumego']['set_id']==208){ ?>
 		<label>
 		<input type="checkbox" class="alertCheckbox1" id="alertCheckbox" autocomplete="off" />
 		<div class="alertBox alertInfo" id="multipleChoiceAlerts">
@@ -889,7 +882,8 @@
 		</div>
 		<span class="alertText2">
 		<div id="multipleChoiceText"></div>
-		<br class="clear1"/></span>
+		<div class="clear1"></div>
+		</span>
 		</div>
 		</label>
 	<?php }	?>
@@ -928,7 +922,7 @@
 	§TESTING AREA
 	§TESTING AREA
 	*/
-	
+	echo '<pre>'; print_r($multipleChoiceTriangles); echo '</pre>'; 
 	
 	
 	if($inFavorite!=null) echo $inFavorite;
@@ -1042,7 +1036,7 @@
 	}
 	
 	if($pl==1) echo 'besogoPlayerColor = "white";';
-	if($t['Tsumego']['set_id']==42) echo 'besogoPlayerColor = "black";';
+	if($t['Tsumego']['set_id']==208) echo 'besogoPlayerColor = "black";';
 
 	if($authorx==$_SESSION['loggedInUser']['User']['name']) echo 'authorProblem = true;';
 	//if($_SESSION['loggedInUser']['User']['id']==72) echo 'authorProblem = true;';
@@ -1600,7 +1594,7 @@
 		<?php } ?>
 		if(authorProblem)
 			displaySettings();
-		<?php if($t['Tsumego']['set_id']==42){ ?>
+		<?php if($t['Tsumego']['set_id']==208){ ?>
 		$("#alertCheckbox").change(function(){
 			$("#multipleChoiceAlerts").fadeOut(500);
 		});
@@ -2363,168 +2357,6 @@
 		document.cookie = "preId=<?php echo $t['Tsumego']['id']; ?>";
 	}
 	
-	function displayMultipleChoiceResult(num){
-		let correct = 0;
-		let mText = "";
-		let mText2 = "";
-		let mText3 = 0;
-		let mTextPlural = "s";
-		let libPlural1 = "liberties";
-		let libPlural2 = "liberties";
-		let multipleChoiceLibertiesB2 = multipleChoiceLibertyCount-multipleChoiceLibertiesB;
-		let multipleChoiceLibertiesW2 = multipleChoiceLibertyCount-multipleChoiceLibertiesW;
-		let libCalcB, libCalcW,	libCalcB2, libCalcW2, libCalc3;
-		if(!hasChosen){
-			$("#besogo-multipleChoice1").css("background-color", "#e0747f");
-			$("#besogo-multipleChoice2").css("background-color", "#e0747f");
-			$("#besogo-multipleChoice3").css("background-color", "#e0747f");
-			$("#besogo-multipleChoice4").css("background-color", "#e0747f");
-			if(multipleChoiceSemeaiType==1){
-				if(multipleChoiceLibertiesB<multipleChoiceLibertiesW){
-					correct = 1;
-					$("#besogo-multipleChoice1").css("background-color", "#3ecf78");
-					mText3 = multipleChoiceLibertiesW-multipleChoiceLibertiesB;
-					if(mText3==1) mTextPlural = "";
-					mText2 = "Black is dead. ("+mText3+" move"+mTextPlural+" behind)";
-				}else if(multipleChoiceLibertiesB>multipleChoiceLibertiesW){
-					correct = 2;
-					$("#besogo-multipleChoice2").css("background-color", "#3ecf78");
-					mText3 = multipleChoiceLibertiesB-multipleChoiceLibertiesW;
-					if(mText3==1) mTextPlural = "";
-					mText2 = "White is dead. ("+mText3+" move"+mTextPlural+" behind)";
-				}else{
-					correct = 3;
-					$("#besogo-multipleChoice3").css("background-color", "#3ecf78");
-					mText2 = "The position is unsettled. (Whoever plays first wins.)";
-				}
-				if(multipleChoiceLibertiesB2==1) libPlural1 = "liberty";
-				if(multipleChoiceLibertiesW2==1) libPlural2 = "liberty";
-				mText = "Semeai Type 1: No eyes, less than 2 inside liberties.<br>No Seki possible.<br> Black has "+multipleChoiceLibertiesB2
-				+" "+libPlural1+".<br> White has "+multipleChoiceLibertiesW2+" "+libPlural2+".<br>"+mText2;
-				$(".alertBox").css("height", "196px");
-			}else if(multipleChoiceSemeaiType==2){
-				mText = "Semeai Type 2: No eyes, 2 or more inside liberties.<br>The favorite\'s task is to kill.<br>The favorite counts his outside liberties plus 1 inside liberty.<br>The underdog\'s task is Seki.<br>The underdog counts his outside liberties plus all inside liberties.<br>";
-				let underdog = "Black";
-				if(multipleChoiceLibertiesB<multipleChoiceLibertiesW){
-					mText += "White is the favorite with more outside liberties.<br>";
-					underdog = "Black";
-					libCalcB = parseInt(multipleChoiceLibertyCount)-parseInt(multipleChoiceLibertiesW)+parseInt(multipleChoiceInsideLiberties);
-					libCalcW = parseInt(multipleChoiceLibertyCount)-parseInt(multipleChoiceLibertiesB)+1;
-					libCalcB2 = parseInt(multipleChoiceLibertyCount)-parseInt(multipleChoiceLibertiesW);
-					libCalcW2 = parseInt(multipleChoiceLibertyCount)-parseInt(multipleChoiceLibertiesB);
-					if(libCalcB==1) libPlural1="liberty";
-					if(libCalcW==1) libPlural2="liberty";
-					mText += "Black has "+libCalcB+" "+libPlural1+".(underdog: "+libCalcB2+" outside + "+multipleChoiceInsideLiberties+" inside)<br>";
-					mText += "White has "+libCalcW+" "+libPlural2+".(favorite: "+libCalcW2+" outside + 1 inside)<br>";
-					libCalc3 = libCalcW-libCalcB;
-					if(libCalc3===0){
-						mText += "Unsettled. (whoever plays first accomplishes their task)<br>";
-						$("#besogo-multipleChoice3").css("background-color", "#3ecf78");
-						correct = 3;
-					}else{
-						mText += "Black is dead. ("+libCalc3+" move(s) behind)<br>";
-						$("#besogo-multipleChoice1").css("background-color", "#3ecf78");
-						correct = 1;
-					}
-				}else if(multipleChoiceLibertiesB>multipleChoiceLibertiesW){
-					mText += "Black is the favorite with more outside liberties.<br>";
-					underdog = "White";
-					libCalcB = parseInt(multipleChoiceLibertyCount)-parseInt(multipleChoiceLibertiesW)+1;
-					libCalcW = parseInt(multipleChoiceLibertyCount)-parseInt(multipleChoiceLibertiesB)+parseInt(multipleChoiceInsideLiberties);
-					libCalcB2 = parseInt(multipleChoiceLibertyCount)-parseInt(multipleChoiceLibertiesW);
-					libCalcW2 = parseInt(multipleChoiceLibertyCount)-parseInt(multipleChoiceLibertiesB);
-					if(libCalcB==1) libPlural1="liberty";
-					if(libCalcW==1) libPlural2="liberty";
-					mText += "White has "+libCalcW+" "+libPlural2+".(underdog: "+libCalcW2+" outside + "+multipleChoiceInsideLiberties+" inside)<br>";
-					mText += "Black has "+libCalcB+" "+libPlural1+".(favorite: "+libCalcB2+" outside + 1 inside)<br>";
-					libCalc3 = libCalcB-libCalcW;
-					if(libCalc3===0){
-						mText += "Unsettled. (whoever plays first accomplishes their task)<br>";
-						$("#besogo-multipleChoice3").css("background-color", "#3ecf78");
-						correct = 3;
-					}else{
-						mText += "White is dead. ("+libCalc3+" move(s) behind)<br>";
-						$("#besogo-multipleChoice2").css("background-color", "#3ecf78");
-						correct = 2;
-					}
-				}else{
-					mText += "Seki - same amount of liberties.<br>";
-					$("#besogo-multipleChoice4").css("background-color", "#3ecf78");
-					correct = 4;
-				}
-				
-				//mText += "Black has "+libCalcB+" liberties.("+multipleChoiceLibertiesB+")<br>";
-				//mText += "White has "+libCalcW+" liberties.("+multipleChoiceLibertiesW+")<br>";
-				
-				$(".alertBox").css("height", "310px");
-			}else if(multipleChoiceSemeaiType==3){
-				if(multipleChoiceLibertiesB<multipleChoiceLibertiesW){
-					correct = 1;
-					$("#besogo-multipleChoice1").css("background-color", "#3ecf78");
-					mText3 = multipleChoiceLibertiesW-multipleChoiceLibertiesB;
-					if(mText3==1) mTextPlural = "";
-					mText2 = "Black is dead. ("+mText3+" move"+mTextPlural+" behind)";
-				}else if(multipleChoiceLibertiesB>multipleChoiceLibertiesW){
-					correct = 2;
-					$("#besogo-multipleChoice2").css("background-color", "#3ecf78");
-					mText3 = multipleChoiceLibertiesB-multipleChoiceLibertiesW;
-					if(mText3==1) mTextPlural = "";
-					mText2 = "White is dead. ("+mText3+" move"+mTextPlural+" behind)";
-				}else{
-					correct = 3;
-					$("#besogo-multipleChoice3").css("background-color", "#3ecf78");
-					mText2 = "The position is unsettled. (Whoever plays first wins.)";
-				}
-				if(multipleChoiceLibertiesB2==1) libPlural1 = "liberty";
-				if(multipleChoiceLibertiesW2==1) libPlural2 = "liberty";
-				mText = "Semeai Type 3: Eye vs no eye.<br>No Seki possible.<br> All inside liberties count for the group with the eye.<br>Black has "+multipleChoiceLibertiesB2
-				+" "+libPlural1+".<br> White has "+multipleChoiceLibertiesW2+" "+libPlural2+".<br>"+mText2;
-				$(".alertBox").css("height", "220px");
-			}else if(multipleChoiceSemeaiType==4){
-				mText = "Semeai Type 4: Same sized big eyes.<br>";
-				if(multipleChoiceInsideLiberties==0){
-					mText += "No Seki possible because there are no inside liberties.<br>";
-					console.log(multipleChoiceLibertiesB);
-					console.log(multipleChoiceLibertiesW);
-					multipleChoiceLibertiesB2 = multipleChoiceLibertyCount-multipleChoiceLibertiesB;
-					multipleChoiceLibertiesW2 = multipleChoiceLibertyCount-multipleChoiceLibertiesW;
-					mText += "Black has "+multipleChoiceLibertiesB2+".<br>";
-					mText += "White has "+multipleChoiceLibertiesW2+".<br>";
-					if(multipleChoiceLibertiesB>multipleChoiceLibertiesW){
-						libCalcB = multipleChoiceLibertiesB-multipleChoiceLibertiesW;
-						mText += "White is dead. ("+libCalcB+" moves behind)<br>";
-						correct = 2;
-					}else if(multipleChoiceLibertiesB<multipleChoiceLibertiesW){
-						libCalcW = multipleChoiceLibertiesW-multipleChoiceLibertiesB;
-						mText += "Black is dead. ("+libCalcW+" moves behind)<br>";
-						correct = 1;
-					}else{
-						mText += "Unsettled.<br>";
-						correct = 3;
-					}
-				}
-				$(".alertBox").css("height", "220px");//§
-			}else if(multipleChoiceSemeaiType==5){
-			}else if(multipleChoiceSemeaiType==6){
-			
-			}
-			if(num==correct){
-				displayResult("S");
-				multipleChoiceEnabled = false;
-				$(".alertBanner").css("background-color", "rgb(18, 121, 59)");
-				$(".alertBanner").html("Correct!<span class=\"alertClose\">x</span>");
-			}else{
-				displayResult("F");
-				multipleChoiceEnabled = false;
-				$(".alertBanner").css("background-color", "rgb(219, 76, 89)");
-				$(".alertBanner").html("Incorrect<span class=\"alertClose\">x</span>");
-			}
-			$('#multipleChoiceText').html(mText);
-			$("#multipleChoiceAlerts").fadeIn(500);
-			hasChosen = true;
-		}
-	}
-
 	function toggleBoardLock(t, customHeight=false, multipleChoice=false){
 		if(t){
 			let besogoBoardHeight = $('.besogo-board').height() + "px";
@@ -2600,7 +2432,7 @@
 			echo 'options.vChildrenEnabled = false;';
 		if($alternative_response!=1)
 			echo 'options.alternativeResponse = false;';
-		if($t['Tsumego']['set_id']==42){
+		if($t['Tsumego']['set_id']==208){
 			$sStatusB = '';
 			$sStatusW = '';
 			if($t['Tsumego']['semeaiType'] == 1){
@@ -2642,7 +2474,7 @@
 			echo 'multipleChoiceLibertiesW = sStatusW;';
 			echo 'multipleChoiceVariance = '.$t['Tsumego']['variance'].';';
 			echo 'multipleChoiceLibertyCount = '.$t['Tsumego']['libertyCount'].';';
-			echo 'let mVariance = '.$t['Tsumego']['libertyCount'].';';//variance?
+			echo 'let mVariance = '.$multipleChoiceTriangles.';';//variance?
 			echo 'let a1 = []; let a2 = [];
 			for(i=0;i<mVariance;i++){
 				if(sStatusB>0) a1.push(1);
@@ -2658,11 +2490,9 @@
 			a5.push(a3);
 			a5.push(a4);
 			';
-			
 			echo 'options.multipleChoiceSetup = a5;';
 		}
 	  ?>
-	  
 	  const cornerArray = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
 	  shuffledCornerArray = cornerArray.sort((a, b) => 0.5 - Math.random());
 	  options.corner = shuffledCornerArray[0];
@@ -2675,8 +2505,6 @@
 	  options.theme = '<?php echo $choice[0][1]; ?>';
 	  options.themeParameters = ['<?php echo $choice[0][2]; ?>', '<?php echo $choice[0][3]; ?>'];
 	  options.coord = 'western';
-	  //options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/'+'<?php echo $file; ?>';
-	  
 	  options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/placeholder.sgf';
 	  options.sgf2 = "<?php echo $sgf['Sgf']['sgf']; ?>";
 	  
@@ -2694,6 +2522,8 @@
 			echo 'options.reviewEnabled = true;';
 		}}
 	?>
+	if(authorProblem)
+		options.reviewEnabled = true;
 	besogo.create(div, options);
     besogo.editor.setAutoPlay(true);
     besogo.editor.registerDisplayResult(displayResult);
@@ -2703,7 +2533,6 @@
       $("#xpDisplayDiv").css("display", commentText.length == 0 ? "block" : "none");
       $('#theComment').text(commentText);
     });
-
 	function addStyleLink(cssURL)
 	{
 		var element = document.createElement('link');
@@ -2713,19 +2542,14 @@
 		document.head.appendChild(element);
 	}
 	})();
-	
 	if(mode==2) $("#targetLockOverlay").css('top', '235px');
-	
 	<?php
 		for($i=0; $i<count($dynamicCommentCoords[0]); $i++){
 			echo 'besogo.editor.dynamicCommentCoords("'.$dynamicCommentCoords[0][$i].'", "'.$dynamicCommentCoords[1][$i].'");';
 		}
 	?>
 	</script>
-	<?php 
-	}
-	?>
-	
+	<?php } ?>
 	<style>
 	.besogo-panels{
 		display: none;

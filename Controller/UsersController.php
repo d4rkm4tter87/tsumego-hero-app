@@ -17,8 +17,25 @@ class UsersController extends AppController{
 		$this->loadModel('RankOverview');
 		$this->loadModel('Comment');
 		$this->loadModel('Schedule');
+		$this->loadModel('Sgf');
+		
+		
 		
 		/*
+		$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => 42)));
+		$sgfs = array();
+		for($i=0; $i<count($ts); $i++){
+			//$this->Tsumego->delete($ts[$i]['Tsumego']['id']);
+			array_push($sgfs, $this->Sgf->find('first', array('conditions' => array('tsumego_id' => $ts[$i]['Tsumego']['id']))));
+		}
+		
+		for($i=0; $i<count($sgfs); $i++){
+			$this->Sgf->delete($sgfs[$i]['Sgf']['id']);
+		}
+		echo '<pre>'; print_r(count($ts)); echo '</pre>'; 
+		echo '<pre>'; print_r(count($sgfs)); echo '</pre>'; 
+		
+		
 		$ts = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array(
 			'set_id' => 185,
 			'num >=' => 531,
@@ -2192,6 +2209,7 @@ Joschka Zimdars';
 		$ts2 = $ts;
 		
 		for($i=0; $i<count($ts); $i++){
+			/*
 			$set = $this->Set->findById($ts[$i]['Tsumego']['set_id']);
 			$sgf = array();
 			$sgf['Sgf']['sgf'] = file_get_contents('6473k339312/'.$set['Set']['folder'].'/'.$ts[$i]['Tsumego']['num'].'.sgf');
@@ -2200,7 +2218,7 @@ Joschka Zimdars';
 			$sgf['Sgf']['version'] = 1.0;
 			$this->Sgf->create();
 			$this->Sgf->save($sgf);
-			
+			*/
 			$ur = $this->TsumegoAttempt->find('all', array('order' => 'created DESC', 'limit' => 1000, 'conditions' =>  array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
 			$ratio = array();
 			$ratio['s'] = 0;
