@@ -195,6 +195,8 @@ besogo.makeFilePanel = function(container, editor) {
 	  }else{
 		  //text = text.replaceAll(";", "@");
 		  text = text.replaceAll("ß", "ss");
+		  text = text.replaceAll("\n", " ");
+		  text = text.replaceAll("+", "%2B");
 		  //text = text.replaceAll("\n", "€");
 		  window.location.href = "/tsumegos/play/"+(besogo.onSite[1]/1337)+"?requestProblem="+besogo.onSite[1]+"&adminSGF="+text;
 	  }

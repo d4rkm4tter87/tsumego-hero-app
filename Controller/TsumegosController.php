@@ -1268,19 +1268,23 @@ class TsumegosController extends AppController{
 			$this->set('multipleChoiceSquares', count($sqX));
 		}
 		
+		$sgf2 = str_replace("\n", ' ', $sgf['Sgf']['sgf']);
 		$sgf['Sgf']['sgf'] = str_replace("\n", '"+"\n"+"', $sgf['Sgf']['sgf']);
+		//$sgf['Sgf']['sgf'] = str_replace("\n", ' ', $sgf['Sgf']['sgf']);
 		
 		if(isset($this->params['url']['adminSGF'])){
 			if(strlen($this->params['url']['adminSGF'])>5){
 				if($_SESSION['loggedInUser']['User']['isAdmin']>=1){
 					if(($this->params['url']['requestProblem']/1337)==$id){
 						$requestProblem = $this->params['url']['adminSGF'];
+						
 						$requestProblem = str_replace('@', ';', $requestProblem);
 						$requestProblem = str_replace('€', "\n", $requestProblem);
 						$requestProblem = str_replace('C[  ]', "C[+]", $requestProblem);
 						$requestProblem = str_replace('C[ ]', "C[+]", $requestProblem);
 						$requestProblem = str_replace('C[x]', "C[+]", $requestProblem);
-						
+						$requestProblem = str_replace(' ', "\n", $requestProblem);
+						$requestProblem = str_replace('%2B', '+', $requestProblem);
 						//file_put_contents('6473k339312/'.$set['Set']['folder'].'/'.$t['Tsumego']['num'].'.sgf', $requestProblem);
 						$lastV = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $id)));
 						$sgf = array();
@@ -1310,7 +1314,7 @@ class TsumegosController extends AppController{
 							}
 						}
 						$this->Sgf->save($sgf);
-						
+						$sgf['Sgf']['sgf'] = str_replace("\n", '"+"\n"+"', $sgf['Sgf']['sgf']);
 						$this->AdminActivity->create();
 						$adminActivity = array();
 						$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
@@ -1681,19 +1685,10 @@ class TsumegosController extends AppController{
 		}
 		$ui = 2;
 		
-		/*
-		echo '<pre>minLib '.$t['Tsumego']['minLib'].'</pre>';
-		echo '<pre>maxLib '.$t['Tsumego']['maxLib'].'</pre>';
-		echo '<pre>variance '.$t['Tsumego']['variance'].'</pre>';
-		echo '<pre>libertyCount '.$t['Tsumego']['libertyCount'].'</pre>';
-		echo '<pre>insideLiberties '.$t['Tsumego']['insideLiberties'].'</pre>';
-		echo '<pre>eyeLiberties1 '.$t['Tsumego']['eyeLiberties1'].'</pre>';
-		echo '<pre>eyeLiberties2 '.$t['Tsumego']['eyeLiberties2'].'</pre>';
-		echo '<pre>semeaiType '.$t['Tsumego']['semeaiType'].'</pre>';
-		*/
 		//echo '<pre>'; print_r($sgf['Sgf']['sgf']); echo '</pre>'; 
 		
 		$this->set('sgf', $sgf);
+		$this->set('sgf2', $sgf2);
 		$this->set('sandboxComment2', $sandboxComment2);
 		$this->set('raName', $raName);
 		$this->set('crs', $crs);

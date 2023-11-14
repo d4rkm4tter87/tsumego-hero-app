@@ -1612,7 +1612,7 @@
 		enableDownloads = true;
 		$("#showx3").css("display", "inline-block");
 		<?php if($_SESSION['loggedInUser']['User']['isAdmin']==1){ ?>
-		$("#showx5").attr("href", "<?php echo '/app/webroot/editor/?onSite='.$_SERVER['HTTP_HOST'].'$'.($t['Tsumego']['id']*1337).'$'.$sgf['Sgf']['sgf']; ?>");
+		$("#showx5").attr("href", "<?php echo '/app/webroot/editor/?onSite='.$_SERVER['HTTP_HOST'].'$'.($t['Tsumego']['id']*1337).'$'.$sgf2; ?>");
 		$("#showx6").attr("href", "<?php echo '/sgfs/view/'.($t['Tsumego']['id']*1337); ?>");
 		$("#showx4").css("display", "inline-block");		
 		$("#showx5").css("display", "inline-block");		

@@ -253,10 +253,12 @@
 	if(typeof options.tsumegoPlayTool === 'string')
 		besogo.isEmbedded = true;
 	if(typeof options.onSite === 'string'){
+		//besogo.onSite = options.onSite.replaceAll('', "\n");
 		besogo.onSite = options.onSite.replaceAll('%20', ' ');
 		besogo.onSite = besogo.onSite.split('$');
 		options.sgf = 'https://'+besogo.onSite[0]+'/placeholder.sgf';
 		options.sgf2 = besogo.onSite[2];
+		console.log(options.sgf2);
 	}
 
 	let sgfLoaded =
