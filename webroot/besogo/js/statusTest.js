@@ -133,6 +133,18 @@ besogo.addTest("Status", "SaveLoadApproachKo", function()
   CHECK_EQUALS(statusLoaded.blackFirst.extraThreats, 0);
 });
 
+besogo.addTest("Status", "SaveLoadPositiveApproachKo", function()
+{
+  let status = besogo.makeStatusSimple(STATUS_KO);
+  status.setApproachKo(1);
+  CHECK_EQUALS(status.str(), "A+1KO+");
+
+  let statusLoaded = besogo.loadStatusFromString(status.str());
+  CHECK_EQUALS(statusLoaded.str(), "A+1KO+");
+  CHECK_EQUALS(statusLoaded.blackFirst.approaches, 1);
+  CHECK_EQUALS(statusLoaded.blackFirst.extraThreats, 0);
+});
+
 besogo.addTest("Status", "SaveLoadApproachKoWithNegativeExtraThreats", function()
 {
   let status = besogo.makeStatusSimple(STATUS_KO);
