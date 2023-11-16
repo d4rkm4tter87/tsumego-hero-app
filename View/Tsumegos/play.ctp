@@ -2044,7 +2044,6 @@
 			}
 		}
 	});
-
 	/*
 	$(document).keydown(function(event){
 		var keycode = (event.keyCode ? event.keyCode : event.which);

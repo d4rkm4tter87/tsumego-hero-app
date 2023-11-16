@@ -171,7 +171,7 @@
 			<span class="alertText">
 			<?php
 			echo '<img id="hpIcon1" src="/img/rankButton'.$alertRank.'.png">
-			You unlocked the '.$alertRank.' '.$alertCategory.' rank. <a href="/ranks/overview">Play</a>'
+			You unlocked the '.$alertRank.' '.$alertCategory.' rank. <a href="/ranks/overview">Play</a><br>'
 			?>
 			<br class="clear1"/></span>
 		  </div>
@@ -224,8 +224,9 @@
 			$("#account-bar-xp").html(bartext);
 			$("#xp-bar-fill").css("width", barPercent);
 			
-			
-			
+			<?php if(isset($ro['RankOverview']['status']) && $ro['RankOverview']['status']=='s' && $newUnlock){ ?>
+			$(".alertBox").fadeIn(500);
+			<?php } ?>
 		});
 		
 		
