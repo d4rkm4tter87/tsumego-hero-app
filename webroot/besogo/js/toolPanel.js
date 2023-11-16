@@ -255,6 +255,7 @@ besogo.makeToolPanel = function(container, editor)
         besogo.editor.setReviewMode(false);
         document.getElementById("status").innerHTML = "";
         document.getElementById("theComment").style.cssText = "display:none;";
+		$("#customAlerts").fadeOut(500);
         $(".besogo-panels").css("display","none");
         if(besogo.scaleParameters['boardCanvasSize'] === 'full board'){
 			$(".besogo-board").css("width", "60%");
@@ -262,6 +263,7 @@ besogo.makeToolPanel = function(container, editor)
 		}else if(besogo.scaleParameters['boardCanvasSize'] === 'horizontal half board'){
 			$(".besogo-board").css("width", "78%");
 			$(".besogo-board").css("margin", "0 138px");
+			$(".besogo-board").css("height",trueBoardHeight);
 		}else if(besogo.scaleParameters['boardCanvasSize'] === 'vertical half board'){
 			$(".besogo-board").css("width", "30%");
 			$(".besogo-board").css("margin", "0 443px");

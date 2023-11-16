@@ -258,7 +258,6 @@
 		besogo.onSite = besogo.onSite.split('$');
 		options.sgf = 'https://'+besogo.onSite[0]+'/placeholder.sgf';
 		options.sgf2 = besogo.onSite[2];
-		console.log(options.sgf2);
 	}
 
 	let sgfLoaded =

@@ -467,7 +467,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
       return;
     setTimeout(function()
     {
-      toggleBoardLock(true);
+      //toggleBoardLock(true);
       let success = (!node.localEdit && node.correct);
       if (!node.localEdit && !success && node.status && showComment && node.comment == '')
       {
@@ -475,7 +475,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
         if (root.goal != GOAL_NONE &&
         node.status.blackFirst.type != STATUS_ALIVE && // when the current is clearly dead or alive, we don't say the obvious
         node.status.blackFirst.type != STATUS_DEAD)
-          showComment(transformTextColors(root, "It is " + node.status.strLong() + ", but it should be: " + root.status.strLong()));
+		  displayMessage(transformTextColors(root, "It is " + node.status.strLong() + ", but it should be: " + root.status.strLong()), 'Not the best solution');
       }
       displayResult(success ? 'S' : 'F');
     }, 360);

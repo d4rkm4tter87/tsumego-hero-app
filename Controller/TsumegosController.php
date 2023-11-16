@@ -793,9 +793,10 @@ class TsumegosController extends AppController{
 		//Incorrect
 		if(isset($_COOKIE['misplay']) && $_COOKIE['misplay']!=0){
 			if($_COOKIE['misplay']<0 && $mode!=3){
-				if($u['User']['usedRejuvenation'] == 0){
+				if($u['User']['usedRejuvenation']==0 || isset($this->params['url']['potionAlert'])){
 					$u['User']['damage'] += $_COOKIE['misplay'];
-					$u['User']['rejuvenation'] = 0;
+					if(!isset($this->params['url']['potionAlert']))
+						$u['User']['rejuvenation'] = 0;
 					$rejuvenation = true;
 				}
 			}else{
@@ -835,7 +836,6 @@ class TsumegosController extends AppController{
 					else $u['User']['elo_rating_mode'] -= $_COOKIE['misplay'];
 					if(isset($_COOKIE['preId'])){
 						$u = $this->compute_initial_user_rd($u);
-						//$this->compute_initial_user_rd($t);
 						$old_u = array();
 						$old_u['old_r'] = $u['User']['elo_rating_mode'];
 						$old_u['old_rd'] = $u['User']['rd'];
@@ -898,12 +898,11 @@ class TsumegosController extends AppController{
 							$potionPercent2 = 0;
 							$potionSuccess = false;
 							if($potion>=5){
-								$potionPercent = $potion*.5;
+								$potionPercent = $potion*1.3;
 								$potionPercent2 = rand(0,100);
 								$potionSuccess = $potionPercent>$potionPercent2;
 							}
 							if($potionSuccess){
-								$u['User']['usedRejuvenation'] = 0;
 								$u['User']['potion'] = -69;
 							}
 						}

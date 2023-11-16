@@ -317,7 +317,7 @@
 			//if($_SESSION['loggedInUser']['User']['id']!=72){
 			//echo '<pre>';print_r($_SESSION['loggedInUser']);echo '</pre>';
 			echo '
-				<div id="account-bar-wrapper" onmouseover="xpHover()">
+				<div id="account-bar-wrapper" onmouseover="xpHover()" onmouseout="xpNoHover()">
 					  <div id="account-bar">
 							<div id="account-bar-user">
 								<a href="/users/view/'.$_SESSION['loggedInUser']['User']['id'].'">
@@ -399,6 +399,7 @@
 			</div>
 			<span class="alertText"><img id="hpIcon1" src="/img/'.$achievementUpdate[$i][2].'.png">
 			<b>'.$achievementUpdate[$i][0].' - '.$achievementUpdate[$i][1].'</b>&nbsp; ('.$achievementUpdate[$i][4].' XP)&nbsp; <a href="/achievements/view/'.$achievementUpdate[$i][5].'">view</a>
+			<br>
 			<br class="clear1"/></span>
 		    </div>
 			</label>

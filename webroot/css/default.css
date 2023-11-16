@@ -3157,7 +3157,6 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.alertBox {
 		position: fixed;
 		width: 1000px;
-		height: 135px;
 		bottom: 1%;
 		left: 50%;
 		margin-left: -500px;
@@ -3173,13 +3172,16 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		position: relative;
 		width:40px;
 	}
-	.alertCheckbox1 {
+	.alertCheckbox1{
 	  display: none;
 	}
-	:checked + .alertBox {
+	.alertCheckbox2{
 	  display: none;
 	}
-	.alertText {
+	:checked + .alertBox{
+	  display: none;
+	}
+	.alertText{
 	  display: table;
 	  margin: 10px;
 	  width:100%;
@@ -3192,6 +3194,13 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	  text-align: left;
 	  font-size: 16px;
 	}
+	.alertText3{
+		display: table;
+		margin: 10px;
+		text-align: left;
+		font-size: 16px;
+		width:550px;
+	}
 	.alertBox2{
 		
 	}
@@ -3203,7 +3212,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.alertBanner {
 	  border-top-left-radius:8px;
 	  border-top-right-radius:8px;
-	  background:#373737;
+	  background:linear-gradient(rgb(100, 100, 100), rgb(36, 36, 36));
 	  color:white;
 	  height:31px;
 	  width:100%;

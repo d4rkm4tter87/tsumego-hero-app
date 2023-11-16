@@ -379,20 +379,6 @@
 	</td>
 	</tr>
 	</table>
-	<div align="center">
-	<?php
-		/*//§
-		echo ' semeaiType:'.$t['Tsumego']['semeaiType'];
-		echo ' minLib:'.$t['Tsumego']['minLib'];
-		echo ' maxLib:'.$t['Tsumego']['maxLib'];
-		echo ' variance:'.$t['Tsumego']['variance'];
-		echo ' libertyCount:'.$t['Tsumego']['libertyCount'];
-		echo ' insideLiberties:'.$t['Tsumego']['insideLiberties'];
-		echo ' eyeLiberties1:'.$t['Tsumego']['eyeLiberties1'];
-		echo ' eyeLiberties2:'.$t['Tsumego']['eyeLiberties2'];
-		*/
-	?>
-	</div>	
 	<div align="center" id="xpDisplayDiv">
 		<table class="xpDisplayTable" border="0" width="70%">
 			<tr>
@@ -867,8 +853,6 @@
 		</tr>
 		</table>
 		</div>
-
-
 	<?php
 	}
 	?>
@@ -886,12 +870,11 @@
 		</span>
 		</div>
 		</label>
-	<?php }	?>
-	<?php if($potionAlert){
-	?>
+	<?php }else{ ?>
+		<?php if($potionAlert){ ?>
 		<label>
-		  <input type="checkbox" class="alertCheckbox1" autocomplete="off" />
-		  <div class="alertBox alertInfo">
+		  <input type="checkbox" class="alertCheckbox1" id="potionAlertCheckbox" autocomplete="off" />
+		  <div class="alertBox alertInfo" id="potionAlerts">
 			<div class="alertBanner" align="center">
 			Hero Power
 			<span class="alertClose">x</span>
@@ -899,13 +882,29 @@
 			<span class="alertText">
 			<?php
 			echo '<img id="hpIcon1" src="/img/hp5.png">
-			You found a potion, your hearts have been restored.'
+			You found a potion, your hearts have been restored.<br>'
 			?>
 			<br class="clear1"/></span>
 		  </div>
 		</label>
-	<?php }
-	echo '</div>';
+	<?php }else{ ?>
+		<label>
+		<input type="checkbox" class="alertCheckbox1" id="customAlertCheckbox" autocomplete="off" />
+		<div class="alertBox alertInfo" id="customAlerts">
+		<div class="alertBanner">
+		Message
+		<span class="alertClose">x</span>
+		</div>
+		<span class="alertText3">
+		<div id="customText"></div>
+		<div class="clear1"></div>
+		</span>
+		</div>
+		</label>
+	<?php } ?>
+	<?php } ?>
+	
+	<?php echo '</div>';
 	if(count($showComment)>0){
 		echo '<div align="center">';
 		echo '<font color="grey"></font>';
@@ -918,12 +917,10 @@
 	
 	
 	/* 
-	§TESTING AREA
-	§TESTING AREA
-	§TESTING AREA
-	*/
-	echo '<pre>'; print_r($multipleChoiceTriangles); echo '</pre>'; 
-	
+	TESTING AREA
+	TESTING AREA
+	TESTING AREA
+	*/ 
 	
 	if($inFavorite!=null) echo $inFavorite;
 	else echo '<x>'
@@ -1313,7 +1310,6 @@
 			if($refresh=='7') echo 'window.location = "/users/leaderboard";';
 			if($refresh=='8') echo 'window.location = "/tsumegos/play/'.$t['Tsumego']['id'].'";';
 		?>
-		loadBar();
 		<?php
 		if($t['Tsumego']['status'] == 'setF2' || $t['Tsumego']['status'] == 'setX2'){
 			echo '
@@ -1322,6 +1318,9 @@
 				document.getElementById("status").style.color = "#e03c4b";
 				document.getElementById("xpDisplay").innerHTML = "&nbsp;";
 			';
+		}
+		if($potionAlert){
+			echo '$(".alertBox").fadeIn(500);';
 		}
 		if($isSemeai){
 			echo '
@@ -1599,7 +1598,12 @@
 			$("#multipleChoiceAlerts").fadeOut(500);
 		});
 		<?php } ?>
-		
+		$("#customAlertCheckbox").change(function(){
+			$("#customAlerts").fadeOut(500);
+		});
+		$("#potionAlertCheckbox").change(function(){
+			$("#potionAlerts").fadeOut(500);
+		});
 		$("#showx3").click(function(){
 			jsCreateDownloadFile("<?php echo $getTitle; ?>");
 		});
@@ -2028,6 +2032,21 @@
 	function selectFav(){
 		document.getElementById("ans2").innerHTML = "";
 	}
+	
+	$(document).keydown(function(event){
+		var keycode = (event.keyCode ? event.keyCode : event.which);
+		if(keycode == '37'){
+			if(prevButtonLink!=0)
+				window.location.href = prevButtonLink;
+			else
+				window.location.href = '/sets/view/'+nextButtonLinkSet;
+		}else if(keycode == '39'){
+			if(nextButtonLink!=0)
+				window.location.href = '/tsumegos/play/'+nextButtonLink;
+			else
+				window.location.href = '/tsumegos/play/'+nextButtonLinkLv+'?refresh=3';
+		}
+	});
 
 	/*
 	$(document).keydown(function(event){
@@ -2276,6 +2295,7 @@
 					noXP = true;
 				}
 			}
+			toggleBoardLock(true);
 			displaySettings();
 		}else{//mode 1 and 3 incorrect
 			if(mode!=2){
@@ -2352,6 +2372,7 @@
 					ulvl = <?php echo $user['User']['level']; ?>;
 					runXPNumber("account-bar-xp", <?php echo $user['User']['elo_rating_mode']; ?>, elo2, 1000, ulvl);
 				}
+				toggleBoardLock(true);
 			}
 		}
 		document.cookie = "preId=<?php echo $t['Tsumego']['id']; ?>";
@@ -2365,18 +2386,29 @@
 			if(!customHeight){ 
 				$("#targetLockOverlay").css("height", besogoBoardHeight);
 				$("#targetLockOverlay").css("width", besogoBoardWidth);
-				$("#targetLockOverlay").css("top", $('.besogo-board').offset().top-71);
+				//$("#targetLockOverlay").css("top", $('.besogo-board').offset().top);
+				$("#targetLockOverlay").css("top", $('.besogo-board').offset());
+				//$("#targetLockOverlay").css("left", $('.besogo-board').offset().left);
+				//console.log($('.besogo-board').offset().left);
 			}
 			else $("#targetLockOverlay").css("height", "633px");
 			$("#targetLockOverlay").css("z-index", "1000");
 			//$("#targetLockOverlay").css("background", "blue");
-			//$("#targetLockOverlay").css("opacity", ".5");
+			//$("#targetLockOverlay").css("opacity", ".2");
 		}else{
 			$("#targetLockOverlay").css("width", "0");
 			$("#targetLockOverlay").css("height", "0");
 			$("#targetLockOverlay").css("z-index", "-1");
 		}
 		if(multipleChoice) multipleChoiceEnabled = true;
+	}
+	
+	function displayMessage(message='text', topic='Message'){
+		//§
+		$('#customText').html(message);
+		$("#customAlerts").fadeIn(500);
+		$(".alertBanner").addClass("alertBannerIncorrect");
+		$(".alertBanner").html(topic+"<span class=\"alertClose\">x</span>");
 	}
 	
 	function resetParameters(isAtStart){
