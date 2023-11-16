@@ -41,51 +41,18 @@
 							echo '<td width="15%"><b>'.$modes[$h][$i]['RankOverview']['status'].'<b></td>';
 							echo '<td width="13%">'.$modes[$h][$i]['RankOverview']['points'].' points</td>';
 							echo '<td class="timeModeTable2td">'.$modes[$h][$i]['RankOverview']['created'].'</td>';
-							echo '<td width="3%" class="timeModeTable2td"><img id="arrow'.$h.'_'.$i.'" src="/img/greyArrow1.png"></td>';
+							if(!empty($allR[$h][$i])){
+								echo '<td width="3%" class="timeModeTable2td"><img id="arrow'.$h.'_'.$i.'" src="/img/greyArrow1.png"></td>';
+							}
 							echo '</tr>';
 							echo '</table>';
 							echo '</div>';
-							echo '<div class="timeModeTable3" width="100%" id="content'.$h.'_'.$i.'" style="display: block;">';
-							echo '<table width="100%" class="scoreTable" border="0">';	
-							for($j=0;$j<count($allR[$h][$i]);$j++){
-								if($h==$openCard1&&$i==$openCard2 && $j==0 && $finish && $sessionFound){
-									echo '<tr>';
-									echo '<td colspan="5">';
-									if($solved>=$stopParameterPass){
-										$pf='passed';
-										$cpf = 'green';
-									}else{
-										$pf='failed';
-										$cpf = '#e03c4b';
-									}
-									echo '<h4 style="color:'.$cpf.';">Result: '.$pf.'('.$c.'/'.$stopParameterNum.') - '.$sum.' points</h4>';
-									echo '</td>';
-									echo '</tr>';
-								}
-								if(!$sessionFound && $h==$openCard1&&$i==$openCard2 && $j==0){
-									echo '<tr>';
-									echo '<td colspan="5">';
-									echo '<h4>Best Result:</h4>';
-									echo '</td>';
-									echo '</tr>';
-								}
-								
-								
-								echo '<tr>';
-								echo '<td width="9%">#'.$allR[$h][$i][$j]['Rank']['num'].'</td>';
-								echo '<td width="46%"><a href="/tsumegos/play/'.$allR[$h][$i][$j]['Rank']['tsumego_id'].'">'.$allR[$h][$i][$j]['Rank']['tsumego'].'</a></td>';
-								echo '<td width="7%">'.$allR[$h][$i][$j]['Rank']['result'].'</td>';
-								echo '<td width="8%">'.$allR[$h][$i][$j]['Rank']['seconds'].'</td>';
-								echo '<td>'.$allR[$h][$i][$j]['Rank']['points'].' points</td>';
-								echo '</tr>';
-							}
-							echo '</table>';
-							if(!$sessionFound && $h==$openCard1&&$i==$openCard2){
-								echo '<br>';	
-								echo '<table width="100%" class="scoreTable" border="0">';
-
-								for($k=0;$k<count($ranks);$k++){
-									if($k==0){
+							
+							if(!empty($allR[$h][$i])){
+								echo '<div class="timeModeTable3" width="100%" id="content'.$h.'_'.$i.'" style="display: block;">';
+								echo '<table width="100%" class="scoreTable" border="0">';	
+								for($j=0;$j<count($allR[$h][$i]);$j++){
+									if($h==$openCard1&&$i==$openCard2 && $j==0 && $finish && $sessionFound){
 										echo '<tr>';
 										echo '<td colspan="5">';
 										if($solved>=$stopParameterPass){
@@ -99,26 +66,62 @@
 										echo '</td>';
 										echo '</tr>';
 									}
-									if($ranks[$k]['Rank']['result']=='solved'){
-										$ranks[$k]['Rank']['result'] = '<b style="color:green;">'.$ranks[$k]['Rank']['result'].'</b>';
-										$ranks[$k]['Rank']['seconds'] = '<font style="color:green;">'.$ranks[$k]['Rank']['seconds'].'</font>';
-									}else{
-										$ranks[$k]['Rank']['result'] = '<b style="color:#e03c4b;">'.$ranks[$k]['Rank']['result'].'</b>';
-										$ranks[$k]['Rank']['seconds'] = '<font style="color:#e03c4b;">'.$ranks[$k]['Rank']['seconds'].'</font>';
+									if(!$sessionFound && $h==$openCard1&&$i==$openCard2 && $j==0){
+										echo '<tr>';
+										echo '<td colspan="5">';
+										echo '<h4>Best Result:</h4>';
+										echo '</td>';
+										echo '</tr>';
 									}
+									
+									
 									echo '<tr>';
-									echo '<td width="9%">#'.($k+1).'</td>';
-									echo '<td width="46%"><a href="/tsumegos/play/'.$ranks[$k]['Rank']['tsumego_id'].'">'.$ranks[$k]['Rank']['set1'].' '.$ranks[$k]['Rank']['set2'].' - '.$ranks[$k]['Rank']['tsumegoNum'].'</a></td>';
-									echo '<td width="7%">'.$ranks[$k]['Rank']['result'].'</td>';
-									echo '<td width="8%">'.$ranks[$k]['Rank']['seconds'].'</td>';
-									echo '<td>'.$ranks[$k]['Rank']['points'].' points</td>';
+									echo '<td width="9%">#'.$allR[$h][$i][$j]['Rank']['num'].'</td>';
+									echo '<td width="46%"><a href="/tsumegos/play/'.$allR[$h][$i][$j]['Rank']['tsumego_id'].'">'.$allR[$h][$i][$j]['Rank']['tsumego'].'</a></td>';
+									echo '<td width="7%">'.$allR[$h][$i][$j]['Rank']['result'].'</td>';
+									echo '<td width="8%">'.$allR[$h][$i][$j]['Rank']['seconds'].'</td>';
+									echo '<td>'.$allR[$h][$i][$j]['Rank']['points'].' points</td>';
 									echo '</tr>';
 								}
 								echo '</table>';
+								if(!$sessionFound && $h==$openCard1&&$i==$openCard2){
+									echo '<br>';	
+									echo '<table width="100%" class="scoreTable" border="0">';
+
+									for($k=0;$k<count($ranks);$k++){
+										if($k==0){
+											echo '<tr>';
+											echo '<td colspan="5">';
+											if($solved>=$stopParameterPass){
+												$pf='passed';
+												$cpf = 'green';
+											}else{
+												$pf='failed';
+												$cpf = '#e03c4b';
+											}
+											echo '<h4 style="color:'.$cpf.';">Result: '.$pf.'('.$c.'/'.$stopParameterNum.') - '.$sum.' points</h4>';
+											echo '</td>';
+											echo '</tr>';
+										}
+										if($ranks[$k]['Rank']['result']=='solved'){
+											$ranks[$k]['Rank']['result'] = '<b style="color:green;">'.$ranks[$k]['Rank']['result'].'</b>';
+											$ranks[$k]['Rank']['seconds'] = '<font style="color:green;">'.$ranks[$k]['Rank']['seconds'].'</font>';
+										}else{
+											$ranks[$k]['Rank']['result'] = '<b style="color:#e03c4b;">'.$ranks[$k]['Rank']['result'].'</b>';
+											$ranks[$k]['Rank']['seconds'] = '<font style="color:#e03c4b;">'.$ranks[$k]['Rank']['seconds'].'</font>';
+										}
+										echo '<tr>';
+										echo '<td width="9%">#'.($k+1).'</td>';
+										echo '<td width="46%"><a href="/tsumegos/play/'.$ranks[$k]['Rank']['tsumego_id'].'">'.$ranks[$k]['Rank']['set1'].' '.$ranks[$k]['Rank']['set2'].' - '.$ranks[$k]['Rank']['tsumegoNum'].'</a></td>';
+										echo '<td width="7%">'.$ranks[$k]['Rank']['result'].'</td>';
+										echo '<td width="8%">'.$ranks[$k]['Rank']['seconds'].'</td>';
+										echo '<td>'.$ranks[$k]['Rank']['points'].' points</td>';
+										echo '</tr>';
+									}
+									echo '</table>';
+								}
+								echo '</div>';
 							}
-							//echo '<br>';	
-							
-							echo '</div>';
 							echo '</td>';
 							echo '</tr>';
 						}
@@ -128,32 +131,8 @@
 			$modesOrder++;
 		}
 		?>
-		
 	</table>
-	
 	<br>
-	<table>
-	<?php
-		/*
-		for($i=0;$i<count($ranks);$i++){
-			if($ranks[$i]['Rank']['result']=='solved'){
-				$ranks[$i]['Rank']['result'] = '<b style="color:green;">'.$ranks[$i]['Rank']['result'].'</b>';
-				$ranks[$i]['Rank']['seconds'] = '<font style="color:green;">'.$ranks[$i]['Rank']['seconds'].'</font>';
-			}else{
-				$ranks[$i]['Rank']['result'] = '<b style="color:#e03c4b;">'.$ranks[$i]['Rank']['result'].'</b>';
-				$ranks[$i]['Rank']['seconds'] = '<font style="color:#e03c4b;">'.$ranks[$i]['Rank']['seconds'].'</font>';
-			}
-			echo '<tr>';
-			echo '<td>#'.($i+1).'</td>';
-			echo '<td><a href="/tsumegos/play/'.$ranks[$i]['Rank']['tsumego_id'].'">'.$ranks[$i]['Rank']['set1'].' '.$ranks[$i]['Rank']['set2'].' - '.$ranks[$i]['Rank']['tsumegoNum'].'</a></td>';
-			echo '<td>'.$ranks[$i]['Rank']['result'].'</td>';
-			echo '<td>'.$ranks[$i]['Rank']['seconds'].'</td>';
-			echo '<td>'.$ranks[$i]['Rank']['points'].' points</td>';
-			echo '</tr>';
-		}
-		*/
-	?>
-	</table>
 	</div>
 	<?php if(isset($ro['RankOverview']['status']) && $ro['RankOverview']['status']=='s' && $newUnlock){
 	$alertCategory = '';

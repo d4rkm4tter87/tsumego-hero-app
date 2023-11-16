@@ -226,9 +226,7 @@
 						<table class="gameInfo" style="padding-top:7px;">
 						<tr>
 						<td>
-						<?php //echo '<pre>';print_r($additionalInfo);echo '</pre>';
-						echo $additionalInfo['playerNames'][0].' on '.$additionalInfo['playerNames'][1];
-						?>
+						<?php echo $additionalInfo['playerNames'][0].' on '.$additionalInfo['playerNames'][1]; ?>
 						</td>
 						</tr>
 						</table>
@@ -423,11 +421,8 @@
 					elseif($t['Tsumego']['userWin']<=92) $tRank='13k';
 					elseif($t['Tsumego']['userWin']<=96) $tRank='14k';
 					else $tRank='15k';
-
 					echo  $tRank.' <font color="grey">('.$t['Tsumego']['userWin'].'%)</font>';
-					//echo '<img src="/img/questionmark.png" title="% of successful attempts">';
 				}
-				//echo '<pre>';print_r($t);echo '</pre>';
 				?>
 				</font>
 				</div>
@@ -2035,16 +2030,18 @@
 	
 	$(document).keydown(function(event){
 		var keycode = (event.keyCode ? event.keyCode : event.which);
-		if(keycode == '37'){
-			if(prevButtonLink!=0)
-				window.location.href = prevButtonLink;
-			else
-				window.location.href = '/sets/view/'+nextButtonLinkSet;
-		}else if(keycode == '39'){
-			if(nextButtonLink!=0)
-				window.location.href = '/tsumegos/play/'+nextButtonLink;
-			else
-				window.location.href = '/tsumegos/play/'+nextButtonLinkLv+'?refresh=3';
+		if(mode!=2){
+			if(keycode == '37'){
+				if(prevButtonLink!=0)
+					window.location.href = prevButtonLink;
+				else
+					window.location.href = '/sets/view/'+nextButtonLinkSet;
+			}else if(keycode == '39'){
+				if(nextButtonLink!=0)
+					window.location.href = '/tsumegos/play/'+nextButtonLink;
+				else
+					window.location.href = '/tsumegos/play/'+nextButtonLinkLv+'?refresh=3';
+			}
 		}
 	});
 
@@ -2311,6 +2308,7 @@
 					document.cookie = "seconds="+secondsy;
 					timeModeEnabled = false;
 					$("#time-mode-countdown").css("color","#e45663");
+					toggleBoardLock(true);
 				}
 				noLastMark = true;
 				if(!noXP){

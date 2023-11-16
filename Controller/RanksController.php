@@ -523,40 +523,42 @@ class RanksController extends AppController {
 		for($h=0;$h<count($modes);$h++){
 			$allR[$h] = array();
 			for($i=0;$i<count($modes[$h]);$i++){
-				$allR[$h][$i] = $this->Rank->find('all', array('order' => 'num ASC', 'conditions' =>  array('session' => $modes[$h][$i]['RankOverview']['session'])));
-				for($j=0;$j<count($allR[$h][$i]);$j++){
-					$tx = $this->Tsumego->findById($allR[$h][$i][$j]['Rank']['tsumego_id']);
-					$sx = $this->Set->findById($tx['Tsumego']['set_id']);
-					$foundSkipped = false;
-					$timeFieldColor = '#e03c4b';
-					if($h==0) $ss = 30;
-					elseif($h==1) $ss = 60;
-					elseif($h==2) $ss = 240;
-					$allR[$h][$i][$j]['Rank']['tsumego'] = $sx['Set']['title'].' '.$sx['Set']['title2'].' - '.$tx['Tsumego']['num'];
-					if($allR[$h][$i][$j]['Rank']['result']=='solved') $hh = 'green';
-					else $hh = '#e03c4b';
-					if($allR[$h][$i][$j]['Rank']['result']=='timeout') $allR[$h][$i][$j]['Rank']['seconds'] = $ss;
-					if($allR[$h][$i][$j]['Rank']['result']=='skipped') $foundSkipped = true;
-					if($allR[$h][$i][$j]['Rank']['result']=='solved') $timeFieldColor = 'green';
-					$allR[$h][$i][$j]['Rank']['result'] = '<b style="color:'.$hh.';">'.$allR[$h][$i][$j]['Rank']['result'].'</b>';
-					$allR[$h][$i][$j]['Rank']['seconds'] = round($allR[$h][$i][$j]['Rank']['seconds'], 1);
-					$rx = $ss-$allR[$h][$i][$j]['Rank']['seconds'];
-					$ranksMinutes = floor($rx/60);
-					$ranksSeconds = $rx%60;
-					$ranksDecimal = $rx-floor($rx);
-					$ranksDecimal = round($ranksDecimal, 1);
-					$ranksDecimal *= 10;
-					if($rx>=10){
-						$rx1 = '';
-					}else{
-						$rx1 = '0';
-						if($ranksMinutes>0) $rx1 = '00';
+				if($h==$openCard1 && $i==$openCard2){
+					$allR[$h][$i] = $this->Rank->find('all', array('order' => 'num ASC', 'conditions' => array('session' => $modes[$h][$i]['RankOverview']['session'])));
+					for($j=0;$j<count($allR[$h][$i]);$j++){
+						$tx = $this->Tsumego->findById($allR[$h][$i][$j]['Rank']['tsumego_id']);
+						$sx = $this->Set->findById($tx['Tsumego']['set_id']);
+						$foundSkipped = false;
+						$timeFieldColor = '#e03c4b';
+						if($h==0) $ss = 30;
+						elseif($h==1) $ss = 60;
+						elseif($h==2) $ss = 240;
+						$allR[$h][$i][$j]['Rank']['tsumego'] = $sx['Set']['title'].' '.$sx['Set']['title2'].' - '.$tx['Tsumego']['num'];
+						if($allR[$h][$i][$j]['Rank']['result']=='solved') $hh = 'green';
+						else $hh = '#e03c4b';
+						if($allR[$h][$i][$j]['Rank']['result']=='timeout') $allR[$h][$i][$j]['Rank']['seconds'] = $ss;
+						if($allR[$h][$i][$j]['Rank']['result']=='skipped') $foundSkipped = true;
+						if($allR[$h][$i][$j]['Rank']['result']=='solved') $timeFieldColor = 'green';
+						$allR[$h][$i][$j]['Rank']['result'] = '<b style="color:'.$hh.';">'.$allR[$h][$i][$j]['Rank']['result'].'</b>';
+						$allR[$h][$i][$j]['Rank']['seconds'] = round($allR[$h][$i][$j]['Rank']['seconds'], 1);
+						$rx = $ss-$allR[$h][$i][$j]['Rank']['seconds'];
+						$ranksMinutes = floor($rx/60);
+						$ranksSeconds = $rx%60;
+						$ranksDecimal = $rx-floor($rx);
+						$ranksDecimal = round($ranksDecimal, 1);
+						$ranksDecimal *= 10;
+						if($rx>=10){
+							$rx1 = '';
+						}else{
+							$rx1 = '0';
+							if($ranksMinutes>0) $rx1 = '00';
+						}
+						$allR[$h][$i][$j]['Rank']['seconds'] = $ranksMinutes.':'.$rx1.$ranksSeconds.'.'.$ranksDecimal;
+						if($foundSkipped){
+							$allR[$h][$i][$j]['Rank']['seconds'] = '0:00.0';
+						}
+						$allR[$h][$i][$j]['Rank']['seconds'] = '<font style="color:'.$timeFieldColor.';">'.$allR[$h][$i][$j]['Rank']['seconds'].'</font>';
 					}
-					$allR[$h][$i][$j]['Rank']['seconds'] = $ranksMinutes.':'.$rx1.$ranksSeconds.'.'.$ranksDecimal;
-					if($foundSkipped){
-						$allR[$h][$i][$j]['Rank']['seconds'] = '0:00.0';
-					}
-					$allR[$h][$i][$j]['Rank']['seconds'] = '<font style="color:'.$timeFieldColor.';">'.$allR[$h][$i][$j]['Rank']['seconds'].'</font>';
 				}
 			}
 		}
