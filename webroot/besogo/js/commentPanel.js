@@ -574,7 +574,7 @@ besogo.makeCommentPanel = function(container, editor)
     correctButton.disabled = editor.getRoot().goal != GOAL_NONE ||
                              current.children.length ||
                              current.virtualChildren.length
-    if (current.correct)
+    if (current.correct == CORRECT_GOOD)
       correctButton.value = 'Make incorrect';
     else
       correctButton.value = 'Make correct';
