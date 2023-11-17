@@ -27,7 +27,7 @@ besogo.composeSgf = function(editor, expand = false)
       // This is mainly because tsumego-hero can't support it
       if (expand && (tree.nextIsBlack() || tree.children.length == 0))
         for (i = 0; i < tree.virtualChildren.length; i++)
-          if (tree.correct || !tree.virtualChildren[i].target.correct)
+          if (tree.correct == CORRECT_GOOD || tree.virtualChildren[i].target.correct ==  CORRECT_BAD)
             string += '\n(' + composeNode(root, tree.virtualChildren[i].target, expand, tree.virtualChildren[i].move) + ')';
     }
     return string;
@@ -105,12 +105,7 @@ besogo.composeSgf = function(editor, expand = false)
       }
     string += composePointLists(props);
 
-    let correctToSave;
-    if (root.goal == GOAL_NONE)
-      correctToSave = node.correctSource;
-    else
-      correctToSave = !node.hasChildIncludingVirtual() && node.correct;
-
+    let correctToSave = (root.goal == GOAL_NONE) && node.correctSource;
     if (node.comment || correctToSave) // Compose comment property
     {
       string += (string ? '\n' : ''); // Add line break if other properties exist
