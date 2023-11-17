@@ -463,12 +463,12 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
       return;
     if (!displayResult)
       return;
-    if (!node.localEdit && node.correct && navigateToRemainingRequiredIfNeeded())
+    if (!node.localEdit && node.correct == CORRECT_GOOD && navigateToRemainingRequiredIfNeeded())
       return;
     setTimeout(function()
     {
       //toggleBoardLock(true);
-      let success = (!node.localEdit && node.correct);
+      let success = (!node.localEdit && node.correct == CORRECT_GOOD);
       if (!node.localEdit && !success && node.status && showComment && node.comment == '')
       {
         let root = node.getRoot();
