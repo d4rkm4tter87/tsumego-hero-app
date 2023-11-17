@@ -2,6 +2,11 @@ const BLACK = -1;
 const WHITE = 1;
 const EMPTY = 0;
 
+const CORRECT_EMPTY = 0;
+const CORRECT_GOOD = 1;
+const CORRECT_BAD = 2;
+const CORRECT_UNDEFINED = 3;
+
 besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
 {
   var root = { // Inherited attributes of root node
@@ -25,7 +30,7 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
     node.comment = ''; // Comment on this node
     node.hash = 0;
     node.correctSource = false;
-    node.correct = false;
+    node.correct = CORRECT_EMPTY;
     node.cameFrom = null;
     node.statusSource = null;
     node.status = null;
@@ -258,9 +263,13 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
   {
     if (this.localEdit)
       return 'blue';
-    if (this.correct)
+    if (this.correct == CORRECT_GOOD)
       return 'green';
-    return 'red';
+    if (this.correct == CORRECT_BAD)
+      return 'red';
+    if (this.correct == CORRECT_UNDEFINED)
+      return 'grey';
+    return 'pink';
   };
 
   // Checks if this node can be modified by a 'type' action
@@ -315,7 +324,7 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
     this.children.push(child);
     if (!child.localEdit)
     {
-      this.correct = false;
+      this.correct = CORRECT_BAD;
       this.correctSource = false;
     }
     return child;
@@ -582,23 +591,19 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
     editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
   }
 
-  root.checkTsumegoHeroCompatibility = function()
+  root.checkTsumegoHeroCompatibility = function(root)
   {
-    if (!this.nextIsBlack() &&
-        this.children.length == 0 &&
-        this.virtualChildren.length == 0 &&
-        !this.correctSource)
-      return {node: this, message: "Last black move not marked correct"};
+    if (!this.hasChildIncludingVirtual())
+    {
+      if (root.goal == GOAL_NONE && !this.nextIsBlack() && !this.correctSource)
+        return {node: this, message: "Last black move not marked correct"};
+      if (root.goal != GOAL_NONE && this.status.isNone())
+        return {node: this, message: "End position without status."};
+    }
 
     for (let i = 0; i < this.children.length; ++i)
     {
-      let result = this.children[i].checkTsumegoHeroCompatibility()
-      if (result)
-        return result;
-    }
-    for (let i = 0; i < this.virtualChildren.length; ++i)
-    {
-      let result = this.virtualChildren[i].target.checkTsumegoHeroCompatibility()
+      let result = this.children[i].checkTsumegoHeroCompatibility(root)
       if (result)
         return result;
     }
@@ -653,14 +658,25 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
     return this.hasChildIncludingVirtual;
   }
 
+  root.isNonLocalChildWithNoBetterStatus = function(child)
+  {
+    if (child.localEdit)
+      return false;
+    if (this.correct == CORRECT_GOOD)
+      return true; // nothing better than correct;
+    if (child.correct == CORRECT_BAD)
+      return true;
+    return false;
+  }
+
   root.countOfNonLocalChildrenIncludingVirtualWithNoBetterStatus = function()
   {
     let result = 0;
     for (let i = 0; i < this.children.length; ++i)
-      if (!this.children[i].localEdit && (this.correct || !this.children[i].correct)) // don't select correct variant inside incorrect
+      if (this.isNonLocalChildWithNoBetterStatus(this.children[i]))
         ++result;
     for (let i = 0; i < this.virtualChildren.length; ++i)
-      if (!this.virtualChildren[i].localEdit && (this.correct || !this.virtualChildren[i].correct))
+      if (this.isNonLocalChildWithNoBetterStatus(this.virtualChildren[i].target))
         ++result;
     return false;
   }
@@ -669,13 +685,13 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
   {
     let currentIndex = 0;
     for (let i = 0; i < this.children.length; ++i)
-      if (!this.children[i].localEdit && (this.correct || !this.children[i].correct)) // don't select correct variant inside incorrect
+      if (this.isNonLocalChildWithNoBetterStatus(this.children[i]))
         if (currentIndex == indexToSelect)
           return this.children[i];
         else
           ++currentIndex;
     for (let i = 0; i < this.virtualChildren.length; ++i)
-      if (!this.virtualChildren[i].localEdit && (this.correct || !this.virtualChildren[i].correct))
+      if (this.isNonLocalChildWithNoBetterStatus(this.virtualChildren[i].target))
         if (currentIndex == indexToSelect)
           return this.virtualChildren[i];
         else

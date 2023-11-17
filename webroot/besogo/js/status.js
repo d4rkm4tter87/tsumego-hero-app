@@ -3,15 +3,16 @@ GOAL_KILL = 1;
 const GOAL_LIVE = 2;
 
 const STATUS_NONE = 0;
-const STATUS_DEAD = 1;
-const STATUS_BENT_FOUR_IN_THE_CORNER = 2;
-const STATUS_DEAD_IN_DOUBLE_KO = 3;
-const STATUS_TEN_THOUSAND_YEARS_KO = 4;
-const STATUS_KO = 5;
-const STATUS_SEKI = 6;
-const STATUS_ALIVE_IN_DOUBLE_KO = 7;
-const STATUS_ALIVE = 8;
-const STATUS_ALIVE_NONE = 9;
+const STATUS_DEAD_NONE = 1;
+const STATUS_DEAD = 2;
+const STATUS_BENT_FOUR_IN_THE_CORNER = 3;
+const STATUS_DEAD_IN_DOUBLE_KO = 4;
+const STATUS_TEN_THOUSAND_YEARS_KO = 5;
+const STATUS_KO = 6;
+const STATUS_SEKI = 7;
+const STATUS_ALIVE_IN_DOUBLE_KO = 8;
+const STATUS_ALIVE = 9;
+const STATUS_ALIVE_NONE = 10;
 
 besogo.makeStatusInternal = function(type)
 {
@@ -327,6 +328,11 @@ besogo.makeStatus = function(blackFirst = null, whiteFirst = null)
   status.setSeki = function(sente)
   {
     this.blackFirst.setSeki(sente);
+  }
+
+  status.isNone = function()
+  {
+    return this.blackFirst.type == STATUS_NONE;
   }
 
   return status;
