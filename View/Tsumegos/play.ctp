@@ -915,6 +915,7 @@
 	TESTING AREA
 	TESTING AREA
 	TESTING AREA
+	echo '<pre>'; print_r($u); echo '</pre>';
 	*/ 
 	
 	if($inFavorite!=null) echo $inFavorite;
@@ -1065,7 +1066,6 @@
 		}
 		var secondsx = setInterval(incrementSeconds, 100);
 	<?php } ?>
-	//$('#CommentMessage').val('');
 	$(".adminCommentPanel").hide();
 	$(".modify-description-panel").hide();
 	$(".tsumegoNavi-middle2").hide();
@@ -1183,7 +1183,6 @@
 			$(".tsumegoNavi-middle").hide();
 			$(".tsumegoNavi-middle2").show();
 			$(".mode1").css({"padding-top":"8px"});
-			//$("#playTitle").hide();
 			$(".selectable-text").hide();
 			$("#commentSpace").hide();
 			$("#msg1").hide();
@@ -1455,6 +1454,7 @@
 						document.getElementById("status").style.color = "#e03c4b";
 						document.getElementById("status").innerHTML = "<h2>Time up</h2>";
 						clearInterval(x);
+						toggleBoardLock(true);
 					}
 				}else{
 					clearInterval(x);
@@ -1545,7 +1545,6 @@
 		  let besogoOrientation = besogo.editor.getOrientation();
 		  if(besogoOrientation[1]=="full-board")
 			besogoOrientation[0] = besogoOrientation[1];
-		  //let isInTree = null;
 		  let isInTree = besogo.editor.isMoveInTree(current);
 		  current = isInTree[0];
 		  
@@ -2031,16 +2030,18 @@
 	$(document).keydown(function(event){
 		var keycode = (event.keyCode ? event.keyCode : event.which);
 		if(mode!=2){
-			if(keycode == '37'){
-				if(prevButtonLink!=0)
-					window.location.href = prevButtonLink;
-				else
-					window.location.href = '/sets/view/'+nextButtonLinkSet;
-			}else if(keycode == '39'){
-				if(nextButtonLink!=0)
-					window.location.href = '/tsumegos/play/'+nextButtonLink;
-				else
-					window.location.href = '/tsumegos/play/'+nextButtonLinkLv+'?refresh=3';
+			if(!msg2selected){
+				if(keycode == '37'){
+					if(prevButtonLink!=0)
+						window.location.href = prevButtonLink;
+					else
+						window.location.href = '/sets/view/'+nextButtonLinkSet;
+				}else if(keycode == '39'){
+					if(nextButtonLink!=0)
+						window.location.href = '/tsumegos/play/'+nextButtonLink;
+					else
+						window.location.href = '/tsumegos/play/'+nextButtonLinkLv+'?refresh=3';
+				}
 			}
 		}
 	});

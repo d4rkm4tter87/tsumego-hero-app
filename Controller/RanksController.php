@@ -588,8 +588,6 @@ class RanksController extends AppController {
 		if(count($roxBefore)>0) $newUnlock = false;
 		else $newUnlock = true;
 		
-		echo '<pre>'; print_r($newUnlock); echo '</pre>';
-		
 		$this->set('c', $c);
 		$this->set('solved', $solved);
 		$this->set('ranks', $ranks);

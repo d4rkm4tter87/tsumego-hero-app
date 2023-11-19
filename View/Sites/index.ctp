@@ -649,6 +649,16 @@
 		<div class="new1">
 			<table class="newx" border="0">
 				<tr>
+					<td><h1>14.11.2023</h1></td>
+					<td><h1>hoshi911</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>07.11.2023</h1></td>
+					<td><h1>Mykyta Shvetsov</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
 					<td><h1>05.11.2023</h1></td>
 					<td><h1>Dominik Franěk</h1></td>
 					<td><h1>10,00 €</h1></td>
@@ -661,16 +671,6 @@
 				<tr>
 					<td><h1>28.10.2023</h1></td>
 					<td><h1>Andrew Hlavats</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>20.10.2023</h1></td>
-					<td><h1>Marcel Wiesenhöfer</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>09.10.2023</h1></td>
-					<td><h1>Maksymilian Gaidemski</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 			</table>	

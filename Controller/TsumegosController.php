@@ -414,8 +414,10 @@ class TsumegosController extends AppController{
 				else $t['Tsumego']['alternative_response'] = 0;
 				$this->Tsumego->save($t, true);
 			}else{
-				$this->Comment->create();
-				$this->Comment->save($this->data, true);
+				if($this->data['Comment']['user_id']!=33){
+					$this->Comment->create();
+					$this->Comment->save($this->data, true);
+				}
 			}
 			$this->set('formRedirect', true);
 		}
