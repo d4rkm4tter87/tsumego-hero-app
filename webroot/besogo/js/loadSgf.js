@@ -14,8 +14,6 @@ besogo.loadSgf = function(sgf, editor, mode = NORMAL_LOAD)
     let bCounter = 0;
     let wCounter = 0;
   }
-  besogo.scaleParameters = besogo.makeScaleParameters(size);
-
   loadRootProps(sgf); // Load size, variants style and game info
   root = besogo.makeGameRoot(size.x, size.y);
 
@@ -30,28 +28,20 @@ besogo.loadSgf = function(sgf, editor, mode = NORMAL_LOAD)
     editor.notifyListeners({treeChange: true, navChange: true, stoneChange: true});
   }
 
-  besogo.scaleParameters['distToX0'] = Math.abs(1-besogo.scaleParameters['lowestX']);
-  besogo.scaleParameters['distToX19'] = size.x-besogo.scaleParameters['highestX'];
-  if (besogo.scaleParameters['distToX0'] > besogo.scaleParameters['distToX19'])
+  besogo.scaleParameters = besogo.makeScaleParameters(size);
+  besogo.scaleParameters.setupLimitsFromTree(root, besogo.makeTransformation(), size);
+
+  if (besogo.scaleParameters.isOnTheRight())
     besogo.scaleParameters.hFlip = true;
-  besogo.scaleParameters['distToY0'] = Math.abs(1-besogo.scaleParameters['lowestY']);
-  besogo.scaleParameters['distToY19'] = size.x-besogo.scaleParameters['highestY'];
-  if (besogo.scaleParameters['distToY0'] > besogo.scaleParameters['distToY19'])
+  if (besogo.scaleParameters.isOnBottom())
     besogo.scaleParameters.vFlip = true;
 
   {
     besogo.scaleParameters.clear(size);
-    besogo.scaleParameters.highestX = 0;
-    besogo.scaleParameters.highestY = 0;
     let transformation = besogo.makeTransformation();
     transformation.vFlip = besogo.scaleParameters.vFlip;
     transformation.hFlip = besogo.scaleParameters.hFlip;
     besogo.scaleParameters.setupLimitsFromTree(root, transformation, size);
-
-    besogo.scaleParameters['distToX0'] = Math.abs(1-besogo.scaleParameters['lowestX']);
-    besogo.scaleParameters['distToX19'] = size.x-besogo.scaleParameters['highestX'];
-    besogo.scaleParameters['distToY0'] = Math.abs(1-besogo.scaleParameters['lowestY']);
-    besogo.scaleParameters['distToY19'] = size.x-besogo.scaleParameters['highestY'];
   }
 
   if (besogo.scaleParameters['distToX19'] < 10 && besogo.scaleParameters['distToY19'] < 10)
