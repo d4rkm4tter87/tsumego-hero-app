@@ -128,7 +128,7 @@
       let resizer = function()
       {
 
-      var windowHeight = window.innerHeight, // Viewport height
+        var windowHeight = window.innerHeight, // Viewport height
         // Calculated width of parent element
         parentWidth = parseFloat(getComputedStyle(container.parentElement).width),
         maxWidth = +(options.maxwidth || -1),
@@ -147,35 +147,35 @@
       // Determine orientation if 'auto' or 'view'
       if (orientation !== 'portrait' && orientation !== 'landscape')
         if (width < minLandscapeWidth || (orientation === 'view' && width < windowHeight))
-        orientation = 'portrait';
+          orientation = 'portrait';
         else
-        orientation = 'landscape';
+          orientation = 'landscape';
 
         if (orientation === 'portrait') // Portrait mode
         {
-        if (!isNaN(portraitRatio))
-        {
-          height = portraitRatio * width;
-          if (panelsDiv)
-          height = (height - width < minPanelsHeight) ? width + minPanelsHeight : height;
-        } // Otherwise, leave height undefined
+          if (!isNaN(portraitRatio))
+          {
+            height = portraitRatio * width;
+            if (panelsDiv)
+            height = (height - width < minPanelsHeight) ? width + minPanelsHeight : height;
+          } // Otherwise, leave height undefined
         }
         else if (orientation === 'landscape') // Landscape mode
         {
-        if (!panelsDiv) // No panels div
-          height = width; // Square overall
-        else if (isNaN(landscapeRatio))
-          height = windowHeight;
-        else // Otherwise use ratio
-          height = width / landscapeRatio;
+          if (!panelsDiv) // No panels div
+            height = width; // Square overall
+          else if (isNaN(landscapeRatio))
+            height = windowHeight;
+          else // Otherwise use ratio
+            height = width / landscapeRatio;
 
-        if (panelsDiv) // Reduce height to ensure minimum width of panels div
-          height = (width < height + minPanelsWidth) ? (width - minPanelsWidth) : height;
+          if (panelsDiv) // Reduce height to ensure minimum width of panels div
+            height = (width < height + minPanelsWidth) ? (width - minPanelsWidth) : height;
         }
 
 
-      setDimensions(width, height);
-      container.style.width = width + 'px';
+        setDimensions(width, height);
+        container.style.width = width + 'px';
       };
       window.addEventListener("resize", resizer);
       resizer(); // Initial div sizing
@@ -222,26 +222,38 @@
       window.addEventListener("resize", resizer);
       resizer(); // Initial div sizing
     }
-	if(besogo.isEmbedded){
-		if(besogo.scaleParameters['boardCanvasSize'] === 'full board'){
-			$(".besogo-board").css("width", "60%");
-			$(".besogo-board").css("margin", "0 252px");
-		}else if(besogo.scaleParameters['boardCanvasSize'] === 'horizontal half board'){
-			$(".besogo-board").css("width", "78%");
-			$(".besogo-board").css("margin", "0 138px");
-		}else if(besogo.scaleParameters['boardCanvasSize'] === 'vertical half board'){
-			$(".besogo-board").css("width", "30%");
-			$(".besogo-board").css("margin", "0 443px");
-		}else{
-			$(".besogo-board").css("width", "50%");
-			$(".besogo-board").css("margin", "0 315px");
-		}
-		if(besogo.boardParameters['corner']=='top-left') $("#boardOrientationTL").css("opacity","1");
-		else if(besogo.boardParameters['corner']=='top-right') $("#boardOrientationTR").css("opacity","1");
-		else if(besogo.boardParameters['corner']=='bottom-left') $("#boardOrientationBL").css("opacity","1");
-		else if(besogo.boardParameters['corner']=='bottom-right') $("#boardOrientationBR").css("opacity","1");
-	}
-	besogo.boardDisplay = boardDisplay;
+    if (besogo.isEmbedded)
+    {
+      if (besogo.scaleParameters['boardCanvasSize'] === 'full board')
+      {
+        $(".besogo-board").css("width", "60%");
+        $(".besogo-board").css("margin", "0 252px");
+      }
+      else if (besogo.scaleParameters['boardCanvasSize'] === 'horizontal half board')
+      {
+        $(".besogo-board").css("width", "78%");
+        $(".besogo-board").css("margin", "0 138px");
+      }
+      else if (besogo.scaleParameters['boardCanvasSize'] === 'vertical half board')
+      {
+        $(".besogo-board").css("width", "30%");
+        $(".besogo-board").css("margin", "0 443px");
+      }
+      else
+      {
+        $(".besogo-board").css("width", "50%");
+        $(".besogo-board").css("margin", "0 315px");
+      }
+      if (besogo.boardParameters['corner']=='top-left')
+        $("#boardOrientationTL").css("opacity","1");
+      else if (besogo.boardParameters['corner']=='top-right')
+        $("#boardOrientationTR").css("opacity","1");
+      else if (besogo.boardParameters['corner']=='bottom-left')
+        $("#boardOrientationBL").css("opacity","1");
+      else if (besogo.boardParameters['corner']=='bottom-right')
+        $("#boardOrientationBR").css("opacity","1");
+    }
+    besogo.boardDisplay = boardDisplay;
   }
 
   besogo.create = function(container, options)
@@ -250,17 +262,18 @@
         boardDisplay,
         boardDiv, // Board display container
         insideText = container.textContent || container.innerText || '';
-	if(typeof options.tsumegoPlayTool === 'string')
-		besogo.isEmbedded = true;
-	if(typeof options.onSite === 'string'){
-		//besogo.onSite = options.onSite.replaceAll('', "\n");
-		besogo.onSite = options.onSite.replaceAll('%20', ' ');
-		besogo.onSite = besogo.onSite.split('$');
-		options.sgf = 'https://'+besogo.onSite[0]+'/placeholder.sgf';
-		options.sgf2 = besogo.onSite[2];
-	}
+    if (typeof options.tsumegoPlayTool === 'string')
+      besogo.isEmbedded = true;
+    if (typeof options.onSite === 'string')
+    {
+      //besogo.onSite = options.onSite.replaceAll('', "\n");
+      besogo.onSite = options.onSite.replaceAll('%20', ' ');
+      besogo.onSite = besogo.onSite.split('$');
+      options.sgf = 'https://'+besogo.onSite[0]+'/placeholder.sgf';
+      options.sgf2 = besogo.onSite[2];
+    }
 
-	let sgfLoaded =
+    let sgfLoaded =
     {
       aInternal: 10,
       aListener: function(val) {},
@@ -279,14 +292,14 @@
       }
     }
 
-	besogo.theme = options.theme;
-	if(typeof options.vChildrenEnabled === 'boolean')
-		besogo.vChildrenEnabled = options.vChildrenEnabled;
-	if(typeof options.alternativeResponse === 'boolean')
-		besogo.alternativeResponse = options.alternativeResponse;
-	if(typeof options.multipleChoice === 'boolean')
-		besogo.multipleChoice = options.multipleChoice;
-	besogo.multipleChoiceSetup = options.multipleChoiceSetup;
+    besogo.theme = options.theme;
+    if (typeof options.vChildrenEnabled === 'boolean')
+      besogo.vChildrenEnabled = options.vChildrenEnabled;
+    if (typeof options.alternativeResponse === 'boolean')
+      besogo.alternativeResponse = options.alternativeResponse;
+    if (typeof options.multipleChoice === 'boolean')
+      besogo.multipleChoice = options.multipleChoice;
+    besogo.multipleChoiceSetup = options.multipleChoiceSetup;
     if (typeof options.rootPath === 'string')
       besogo.rootPath = options.rootPath;
     else
@@ -297,8 +310,9 @@
     options.size = besogo.parseSize(options.size || 19);
     options.coord = options.coord || 'none';
     options.tool = options.tsumegoPlayTool || 'auto';
-	besogo.playerColor = options.playerColor;
-    if(options.tsumegoPlayTool) options.tsumegoPlayTool = options.tsumegoPlayTool || 'auto';
+    besogo.playerColor = options.playerColor;
+    if (options.tsumegoPlayTool)
+      options.tsumegoPlayTool = options.tsumegoPlayTool || 'auto';
     if (options.panels === '')
       options.panels = [];
 
@@ -359,16 +373,14 @@
       try
       {
         if (validURL)
-		{
-		  //to load by code, not file, options.sgf contains an empty sgf file and options.sgf2 contains the code
+      //to load by code, not file, options.sgf contains an empty sgf file and options.sgf2 contains the code
           fetchParseLoad(options.sgf, besogo.editor, options.path, sgfLoaded, options.sgf2);
-        }
-		else
+        else
         {
-		/*doesn't work
+    /*doesn't work
           parseAndLoad(options.sgf, besogo.editor);
           navigatePath(besogo.editor, options.path);
-		*/
+    */
         }
       }
       catch(e)
@@ -395,29 +407,29 @@
   // Parses size parameter from SGF format
   besogo.parseSize = function(input)
   {
-      var matches,
-          sizeX,
-          sizeY;
+    var matches,
+        sizeX,
+        sizeY;
 
-      input = (input + '').replace(/\s/g, ''); // Convert to string and remove whitespace
+    input = (input + '').replace(/\s/g, ''); // Convert to string and remove whitespace
 
-      matches = input.match(/^(\d+):(\d+)$/); // Check for #:# pattern
-      if (matches) // Composed value pattern found
-      {
-        sizeX = +matches[1]; // Convert to numbers
-        sizeY = +matches[2];
-      }
-      else if (input.match(/^\d+$/)) // Check for # pattern
-      {
-        sizeX = +input; // Convert to numbers
-        sizeY = +input; // Implied square
-      }
-      else // Invalid input format
-        sizeX = sizeY = 19; // Default size value
-      if (sizeX > 52 || sizeX < 1 || sizeY > 52 || sizeY < 1)
-        sizeX = sizeY = 19; // Out of range, set to default
+    matches = input.match(/^(\d+):(\d+)$/); // Check for #:# pattern
+    if (matches) // Composed value pattern found
+    {
+      sizeX = +matches[1]; // Convert to numbers
+      sizeY = +matches[2];
+    }
+    else if (input.match(/^\d+$/)) // Check for # pattern
+    {
+      sizeX = +input; // Convert to numbers
+      sizeY = +input; // Implied square
+    }
+    else // Invalid input format
+      sizeX = sizeY = 19; // Default size value
+    if (sizeX > 52 || sizeX < 1 || sizeY > 52 || sizeY < 1)
+      sizeX = sizeY = 19; // Out of range, set to default
 
-      return { x: sizeX, y: sizeY };
+    return { x: sizeX, y: sizeY };
   };
 
   // Automatically converts document elements into besogo instances
@@ -442,18 +454,21 @@
       {
         options.panels = ['control', 'comment', 'tool', 'tree', 'file'];
         options.tool = 'auto';
-        if(options.tsumegoPlayTool) options.tsumegoPlayTool = 'auto';
+        if(options.tsumegoPlayTool)
+          options.tsumegoPlayTool = 'auto';
       }
       else if (hasClass(targetDivs[i], 'besogo-viewer'))
       {
         options.panels = ['control', 'comment'];
         options.tool = 'navOnly';
         if(options.tsumegoPlayTool) options.tsumegoPlayTool = 'navOnly';
-      } else if (hasClass(targetDivs[i], 'besogo-diagram'))
+      }
+      else if (hasClass(targetDivs[i], 'besogo-diagram'))
       {
         options.panels = [];
         options.tool = 'navOnly';
-        if(options.tsumegoPlayTool) options.tsumegoPlayTool = 'navOnly';
+        if(options.tsumegoPlayTool)
+          options.tsumegoPlayTool = 'navOnly';
       }
 
       attrs = targetDivs[i].attributes;
@@ -549,16 +564,16 @@
     besogo.scaleParameters = besogo.loadSgf(sgf, editor);
 
     //if the setting is not full-board
-    if(besogo.scaleParameters['orientation']!=='full-board')
+    if (besogo.scaleParameters['orientation']!=='full-board')
     {
       //set default corner top-left
-      if(besogo.scaleParameters['hFlip'])
+      if( besogo.scaleParameters['hFlip'])
       {
         let transformation = besogo.makeTransformation();
         transformation.hFlip = true;
         besogo.editor.applyTransformation(transformation);
       }
-      if(besogo.scaleParameters['vFlip'])
+      if (besogo.scaleParameters['vFlip'])
       {
         let transformation = besogo.makeTransformation();
         transformation.vFlip = true;
@@ -566,71 +581,71 @@
       }
       besogo.scaleParameters['orientation'] = 'top-left';
 
-	  //enlarge area based on places stones
-	  if(besogo.scaleParameters['highestX'] >= 10)
-		  besogo.scaleParameters['highestX'] = 19;
-      else
-		  besogo.scaleParameters['highestX'] += 3;
-      if(besogo.scaleParameters['highestY'] >= 14)
-		  besogo.scaleParameters['highestY'] = 19;
-      else
-		  besogo.scaleParameters['highestY'] += 3;
+    //enlarge area based on places stones
+    if (besogo.scaleParameters['highestX'] >= 10)
+      besogo.scaleParameters['highestX'] = 19;
+    else
+      besogo.scaleParameters['highestX'] += 3;
+    if(besogo.scaleParameters['highestY'] >= 14)
+      besogo.scaleParameters['highestY'] = 19;
+    else
+      besogo.scaleParameters['highestY'] += 3;
 
-	  if(besogo.scaleParameters['highestX']===19 && besogo.scaleParameters['highestY']!==19)
-		besogo.scaleParameters['boardCanvasSize'] = 'horizontal half board';
-	  else if(besogo.scaleParameters['highestX']!==19 && besogo.scaleParameters['highestY']===19)
-		besogo.scaleParameters['boardCanvasSize'] = 'vertical half board';
-	  else
-		besogo.scaleParameters['boardCanvasSize'] = 'regular board';
+    if(besogo.scaleParameters['highestX']===19 && besogo.scaleParameters['highestY']!==19)
+      besogo.scaleParameters['boardCanvasSize'] = 'horizontal half board';
+    else if(besogo.scaleParameters['highestX']!==19 && besogo.scaleParameters['highestY']===19)
+      besogo.scaleParameters['boardCanvasSize'] = 'vertical half board';
+    else
+      besogo.scaleParameters['boardCanvasSize'] = 'regular board';
 
-	  //half boards only have 2 orientations, not 4
-	  if(besogo.scaleParameters['boardCanvasSize']==='horizontal half board')
-	  {
-		if(corner==='top-right')
-		{
-			corner = 'top-left';
-			besogo.scaleParameters['orientation'] = 'top-left';
-		}
-		else if(corner==='bottom-right')
-		{
-			corner = 'bottom-left';
-			besogo.scaleParameters['orientation'] = 'bottom-left';
-		}
-	  }
-	  else if(besogo.scaleParameters['boardCanvasSize']==='vertical half board')
-	  {
-		if(corner==='bottom-left')
-		{
-			corner = 'top-left';
-			besogo.scaleParameters['orientation'] = 'top-left';
-		}
-		else if(corner==='bottom-right')
-		{
-			corner = 'top-right';
-			besogo.scaleParameters['orientation'] = 'top-right';
-		}
-	  }
+    //half boards only have 2 orientations, not 4
+    if (besogo.scaleParameters['boardCanvasSize']==='horizontal half board')
+    {
+      if (corner==='top-right')
+      {
+        corner = 'top-left';
+        besogo.scaleParameters['orientation'] = 'top-left';
+      }
+      else if(corner==='bottom-right')
+      {
+        corner = 'bottom-left';
+        besogo.scaleParameters['orientation'] = 'bottom-left';
+      }
+    }
+    else if (besogo.scaleParameters['boardCanvasSize']==='vertical half board')
+    {
+      if (corner==='bottom-left')
+      {
+        corner = 'top-left';
+        besogo.scaleParameters['orientation'] = 'top-left';
+      }
+      else if (corner==='bottom-right')
+      {
+        corner = 'top-right';
+        besogo.scaleParameters['orientation'] = 'top-right';
+      }
+    }
 
-	  //if another corner than top-left is set
-      if(corner=='top-right')
+    //if another corner than top-left is set
+      if (corner=='top-right')
       {
         let transformation = besogo.makeTransformation();
         transformation.hFlip = true;
         besogo.editor.applyTransformation(transformation);
         besogo.scaleParameters['orientation'] = 'top-right';
-		besogo.coordArea['lowestX'] = 18-besogo.coordArea['lowestX'];
-	    besogo.coordArea['highestX'] = 18-besogo.coordArea['highestX'];
+        besogo.coordArea['lowestX'] = 18-besogo.coordArea['lowestX'];
+        besogo.coordArea['highestX'] = 18-besogo.coordArea['highestX'];
       }
-      else if(corner=='bottom-left')
+      else if (corner=='bottom-left')
       {
         let transformation = besogo.makeTransformation();
         transformation.vFlip = true;
         besogo.editor.applyTransformation(transformation);
         besogo.scaleParameters['orientation'] = 'bottom-left';
-		besogo.coordArea['lowestY'] = 18-besogo.coordArea['lowestY'];
-	    besogo.coordArea['highestY'] = 18-besogo.coordArea['highestY'];
+        besogo.coordArea['lowestY'] = 18-besogo.coordArea['lowestY'];
+        besogo.coordArea['highestY'] = 18-besogo.coordArea['highestY'];
       }
-      else if(corner=='bottom-right')
+      else if (corner=='bottom-right')
       {
         let transformation = besogo.makeTransformation();
         transformation.hFlip = true;
@@ -639,22 +654,22 @@
         transformation.vFlip = true;
         besogo.editor.applyTransformation(transformation);
         besogo.scaleParameters['orientation'] = 'bottom-right';
-		besogo.coordArea['lowestX'] = 18-besogo.coordArea['lowestX'];
-	    besogo.coordArea['highestX'] = 18-besogo.coordArea['highestX'];
-		besogo.coordArea['lowestY'] = 18-besogo.coordArea['lowestY'];
-	    besogo.coordArea['highestY'] = 18-besogo.coordArea['highestY'];
+        besogo.coordArea['lowestX'] = 18-besogo.coordArea['lowestX'];
+        besogo.coordArea['highestX'] = 18-besogo.coordArea['highestX'];
+        besogo.coordArea['lowestY'] = 18-besogo.coordArea['lowestY'];
+        besogo.coordArea['highestY'] = 18-besogo.coordArea['highestY'];
       }
     }
 
-	let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
-	besogo.coordArea['lowestXconverted'] = convertedCoords.x[besogo.coordArea['lowestX']+1];
-	besogo.coordArea['highestXconverted'] = convertedCoords.x[besogo.coordArea['highestX']+1];
-	besogo.coordArea['lowestYconverted'] = convertedCoords.y[besogo.coordArea['lowestY']+1];
-	besogo.coordArea['highestYconverted'] = convertedCoords.y[besogo.coordArea['highestY']+1];
-	
-	if(besogo.isEmbedded) besogo.editor.adjustCommentCoords();
+  let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
+  besogo.coordArea['lowestXconverted'] = convertedCoords.x[besogo.coordArea['lowestX']+1];
+  besogo.coordArea['highestXconverted'] = convertedCoords.x[besogo.coordArea['highestX']+1];
+  besogo.coordArea['lowestYconverted'] = convertedCoords.y[besogo.coordArea['lowestY']+1];
+  besogo.coordArea['highestYconverted'] = convertedCoords.y[besogo.coordArea['highestY']+1];
+  
+  if (besogo.isEmbedded) besogo.editor.adjustCommentCoords();
 
-    if(besogo.playerColor==="white")
+    if (besogo.playerColor==="white")
     {
       let transformation = besogo.makeTransformation();
       transformation.invertColors = true;
@@ -672,10 +687,10 @@
     {
       if (http.readyState === 4 && http.status === 200) // Successful fetch
       {
-		if(sgfText!==null)
-			sgfLoaded.scaleParameters = parseAndLoad(sgfText, editor);
+        if (sgfText !== null)
+          sgfLoaded.scaleParameters = parseAndLoad(sgfText, editor);
         else
-			sgfLoaded.scaleParameters = parseAndLoad(http.responseText, editor);
+          sgfLoaded.scaleParameters = parseAndLoad(http.responseText, editor);
         navigatePath(editor, path);
       }
     };
@@ -708,9 +723,9 @@
               editor.nextNode(1);
               editor.nextSibling(part[i] - 1);
             }
-          }else{
+          }
+          else
             editor.nextNode(+part[i]); // Converts to number
-      }
     }
   }
 })();
