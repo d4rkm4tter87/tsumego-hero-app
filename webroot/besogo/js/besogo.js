@@ -74,6 +74,7 @@
 
   besogo.initPanels = function(options, container, boardDiv, boardDisplay, scaleParameters, corner)
   {
+    besogo.scaleParameters = scaleParameters;
     boardDiv = makeDiv('besogo-board', container); // Create div for board display
     boardDisplay = besogo.makeBoardDisplay(boardDiv, besogo.editor, corner); // Create board display
     besogo.boardDisplay = boardDisplay;
