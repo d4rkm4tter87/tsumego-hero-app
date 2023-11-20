@@ -228,6 +228,7 @@ besogo.makeCommentPanel = function(container, editor)
       besogo.updateCorrectValues(editor.getRoot());
       updateKoApproachesCountLabel();
       updateStatusLabel();
+      editor.notifyListeners({ treeChange: true});
     }
 
     koApproachesMinusButton = document.createElement('input');
@@ -260,6 +261,7 @@ besogo.makeCommentPanel = function(container, editor)
       besogo.updateCorrectValues(editor.getRoot());
       updateKoExtraThreatsCountLabel();
       updateStatusLabel();
+      editor.notifyListeners({ treeChange: true});
     }
 
     koExtraThreatsMinusButton = document.createElement('input');
