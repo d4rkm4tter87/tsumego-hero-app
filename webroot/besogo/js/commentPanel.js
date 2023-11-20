@@ -15,8 +15,12 @@ besogo.makeCommentPanel = function(container, editor)
       noneSelection = null,
       deadSelection = null,
       koSelection = null,
-      koExtraThreats = null,
-      koApproaches = null,
+      koExtraThreatsCountLabel = null,
+      koExtraThreatsPlusButton = null,
+      koExtraThreatsMinusButton = null,
+      koApproachesCountLabel = null,
+      koApproachesPlusButton = null,
+      koApproachesMinusButton = null,
       tenThousandYearsKoSelection = null,
       bent4InTheCornerSelection = null,
       deadInDoubleKoSelection = null,
@@ -176,6 +180,25 @@ besogo.makeCommentPanel = function(container, editor)
     return label;
   }
 
+  function isKoStatus()
+  {
+    if (!editor.getCurrent().statusSource)
+      return false;
+    if (editor.getCurrent().statusSource.blackFirst.type != STATUS_KO)
+      return false;
+    return true;
+  }
+
+  function updateKoApproachesCountLabel()
+  {
+    koApproachesCountLabel.textContent = isKoStatus() ? editor.getCurrent().status.blackFirst.getApproachCount().toString() : ' ';
+  }
+
+  function updateKoExtraThreatsCountLabel()
+  {
+    koExtraThreatsCountLabel.textContent = isKoStatus() ? editor.getCurrent().status.blackFirst.getKoStr() : ' ';
+  }
+
   function createStatusTable()
   {
     let table = document.createElement('table');
@@ -191,39 +214,65 @@ besogo.makeCommentPanel = function(container, editor)
     koApproachesLabel.textContent = 'Approaches: ';
     koSettingsSpan.appendChild(koApproachesLabel);
 
-    koApproaches = document.createElement('input');
-    koApproaches.type = 'text';
-    koApproaches.oninput = function(event)
+    koApproachesCountLabel = document.createElement('label');
+    koApproachesCountLabel.textContent = '0';
+    koSettingsSpan.appendChild(koApproachesCountLabel);
+
+    function changeApproacheCount(change)
     {
       if (!editor.getCurrent().statusSource)
         return;
       if (editor.getCurrent().statusSource.blackFirst.type != STATUS_KO)
         return;
-      let newStatus = besogo.makeStatusSimple(STATUS_KO);
-      newStatus.setApproachKo(Number(event.target.value), editor.getCurrent().statusSource.blackFirst.extraThreats);
-      editor.getCurrent().setStatusSource(newStatus);
+      editor.getCurrent().statusSource.blackFirst.approaches = editor.getCurrent().statusSource.blackFirst.approaches + change;
+      besogo.updateCorrectValues(editor.getRoot());
+      updateKoApproachesCountLabel();
       updateStatusLabel();
     }
-    koSettingsSpan.appendChild(koApproaches);
+
+    koApproachesMinusButton = document.createElement('input');
+    koApproachesMinusButton.type = 'button';
+    koApproachesMinusButton.value = '-';
+    koApproachesMinusButton.onclick = function(event) { changeApproacheCount(-1); }
+    koSettingsSpan.appendChild(koApproachesMinusButton);
+
+    koApproachesPlusButton = document.createElement('input');
+    koApproachesPlusButton.type = 'button';
+    koApproachesPlusButton.value = '+';
+    koApproachesPlusButton.onclick = function(event) { changeApproacheCount(1); }
+    koSettingsSpan.appendChild(koApproachesPlusButton);
 
     let koExtraThreatsLabel = document.createElement('label');
     koExtraThreatsLabel.textContent = 'Threats: ';
     koSettingsSpan.appendChild(koExtraThreatsLabel);
 
-    koExtraThreats = document.createElement('input');
-    koExtraThreats.type = 'text';
-    koExtraThreats.oninput = function(event)
+    koExtraThreatsCountLabel = document.createElement('label');
+    koExtraThreatsCountLabel.textContent = '0';
+    koSettingsSpan.appendChild(koExtraThreatsCountLabel);
+
+    function changeExtraThreatsCount(change)
     {
-      if (!editor.getCurrent().statusSource)
+       if (!editor.getCurrent().statusSource)
         return;
       if (editor.getCurrent().statusSource.blackFirst.type != STATUS_KO)
         return;
-      let newStatus = besogo.loadStatusFromString('KO' + event.target.value);
-      newStatus.setApproachKo(Number(koApproaches.value), newStatus.blackFirst.extraThreats);
-      editor.getCurrent().setStatusSource(newStatus);
+      editor.getCurrent().statusSource.blackFirst.extraThreats = editor.getCurrent().statusSource.blackFirst.extraThreats + change;
+      besogo.updateCorrectValues(editor.getRoot());
+      updateKoExtraThreatsCountLabel();
       updateStatusLabel();
     }
-    koSettingsSpan.appendChild(koExtraThreats);
+
+    koExtraThreatsMinusButton = document.createElement('input');
+    koExtraThreatsMinusButton.type = 'button';
+    koExtraThreatsMinusButton.value = '-';
+    koExtraThreatsMinusButton.onclick = function(event) { changeExtraThreatsCount(-1); }
+    koSettingsSpan.appendChild(koExtraThreatsMinusButton);
+
+    koExtraThreatsPlusButton = document.createElement('input');
+    koExtraThreatsPlusButton.type = 'button';
+    koExtraThreatsPlusButton.value = '+';
+    koExtraThreatsPlusButton.onclick = function(event) { changeExtraThreatsCount(1); }
+    koSettingsSpan.appendChild(koExtraThreatsPlusButton);
 
     koSelection = createRadioButtonRow(table, 'ko', STATUS_KO, koSettingsSpan);
     tenThousandYearsKoSelection = createRadioButtonRow(table, '10 000 years ko', STATUS_TEN_THOUSAND_YEARS_KO);
@@ -250,11 +299,19 @@ besogo.makeCommentPanel = function(container, editor)
     setEnabledCarefuly(bent4InTheCornerSelection, editable);
     setEnabledCarefuly(deadInDoubleKoSelection, editable);
     setEnabledCarefuly(koSelection, editable);
-    setEnabledCarefuly(koExtraThreats,
+    setEnabledCarefuly(koExtraThreatsMinusButton,
                        editable &&
                        editor.getCurrent().statusSource &&
                        editor.getCurrent().statusSource.blackFirst.type == STATUS_KO);
-    setEnabledCarefuly(koApproaches,
+    setEnabledCarefuly(koExtraThreatsPlusButton,
+                       editable &&
+                       editor.getCurrent().statusSource &&
+                       editor.getCurrent().statusSource.blackFirst.type == STATUS_KO);
+    setEnabledCarefuly(koApproachesMinusButton,
+                       editable &&
+                       editor.getCurrent().statusSource &&
+                       editor.getCurrent().statusSource.blackFirst.type == STATUS_KO);
+    setEnabledCarefuly(koApproachesPlusButton,
                        editable &&
                        editor.getCurrent().statusSource &&
                        editor.getCurrent().statusSource.blackFirst.type == STATUS_KO);
@@ -310,8 +367,8 @@ besogo.makeCommentPanel = function(container, editor)
     if (editor.getCurrent().status.blackFirst.type == STATUS_KO)
     {
       koSelection.checked = true;
-      koExtraThreats.value = editor.getCurrent().status.blackFirst.getKoStr();
-      koApproaches.value = editor.getCurrent().status.blackFirst.getApproachCount();
+      updateKoExtraThreatsCountLabel();
+      updateKoApproachesCountLabel();
       return;
     }
 
