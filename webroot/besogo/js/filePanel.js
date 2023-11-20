@@ -182,7 +182,7 @@ besogo.makeFilePanel = function(container, editor)
       let file = evt.target.files[0], // Selected file
           reader = new FileReader();
 
-      let newChooser = makeFileChooser(); // Create new file input to reset selection
+      let newChooser = makeDiffFileChooser(); // Create new file input to reset selection
 
       container.replaceChild(newChooser, diffFileChooser); // Replace with the reset selector
       diffFileChooser = newChooser;
