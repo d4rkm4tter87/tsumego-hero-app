@@ -655,7 +655,7 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
   {
     if (autoPlay)
       return this.hasNonLocalChildIncludingVirtual();
-    return this.hasChildIncludingVirtual;
+    return this.hasChildIncludingVirtual();
   }
 
   root.isNonLocalChildWithNoBetterStatus = function(child)
