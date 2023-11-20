@@ -31,9 +31,9 @@ besogo.loadSgf = function(sgf, editor, mode = NORMAL_LOAD)
   besogo.scaleParameters = besogo.makeScaleParameters(size);
   besogo.scaleParameters.setupLimitsFromTree(root, besogo.makeTransformation(), size);
 
-  if (besogo.scaleParameters.isOnTheRight())
+  if (besogo.scaleParameters.isOnTheRight(size))
     besogo.scaleParameters.hFlip = true;
-  if (besogo.scaleParameters.isOnBottom())
+  if (besogo.scaleParameters.isOnBottom(size))
     besogo.scaleParameters.vFlip = true;
 
   {

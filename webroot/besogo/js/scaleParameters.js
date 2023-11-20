@@ -9,21 +9,12 @@ besogo.makeScaleParameters = function(size)
     this.lowest = structuredClone(size);
     this.highest = {x: 0, y: 0};
     this.orientation = '';
-    this.distToX0 = 0;
-    this.distToX19 = 0;
-    this.distToY0 = 0;
-    this.distToY19 = 0;
     this.boardCanvasSize = 'regular board';
   }
 
   scaleParameters.setupLimitsFromTree = function(node, transformation, size)
   {
     this.setupLimitsFromTreeInternal(node, transformation, size);
-
-    this.distToX0 = Math.abs(1 - this.lowest.x);
-    this.distToX19 = size.x - this.highest.x;
-    this.distToY0 = Math.abs(1 - this.lowest.y);
-    this.distToY19 = size.x - this.highest.y;
   }
 
   scaleParameters.setupLimitsFromTreeInternal = function(node, transformation, size)
@@ -49,14 +40,14 @@ besogo.makeScaleParameters = function(size)
       this.highest.y = position.y
   }
 
-  scaleParameters.isOnTheRight = function()
+  scaleParameters.isOnTheRight = function(size)
   {
-    return this.distToX0 > this.distToX19;
+    return this.lowest.x - 1 > size.x - this.highest.x;
   }
 
-  scaleParameters.isOnBottom = function()
+  scaleParameters.isOnBottom = function(size)
   {
-    return this.distToY0 > this.distToY19;
+    return this.lowest.y - 1 > size.y - this.highest.y;
   }
 
   scaleParameters.clear(size);
