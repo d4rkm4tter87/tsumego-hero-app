@@ -392,7 +392,7 @@
       besogo.initPanels(options, container, boardDiv, boardDisplay, sgfLoaded.scaleParameters, corner);
     }
     else // no sgf provided, load the board instantly
-      besogo.initPanels(options, container, boardDiv, boardDisplay, besogo.getDefaultScaleParameters(options.size), null);
+      besogo.initPanels(options, container, boardDiv, boardDisplay, besogo.makeScaleParameters(options.size), null);
 
     if (typeof options.variants === 'number' || typeof options.variants === 'string')
       besogo.editor.setVariantStyle(+options.variants); // Converts to number
