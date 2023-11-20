@@ -20,7 +20,7 @@ besogo.makeScaleParameters = function(size)
       if (node.setupStones[i])
         this.addPosition(node.toXY(i));
     if (node.move)
-      this.addPosition(move);
+      this.addPosition(node.move);
     for (let i = 0; i < node.children.length; ++i)
       this.setupLimitsFromTree(node.children[i]);
   }
