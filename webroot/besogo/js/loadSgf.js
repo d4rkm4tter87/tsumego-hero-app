@@ -29,44 +29,27 @@ besogo.loadSgf = function(sgf, editor, mode = NORMAL_LOAD)
   }
 
   besogo.scaleParameters = besogo.makeScaleParameters(size);
-  besogo.scaleParameters.setupLimitsFromTree(root, besogo.makeTransformation(), size);
+  besogo.scaleParameters.setupLimitsFromTree(root);
+  besogo.scaleParameters.normalizeToTopLeft(size);
 
-  if (besogo.scaleParameters.isOnTheRight(size))
-    besogo.scaleParameters.hFlip = true;
-  if (besogo.scaleParameters.isOnBottom(size))
-    besogo.scaleParameters.vFlip = true;
+  if (besogo.scaleParameters.checkFullBoard(size))
+    besogo.boardParameters.fullBoard = true;
 
-  {
-    besogo.scaleParameters.clear(size);
-    let transformation = besogo.makeTransformation();
-    transformation.vFlip = besogo.scaleParameters.vFlip;
-    transformation.hFlip = besogo.scaleParameters.hFlip;
-    besogo.scaleParameters.setupLimitsFromTree(root, transformation, size);
-  }
-
-  if (besogo.scaleParameters['distToX19'] < 10 && besogo.scaleParameters['distToY19'] < 10)
-  {
-    besogo.scaleParameters['orientation'] = 'full-board';
-    besogo.boardParameters['fullBoard'] = true;
-  }
-
-  let boardCoordSize = size.x-1;
+  let boardCoordSize = size.x - 1;
   besogo.coordArea['lowestX'] = 0;
   besogo.coordArea['lowestY'] = 0;
-  besogo.coordArea['highestX'] = boardCoordSize-besogo.scaleParameters['distToX19']+3;
-  besogo.coordArea['highestY'] = boardCoordSize-besogo.scaleParameters['distToY19']+3;
-  if (besogo.coordArea['highestX']>11)
+  besogo.coordArea['highestX'] = boardCoordSize - besogo.scaleParameters.distanceToRight() + 3;
+  besogo.coordArea['highestY'] = boardCoordSize - besogo.scaleParameters.distanceToBottom() + 3;
+  if (besogo.coordArea['highestX'] > 11)
     besogo.coordArea['highestX'] = boardCoordSize;
-  if (besogo.coordArea['highestY']>11)
+  if (besogo.coordArea['highestY'] > 11)
     besogo.coordArea['highestY'] = boardCoordSize;
 
-  if (size.x!==19)
+  if (size.x !== 19)
   {
     besogo.coordArea['highestX'] = boardCoordSize;
     besogo.coordArea['highestY'] = boardCoordSize;
   }
-
-  besogo.scaleParameters['boardCoordSize'] = size.x;
 
   return besogo.scaleParameters;
 
