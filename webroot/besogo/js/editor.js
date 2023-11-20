@@ -215,7 +215,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
   // Returns the root of the game state tree
   function getRoot() { return root; }
 
-  function loadRoot(load)
+  function loadRoot(load, transformation)
   {
     root = load;
     current = load;

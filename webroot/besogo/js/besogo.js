@@ -362,7 +362,7 @@
     while (container.firstChild) // Remove all children of container
       container.removeChild(container.firstChild);
 
-    if (options.sgf) // Load SGF file from URL or SGF string
+    if (options.sgf && !options.sgf2) // Load SGF file from URL or SGF string
     {
       let validURL = false;
       try
@@ -373,15 +373,7 @@
       try
       {
         if (validURL)
-      //to load by code, not file, options.sgf contains an empty sgf file and options.sgf2 contains the code
-          fetchParseLoad(options.sgf, besogo.editor, options.path, sgfLoaded, options.sgf2);
-        else
-        {
-    /*doesn't work
-          parseAndLoad(options.sgf, besogo.editor);
-          navigatePath(besogo.editor, options.path);
-    */
-        }
+          fetchParseLoad(options.sgf, besogo.editor, options.path, sgfLoaded);
       }
       catch(e)
       {
@@ -393,6 +385,11 @@
     {
       parseAndLoad(insideText, besogo.editor);
       navigatePath(besogo.editor, options.path); // Navigate editor along path
+    }
+    else if (options.sgf2)
+    {
+      sgfLoaded.scaleParameters = parseAndLoad(options.sgf2, besogo.editor);
+      besogo.initPanels(options, container, boardDiv, boardDisplay, sgfLoaded.scaleParameters, corner);
     }
     else // no sgf provided, load the board instantly
       besogo.initPanels(options, container, boardDiv, boardDisplay, besogo.getDefaultScaleParameters(options.size), null);
@@ -561,125 +558,99 @@
     {
       return; // Silently fail on parse error
     }
-    besogo.scaleParameters = besogo.loadSgf(sgf, editor);
+    let transformation = besogo.makeTransformation();
+    if (besogo.scaleParameters['hFlip'])
+      transformation.hFlip = true;
+    if (besogo.scaleParameters['vFlip'])
+      transformation.vFlip = true;
+    if (besogo.playerColor === "white")
+      transformation.invertColors = true;
+    
+    if (corner == 'top-right')
+      transformation.hFlip = !transformation.hFlip;
+    else if (corner == 'bottom-left')
+      transformation.vFlip = !transformation.vFlip;
+    else if (corner == 'bottom-right')
+    {
+      transformation.hFlip = !transformation.hFlip;
+      transformation.vFlip = !transformation.vFlip;
+    }
+    
+    besogo.scaleParameters = besogo.loadSgf(sgf, editor, NORMAL_LOAD, transformation);
 
     //if the setting is not full-board
-    if (besogo.scaleParameters['orientation']!=='full-board')
+    if (besogo.scaleParameters['orientation'] !== 'full-board')
     {
       //set default corner top-left
-      if( besogo.scaleParameters['hFlip'])
-      {
-        let transformation = besogo.makeTransformation();
-        transformation.hFlip = true;
-        besogo.editor.applyTransformation(transformation);
-      }
-      if (besogo.scaleParameters['vFlip'])
-      {
-        let transformation = besogo.makeTransformation();
-        transformation.vFlip = true;
-        besogo.editor.applyTransformation(transformation);
-      }
       besogo.scaleParameters['orientation'] = 'top-left';
 
-    //enlarge area based on places stones
-    if (besogo.scaleParameters['highestX'] >= 10)
-      besogo.scaleParameters['highestX'] = 19;
-    else
-      besogo.scaleParameters['highestX'] += 3;
-    if(besogo.scaleParameters['highestY'] >= 14)
-      besogo.scaleParameters['highestY'] = 19;
-    else
-      besogo.scaleParameters['highestY'] += 3;
+      //enlarge area based on places stones
+      if (besogo.scaleParameters['highestX'] >= 10)
+        besogo.scaleParameters['highestX'] = 19;
+      else
+        besogo.scaleParameters['highestX'] += 3;
+      if(besogo.scaleParameters['highestY'] >= 14)
+        besogo.scaleParameters['highestY'] = 19;
+      else
+        besogo.scaleParameters['highestY'] += 3;
 
-    if(besogo.scaleParameters['highestX']===19 && besogo.scaleParameters['highestY']!==19)
-      besogo.scaleParameters['boardCanvasSize'] = 'horizontal half board';
-    else if(besogo.scaleParameters['highestX']!==19 && besogo.scaleParameters['highestY']===19)
-      besogo.scaleParameters['boardCanvasSize'] = 'vertical half board';
-    else
-      besogo.scaleParameters['boardCanvasSize'] = 'regular board';
+      if (besogo.scaleParameters['highestX'] === 19 && besogo.scaleParameters['highestY'] !== 19)
+        besogo.scaleParameters['boardCanvasSize'] = 'horizontal half board';
+      else if (besogo.scaleParameters['highestX']!==19 && besogo.scaleParameters['highestY'] === 19)
+        besogo.scaleParameters['boardCanvasSize'] = 'vertical half board';
+      else
+        besogo.scaleParameters['boardCanvasSize'] = 'regular board';
 
-    //half boards only have 2 orientations, not 4
-    if (besogo.scaleParameters['boardCanvasSize']==='horizontal half board')
-    {
-      if (corner==='top-right')
+      //half boards only have 2 orientations, not 4
+      if (besogo.scaleParameters['boardCanvasSize'] === 'horizontal half board')
       {
-        corner = 'top-left';
-        besogo.scaleParameters['orientation'] = 'top-left';
+        if (corner === 'top-right')
+        {
+          corner = 'top-left';
+          besogo.scaleParameters['orientation'] = 'top-left';
+        }
+        else if (corner === 'bottom-right')
+        {
+          corner = 'bottom-left';
+          besogo.scaleParameters['orientation'] = 'bottom-left';
+        }
       }
-      else if(corner==='bottom-right')
+      else if (besogo.scaleParameters['boardCanvasSize'] === 'vertical half board')
       {
-        corner = 'bottom-left';
-        besogo.scaleParameters['orientation'] = 'bottom-left';
+        if (corner === 'bottom-left')
+        {
+          corner = 'top-left';
+          besogo.scaleParameters['orientation'] = 'top-left';
+        }
+        else if (corner === 'bottom-right')
+        {
+          corner = 'top-right';
+          besogo.scaleParameters['orientation'] = 'top-right';
+        }
       }
-    }
-    else if (besogo.scaleParameters['boardCanvasSize']==='vertical half board')
-    {
-      if (corner==='bottom-left')
-      {
-        corner = 'top-left';
-        besogo.scaleParameters['orientation'] = 'top-left';
-      }
-      else if (corner==='bottom-right')
-      {
-        corner = 'top-right';
+
+      //if another corner than top-left is set
+      if (corner == 'top-right')
         besogo.scaleParameters['orientation'] = 'top-right';
-      }
-    }
-
-    //if another corner than top-left is set
-      if (corner=='top-right')
-      {
-        let transformation = besogo.makeTransformation();
-        transformation.hFlip = true;
-        besogo.editor.applyTransformation(transformation);
-        besogo.scaleParameters['orientation'] = 'top-right';
-        besogo.coordArea['lowestX'] = 18-besogo.coordArea['lowestX'];
-        besogo.coordArea['highestX'] = 18-besogo.coordArea['highestX'];
-      }
-      else if (corner=='bottom-left')
-      {
-        let transformation = besogo.makeTransformation();
-        transformation.vFlip = true;
-        besogo.editor.applyTransformation(transformation);
+      else if (corner == 'bottom-left')
         besogo.scaleParameters['orientation'] = 'bottom-left';
-        besogo.coordArea['lowestY'] = 18-besogo.coordArea['lowestY'];
-        besogo.coordArea['highestY'] = 18-besogo.coordArea['highestY'];
-      }
-      else if (corner=='bottom-right')
-      {
-        let transformation = besogo.makeTransformation();
-        transformation.hFlip = true;
-        besogo.editor.applyTransformation(transformation);
-        transformation = besogo.makeTransformation();
-        transformation.vFlip = true;
-        besogo.editor.applyTransformation(transformation);
+      else if (corner == 'bottom-right')
         besogo.scaleParameters['orientation'] = 'bottom-right';
-        besogo.coordArea['lowestX'] = 18-besogo.coordArea['lowestX'];
-        besogo.coordArea['highestX'] = 18-besogo.coordArea['highestX'];
-        besogo.coordArea['lowestY'] = 18-besogo.coordArea['lowestY'];
-        besogo.coordArea['highestY'] = 18-besogo.coordArea['highestY'];
-      }
     }
 
-  let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
-  besogo.coordArea['lowestXconverted'] = convertedCoords.x[besogo.coordArea['lowestX']+1];
-  besogo.coordArea['highestXconverted'] = convertedCoords.x[besogo.coordArea['highestX']+1];
-  besogo.coordArea['lowestYconverted'] = convertedCoords.y[besogo.coordArea['lowestY']+1];
-  besogo.coordArea['highestYconverted'] = convertedCoords.y[besogo.coordArea['highestY']+1];
+    let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
+    besogo.coordArea['lowestXconverted'] = convertedCoords.x[besogo.coordArea['lowestX']+1];
+    besogo.coordArea['highestXconverted'] = convertedCoords.x[besogo.coordArea['highestX']+1];
+    besogo.coordArea['lowestYconverted'] = convertedCoords.y[besogo.coordArea['lowestY']+1];
+    besogo.coordArea['highestYconverted'] = convertedCoords.y[besogo.coordArea['highestY']+1];
   
-  if (besogo.isEmbedded) besogo.editor.adjustCommentCoords();
-
-    if (besogo.playerColor==="white")
-    {
-      let transformation = besogo.makeTransformation();
-      transformation.invertColors = true;
-      besogo.editor.applyTransformation(transformation);
-    }
+    if (besogo.isEmbedded)
+      besogo.editor.adjustCommentCoords();
     return besogo.scaleParameters;
   }
 
   // Fetches text file at url from same domain
-  function fetchParseLoad(url, editor, path, sgfLoaded, sgfText=null)
+  function fetchParseLoad(url, editor, path, sgfLoaded)
   {
     var http = new XMLHttpRequest();
 
@@ -687,10 +658,7 @@
     {
       if (http.readyState === 4 && http.status === 200) // Successful fetch
       {
-        if (sgfText !== null)
-          sgfLoaded.scaleParameters = parseAndLoad(sgfText, editor);
-        else
-          sgfLoaded.scaleParameters = parseAndLoad(http.responseText, editor);
+        sgfLoaded.scaleParameters = parseAndLoad(http.responseText, editor);
         navigatePath(editor, path);
       }
     };
