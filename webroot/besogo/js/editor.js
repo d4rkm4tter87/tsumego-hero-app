@@ -180,7 +180,8 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
 
   function getGameInfo() { return gameInfo; }
 
-  function setGameInfo(info, id) {
+  function setGameInfo(info, id)
+  {
     if (id)
       gameInfo[id] = info;
     else
@@ -201,7 +202,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
   function getVariants()
   {
     if (variantStyle >= 2) // Do not show variants if style >= 2
-        return [];
+      return [];
     if (variantStyle === 1) // Display sibling variants
       // Root node does not have parent nor siblings
       return current.parent ? current.parent.children : [];
@@ -773,11 +774,11 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
 
   function intuitionHeroPower()
   {
-  besogo.intuitionActive = true;
-  deleteNextMoveGroup = true;
-  besogo.editor.resetToStart();
-  besogo.editor.setReviewMode(true);
-  besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+    besogo.intuitionActive = true;
+    deleteNextMoveGroup = true;
+    besogo.editor.resetToStart();
+    besogo.editor.setReviewMode(true);
+    besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
   }
 
   function isPerformingAutoPlay()
@@ -844,44 +845,12 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
 
   function commentPosition(positionParams)
   {
-  let hasParent = true;
+    let hasParent = true;
     if(positionParams[2]==-1)
     hasParent = false;
 
-  let counter = 0;
-  if(positionParams[8]==='top-right')
-  {
-    counter = 0;
-    while(counter<=5)
-    {
-      if(counter%2==0)
-        positionParams[counter] = 20-positionParams[counter];
-      counter++;
-    }
-  }
-  else if(positionParams[8]==='bottom-left')
-  {
-    counter = 0;
-    while(counter<=5)
-    {
-      if(counter%2!=0)
-        positionParams[counter] = 20-positionParams[counter];
-      counter++;
-    }
-  }
-  else if(positionParams[8]==='bottom-right')
-  {
-    counter = 0;
-    while(counter<=5)
-    {
-      positionParams[counter] = 20-positionParams[counter];
-      counter++;
-    }
-  }
-  //---
-  if(besogo.scaleParameters['orientation']!=='full-board')
-  {
-    if(besogo.boardParameters['corner']==='top-right')
+    let counter = 0;
+    if(positionParams[8]==='top-right')
     {
       counter = 0;
       while(counter<=5)
@@ -891,7 +860,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
         counter++;
       }
     }
-    else if(besogo.boardParameters['corner']==='bottom-left')
+    else if(positionParams[8]==='bottom-left')
     {
       counter = 0;
       while(counter<=5)
@@ -901,7 +870,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
         counter++;
       }
     }
-    else if(besogo.boardParameters['corner']==='bottom-right')
+    else if(positionParams[8]==='bottom-right')
     {
       counter = 0;
       while(counter<=5)
@@ -910,11 +879,43 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
         counter++;
       }
     }
-  }
-  if(positionParams[8]!=="0")
-    commentTreeSearch(root, 0, 0, nextOpen, positionParams);
-  else
-    setCurrent(root);
+    //---
+    if (besogo.scaleParameters['orientation']!=='full-board')
+    {
+      if (besogo.boardParameters['corner']==='top-right')
+      {
+        counter = 0;
+        while (counter<=5)
+        {
+          if (counter%2==0)
+            positionParams[counter] = 20-positionParams[counter];
+          counter++;
+        }
+      }
+      else if (besogo.boardParameters['corner']==='bottom-left')
+      {
+        counter = 0;
+        while (counter<=5)
+        {
+          if (counter%2!=0)
+            positionParams[counter] = 20-positionParams[counter];
+          counter++;
+        }
+      }
+      else if (besogo.boardParameters['corner']==='bottom-right')
+      {
+        counter = 0;
+        while (counter<=5)
+        {
+          positionParams[counter] = 20-positionParams[counter];
+          counter++;
+        }
+      }
+    }
+    if (positionParams[8]!=="0")
+      commentTreeSearch(root, 0, 0, nextOpen, positionParams);
+    else
+      setCurrent(root);
   }
 
   function commentTreeSearch(node, x, y, nextOpen, positionParams, hasParent=true)
@@ -945,7 +946,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
 
   let childrenMoveX = 0;
   let childrenMoveY = 0;
-  if(node.children.length===0)
+  if (node.children.length===0)
   {
     childrenMoveX = positionParams[4];
     childrenMoveY = positionParams[5];
@@ -956,29 +957,25 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
     childrenMoveY = node.children[0].move.y;
   }
   //this is not well written, maybe I improve it later
-  if(node.parent!==null && node.parent.move!==null)
+  if (node.parent!==null && node.parent.move!==null)
   {
-    if(node.move.x==positionParams[0]
-    && node.move.y==positionParams[1]
-    && node.parent.move.x==positionParams[2]
-    && node.parent.move.y==positionParams[3]
-    && childrenMoveX==positionParams[4]
-    && childrenMoveY==positionParams[5]
-    && node.moveNumber==positionParams[6])
-    {
+    if (node.move.x==positionParams[0] &&
+        node.move.y==positionParams[1] &&
+        node.parent.move.x==positionParams[2] &&
+        node.parent.move.y==positionParams[3] &&
+        childrenMoveX==positionParams[4] &&
+        childrenMoveY==positionParams[5] &&
+        node.moveNumber==positionParams[6])
       setCurrent(node);
-    }
   }
-  else if(node.move!==null)
+  else if (node.move !== null)
   {
-    if(node.move.x==positionParams[0]
-    && node.move.y==positionParams[1]
-    && childrenMoveX==positionParams[4]
-    && childrenMoveY==positionParams[5]
-    && node.moveNumber==positionParams[6])
-    {
+    if (node.move.x==positionParams[0] &&
+        node.move.y==positionParams[1] &&
+        childrenMoveX==positionParams[4] &&
+        childrenMoveY==positionParams[5] &&
+        node.moveNumber==positionParams[6])
       setCurrent(node);
-    }
   }
 
     nextOpen[x] = y + 1;
@@ -1009,10 +1006,10 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
 
   function dynamicCommentCoords(id, content)
   {
-    if(besogo.dynamicCommentCoords.length===0)
+    if (besogo.dynamicCommentCoords.length === 0)
     {
-    besogo.dynamicCommentCoords[0] = [];
-    besogo.dynamicCommentCoords[1] = [];
+      besogo.dynamicCommentCoords[0] = [];
+      besogo.dynamicCommentCoords[1] = [];
     }
     besogo.dynamicCommentCoords[0].push(id);
     besogo.dynamicCommentCoords[1].push(content);
@@ -1020,57 +1017,59 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
 
   function adjustCommentCoords()
   {
-  let buffer;
-  let c1;
-  let c2;
-  let found = false;
-  let spin = 0;
-  let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
-  if(typeof besogo.dynamicCommentCoords[0] !== 'undefined'){
-    if(besogo.coordArea['lowestX']>besogo.coordArea['highestX'])
-    {
-      buffer = besogo.coordArea['lowestX'];
-      besogo.coordArea['lowestX'] = besogo.coordArea['highestX'];
-      besogo.coordArea['highestX'] = buffer;
-    }
-    if(besogo.coordArea['lowestY']>besogo.coordArea['highestY'])
-    {
-      buffer = besogo.coordArea['lowestY'];
-      besogo.coordArea['lowestY'] = besogo.coordArea['highestY'];
-      besogo.coordArea['highestY'] = buffer;
-    }
-    for(let i=0;i<besogo.dynamicCommentCoords[0].length;i++)
-    {
-      c1 = besogo.dynamicCommentCoords[1][i].charAt(0).toUpperCase();
-      c2 = besogo.dynamicCommentCoords[1][i].substring(1);
-      c1 = c1.charCodeAt(0)-65;
-      if(c1>7) c1--;
-      c2 = besogo.scaleParameters['boardCoordSize']-c2;
-      found = false;
-      spin = 0;
-      while(spin<4)
+    let buffer;
+    let c1;
+    let c2;
+    let found = false;
+    let spin = 0;
+    let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
+    if (typeof besogo.dynamicCommentCoords[0] !== 'undefined'){
+      if (besogo.coordArea['lowestX']>besogo.coordArea['highestX'])
       {
-        if(!found)
-        {
-          if(spin==1 || spin==3)
-          {
-            if(besogo.scaleParameters['boardCanvasSize']!=='horizontal half board')
-              c1 = besogo.scaleParameters['boardCoordSize'] - c1 - 1;
-            else
-              c2 = besogo.scaleParameters['boardCoordSize'] - c2 - 1;
-          }
-          else if(spin==2)
-            c2 = besogo.scaleParameters['boardCoordSize'] - c2 - 1;
-          if(c1>=besogo.coordArea['lowestX'] && c1<=besogo.coordArea['highestX'] && c2>=besogo.coordArea['lowestY'] && c2<=besogo.coordArea['highestY'])
-            found = true;
-        }
-        spin++;
+        buffer = besogo.coordArea['lowestX'];
+        besogo.coordArea['lowestX'] = besogo.coordArea['highestX'];
+        besogo.coordArea['highestX'] = buffer;
       }
-      c1 = convertedCoords.x[c1+1];
-      c2 = convertedCoords.y[c2+1];
-      $('#'+besogo.dynamicCommentCoords[0][i]).text(c1+c2);
+      if (besogo.coordArea['lowestY']>besogo.coordArea['highestY'])
+      {
+        buffer = besogo.coordArea['lowestY'];
+        besogo.coordArea['lowestY'] = besogo.coordArea['highestY'];
+        besogo.coordArea['highestY'] = buffer;
+      }
+      for (let i=0;i<besogo.dynamicCommentCoords[0].length;i++)
+      {
+        c1 = besogo.dynamicCommentCoords[1][i].charAt(0).toUpperCase();
+        c2 = besogo.dynamicCommentCoords[1][i].substring(1);
+        c1 = c1.charCodeAt(0)-65;
+        if (c1>7)
+          c1--;
+        c2 = besogo.scaleParameters['boardCoordSize']-c2;
+        found = false;
+        spin = 0;
+        while (spin<4)
+        {
+          if (!found)
+          {
+            if (spin==1 || spin==3)
+            {
+              if (besogo.scaleParameters['boardCanvasSize']!=='horizontal half board')
+                c1 = besogo.scaleParameters['boardCoordSize'] - c1 - 1;
+              else
+                c2 = besogo.scaleParameters['boardCoordSize'] - c2 - 1;
+            }
+            else if (spin==2)
+              c2 = besogo.scaleParameters['boardCoordSize'] - c2 - 1;
+            if (c1>=besogo.coordArea['lowestX'] && c1<=besogo.coordArea['highestX'] &&
+                c2>=besogo.coordArea['lowestY'] && c2<=besogo.coordArea['highestY'])
+              found = true;
+          }
+          spin++;
+        }
+        c1 = convertedCoords.x[c1+1];
+        c2 = convertedCoords.y[c2+1];
+        $('#'+besogo.dynamicCommentCoords[0][i]).text(c1+c2);
+      }
     }
-  }
   }
 
   function isMoveInTree(cu)
@@ -1088,8 +1087,9 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
     let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
     let exitCounter = 0;
 
-    if(treeX!==0){
-      while(found===null)
+    if (treeX!==0)
+    {
+      while (found===null)
       {
         found = searchNodesForTreePosition(treeX, treeY);
         treeX--;
@@ -1111,7 +1111,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
     else
       found = null;
 
-    if(exitCounter>1000)
+    if (exitCounter > 1000)
       found = null;
     returnArray[0] = found;
     returnArray[1] = notInTreeCoords;
@@ -1123,7 +1123,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
   {
     let found = null;
     for (let i = 0; i < besogo.nodes.length; i++)
-      if( x === besogo.nodes[i].navTreeX && y===besogo.nodes[i].navTreeY)
+      if (x === besogo.nodes[i].navTreeX && y===besogo.nodes[i].navTreeY)
         found = besogo.nodes[i];
     return found;
   }
