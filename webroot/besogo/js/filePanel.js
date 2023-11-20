@@ -2,8 +2,10 @@ besogo.makeFilePanel = function(container, editor)
 {
   'use strict';
   var fileChooser, // Reference to the file chooser element
+      diffFileChooser,
       element, // Scratch variable for creating elements
-      WARNING = "Everything not saved will be lost";
+      WARNING = "Everything not saved will be lost",
+      compareButton = null;
 
   if (!besogo.isEmbedded)
   {
@@ -16,6 +18,9 @@ besogo.makeFilePanel = function(container, editor)
   // Hidden file chooser element
   fileChooser = makeFileChooser();
   container.appendChild(fileChooser);
+
+  diffFileChooser = makeDiffFileChooser();
+  container.appendChild(diffFileChooser);
 
   if (!besogo.isEmbedded)
   {
@@ -31,6 +36,21 @@ besogo.makeFilePanel = function(container, editor)
       fileChooser.click();
     };
     container.appendChild(element);
+  }
+  
+  if (!besogo.isEmbedded)
+  {
+    // Load file button
+    compareButton = document.createElement('input');
+    compareButton.type = 'button';
+    compareButton.value = 'Compare';
+    compareButton.title = 'Import SGF';
+    compareButton.disabled = true;
+    compareButton.onclick = function()  // Bind click to the hidden file chooser
+    {
+      diffFileChooser.click();
+    };
+    container.appendChild(compareButton);
   }
 
   // Save file button
@@ -135,31 +155,69 @@ besogo.makeFilePanel = function(container, editor)
       }
       container.appendChild(button);
     }
+    
+    // Creates the file selector
+    function makeDiffFileChooser()
+    {
+      let chooser = document.createElement('input');
+      chooser.type = 'file';
+      chooser.style.display = 'none'; // Keep hidden
+      chooser.onchange = readDiffFile; // Read, parse and load on file select
+      return chooser;
+    }
 
     // Creates the file selector
     function makeFileChooser()
     {
-      var chooser = document.createElement('input');
+      let chooser = document.createElement('input');
       chooser.type = 'file';
       chooser.style.display = 'none'; // Keep hidden
       chooser.onchange = readFile; // Read, parse and load on file select
       return chooser;
     }
+    
+     // Reads, parses and loads an SGF file
+    function readDiffFile(evt)
+    {
+      let file = evt.target.files[0], // Selected file
+          reader = new FileReader();
+
+      let newChooser = makeFileChooser(); // Create new file input to reset selection
+
+      container.replaceChild(newChooser, diffFileChooser); // Replace with the reset selector
+      diffFileChooser = newChooser;
+
+      reader.onload = function(e) // Parse and load game tree
+      {
+        let sgf;
+        try
+        {
+          sgf = besogo.parseSgf(e.target.result);
+        }
+        catch (error)
+        {
+          alert('SGF parse error at ' + error.at + ':\n' + error.message);
+          return;
+        }
+        besogo.loadSgf(sgf, editor, OPEN_FOR_DIFF);
+      };
+      reader.readAsText(file); // Initiate file read
+    }
 
     // Reads, parses and loads an SGF file
     function readFile(evt)
     {
-      var file = evt.target.files[0], // Selected file
+      let file = evt.target.files[0], // Selected file
           reader = new FileReader();
 
-      var newChooser = makeFileChooser(); // Create new file input to reset selection
+      let newChooser = makeFileChooser(); // Create new file input to reset selection
 
       container.replaceChild(newChooser, fileChooser); // Replace with the reset selector
       fileChooser = newChooser;
 
       reader.onload = function(e) // Parse and load game tree
       {
-        var sgf;
+        let sgf;
         try
         {
           sgf = besogo.parseSgf(e.target.result);
@@ -170,6 +228,7 @@ besogo.makeFilePanel = function(container, editor)
           return;
         }
         besogo.loadSgf(sgf, editor);
+        compareButton.disabled = false;
       };
       reader.readAsText(file); // Initiate file read
     }

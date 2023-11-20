@@ -95,8 +95,8 @@ besogo.makeTreePanel = function(container, editor)
     svg.appendChild(bottomLayer); // Bottom layer (for current marker) second
     svg.appendChild(pathGroup); // Navigation path third
 
-    path = recursiveTreeBuild(root, 0, 0, nextOpen); // Build the tree
-	nodesInitialized = true;
+    path = recursiveTreeBuild(root, 0, 0, nextOpen, root.isDiff); // Build the tree
+	  nodesInitialized = true;
     pathGroup.appendChild(finishPath(path, 'black')); // Finish and add root path
 
     width = 120 * nextOpen.length; // Compute height and width of nav tree
@@ -114,7 +114,7 @@ besogo.makeTreePanel = function(container, editor)
   }
 
   // Recursively builds the tree
-  function recursiveTreeBuild(node, x, y, nextOpen)
+  function recursiveTreeBuild(node, x, y, nextOpen, isDiff)
   {
     var children = node.children,
         position,
@@ -138,26 +138,24 @@ besogo.makeTreePanel = function(container, editor)
       if (y < position - 1) // Check if first child natural drop > 1
         y = position - 1; // Bring current y within 1 of first child drop
       // Place first child and extend path
-      path = recursiveTreeBuild(children[0], x + 1, position, nextOpen) +
-             extendPath(x, y, nextOpen);
+      path = recursiveTreeBuild(children[0], x + 1, position, nextOpen, isDiff) + extendPath(x, y, nextOpen);
 
       // Place other children (intentionally starting at i = 1)
       for (i = 1; i < children.length; i++)
       {
         position = nextOpen[x + 1];
-        childPath = recursiveTreeBuild(children[i], x + 1, position, nextOpen) +
-            extendPath(x, y, nextOpen, position - 1);
+        childPath = recursiveTreeBuild(children[i], x + 1, position, nextOpen, isDiff) + extendPath(x, y, nextOpen, position - 1);
         // End path at beginning of branch
         pathGroup.appendChild(finishPath(childPath, 'black'));
       }
     }
-    svg.appendChild(makeNodeIcon(node, x, y));
+    svg.appendChild(makeNodeIcon(node, x, y, isDiff));
     addSelectionMarker(node, x, y);
     nextOpen[x] = y + 1; // Claims (x, y)
     return path;
   }
 
-  function makeNodeIcon(node, x, y) // Makes a node icon for the tree
+  function makeNodeIcon(node, x, y, isDiff) // Makes a node icon for the tree
   {
     var element;
 
@@ -166,12 +164,20 @@ besogo.makeTreePanel = function(container, editor)
       case 'move': // Move node
         let color = node.move.color;
         element = besogo.svgEl("g");
-        element.appendChild( besogo.svgStone(svgPos(x), svgPos(y), color) );
+        element.appendChild(besogo.svgStone(svgPos(x), svgPos(y), color));
         color = (color === -1) ? "white" : "black";
-        if (node.virtualChildren.length)
-          element.appendChild(besogo.svgPlus(svgPos(x), svgPos(y), color));
-        else
-          element.appendChild( besogo.svgLabel(svgPos(x), svgPos(y), color, '' + node.moveNumber) );
+        if (node.diffInfo && node.diffInfo.type != DIFF_NO_CHANGE)
+          if (node.diffInfo.type == DIFF_ADDED)
+            element.appendChild(besogo.svgPlus(svgPos(x), svgPos(y), color));
+          else
+            element.appendChild(besogo.svgCross(svgPos(x), svgPos(y), color));
+        else if (!isDiff)
+        {
+          if (node.virtualChildren.length)
+            element.appendChild(besogo.svgArrow(svgPos(x), svgPos(y), color));
+          else
+            element.appendChild(besogo.svgLabel(svgPos(x), svgPos(y), color, '' + node.moveNumber));
+        }
         element.appendChild(besogo.svgCircle(svgPos(x), svgPos(y), node.getCorrectColor(), 50))
         break;
       case 'setup': // Setup node

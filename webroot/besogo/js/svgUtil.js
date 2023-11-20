@@ -27,37 +27,40 @@ besogo.svgEl = function(name, attributes) {
 };
 
 // Makes an SVG group for containing the shadow layer
-besogo.svgShadowGroup = function() {
-    var group = besogo.svgEl('g'),
-        filter = besogo.svgEl('filter', { id: 'blur' }),
-        blur = besogo.svgEl('feGaussianBlur', {
-            in: 'SourceGraphic',
-            stdDeviation: '2'
-        });
+besogo.svgShadowGroup = function()
+{
+  var group = besogo.svgEl('g'),
+      filter = besogo.svgEl('filter', { id: 'blur' }),
+      blur = besogo.svgEl('feGaussianBlur', {
+          in: 'SourceGraphic',
+          stdDeviation: '2'
+      });
 
-    filter.appendChild(blur);
-    group.appendChild(filter);
-    return group;
+  filter.appendChild(blur);
+  group.appendChild(filter);
+  return group;
 };
 
 // Makes a stone shadow
-besogo.svgShadow = function(x, y) {
-    return besogo.svgEl("circle", {
-        cx: x,
-        cy: y,
-        r: 43,
-        stroke: 'none',
-        fill: 'black',
-        opacity: 0.32,
-        filter: 'url(#blur)'
-    });
+besogo.svgShadow = function(x, y)
+{
+  return besogo.svgEl("circle", {
+      cx: x,
+      cy: y,
+      r: 43,
+      stroke: 'none',
+      fill: 'black',
+      opacity: 0.32,
+      filter: 'url(#blur)'
+  });
 };
 
 // Makes a photo realistic stone element
-besogo.realStone = function(x, y, color, index, blackStone = '', whiteStone = '') {
-    var element;
+besogo.realStone = function(x, y, color, index, blackStone = '', whiteStone = '')
+{
+  var element;
 	
-	if(blackStone === '')
+	if (blackStone === '')
   {
 		if (color < 0)
 			color = 'black' + (index % besogo.BLACK_STONES);
@@ -143,55 +146,72 @@ besogo.svgSquare = function(x, y, color, strokeWidth = 8)
 };
 
 // Makes an equilateral triangle at (x, y)
-besogo.svgTriangle = function(x, y, color) {
-    // Approximates an equilateral triangle centered on (x, y)
-    var pointString = "" + x + "," + (y - 30) + " " +
-        (x - 26) + "," + (y + 15) + " " +
-        (x + 26) + "," + (y + 15);
+besogo.svgTriangle = function(x, y, color)
+{
+  // Approximates an equilateral triangle centered on (x, y)
+  var pointString = "" + x + "," + (y - 30) + " " +
+      (x - 26) + "," + (y + 15) + " " +
+      (x + 26) + "," + (y + 15);
 
-    return besogo.svgEl("polygon", {
-        points: pointString,
-        stroke: color,
-        "stroke-width": 8,
-        fill: "none"
-    });
+  return besogo.svgEl("polygon", {
+      points: pointString,
+      stroke: color,
+      "stroke-width": 8,
+      fill: "none"
+  });
 };
 
 // Makes an "X" cross at (x, y)
-besogo.svgCross = function(x, y, color) {
-    var path = "m" + (x - 24) + "," + (y - 24) + "l48,48m0,-48l-48,48";
+besogo.svgCross = function(x, y, color)
+{
+  var path = "m" + (x - 24) + "," + (y - 24) + "l48,48m0,-48l-48,48";
 
-    return besogo.svgEl("path", {
-        d: path,
-        stroke: color,
-        "stroke-width": 8,
-        fill: "none"
-    });
+  return besogo.svgEl("path", {
+      d: path,
+      stroke: color,
+      "stroke-width": 8,
+      fill: "none"
+  });
 };
 
 // Makes an "+" plus sign at (x, y)
-besogo.svgPlus = function(x, y, color) {
-    var path = "m" + x + "," + (y - 28) + "v56m-28,-28h56";
+besogo.svgPlus = function(x, y, color)
+{
+  var path = "m" + x + "," + (y - 28) + "v56m-28,-28h56";
 
-    return besogo.svgEl("path", {
-        d: path,
-        stroke: color,
-        "stroke-width": 8,
-        fill: "none"
-    });
+  return besogo.svgEl("path", {
+      d: path,
+      stroke: color,
+      "stroke-width": 8,
+      fill: "none"
+  });
+};
+
+// Makes an "->" sign at (x, y)
+besogo.svgArrow = function(x, y, color)
+{
+  var path = "m" + (x - 28) + "," + y + "h56,l-28,-28,m0,56l28,-28";
+
+  return besogo.svgEl("path", {
+      d: path,
+      stroke: color,
+      "stroke-width": 8,
+      fill: "none"
+  });
 };
 
 // Makes a small filled square at (x, y)
-besogo.svgBlock = function(x, y, color) {
-    return besogo.svgEl("rect", {
-        x: x - 18,
-        y: y - 18,
-        width: 36,
-        height: 36,
-        stroke: "none",
-        "stroke-width": 8,
-        fill: color
-    });
+besogo.svgBlock = function(x, y, color)
+{
+  return besogo.svgEl("rect", {
+      x: x - 18,
+      y: y - 18,
+      width: 36,
+      height: 36,
+      stroke: "none",
+      "stroke-width": 8,
+      fill: color
+  });
 };
 
 // Makes a label at (x, y)

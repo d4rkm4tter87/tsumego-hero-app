@@ -43,6 +43,7 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
   root.goal = GOAL_NONE;
   root.status = besogo.makeStatusSimple(STATUS_NONE);
   root.firstMove = BLACK;
+  root.isDiff = false;
 
   root.playMove = function(x, y, color = false, allow = false)
   {
@@ -593,6 +594,8 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
 
   root.checkTsumegoHeroCompatibility = function(root)
   {
+    if (root.isDiff)
+      return {node: root, message: "Can't save diff."};
     if (!this.hasChildIncludingVirtual())
     {
       if (root.goal == GOAL_NONE && !this.nextIsBlack() && !this.correctSource)
@@ -800,6 +803,51 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
     this.visited = false;
     for (let i = 0; i < this.children.length; ++i)
       this.children[i].unvisit();
+  }
+  
+  root.getCorrespondingChild = function(otherChild)
+  {
+    for (let i = 0; i < this.children.length; ++i)
+      if (this.children[i].move.x == otherChild.move.x && this.children[i].move.y == otherChild.move.y)
+        return this.children[i];
+    return null;
+  }
+  
+  root.wasAddedIncludingChildren = function()
+  {
+    this.diffInfo = besogo.makeAddedMoveDiffInfo();
+    for (let i = 0; i < this.children.length; ++i)
+      this.children[i].wasAddedIncludingChildren();
+  }
+  
+  root.incorporateDiff = function(otherRoot)
+  {
+    this.isDiff = true;
+    this.incorporateDiffInternal(otherRoot);
+  }
+  
+  root.incorporateDiffInternal = function(otherRoot)
+  {
+    for (let i = 0; i < this.children.length; ++i)
+    {
+      let correspondingChild = otherRoot.getCorrespondingChild(this.children[i]);
+      if (!correspondingChild)
+        this.children[i].wasAddedIncludingChildren();
+      else
+        this.children[i].incorporateDiffInternal(correspondingChild);
+    }
+    
+    for (let i = 0; i < otherRoot.children.length; ++i)
+    {
+      let otherChild = otherRoot.children[i];
+      let correspondingChild = this.getCorrespondingChild(otherChild);
+      if (!correspondingChild)
+      {
+        let newChild = this.registerMove(otherChild.move.x, otherChild.move.y);
+        newChild.diffInfo = besogo.makeRemovedMoveDiffInfo();
+        newChild.incorporateDiffInternal(otherChild);
+      }
+    }
   }
 
   return root;

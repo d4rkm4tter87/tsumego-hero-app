@@ -19,6 +19,7 @@
 <script src="/besogo/js/controlPanel.js"></script>
 <script src="/besogo/js/commentPanel.js"></script>
 <script src="/besogo/js/treePanel.js"></script>
+<script src="/besogo/js/diffInfo.js"></script>
 <script src ="/FileSaver.min.js"></script>
 <?php if($t['Tsumego']['set_id']==208){ ?>
 	<script src="/js/multipleChoice.js"></script>

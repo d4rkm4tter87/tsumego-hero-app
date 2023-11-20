@@ -20,16 +20,16 @@ besogo.makeBoardDisplay = function(container, editor, corner)
       randIndex, // Random index for stone images
       lastHoverPosition = null,
       TOUCH_FLAG = false; // Flag for touch interfaces
-	
-	besogo.scaleParameters['boardCoordSize'] = sizeX;
-	//Not a 19x19 board, so it should be full board view
-	//or not embedded viewer
-    if(sizeX != 19 || !besogo.isEmbedded)
-    {
-      besogo.scaleParameters['orientation'] = 'full-board';
-      besogo.boardParameters['fullBoard'] = true;
-	  besogo.controlButtonLock = false;
-    }
+  
+  besogo.scaleParameters['boardCoordSize'] = sizeX;
+  //Not a 19x19 board, so it should be full board view
+  //or not embedded viewer
+  if(sizeX != 19 || !besogo.isEmbedded)
+  {
+    besogo.scaleParameters['orientation'] = 'full-board';
+    besogo.boardParameters['fullBoard'] = true;
+    besogo.controlButtonLock = false;
+  }
   
   besogo.boardParameters['fullBoard'] = false;
   besogo.boardParameters['corner'] = null;
@@ -53,7 +53,7 @@ besogo.makeBoardDisplay = function(container, editor, corner)
 
   return {
       redrawHover: redrawHover,
-	  displayHoverCoord: displayHoverCoord
+    displayHoverCoord: displayHoverCoord
     };
 
   // Function for setting the flag for touch interfaces
@@ -145,34 +145,34 @@ besogo.makeBoardDisplay = function(container, editor, corner)
 
     if(besogo.scaleParameters['orientation']!=='full-board')
     {
-	  besogo.boardParameters['corner'] = besogo.scaleParameters['orientation'];
-	  /*
+    besogo.boardParameters['corner'] = besogo.scaleParameters['orientation'];
+    /*
       if(!besogo.scaleParameters['hFlip'] && !besogo.scaleParameters['vFlip']) 
-		  besogo.scaleParameters['orientation'] = 'top-left';
+      besogo.scaleParameters['orientation'] = 'top-left';
       else if(besogo.scaleParameters['hFlip'] && !besogo.scaleParameters['vFlip'])
-		  besogo.scaleParameters['orientation'] = 'top-right';
+      besogo.scaleParameters['orientation'] = 'top-right';
       else if(!besogo.scaleParameters['hFlip'] && besogo.scaleParameters['vFlip'])
-		  besogo.scaleParameters['orientation'] = 'bottom-left';
+      besogo.scaleParameters['orientation'] = 'bottom-left';
       else if(besogo.scaleParameters['hFlip'] && besogo.scaleParameters['vFlip'])
-		  besogo.scaleParameters['orientation'] = 'bottom-right';
-		
+      besogo.scaleParameters['orientation'] = 'bottom-right';
+    
       if(besogo.scaleParameters['highestX'] >= 10) 
-		  besogo.scaleParameters['highestX'] = 19;
+      besogo.scaleParameters['highestX'] = 19;
       else 
-		  besogo.scaleParameters['highestX'] += 3;
+      besogo.scaleParameters['highestX'] += 3;
       if(besogo.scaleParameters['highestY'] >= 10) 
-		  besogo.scaleParameters['highestY'] = 19;
+      besogo.scaleParameters['highestY'] = 19;
       else 
-		  besogo.scaleParameters['highestY'] += 3;
-	  
-	  if(besogo.scaleParameters['highestX']===19 && besogo.scaleParameters['highestY']!==19)
-		besogo.scaleParameters['boardCanvasSize'] = 'horizontal half board';
-	  else if(besogo.scaleParameters['highestX']!==19 && besogo.scaleParameters['highestY']===19)
-		besogo.scaleParameters['boardCanvasSize'] = 'vertical half board';
-	  else
-		besogo.scaleParameters['boardCanvasSize'] = 'regular board';
-		*/
-		 
+      besogo.scaleParameters['highestY'] += 3;
+    
+    if(besogo.scaleParameters['highestX']===19 && besogo.scaleParameters['highestY']!==19)
+    besogo.scaleParameters['boardCanvasSize'] = 'horizontal half board';
+    else if(besogo.scaleParameters['highestX']!==19 && besogo.scaleParameters['highestY']===19)
+    besogo.scaleParameters['boardCanvasSize'] = 'vertical half board';
+    else
+    besogo.scaleParameters['boardCanvasSize'] = 'regular board';
+    */
+     
       board_margin_x = BOARD_MARGIN - 75;
       board_margin_y = BOARD_MARGIN - 75;
 
@@ -195,10 +195,10 @@ besogo.makeBoardDisplay = function(container, editor, corner)
       besogo.boardParameters['fullBoardWidth'] = 2*BOARD_MARGIN + 19*CELL_SIZE;
       besogo.boardParameters['fullBoardHeight'] = 2*BOARD_MARGIN + 19*CELL_SIZE;
     }
-	else
-	{
-		besogo.scaleParameters['boardCanvasSize'] = 'full board';
-	}
+  else
+  {
+    besogo.scaleParameters['boardCanvasSize'] = 'full board';
+  }
     svg = besogo.svgEl("svg", { // Initialize the SVG element
         width: "100%",
         height: "100%",
@@ -210,7 +210,7 @@ besogo.makeBoardDisplay = function(container, editor, corner)
 
     besogo.boardParameters['boardHeight2'] = besogo.boardParameters['fullBoardWidth'] - besogo.boardParameters['boardHeight'];
     besogo.boardParameters['boardHeight3'] = besogo.boardParameters['fullBoardWidth'] - besogo.boardParameters['boardHeight2'];
-	
+  
     if(corner==='top-right' && besogo.scaleParameters['orientation']!=='full-board')
       svg.setAttribute('viewBox', besogo.boardParameters['boardWidth2'] + ' ' + 0 + ' ' + besogo.boardParameters['boardWidth3'] + ' ' + besogo.boardParameters['boardHeight3']);
     else if(corner==='bottom-left' && besogo.scaleParameters['orientation']!=='full-board')
@@ -238,7 +238,7 @@ besogo.makeBoardDisplay = function(container, editor, corner)
     }) );
 
     drawHoshi(); // Draw the hoshi points
-	
+  
     if (coord !== 'none')
       drawCoords(coord, besogo.scaleParameters['orientation']); // Draw the coordinate labels
   }
@@ -246,21 +246,21 @@ besogo.makeBoardDisplay = function(container, editor, corner)
   // Draws coordinate labels on the board
   function drawCoords(coord, corner)
   {
-	let fill = 'black';
-	if(besogo.theme==='texture26')
-		fill = '#bbb';
-	else if(besogo.theme==='texture25')
-		fill = '#000';
-	else if(besogo.theme==='texture54')
-		fill = '#aaa';
-	else if(besogo.theme==='texture41')
-		fill = '#bbb';
-	else if(besogo.theme==='texture40')
-		fill = '#bbb';
-	else if(besogo.theme==='texture38')
-		fill = '#bbb';
-	else if(besogo.theme==='texture22')
-		fill = '#bbb';
+  let fill = 'black';
+  if(besogo.theme==='texture26')
+    fill = '#bbb';
+  else if(besogo.theme==='texture25')
+    fill = '#000';
+  else if(besogo.theme==='texture54')
+    fill = '#aaa';
+  else if(besogo.theme==='texture41')
+    fill = '#bbb';
+  else if(besogo.theme==='texture40')
+    fill = '#bbb';
+  else if(besogo.theme==='texture38')
+    fill = '#bbb';
+  else if(besogo.theme==='texture22')
+    fill = '#bbb';
     var labels = besogo.coord[coord](sizeX, sizeY),
         labelXa = labels.x, // Top edge labels
         labelXb = labels.xb || labels.x, // Bottom edge
@@ -371,7 +371,7 @@ besogo.makeBoardDisplay = function(container, editor, corner)
         });
 
         // Add event listeners, using closures to decouple (i, j)
-		element.addEventListener("click", handleClick(i, j));
+    element.addEventListener("click", handleClick(i, j));
 
         if (!TOUCH_FLAG) { // Skip hover listeners for touch interfaces
             element.addEventListener("mouseover", handleOver(i, j));
@@ -386,15 +386,15 @@ besogo.makeBoardDisplay = function(container, editor, corner)
   {
     return function(event)
     {
-	  if(besogo.intuitionActive)
-	  {
-		deleteNextMoveGroup = false;
-		editor.setReviewMode(false);  
-		besogo.intuitionActive = false;
-	  }
+    if(besogo.intuitionActive)
+    {
+    deleteNextMoveGroup = false;
+    editor.setReviewMode(false);  
+    besogo.intuitionActive = false;
+    }
       editor.click(i, j, event.ctrlKey, event.shiftKey);
-		  if (!TOUCH_FLAG)
-  			(handleOver(i, j))(); // Ensures that any updated tool is visible
+      if (!TOUCH_FLAG)
+        (handleOver(i, j))(); // Ensures that any updated tool is visible
     };
   }
 
@@ -445,27 +445,27 @@ besogo.makeBoardDisplay = function(container, editor, corner)
       for (j = 1; j <= sizeY; j++)
       {
         color = current.getStone(i, j);
-		
-		/*
-		let blackMarkup = false;
-		let whiteMarkup = false;
-		if(current.getMarkup(i, j)==2){
-			blackMarkup = true;
-		}else if(current.getMarkup(i, j)==3){
-			whiteMarkup = true;
-		}
-		*/
-		
+    
+    /*
+    let blackMarkup = false;
+    let whiteMarkup = false;
+    if(current.getMarkup(i, j)==2){
+      blackMarkup = true;
+    }else if(current.getMarkup(i, j)==3){
+      whiteMarkup = true;
+    }
+    */
+    
         if (color)
         {
           x = svgPos(i);
           y = svgPos(j);
 
-		  if (editor.REAL_STONES) // Realistic stone
-			group.appendChild(besogo.realStone(x, y, color, randIndex[fromXY(i, j)], editor.BLACK_STONES, editor.WHITE_STONES));
-		  else // SVG stone
-			group.appendChild(besogo.svgStone(x, y, color));
-		  
+      if (editor.REAL_STONES) // Realistic stone
+      group.appendChild(besogo.realStone(x, y, color, randIndex[fromXY(i, j)], editor.BLACK_STONES, editor.WHITE_STONES));
+      else // SVG stone
+      group.appendChild(besogo.svgStone(x, y, color));
+      
           // Draw shadows
           if (editor.SHADOWS)
           {
@@ -524,36 +524,64 @@ besogo.makeBoardDisplay = function(container, editor, corner)
             }
             element = besogo.svgLabel(x, y, color, mark);
           }
-		  if(!besogo.multipleChoice){
-			  group.appendChild(element);
-			  markupLayer[fromXY(i, j)] = element;
-		  }else{
-			//group.appendChild(element);
-			//markupLayer[fromXY(i, j)] = element; 
-		  }
-        }
+      if (!besogo.multipleChoice)
+      {
+        group.appendChild(element);
+        markupLayer[fromXY(i, j)] = element;
+      }
+      else
+      {
+      //group.appendChild(element);
+      //markupLayer[fromXY(i, j)] = element; 
+      }
+    }
 
-    // Mark last move with plus if not already marked
+    // Mark last move with circle if not already marked
     if (lastMove && lastMove.x !== 0 && lastMove.y !== 0 &&
         !markupLayer[fromXY(lastMove.x, lastMove.y)]) // Last move not marked
     {
-      var color = checkVariants(variants, current, lastMove.x, lastMove.y) ? besogo.PURP : besogo.BLUE;
-      var moveToUse = lastMove;
+      let moveToUse = lastMove;
       if (current.cameFrom && current.cameFrom.getMoveToGetToVirtualChild(current))
-		moveToUse = current.cameFrom.getMoveToGetToVirtualChild(current);
-	  
-      var element = besogo.svgCircle(svgPos(moveToUse.x),
-                                     svgPos(moveToUse.y),
-                                     current.nextIsBlack() ? "black" : "white",
-                                     20, 4);
+        moveToUse = current.cameFrom.getMoveToGetToVirtualChild(current);
+      let color = current.nextIsBlack() ? "black" : "white";
+      let element = besogo.svgCircle(svgPos(moveToUse.x), svgPos(moveToUse.y), color, 20, 4);
       group.appendChild(element);
       markupLayer[fromXY(moveToUse.x, moveToUse.y)] = element;
+      if (current.diffInfo)
+        if (current.diffInfo.type == DIFF_ADDED)
+          group.appendChild(besogo.svgPlus(svgPos(moveToUse.x), svgPos(moveToUse.y), color));
+        else if (current.diffInfo.type == DIFF_REMOVED)
+          group.appendChild(besogo.svgCross(svgPos(moveToUse.x), svgPos(moveToUse.y), color));
     }
 
     svg.replaceChild(group, markupGroup); // Replace the markup group
     markupGroup = group;
   }
 
+  function redrawNextMovesDiffInfo(group, current)
+  {
+    for (let i = 0; i < current.children.length; ++i)
+      redrawNextMoveDiffInfo(group, current.children[i], current.children[i].move);
+    for (let i = 0; i < current.virtualChildren.length; ++i)
+      redrawNextMoveDiffInfo(group, current.virtualChildren[i].target, current.virtualChildren[i].move);
+  }
+  
+  function redrawNextMoveDiffInfo(group, node, move)
+  {
+    if (!node.diffInfo)
+      return;
+    if (node.diffInfo.type == DIFF_ADDED)
+    {
+      var plus = besogo.svgPlus(svgPos(move.x), svgPos(move.y), 'black');
+      group.appendChild(plus);
+    }
+    else if (node.diffInfo.type == DIFF_REMOVED)
+    {
+      var cross = besogo.svgCross(svgPos(move.x), svgPos(move.y), 'black');
+      group.appendChild(cross);
+    }
+  }
+  
   function redrawNextMoveStatus(group, node, move)
   {
     if (node.status.blackFirst.type == STATUS_NONE)
@@ -569,82 +597,84 @@ besogo.makeBoardDisplay = function(container, editor, corner)
     for (let i = 0; i < current.virtualChildren.length; ++i)
       redrawNextMoveStatus(group, current.virtualChildren[i].target, current.virtualChildren[i].move);
   }
-	
+  
   function displayHoverCoord(c=-1)
   {
-	let x = -1;
-	let y = -1;
-	if(c!=-1)
-	{
-		let c1 = c.charAt(0).toUpperCase();
-		let c2 = c.substring(1);	
-		c1 = c1.charCodeAt(0)-65;
-		if(c1>7)
-			c1--;
-		c2 = besogo.scaleParameters['boardCoordSize']-c2;
-		
-		x = c1;
-		y = c2;
-		
-		if(besogo.coordArea['lowestX']>besogo.coordArea['highestX'])
-		{
-			buffer = besogo.coordArea['lowestX'];
-			besogo.coordArea['lowestX'] = besogo.coordArea['highestX'];
-			besogo.coordArea['highestX'] = buffer;
-		}
-		if(besogo.coordArea['lowestY']>besogo.coordArea['highestY'])
-		{
-			buffer = besogo.coordArea['lowestY'];
-			besogo.coordArea['lowestY'] = besogo.coordArea['highestY'];
-			besogo.coordArea['highestY'] = buffer;
-		}
-		
-		let found = false;
-		let spin = 0;
-		while(spin<4)
-		{
-			if(!found)
-			{
-				if(spin==1 || spin==3)
-				{
-					if(besogo.scaleParameters['boardCanvasSize']!=='horizontal half board')
-						x = besogo.scaleParameters['boardCoordSize'] - x - 1;
-					else
-						y = besogo.scaleParameters['boardCoordSize'] - y - 1;
-				}
-				else if(spin==2)
-					y = besogo.scaleParameters['boardCoordSize'] - y - 1;
-				if(x>=besogo.coordArea['lowestX'] && x<=besogo.coordArea['highestX'] && y>=besogo.coordArea['lowestY'] && y<=besogo.coordArea['highestY'])
-					found = true;
-			}
-			spin++;
-		}
-	}
+    let x = -1;
+    let y = -1;
+    if(c!=-1)
+    {
+      let c1 = c.charAt(0).toUpperCase();
+      let c2 = c.substring(1);  
+      c1 = c1.charCodeAt(0)-65;
+      if(c1>7)
+        c1--;
+      c2 = besogo.scaleParameters['boardCoordSize']-c2;
+      
+      x = c1;
+      y = c2;
+      
+      if (besogo.coordArea['lowestX']>besogo.coordArea['highestX'])
+      {
+        buffer = besogo.coordArea['lowestX'];
+        besogo.coordArea['lowestX'] = besogo.coordArea['highestX'];
+        besogo.coordArea['highestX'] = buffer;
+      }
+      if (besogo.coordArea['lowestY']>besogo.coordArea['highestY'])
+      {
+        buffer = besogo.coordArea['lowestY'];
+        besogo.coordArea['lowestY'] = besogo.coordArea['highestY'];
+        besogo.coordArea['highestY'] = buffer;
+      }
+      
+      let found = false;
+      let spin = 0;
+      while (spin<4)
+      {
+        if (!found)
+        {
+          if (spin==1 || spin==3)
+            if (besogo.scaleParameters['boardCanvasSize']!=='horizontal half board')
+              x = besogo.scaleParameters['boardCoordSize'] - x - 1;
+            else
+              y = besogo.scaleParameters['boardCoordSize'] - y - 1;
+          else if (spin==2)
+            y = besogo.scaleParameters['boardCoordSize'] - y - 1;
+          if (x >= besogo.coordArea['lowestX'] && x <= besogo.coordArea['highestX'] && y >= besogo.coordArea['lowestY'] && y <= besogo.coordArea['highestY'])
+            found = true;
+        }
+        spin++;
+      }
+    }
+
     var group = besogo.svgEl("g");
     var circleSize = 15;
-	if(editor.getReviewMode()){
-		var current = editor.getCurrent();
-		for (let i = 0; i < current.children.length; ++i)
-		{
-		  var child = current.children[i];
-		  var element = besogo.svgFilledCircle(svgPos(child.move.x), svgPos(child.move.y), child.getCorrectColor(), circleSize);
-		  group.appendChild(element);
-		}
-		if (current.virtualChildren)
-		  for (let i = 0; i < current.virtualChildren.length; ++i)
-		  {
-			var redirect = current.virtualChildren[i];
-			var element = besogo.svgFilledCircle(svgPos(redirect.move.x), svgPos(redirect.move.y), redirect.target.getCorrectColor(), virtualCircleSize);
-			group.appendChild(element);
-		  }
-	} 
-	if(x!=-1){
-		x+=1;
-		y+=1;
-		var element = besogo.svgFilledCircle(svgPos(x), svgPos(y), "blue", circleSize); 
-	}else{
-		var element = besogo.svgFilledCircle(1, 1, "red", 0); 
-	}		
+    if(editor.getReviewMode())
+    {
+      var current = editor.getCurrent();
+      for (let i = 0; i < current.children.length; ++i)
+      {
+        var child = current.children[i];
+        var element = besogo.svgFilledCircle(svgPos(child.move.x), svgPos(child.move.y), child.getCorrectColor(), circleSize);
+        group.appendChild(element);
+      }
+      if (current.virtualChildren)
+        for (let i = 0; i < current.virtualChildren.length; ++i)
+        {
+          var redirect = current.virtualChildren[i];
+          var element = besogo.svgFilledCircle(svgPos(redirect.move.x), svgPos(redirect.move.y), redirect.target.getCorrectColor(), virtualCircleSize);
+          group.appendChild(element);
+        }
+    }
+
+    if (x!=-1)
+    {
+      x+=1;
+      y+=1;
+      var element = besogo.svgFilledCircle(svgPos(x), svgPos(y), "blue", circleSize); 
+    }
+    else
+      var element = besogo.svgFilledCircle(1, 1, "red", 0); 
     group.appendChild(element);
     svg.replaceChild(group, nextMoveGroup); // Replace the markup group
     nextMoveGroup = group;
@@ -671,6 +701,7 @@ besogo.makeBoardDisplay = function(container, editor, corner)
           group.appendChild(element);
         }
       redrawNextMoveStatuses(group, current);
+      redrawNextMovesDiffInfo(group, current);
     }
     svg.replaceChild(group, nextMoveGroup); // Replace the markup group
     nextMoveGroup = group;
