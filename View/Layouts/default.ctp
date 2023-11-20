@@ -387,6 +387,7 @@
 		<a href="/users/authors">About</a><br><br><br>
 	</div>
 	<?php
+	if(isset($_SESSION['loggedInUser']['User']['id'])){
 		$xpBonus = 0;
 		for($i=0;$i<count($achievementUpdate);$i++){
 			echo '
@@ -410,6 +411,7 @@
 		if($_SESSION['loggedInUser']['User']['xp']+$xpBonus>=$_SESSION['loggedInUser']['User']['nextlvl']){
 			$increaseValue = 100;
 		}else $increaseValue = 50;
+	}
 	?>
 	<script type="text/javascript">
 	<?php

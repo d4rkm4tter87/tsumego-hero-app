@@ -635,6 +635,7 @@ class TsumegosController extends AppController{
 			$array = $this->commentCoordinates($co[$i]['Comment']['status'], $counter1, true);
 			$co[$i]['Comment']['status'] = $array[0];
 			array_push($commentCoordinates, $array[1]);
+			$co[$i]['Comment']['message'] = htmlspecialchars($co[$i]['Comment']['message']);
 			$counter1++;
 		}
 		$idMap = array();

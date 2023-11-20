@@ -256,6 +256,7 @@ class CommentsController extends AppController{
 					array_push($yourc, $yourComments[$i]);
 				}
 			}
+			$yourComments[$i]['Comment']['message'] = htmlspecialchars($yourComments[$i]['Comment']['message']);
 		}
 		if($yourreverseOrder){
 			$yourc = array_reverse($yourc);
@@ -278,15 +279,6 @@ class CommentsController extends AppController{
 				$yourComments[$i]['Comment']['set'] = $s['Set']['title'];
 				$yourComments[$i]['Comment']['set2'] = $s['Set']['title2'];
 				$yourComments[$i]['Comment']['num'] = $t['Tsumego']['num'];
-				/*
-				$date = new DateTime($yourComments[$i]['Comment']['created']);
-				$month = date("F", strtotime($yourComments[$i]['Comment']['created']));
-				$tday = $date->format('d. ');
-				$tyear = $date->format('Y');
-				$tClock = $date->format('H:i');
-				if($tday[0]==0) $tday = substr($tday, -3);
-				$yourComments[$i]['Comment']['created'] = $tday.$month.' '.$tyear.'<br>'.$tClock;
-				*/
 				if($s!=null){
 					array_push($yourComments2, $yourComments[$i]);
 				}
@@ -307,9 +299,11 @@ class CommentsController extends AppController{
 		
 		for($i=0; $i<count($c); $i++){
 			$c[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $c[$i]['Comment']['message']);
+			$c[$i]['Comment']['message'] = htmlspecialchars($c[$i]['Comment']['message']);
 		}
 		for($i=0; $i<count($comments); $i++){
 			$comments[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $comments[$i]['Comment']['message']);
+			$comments[$i]['Comment']['message'] = htmlspecialchars($comments[$i]['Comment']['message']);
 		}
 		for($i=0; $i<count($yourc); $i++){
 			$yourc[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $yourc[$i]['Comment']['message']);

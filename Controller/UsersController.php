@@ -510,7 +510,7 @@ Joschka Zimdars';
 				'tsumego_id <=' => 19761
 			)));
 		}else{
-			$ur = $this->TsumegoAttempt->find('all', array('order' => 'created DESC', 'conditions' => array('user_id' => $uid)));
+			$ur = $this->TsumegoAttempt->find('all', array('limit' => 500, 'order' => 'created DESC', 'conditions' => array('user_id' => $uid)));
 		}	
 		 
 		for($i=0; $i<count($ur); $i++){
