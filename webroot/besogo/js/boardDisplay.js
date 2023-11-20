@@ -140,8 +140,8 @@ besogo.makeBoardDisplay = function(container, editor, corner)
     boardWidth = 2*BOARD_MARGIN + sizeX*CELL_SIZE;
     boardHeight = 2*BOARD_MARGIN + sizeY*CELL_SIZE;
 
-    let modifiedSizeX = besogo.scaleParameters['highestX'];
-    let modifiedSizeY = besogo.scaleParameters['highestY'];
+    let modifiedSizeX = besogo.scaleParameters.highest.x;
+    let modifiedSizeY = besogo.scaleParameters.highest.y;
 
     if (besogo.scaleParameters['orientation']!=='full-board')
     {
@@ -176,14 +176,14 @@ besogo.makeBoardDisplay = function(container, editor, corner)
       board_margin_x = BOARD_MARGIN - 75;
       board_margin_y = BOARD_MARGIN - 75;
 
-      modifiedSizeX = besogo.scaleParameters['highestX'];
-      modifiedSizeY = besogo.scaleParameters['highestY'];
+      modifiedSizeX = besogo.scaleParameters.highest.x;
+      modifiedSizeY = besogo.scaleParameters.highest.y;
 
-      if (besogo.scaleParameters['highestX'] !== 19)
+      if (besogo.scaleParameters.highest.x !== 19)
         numberOfXEdges = 1;
       else
         numberOfXEdges = 2;
-      if(besogo.scaleParameters['highestY'] !== 19)
+      if(besogo.scaleParameters.highest.y !== 19)
         numberOfYEdges = 1;
       else
         numberOfYEdges = 2;

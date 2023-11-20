@@ -579,18 +579,18 @@
       besogo.scaleParameters['orientation'] = 'top-left';
 
     //enlarge area based on places stones
-    if (besogo.scaleParameters['highestX'] >= 10)
-      besogo.scaleParameters['highestX'] = 19;
+    if (besogo.scaleParameters.highest.x >= 10)
+      besogo.scaleParameters.highest.x = 19;
     else
-      besogo.scaleParameters['highestX'] += 3;
-    if(besogo.scaleParameters['highestY'] >= 14)
-      besogo.scaleParameters['highestY'] = 19;
+      besogo.scaleParameters.highest.x += 3;
+    if(besogo.scaleParameters.highest.y >= 14)
+      besogo.scaleParameters.highest.y = 19;
     else
-      besogo.scaleParameters['highestY'] += 3;
+      besogo.scaleParameters.highest.y += 3;
 
-    if(besogo.scaleParameters['highestX']===19 && besogo.scaleParameters['highestY']!==19)
+    if(besogo.scaleParameters.highest.x===19 && besogo.scaleParameters.highest.y!==19)
       besogo.scaleParameters['boardCanvasSize'] = 'horizontal half board';
-    else if(besogo.scaleParameters['highestX']!==19 && besogo.scaleParameters['highestY']===19)
+    else if(besogo.scaleParameters.highest.x!==19 && besogo.scaleParameters.highest.y===19)
       besogo.scaleParameters['boardCanvasSize'] = 'vertical half board';
     else
       besogo.scaleParameters['boardCanvasSize'] = 'regular board';

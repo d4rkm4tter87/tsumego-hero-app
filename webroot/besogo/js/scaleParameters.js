@@ -6,10 +6,8 @@ besogo.makeScaleParameters = function(size)
 
   scaleParameters.clear = function(size)
   {
-    this.lowestX = size.x;
-    this.lowestY = size.y;
-    this.highestX = 0;
-    this.highestY = 0;
+    this.lowest = structuredClone(size);
+    this.highest = {x: 0, y: 0};
     this.orientation = '';
     this.distToX0 = 0;
     this.distToX19 = 0;
@@ -22,10 +20,10 @@ besogo.makeScaleParameters = function(size)
   {
     this.setupLimitsFromTreeInternal(node, transformation, size);
 
-    this.distToX0 = Math.abs(1 - this.lowestX);
-    this.distToX19 = size.x - this.highestX;
-    this.distToY0 = Math.abs(1 - this.lowestY);
-    this.distToY19 = size.x - this.highestY;
+    this.distToX0 = Math.abs(1 - this.lowest.x);
+    this.distToX19 = size.x - this.highest.x;
+    this.distToY0 = Math.abs(1 - this.lowest.y);
+    this.distToY19 = size.x - this.highest.y;
   }
 
   scaleParameters.setupLimitsFromTreeInternal = function(node, transformation, size)
@@ -41,14 +39,14 @@ besogo.makeScaleParameters = function(size)
 
   scaleParameters.addPosition = function(position)
   {
-    if (position.x < this.lowestX)
-      this.lowestX = position.x;
-    if (position.x > this.highestX)
-      this.highestX = position.x;
-    if (position.y < this.lowestY)
-      this.lowestY = position.y;
-    if (position.y > this.highestY)
-      this.highestY = position.y
+    if (position.x < this.lowest.x)
+      this.lowest.x = position.x;
+    if (position.x > this.highest.x)
+      this.highest.x = position.x;
+    if (position.y < this.lowest.y)
+      this.lowest.y = position.y;
+    if (position.y > this.highest.y)
+      this.highest.y = position.y
   }
 
   scaleParameters.isOnTheRight = function()
