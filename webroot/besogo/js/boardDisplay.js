@@ -143,7 +143,7 @@ besogo.makeBoardDisplay = function(container, editor, corner)
     let modifiedSizeX = besogo.scaleParameters['highestX'];
     let modifiedSizeY = besogo.scaleParameters['highestY'];
 
-    if (besogo.scaleParameters['orientation']!=='full-board')
+    if (besogo.scaleParameters['orientation'] !== 'full-board')
     {
       besogo.boardParameters['corner'] = besogo.scaleParameters['orientation'];
       /*
@@ -176,8 +176,11 @@ besogo.makeBoardDisplay = function(container, editor, corner)
       board_margin_x = BOARD_MARGIN - 75;
       board_margin_y = BOARD_MARGIN - 75;
 
-      modifiedSizeX = besogo.scaleParameters['highestX'];
-      modifiedSizeY = besogo.scaleParameters['highestY'];
+      if (besogo.boardParameters['corner'] == 'top-right' || besogo.boardParameters['corner'] == 'bottom-right')
+        modifiedSizeX = besogo.scaleParameters['lowestX'];
+      
+      if (besogo.boardParameters['corner'] == 'bottom-left' || besogo.boardParameters['corner'] == 'bottom-right')
+        modifiedSizeY = besogo.scaleParameters['lowestY'];
 
       if (besogo.scaleParameters['highestX'] !== 19)
         numberOfXEdges = 1;
