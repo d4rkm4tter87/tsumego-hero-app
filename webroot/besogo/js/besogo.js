@@ -362,7 +362,7 @@
     while (container.firstChild) // Remove all children of container
       container.removeChild(container.firstChild);
 
-    if (options.sgf) // Load SGF file from URL or SGF string
+    if (options.sgf && !options.sgf2) // Load SGF file from URL or SGF string
     {
       let validURL = false;
       try
@@ -373,15 +373,7 @@
       try
       {
         if (validURL)
-      //to load by code, not file, options.sgf contains an empty sgf file and options.sgf2 contains the code
-          fetchParseLoad(options.sgf, besogo.editor, options.path, sgfLoaded, options.sgf2);
-        else
-        {
-    /*doesn't work
-          parseAndLoad(options.sgf, besogo.editor);
-          navigatePath(besogo.editor, options.path);
-    */
-        }
+          fetchParseLoad(options.sgf, besogo.editor, options.path, sgfLoaded);
       }
       catch(e)
       {
@@ -393,6 +385,11 @@
     {
       parseAndLoad(insideText, besogo.editor);
       navigatePath(besogo.editor, options.path); // Navigate editor along path
+    }
+    else if (options.sgf2)
+    {
+      sgfLoaded.scaleParameters = parseAndLoad(options.sgf2, besogo.editor);
+      besogo.initPanels(options, container, boardDiv, boardDisplay, sgfLoaded.scaleParameters, corner);
     }
     else // no sgf provided, load the board instantly
       besogo.initPanels(options, container, boardDiv, boardDisplay, besogo.getDefaultScaleParameters(options.size), null);
@@ -679,7 +676,7 @@
   }
 
   // Fetches text file at url from same domain
-  function fetchParseLoad(url, editor, path, sgfLoaded, sgfText=null)
+  function fetchParseLoad(url, editor, path, sgfLoaded)
   {
     var http = new XMLHttpRequest();
 
@@ -687,10 +684,7 @@
     {
       if (http.readyState === 4 && http.status === 200) // Successful fetch
       {
-        if (sgfText !== null)
-          sgfLoaded.scaleParameters = parseAndLoad(sgfText, editor);
-        else
-          sgfLoaded.scaleParameters = parseAndLoad(http.responseText, editor);
+        sgfLoaded.scaleParameters = parseAndLoad(http.responseText, editor);
         navigatePath(editor, path);
       }
     };
