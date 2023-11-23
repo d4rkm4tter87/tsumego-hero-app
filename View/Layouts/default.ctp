@@ -11,12 +11,12 @@
 		if($url['path']=='www.') echo '<script type="text/javascript">window.location.href = "https://tsumego-hero.com'.$_SERVER['REQUEST_URI'].'";</script>';
 		if(isset($_SESSION['redirect']) && $_SESSION['redirect']=='sets'){
 			unset($_SESSION['redirect']);
-			$_SESSION['achievements'] = 'true';
+			$_SESSION['initialLoading'] = 'true';
 			echo '<script type="text/javascript">window.location.href = "/";</script>';
 		}
 		if(isset($_SESSION['redirect']) && $_SESSION['redirect']=='loading'){
 			unset($_SESSION['redirect']);
-			$_SESSION['achievements'] = 'true';
+			$_SESSION['initialLoading'] = 'true';
 			echo '<script type="text/javascript">window.location.href = "/users/loading";</script>';
 		}
 		//if($_SERVER['REMOTE_ADDR'] != '188.104.244.212') echo '<script type="text/javascript">window.location.href = "https://tsumego-hero.com/";</script>';
@@ -28,26 +28,24 @@
 			else echo $_SESSION['title'];
 		?>
 	</title>
-
 	<meta name="description" content="Interactive tsumego database. Solve go problems, get stronger, level up, have fun.">
 	<meta name="keywords" content="tsumego, problems, puzzles, baduk, weiqi, tesuji, life and death, solve, solving, hero, go, in-seong, level" >
 	<meta name="Author" content="Joschka Zimdars">
 	<meta property="og:title" content="Tsumego Hero">
 	<link rel="stylesheet" type="text/css" href="/css/default.css?v=2.8">
 	<?php
-		//echo $_SERVER['REMOTE_ADDR'];
+		if($lightDark=='dark')
+			echo '<link rel="stylesheet" type="text/css" href="/css/dark.css">';
+		
 		echo $this->Html->meta('icon');
-		//echo $this->Html->css('default');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
-
 	?>
-
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script type="text/javascript" src="/dist/jgoboard-latest.js"></script>
+	<script src="/js/dark.js"></script>
 	<?php
-
 		if($mode==1){
 			if(isset($user['User']['level'])) $levelNum = 'Level '.$user['User']['level'];
 			else $levelNum = 1;
@@ -84,7 +82,6 @@
 			elseif($user['User']['elo_rating_mode']>=200) $td = '19k';
 			elseif($user['User']['elo_rating_mode']>=100) $td = '20k';
 			else $td = '20k';
-			//$levelNum = '<p id="bar-0"></p><p id="bar-1">'.$td.'</p><p id="bar-2">&nbsp;(</p><p id="bar-3">'.$user['User']['elo_rating_mode'].'</p><p id="bar-2">)</p>';
 			$levelNum = $td;
 		}elseif($mode==3){
 			$levelNum = '15k';
@@ -104,15 +101,12 @@
 				<img id="logo1" alt="Tsumego Hero" title="Tsumego Hero" src="/img/tsumegoHero1.png" onmouseover="logoHover(this)" onmouseout="logoNoHover(this)" height="55px">
 			</a>
 		</div>
-
 		<div class="outerMenu1">
 			<?php
 				if(isset($_SESSION['lastVisit'])) $lv = $_SESSION['lastVisit'];
 				else $lv = '15352';
 
 				if(isset($_SESSION['loggedInUser'])){
-
-
 					if($_SESSION['loggedInUser']['User']['premium']>=1) $sand = 'onmouseover="sandboxHover()" onmouseout="sandboxNoHover()"';
 					else $sand = '';
 					if($_SESSION['loggedInUser']['User']['premium']>=1) $leaderboard = 'onmouseover="leaderboardHover()" onmouseout="leaderboardNoHover()"';
@@ -121,7 +115,6 @@
 					$sand = '';
 					$leaderboard = '';
 				}
-
 				$homeA = '';
 				$collectionsA = '';
 				$playA = '';
@@ -153,7 +146,6 @@
 				if($_SESSION['page'] == 'home') $homeA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'set') $collectionsA = 'style="color:#74d14c;"';
 				else if($_SESSION['page']=='play' || $_SESSION['page']=='level mode' || $_SESSION['page']=='rating mode' || $_SESSION['page']=='time mode'){
-					//$playA = 'style="color:#74d14c;"';
 					$refreshLinkToStart = 'id="refreshLinkToStart"';
 					$refreshLinkToSets = 'id="refreshLinkToSets"';
 					$refreshLinkToHighscore = 'id="refreshLinkToHighscore"';
@@ -182,22 +174,14 @@
 				}else{
 					$nextMode['Tsumego']['id'] = 15352;
 				}
-				//echo $_SESSION['page'];
-				//echo '<li><a '.$refreshLinkToStart.' class="menuLi" '.$homeA.' href="/">Home</a></li>';
-				//echo '<li><a '.$refreshLinkToSets.' class="menuLi" '.$collectionsA.' id="collectionsInMenu" '.$sand.' href="/sets">Collections</a></li>';
-				//if(true)/*if(!$ac)*/ echo '<li><a class="menuLi" '.$playA.' href="/tsumegos/play/'.$lv.'">Play</a></li>';
-				//else echo '<li><a class="menuLi" '.$playA.' href="/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2">Play</a></li>';
-				//echo '<li><a '.$refreshLinkToHighscore.' class="menuLi" '.$highscoreA.' id="highscoreInMenu" '.$leaderboard.' href="/users/'.$highscoreLink.'">Highscore</a></li>';
 				if(isset($_SESSION['loggedInUser'])){
 					if($_SESSION['loggedInUser']['User']['isAdmin']==0) $discussFilter = '';
 					else $discussFilter = '?filter=false';
 					if($_SESSION['loggedInUser']['User']['completed']==1 || $_SESSION['loggedInUser']['User']['premium']>=1){
-					//echo '<li><a '.$refreshLinkToSandbox.' class="menuLi" id="sandbox-menu" '.$sandboxA.' href="/sets/beta">Sandbox</a></li>';
 					}else{
 						$refreshLinkToSandboxBackup = '<a id="refreshLinkToSandbox"></a>';
 					}
 					if($_SESSION['loggedInUser']['User']['premium']>=1){
-					//echo '<li><a '.$refreshLinkToLeaderboard.' class="menuLi" id="leaderboard-menu" '.$leaderboardA.' href="/users/leaderboard">Leaderboard</a></li>';
 					}else{
 						$refreshLinkToLeaderboardBackup = '<a id="refreshLinkToLeaderboard"></a>';
 					}
@@ -213,7 +197,6 @@
 					echo '<ul class="newMenuLi1">';
 						echo '<li><a id="tutorialLink" href="/sites/websitefunctions" '.$websitefunctionsA.'>Functions & Modes</a></li>';
 						echo '<li><a id="tutorialLink" href="/sites/gotutorial" '.$gotutorialA.'>Go Rules</a></li>';
-						//echo '<li><a id="tutorialLink" href="/sites/gotutorial" '.$gotutorialA.'>Go Tutorial</a></li>';
 						echo '<li><a href="/users/authors" '.$aboutA.'>About</a></li>';
 					echo '</ul>';
 					echo '</li>';
@@ -250,7 +233,9 @@
 					echo '</ul>';
 					if(isset($_SESSION['loggedInUser'])) echo '<li><a  '.$refreshLinkToDiscuss.'  '.$discussA.'href="/comments'.$discussFilter.'">Discuss</a></li>';
 					else echo '<li><a style="color:#aaa;">Discuss</a></li>';
-					echo '<li class="menuIcons1"><a href="#" id="soundButton" onclick="changeSound(); return false;"><img id="soundButtonImage" src="/img/sound-icon1.png" width="25px"></a></li>';
+					echo '<li class="menuIcons1">
+						<a href="#" id="soundButton" onclick="changeSound(); return false;"><img id="soundButtonImage" src="/img/sound-icon1.png" width="25px"></a>
+					</li>';
 					?>
 					<li class="menuIcons1">
 							<div class="dropdown">
@@ -294,8 +279,16 @@
 									</div>
 								</div>
 							</div>
-
 					</li>
+					<?php
+					if($lightDark=='dark')
+						$lightDarkImage = 'dark-icon1';
+					else
+						$lightDarkImage = 'light-icon1';
+					echo '<li class="menuIcons1">
+						<a class="menuIcons2" id="darkButton" onclick="darkAndLight();"><img id="darkButtonImage" src="/img/'.$lightDarkImage.'.png" width="30px"></a>
+					</li>';
+					?>
 				</ul>
 			</nav>
 		</div>
@@ -314,8 +307,6 @@
 	</div>
 	<?php
 		if(isset($_SESSION['loggedInUser']) && isset($_SESSION['loggedInUser']['User']['id'])){
-			//if($_SESSION['loggedInUser']['User']['id']!=72){
-			//echo '<pre>';print_r($_SESSION['loggedInUser']);echo '</pre>';
 			echo '
 				<div id="account-bar-wrapper" onmouseover="xpHover()" onmouseout="xpNoHover()">
 					  <div id="account-bar">
@@ -351,10 +342,8 @@
 					<li><a href="/users/logout">Sign Out</a></li>
 				</div>
 			';
-
 		}
 	?>
-
 	<div width="100%" align="left" class="whitebox2">
 		<?php
 			$setHeight = '';
@@ -371,8 +360,6 @@
 	</div>
 	</div>
 	<div id="footer" class="footerLinks"><br>
-	
-	
 	<?php if(isset($_SESSION['loggedInUser'])){ ?>
 	<?php if($_SESSION['loggedInUser']['User']['premium']==0 && $user['User']['id']!=1165){ ?>
 		<div align="center"><a href="/users/donate"><img id="donateH2" onmouseover="donateHover2()" onmouseout="donateNoHover2()" width="180px" src="/img/donateButton1.png"></a><br></div><br>
@@ -407,7 +394,6 @@
 			';
 			$xpBonus += $achievementUpdate[$i][4];
 		}
-		
 		if($_SESSION['loggedInUser']['User']['xp']+$xpBonus>=$_SESSION['loggedInUser']['User']['nextlvl']){
 			$increaseValue = 100;
 		}else $increaseValue = 50;
@@ -424,15 +410,22 @@
 			';
 		}
 	?>
-	
-	
+	let light = true;
+	<?php 
+	if($lightDark=='dark'){
+		echo 'light = false;'; 
+		if($_SESSION['page']=='home'){
+			echo '$("#darkButtonImage2").attr("src","/img/dark-icon1.png");';
+			echo '$("#darkButtonImage3").attr("src","/img/dark-icon1.png");';
+		}
+	}
+	?>
     function updateSoundValue(value)
     {
       if (typeof besogo !== 'undefined')
         besogo.editor.setSoundEnabled(value);
       soundsEnabled = value;
     }
-
 		usedModeSwitch = false;
 		document.cookie = "score=0";
 		document.cookie = "misplay=0";
@@ -455,6 +448,11 @@
 		document.cookie = "correctNoPoints=0";
 		document.cookie = "ui=0";
 		document.cookie = "requestProblem=0";
+		document.cookie = "lightDark=<?php echo $lightDark; ?>;path=/";
+		document.cookie = "lightDark=<?php echo $lightDark; ?>;path=/sets/view";
+		document.cookie = "lightDark=<?php echo $lightDark; ?>;path=/tsumegos/play";
+		document.cookie = "lightDark=<?php echo $lightDark; ?>;path=/users";
+		document.cookie = "lightDark=<?php echo $lightDark; ?>;path=/users/view";
 
 		<?php
 			if(isset($textureCookies)){
@@ -474,9 +472,7 @@
 		var soundValue = 0;
 		<?php
 		echo 'soundValue = "'.$_SESSION['loggedInUser']['User']['sound'].'";';
-
-		} 
-    else echo 'soundValue = getCookie("sound");';
+		}else echo 'soundValue = getCookie("sound");';
     ?>
     updateSoundValue(soundValue == 'on');
 
@@ -686,19 +682,30 @@
 		function changeSound(){
 			if(getCookie("sound")=="off"){
 				document.getElementById("soundButtonImage").src="/img/sound-icon1.png";
-				document.cookie = "sound=on";
-        updateSoundValue(true);
+				document.cookie = "sound=on;path=/";
+				document.cookie = "sound=on;path=/sets/view";
+				document.cookie = "sound=on;path=/tsumegos/play";
+				document.cookie = "sound=on;path=/users";
+				document.cookie = "sound=on;path=/users/view";
+				updateSoundValue(true);
 			}else if(getCookie("sound")=="on"){
 				document.getElementById("soundButtonImage").src="/img/sound-icon2.png";
-				document.cookie = "sound=off";
-        updateSoundValue(false);
+				document.cookie = "sound=off;path=/";
+				document.cookie = "sound=off;path=/sets/view";
+				document.cookie = "sound=off;path=/tsumegos/play";
+				document.cookie = "sound=off;path=/users";
+				document.cookie = "sound=off;path=/users/view";
+				updateSoundValue(false);
 			}else{
 				document.getElementById("soundButtonImage").src="/img/sound-icon2.png";
-				document.cookie = "sound=off";
-        updateSoundValue(false);
+				document.cookie = "sound=off;path=/";
+				document.cookie = "sound=off;path=/sets/view";
+				document.cookie = "sound=off;path=/tsumegos/play";
+				document.cookie = "sound=off;path=/users";
+				document.cookie = "sound=off;path=/users/view";
+				updateSoundValue(false);
 			}
 		}
-
 		function getCookie(cname){
 			var name = cname + "=";
 			var decodedCookie = decodeURIComponent(document.cookie);
@@ -832,7 +839,11 @@
 					clearInterval(timer);
 				}
 			}, stepTime);
-		}
+		}//
 	</script>
+	<?php
+	if(!isset($_SESSION['loggedInUser']['User']['id']))
+		echo '<style>.outerMenu1{left: 224px;}</style>';
+	?>
 </body>
 </html>

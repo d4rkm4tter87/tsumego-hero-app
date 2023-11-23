@@ -614,6 +614,7 @@ class TsumegosController extends AppController{
 		$co = $this->Comment->find('all', array('conditions' => (array('tsumego_id' => $id))));
 		$counter1 = 1;
 		for($i=0; $i<count($co); $i++){
+			$co[$i]['Comment']['message'] = htmlspecialchars($co[$i]['Comment']['message']);
 			$cou = $this->User->findById($co[$i]['Comment']['user_id']);
 			$co[$i]['Comment']['user'] = $cou['User']['name'];
 			$cad = $this->User->findById($co[$i]['Comment']['admin_id']);
@@ -635,7 +636,6 @@ class TsumegosController extends AppController{
 			$array = $this->commentCoordinates($co[$i]['Comment']['status'], $counter1, true);
 			$co[$i]['Comment']['status'] = $array[0];
 			array_push($commentCoordinates, $array[1]);
-			$co[$i]['Comment']['message'] = htmlspecialchars($co[$i]['Comment']['message']);
 			$counter1++;
 		}
 		$idMap = array();

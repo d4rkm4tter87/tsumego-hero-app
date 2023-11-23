@@ -3,9 +3,6 @@
 .besogo-svg-board {
     fill: none;
 }
-.besogo-svg-backer {
-    fill: #ebb660;
-}
 .besogo-board {
     background: url("../img/texture33.jpg");
     background-size: cover;

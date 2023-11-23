@@ -121,7 +121,6 @@ besogo.makeTreePanel = function(container, editor)
         path,
         childPath,
         i; // Scratch iteration variable
-
 	if(!nodesInitialized)
 	{
 		besogo.nodes.push(node);
@@ -213,10 +212,8 @@ besogo.makeTreePanel = function(container, editor)
         fill: besogo.TURQ
     });
     element.onclick = function() {
-		//console.log(node);
 		editor.setCurrent(node);
 	};
-
     node.navTreeMarker = element; // Save selection marker in node
     setSelectionMarker(element); // Add as and set selection marker properties
   }

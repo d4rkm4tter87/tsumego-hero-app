@@ -1332,16 +1332,17 @@ class AppController extends Controller{
 		session_set_cookie_params(7200000);
 
 		$highscoreLink = 'highscore';
+		$lightDark = 'light';
+		
     	if(isset($_SESSION['loggedInUser'])){
 			if($_SESSION['loggedInUser']['User']['id']==33) unset($_SESSION['loggedInUser']);
             $loggedInUser = $_SESSION['loggedInUser'];
             $this->set('loggedInUser', $loggedInUser);
     	}
-		
 		if(isset($_SESSION['loggedInUser']['User']) && !isset($_SESSION['loggedInUser']['User']['id'])) unset($_SESSION['loggedInUser']);
 		
 		$u = null;
-		if(isset($_SESSION['loggedInUser'])){
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			$u =  $this->User->findById($_SESSION['loggedInUser']['User']['id']);
 			if($u['User']['lastHighscore']==1) $highscoreLink = 'highscore';
 			elseif($u['User']['lastHighscore']==2) $highscoreLink = 'rating';
@@ -1360,9 +1361,12 @@ class AppController extends Controller{
 				$this->User->save($u);
 				unset($_COOKIE['sound']);
 			}
-			
 			$this->set('ac', true);
 			$this->set('user', $u);
+		}
+		
+		if(isset($_COOKIE['lightDark']) && $_COOKIE['lightDark'] != '0'){
+			$lightDark = $_COOKIE['lightDark'];
 		}
 		
 		$mode = 1;
@@ -1572,33 +1576,19 @@ class AppController extends Controller{
 		}
 		
 		$achievementUpdate = array();
-		if(isset($_SESSION['achievements'])){
+		if(isset($_SESSION['initialLoading'])){
 			$achievementUpdate1 = $this->checkLevelAchievements();
 			$achievementUpdate2 = $this->checkProblemNumberAchievements();
 			$achievementUpdate3 = $this->checkRatingAchievements();
 			$achievementUpdate4 = $this->checkTimeModeAchievements();
 			$achievementUpdate = array_merge($achievementUpdate1, $achievementUpdate2, $achievementUpdate3, $achievementUpdate4);
-			unset($_SESSION['achievements']);
+			
+			unset($_SESSION['initialLoading']);
 		}
-		
-		/*
 		//echo '<pre>'; print_r($_SESSION['loggedInUser']['User']['lastHighscore']); echo '</pre>';
-		$ra = null;
-		$crs = 0;
-		$crsAll = 0;
-		if($_SESSION['loggedInUser']['User']['mode'] == 3){
-			$ra = $this->Rank->find('all', array('conditions' => array('session' => $_SESSION['loggedInUser']['User']['activeRank'])));
-			for($i=0;$i<count($ra);$i++){
-				if($ra[$i]['Rank']['result']=='solved') $crs++;
-				$crsAll++;
-			}
-		}
 		
-		echo '<pre>'; print_r($crsAll); echo '</pre>';
-		echo '<pre>'; print_r($ra[0]['Rank']['rank']); echo '</pre>';
-		*/
-		
-		if(count($achievementUpdate)>0) $this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
+		if(count($achievementUpdate)>0) 
+			$this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
 		
 		$nextDay = new DateTime('tomorrow');
 		$this->set('mode', $mode);
@@ -1608,6 +1598,7 @@ class AppController extends Controller{
 		$this->set('boardPositions', $boardPositions);
 		$this->set('highscoreLink', $highscoreLink);
 		$this->set('achievementUpdate', $achievementUpdate);
+		$this->set('lightDark', $lightDark);
     }
 	
 	function afterFilter(){

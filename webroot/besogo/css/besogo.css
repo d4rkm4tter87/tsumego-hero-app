@@ -1,7 +1,6 @@
 .besogo-container {
     outline: none;
     display: flex;
-    background: #fff;
 }
 
 .besogo-container * {
@@ -22,7 +21,10 @@
 
 .besogo-container input[type='button'] {
     background: #d8dcd6;
-    border-color: #ffffff #e6e6e6 #e6e6e6 #ffffff;
+    border-top: 1px solid #CCCCCC;
+	border-right: 1px solid #333333;
+	border-bottom: 1px solid #333333;
+	border-left: 1px solid #CCCCCC;
 }
 
 .besogo-container input[type='text'] {

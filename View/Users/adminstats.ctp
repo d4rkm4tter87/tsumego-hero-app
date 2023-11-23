@@ -22,8 +22,8 @@
 		echo '</tr>';
 		echo '<tr>
 			<td></td>
-			<td>'.$aa1[$i]['AdminActivity']['name'].': '.$aa1[$i]['AdminActivity']['file'].'</td>
-			<td>'.$aa1[$i]['AdminActivity']['answer'].'</td>
+			<td class="adminText">'.$aa1[$i]['AdminActivity']['name'].': '.$aa1[$i]['AdminActivity']['file'].'</td>
+			<td class="adminText">'.$aa1[$i]['AdminActivity']['answer'].'</td>
 		</tr>';
 		echo '<tr><td>';
 		if(count($aa1)-1!=$i) echo '<hr>';
@@ -44,7 +44,7 @@
 		</tr>';
 		echo '<tr>
 			<td></td>
-			<td><b style="color:grey;">'.$ca['type'][$i].'</b><br>'.$ca['name'][$i].': '.$ca['answer'][$i].'</td>
+			<td><b style="color:grey;">'.$ca['type'][$i].'</b><br><p class="adminText">'.$ca['name'][$i].': '.$ca['answer'][$i].'</p></td>
 			<td></td>
 		</tr>';
 		echo '<tr><td>';

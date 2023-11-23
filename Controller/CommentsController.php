@@ -243,8 +243,6 @@ class CommentsController extends AppController{
 						if($au['User']['name']=='Morty') $au['User']['name'] = 'Admin';
 						$yourComments[$i]['Comment']['admin_name'] = $au['User']['name'];
 					}
-					
-						
 						$date = new DateTime($yourComments[$i]['Comment']['created']);
 						$month = date("F", strtotime($yourComments[$i]['Comment']['created']));
 						$tday = $date->format('d. ');
@@ -298,12 +296,12 @@ class CommentsController extends AppController{
 		$currentPositionPlaceholder = '<img src="/img/positionIcon1.png" class="positionIcon1" style="cursor:context-menu;">';
 		
 		for($i=0; $i<count($c); $i++){
-			$c[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $c[$i]['Comment']['message']);
 			$c[$i]['Comment']['message'] = htmlspecialchars($c[$i]['Comment']['message']);
+			$c[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $c[$i]['Comment']['message']);
 		}
 		for($i=0; $i<count($comments); $i++){
-			$comments[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $comments[$i]['Comment']['message']);
 			$comments[$i]['Comment']['message'] = htmlspecialchars($comments[$i]['Comment']['message']);
+			$comments[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $comments[$i]['Comment']['message']);
 		}
 		for($i=0; $i<count($yourc); $i++){
 			$yourc[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $yourc[$i]['Comment']['message']);

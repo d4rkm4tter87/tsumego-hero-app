@@ -221,12 +221,7 @@
 	
 	</div>
 	<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-	<div class="homeCenter2" >
-	<div class="homeCenter3" >
-	<br>
 	
-	<br>
-	</div></div>
 	<script>
 	function delUts(){
 		var dNum = "<?php echo $dNum; ?>";

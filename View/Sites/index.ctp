@@ -25,8 +25,7 @@
 		
 		<div class="new1">
 		<?php
-			//echo '<pre>';print_r($scheduleTsumego);echo '</pre>';
-		if(count($scheduleTsumego)!=0){	
+		if(count($scheduleTsumego)!=0){
 			echo '<font color="#444">Added today:</font><br>';
 			if(count($scheduleTsumego)<=1){
 				echo '<a style="color:#000;" href="/sets/view/'.$newT['Tsumego']['set_id'].'"><b>
@@ -82,14 +81,27 @@
 			*/
 		?>		
 			
-		<?php if(count($scheduleTsumego)!=0) echo '<br>'; ?>
-		<br><br>
+		<?php if(count($scheduleTsumego)!=0) echo '<br><br><br>';
+		else echo ''; 
+		?>
 		<font color="#444">Most popular today:</font><br>
-		<a style="color:#000;" href="/sets/view/<?php echo $totd['Tsumego']['set_id']; ?>"><b><?php echo $totd['Tsumego']['set'].' '.$totd['Tsumego']['set2']; ?></b> - <?php echo $totd['Tsumego']['num']; ?></a><br>
+		<a href="/sets/view/<?php echo $totd['Tsumego']['set_id']; ?>"><b><?php echo $totd['Tsumego']['set'].' '.$totd['Tsumego']['set2']; ?></b> - <?php echo $totd['Tsumego']['num']; ?></a><br>
 			<li class="set<?php echo $totd['Tsumego']['status']; ?>1" style="margin-top:4px;">
 				<a href="/tsumegos/play/<?php echo $totd['Tsumego']['id']; ?>"><?php echo $totd['Tsumego']['num']; ?></a>
 			</li>
 			<br><br>
+		</div>
+		<p class="title4">Update 23.11.2023</p>
+		<div class="new1">
+		<br>
+		<div align="center">
+		<a class="menuIcons2" id="darkButton2" onclick="darkAndLight();"><img id="darkButtonImage2" src="/img/light-icon1.png" width="30px"></a>
+		<h1 class="darkButton2">Dark Theme</h1>
+		<a class="menuIcons2" id="darkButton3" onclick="darkAndLight();"><img id="darkButtonImage3" src="/img/light-icon1.png" width="30px"></a>
+		</div>
+		<br>
+		<br>
+		<br>
 		</div>
 		<p class="title4">Update 06.11.2023</p>
 		<div class="new1">
@@ -486,13 +498,10 @@
 		<p class="title4">User of the Day </p>
 		<div class="new1">
 		<div class="uotd mid uotd<?php echo $uotdbg; ?> mid<?php echo $uotdbg; ?> ">
-		  <h2 <?php if(strlen($userOfTheDay)>=10) echo 'class="midLongName1"'; ?>><?php echo $userOfTheDay; ?></h2>
+		  <h2 id="uotdStartPage" <?php if(strlen($userOfTheDay)>=10) echo 'class="midLongName1"'; ?>><?php echo $userOfTheDay; ?></h2>
 		</div>
 		<p class="uotdmargin">&nbsp;</p>
 		</div>
-		
-	
-		
 		<?php 
 			if(isset($loggedInUser)){
 				echo '
@@ -649,6 +658,21 @@
 		<div class="new1">
 			<table class="newx" border="0">
 				<tr>
+					<td><h1>21.11.2023</h1></td>
+					<td><h1>Jeremy Bruzac</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>21.11.2023</h1></td>
+					<td><h1>Joshua Slater</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>19.11.2023</h1></td>
+					<td><h1>Abhijeet Rajwade</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
 					<td><h1>14.11.2023</h1></td>
 					<td><h1>hoshi911</h1></td>
 					<td><h1>10,00 €</h1></td>
@@ -658,21 +682,11 @@
 					<td><h1>Mykyta Shvetsov</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
+				<!--
 				<tr>
-					<td><h1>05.11.2023</h1></td>
-					<td><h1>Dominik Franěk</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>02.11.2023</h1></td>
-					<td><h1>Tomislav Sokec</h1></td>
 					<td><h1>10,00 € <font size="2px">subscription</font></h1></td>
 				</tr>
-				<tr>
-					<td><h1>28.10.2023</h1></td>
-					<td><h1>Andrew Hlavats</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
+				-->
 			</table>	
 		<br>
 		</div>	

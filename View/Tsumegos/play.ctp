@@ -48,7 +48,16 @@
 	$heroPower4 = 'hp4x';
 	$heroPower5 = 'hp5x';
 
-	$xpDisplayColor = 'black';
+	if($lightDark=='dark'){
+		$playGreenColor = '#0cbb0c';
+		$playBlueColor = '#72a7f2';
+		$xpDisplayColor = '#f0f0f0';
+	}else{
+		$playGreenColor = 'green';
+		$playBlueColor = 'blue';
+		$xpDisplayColor = 'black';
+	}
+	
 	if($goldenTsumego){
 		$xpDisplayColor = '#b5910b';
 		echo '<style>#xpDisplay{font-weight:800;color:#b5910b;}</style>';
@@ -1019,6 +1028,8 @@
 	let multipleChoiceEnabled = false;
 	let hasChosen = false;
 	let enableDownloads = false;
+	let cvn = true;
+	let adminCommentOpened = false;
 	
 	if(inFavorite!==''){
 		prevButtonLink += inFavorite;
@@ -1035,7 +1046,7 @@
 	if($t['Tsumego']['set_id']==208) echo 'besogoPlayerColor = "black";';
 
 	if($authorx==$_SESSION['loggedInUser']['User']['name']) echo 'authorProblem = true;';
-	//if($_SESSION['loggedInUser']['User']['id']==72) echo 'authorProblem = true;';
+	if($_SESSION['loggedInUser']['User']['id']==72) echo 'authorProblem = true;';
 	if($firstRanks!=0) echo 'document.cookie = "mode=3";';
 	if($mode==3){
 		echo 'seconds = 0.0;';
@@ -1206,6 +1217,7 @@
 		$("#adminComment'.$i.'").click(function(e){
 			e.preventDefault();
 			$("#adminCommentPanel'.$i.'").toggle(250);
+			adminCommentOpened = true;
 		});
 		';
 	}
@@ -1217,7 +1229,7 @@
 	if($goldenTsumego) echo 'var goldenTsumego = true;';
 	else echo 'var goldenTsumego = false;';
 
-	$sandboxCheck = 'document.getElementById("currentElement").style.backgroundColor = "green";';
+	$sandboxCheck = 'document.getElementById("currentElement").style.backgroundColor = "'.$playGreenColor.'";';
 
 	if($t['Tsumego']['set_id']==11969 || $t['Tsumego']['set_id']==29156 || $t['Tsumego']['set_id']==31813 || $t['Tsumego']['set_id']==33007
 	|| $t['Tsumego']['set_id']==71790 || $t['Tsumego']['set_id']==74761 || $t['Tsumego']['set_id']==81578 || $t['Tsumego']['set_id']==88156){
@@ -1381,9 +1393,9 @@
 						if(!sprintLockedInSecretArea){
 							if(seconds2<10)  timeOutput = minutes + ":0" + seconds2;
 							else 			timeOutput = minutes + ":" + seconds2;
-							document.getElementById("status2").style.color = "blue";
+							document.getElementById("status2").style.color = "<?php echo $playBlueColor; ?>";
+							document.getElementById("xpDisplay").style.color = "<?php echo $playBlueColor; ?>";
 							document.getElementById("status2").innerHTML = "<h3>Double XP "+timeOutput+"</h3>";
-							document.getElementById("xpDisplay").style.color = "blue";
 							<?php
 							if(!$goldenTsumego) echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4">'.$t['Tsumego']['difficulty'].'×2 XP</font>\';';
 							else echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4">'.$t['Tsumego']['difficulty'].' XP</font>\';';
@@ -1398,7 +1410,7 @@
 						if(isset($sprintActivated)) echo 'document.cookie = "sprint=2";';
 						if($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2'){
 							 echo '
-								document.getElementById("xpDisplay").style.color = "green";
+								document.getElementById("xpDisplay").style.color = "'.$playGreenColor.'";
 								document.getElementById("xpDisplay").innerHTML = \'<font size="4"><b>Solved</b> ('.$t['Tsumego']['difficulty'].' XP) '.$sandboxComment.'</font>\';
 							';
 						}else if($t['Tsumego']['status']=='setW2' || $t['Tsumego']['status']=='setX2'){
@@ -1419,7 +1431,7 @@
 					<?php
 						if($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2'){
 							 echo '
-								document.getElementById("xpDisplay").style.color = "green";
+								document.getElementById("xpDisplay").style.color = "'.$playGreenColor.'";
 								document.getElementById("xpDisplay").innerHTML = \'<font size="4"><b>Solved</b> ('.$t['Tsumego']['difficulty'].' XP) '.$sandboxComment.'</font>\';
 							';
 						}else if($t['Tsumego']['status']=='setW2' || $t['Tsumego']['status']=='setX2'){
@@ -1607,6 +1619,9 @@
 		$("#showx4").click(function(){
 			jsCreateDownloadFile("<?php echo $t['Tsumego']['num']; ?>");
 		});
+		
+		//if(cvn) setTimeout(function () {window.location.href = "/tsumegos/play/"+nextButtonLink}, 50);
+
 	});
 
 	function displaySettings(){
@@ -1617,7 +1632,7 @@
 		$("#showx6").attr("href", "<?php echo '/sgfs/view/'.($t['Tsumego']['id']*1337); ?>");
 		$("#showx4").css("display", "inline-block");		
 		$("#showx5").css("display", "inline-block");		
-		$("#show4").css("display", "inline-block");		
+		$("#show4").css("display", "inline-block");
 		$("#show5").css("display", "inline-block");
 		$("#showx6").css("display", "inline-block");
 		<?php } ?>
@@ -1775,6 +1790,8 @@
 			}
 		?>
 	}
+	
+	//function xxx(){ cvn = false; }
 
 	function runXPNumber(id, start, end, duration, ulvl){
 		userXP = end;
@@ -1832,8 +1849,8 @@
 								if(seconds<10)  timeOutput = minutes + ":0" + seconds;
 								else 			timeOutput = minutes + ":" + seconds;
 								document.getElementById("status2").innerHTML = "<h3>Double XP "+timeOutput+"</h3>";
-								document.getElementById("status2").style.color = "blue";
-								document.getElementById("xpDisplay").style.color = "blue";
+								document.getElementById("status2").style.color = "<?php echo $playBlueColor; ?>";
+								document.getElementById("xpDisplay").style.color = "<?php echo $playBlueColor; ?>";
 								<?php
 								if(!$goldenTsumego) echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4">'.$t['Tsumego']['difficulty'].'×2 XP</font>\';';
 								else echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4">'.$t['Tsumego']['difficulty'].' XP</font>\';';
@@ -1848,7 +1865,7 @@
 							if(isset($sprintActivated)) echo 'document.cookie = "sprint=2";';
 							if($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2'){
 								echo '
-									document.getElementById("xpDisplay").style.color = "green";
+									document.getElementById("xpDisplay").style.color = "'.$playGreenColor.'";
 									document.getElementById("xpDisplay").innerHTML = \'<font size="4"><b>Solved</b> ('.$t['Tsumego']['difficulty'].' XP) '.$sandboxComment.'</font>\';
 								';
 							}else if($t['Tsumego']['status']=='setW2' || $t['Tsumego']['status']=='setX2'){
@@ -2033,7 +2050,7 @@
 	$(document).keydown(function(event){
 		var keycode = (event.keyCode ? event.keyCode : event.which);
 		if(mode!=2){
-			if(!msg2selected){
+			if(!msg2selected && !adminCommentOpened){
 				if(keycode == '37'){
 					if(prevButtonLink!=0)
 						window.location.href = prevButtonLink;
@@ -2191,15 +2208,14 @@
 		if(result=='S'){
 			if(mode!=2){//mode 1 and 3 correct
 				<?php echo $sandboxCheck; ?>
-				document.getElementById("status").style.color = "green";
+				document.getElementById("status").style.color = "<?php echo $playGreenColor; ?>";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
 				document.getElementById("xpDisplay").style.color = "white";
-				$(".besogo-board").css("box-shadow","rgba(67, 255, 40, 0.7) 0px 2px 14px 0px, rgba(0, 0, 0, 0.2) 0px 6px 20px 0px");
+				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(67, 255, 40, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
 				
 				if(set159){document.getElementById("theComment").style.cssText = "visibility:visible;color:green;";
 				document.getElementById("theComment").innerHTML = "xxx";}
 				$("#commentSpace").show();
-				//locked = true;
 				if(mode==3){
 					document.cookie = "rank=<?php echo $mode3ScoreArray[0]; ?>";
 					//seconds = seconds.toFixed(1);
@@ -2208,7 +2224,7 @@
 					timeModeEnabled = false;
 					document.cookie = "score=<?php echo $score1; ?>";
 					document.cookie = "preId=<?php echo $t['Tsumego']['id']; ?>";
-					$("#time-mode-countdown").css("color","green");
+					$("#time-mode-countdown").css("color","<?php echo $playGreenColor; ?>");
 					$("#reviewButton").show();
 					$("#reviewButton-inactive").hide();
 					runXPBar(true);
@@ -2259,10 +2275,10 @@
 			}else if(eloScore!=0){//mode 2 correct
 				if(eloScore>100) eloScore = 100;
 				elo2 = <?php echo $user['User']['elo_rating_mode']; ?>+eloScore;
-				document.getElementById("status").style.color = "green";
+				document.getElementById("status").style.color = "<?php echo $playGreenColor; ?>";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
 				document.getElementById("xpDisplay").style.color = "white";
-				$(".besogo-board").css("box-shadow","rgba(67, 255, 40, 0.7) 0px 2px 14px 0px, rgba(0, 0, 0, 0.2) 0px 6px 20px 0px");
+				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(67, 255, 40, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
 				$("#commentSpace").show();
 				//locked = true;
 				noLastMark = true;
@@ -2302,7 +2318,7 @@
 				branch = "no";
 				document.getElementById("status").style.color = "#e03c4b";
 				document.getElementById("status").innerHTML = "<h2>Incorrect</h2>";
-				$(".besogo-board").css("box-shadow","rgba(183, 19, 19, 0.8) 0px 2px 14px 0px, rgba(183, 19, 19, 0.2) 0px 6px 20px 0px");
+				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(183, 19, 19, 0.8), 0 6px 20px 0 rgba(183, 19, 19, 0.2)");
 				if(mode==3){
 					document.cookie = "rank=<?php echo $mode3ScoreArray[1]; ?>";
 					//locked = true;
@@ -2352,7 +2368,7 @@
 				noLastMark = true;
 				besogoMode2Solved = true;
 				$("#besogo-next-button-inactive").attr("id","besogo-next-button");
-				$(".besogo-board").css("box-shadow","rgba(183, 19, 19, 0.8) 0px 2px 14px 0px, rgba(183, 19, 19, 0.2) 0px 6px 20px 0px");
+				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(183, 19, 19, 0.8), 0 6px 20px 0 rgba(183, 19, 19, 0.2)");
 				if(!noXP){
 					sequence += "incorrect|";
 					document.cookie = "sequence="+sequence;
@@ -2394,7 +2410,7 @@
 			}
 			else $("#targetLockOverlay").css("height", "633px");
 			$("#targetLockOverlay").css("z-index", "1000");
-			//$("#targetLockOverlay").css("background", "blue");
+			//$("#targetLockOverlay").css("background", "#3c3cae");
 			//$("#targetLockOverlay").css("opacity", ".2");
 		}else{
 			$("#targetLockOverlay").css("width", "0");
@@ -2550,8 +2566,8 @@
     options.reviewMode = false;
     options.reviewEnabled = <?php echo $reviewEnabled ? 'true' : 'false'; ?>;
 	<?php
-		//if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72){
-		if(isset($_SESSION['loggedInUser'])){if(false){
+		if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72){
+		//if(isset($_SESSION['loggedInUser'])){if(false){
 			echo 'options.reviewEnabled = true;';
 		}}
 	?>

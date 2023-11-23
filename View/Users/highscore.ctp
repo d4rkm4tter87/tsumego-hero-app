@@ -94,7 +94,7 @@
 						'.$users[$i]['solved'].'
 					</td>
 					
-					<td align="center">
+					<td align="left">
 						'.$users[$i]['xpSum'].' XP
 					</td>
 				</tr>
