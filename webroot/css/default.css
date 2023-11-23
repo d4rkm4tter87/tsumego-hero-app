@@ -3216,6 +3216,13 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.menuIcons2{
 		padding: 5px 12px;
 	}
+	#mostPopularToday{
+		color:black;
+		font-weight:800;
+	}
+	.dailyHighscoreTable{
+		color:black;
+	}
 	nav a {
 		display:block;
 		font-size: 22px;

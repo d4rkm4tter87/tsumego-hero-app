@@ -9,11 +9,6 @@ besogo.loadSgf = function(sgf, editor, mode = NORMAL_LOAD)
       root;
   let bCounter = 0;
   let wCounter = 0;
-  if(besogo.multipleChoice)
-  {
-    let bCounter = 0;
-    let wCounter = 0;
-  }
   loadRootProps(sgf); // Load size, variants style and game info
   root = besogo.makeGameRoot(size.x, size.y);
 
@@ -101,13 +96,13 @@ besogo.loadSgf = function(sgf, editor, mode = NORMAL_LOAD)
         break;
       case 'SQ': // Add square markup
         applyPointList(prop.values, node, markupFunc, 2);
-    if(besogo.multipleChoice)
-      applyPointList2(prop.values, node, setupFunc, 1, besogo.multipleChoiceSetup);
+	  if(besogo.multipleChoice)
+        applyPointList2(prop.values, node, setupFunc, 1, besogo.multipleChoiceSetup);
         break;
       case 'TR': // Add triangle markup
         applyPointList(prop.values, node, markupFunc, 3);
-    if(besogo.multipleChoice)
-      applyPointList2(prop.values, node, setupFunc, -1, besogo.multipleChoiceSetup);
+      if(besogo.multipleChoice)
+        applyPointList2(prop.values, node, setupFunc, -1, besogo.multipleChoiceSetup);
         break;
       case 'M': // Intentional fallthrough treats 'M' as 'MA'
       case 'MA': // Add 'X' cross markup
@@ -183,7 +178,6 @@ besogo.loadSgf = function(sgf, editor, mode = NORMAL_LOAD)
         otherPoint, // Bottom-right point of compressed point lists
         label,
     counter;
-
     let bOrW = 0;
     if (param==-1)
       bOrW = 0;
@@ -195,8 +189,9 @@ besogo.loadSgf = function(sgf, editor, mode = NORMAL_LOAD)
         counter = bCounter;
       else if (param==1)
         counter = wCounter;
-      if(multipleChoice[bOrW][counter]==1)
-        point = lettersToCoords(values[i].slice(0, 2));
+
+      if (multipleChoice[bOrW][counter]==1){
+      point = lettersToCoords(values[i].slice(0, 2));
       if (param === 'label') // Label markup property
       {
         label = values[i].slice(3).replace(/\n/g, ' ');
@@ -221,12 +216,14 @@ besogo.loadSgf = function(sgf, editor, mode = NORMAL_LOAD)
       }
       else // Apply on single point
         node[func](point.x, point.y, param);
+	  }
+	  if (multipleChoice !== null){
+		  if (param == -1)
+			bCounter++;
+		  else if (param == 1)
+			wCounter++;
+	  }
     }
-    if (multipleChoice !== null)
-      if (param == -1)
-        bCounter++;
-      else if (param == 1)
-        wCounter++;
   }
 
   // Loads root properties (size, variant style and game info)

@@ -16,14 +16,20 @@
 		color:#f0f0f0;
 		background:linear-gradient(#737373, #4a4a4a);
 	}
-	.new1 a, .new1 b{
+	.new1 a, .new1 b, .deleteComment{
 		color:#f0f0f0;
 	}
 	.besogo-container{
 		background-color:#2a2a2a;
 	}
+	#mostPopularToday{
+		color:#f0f0f0;
+	}
 	#playTitleA{
 		color:#f0f0f0;
+	}
+	#multipleChoiceText, #potionAlerts, #customAlerts, .alertText, .timeModeTable2{
+		color:black;
 	}
 	li.setBlank{
 		background-color:#2a2a2a;

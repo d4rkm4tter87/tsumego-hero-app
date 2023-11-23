@@ -57,7 +57,7 @@
 	?>
 	
 	<br><br>
-	<table>
+	<table class="dailyHighscoreTable">
 	<?php
 		//echo '<pre>';print_r($a);echo '</pre>';
 		
