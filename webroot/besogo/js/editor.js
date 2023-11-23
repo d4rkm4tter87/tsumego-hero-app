@@ -242,7 +242,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
 
         // The opponent wants to auto play into a move we already visited, potentially forcing the solver to solve part of a variation already done
         // in this case, we just stop and call this sub-variation finished and move on.
-        if (next.target && next.target.visited || next.visited)
+        if (autoPlay && (next.target && next.target.visited || next.visited))
         {
           finish(current);
           return;
