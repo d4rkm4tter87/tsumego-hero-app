@@ -56,8 +56,10 @@
 			echo '<a href="#" id="dl1-'.$s[$i]['Sgf']['id'].'">v'.$s[$i]['Sgf']['version'].$isDecimal.'</a>';
 			echo '</td>
 			<td class="timeTableRight versionColor" align="left">
-			<a id="open-'.$s[$i]['Sgf']['id'].'">open</a>&nbsp;&nbsp;&nbsp;
-			<a href="#" id="dl2-'.$s[$i]['Sgf']['id'].'">download</a>';
+			<a id="open-'.$s[$i]['Sgf']['id'].'">open</a>&nbsp;&nbsp;&nbsp;';
+			if($i!=count($s)-1)
+				echo '<a id="compare-'.$s[$i]['Sgf']['id'].'">diff</a>&nbsp;&nbsp;&nbsp;';
+			echo '<a href="#" id="dl2-'.$s[$i]['Sgf']['id'].'">download</a>';
 			if($s[$i]['Sgf']['delete']) 
 				echo '&nbsp;&nbsp;&nbsp;<a onclick="delV('.$s[$i]['Sgf']['id'].');" href="#">delete</a>';
 			echo '</td>
@@ -76,7 +78,11 @@
 	}
 	
 	<?php for($i=0; $i<count($s); $i++){ ?>
-		$("#open-<?php echo $s[$i]['Sgf']['id'] ?>").attr("href", "<?php echo'/app/webroot/editor/?onSite='.$_SERVER['HTTP_HOST'].'$'.($s[$i]['Sgf']['tsumego_id']*1337).'$'.$s[$i]['Sgf']['sgf']; ?>");
+		$("#open-<?php echo $s[$i]['Sgf']['id'] ?>").attr("href", "<?php echo '/tsumegos/open/'.$id.'/'.$s[$i]['Sgf']['id']; ?>");
+		<?php
+		if($i!=count($s)-1) 
+			echo '$("#compare-'.$s[$i]['Sgf']['id'].'").attr("href", "/tsumegos/open/'.$id.'/'.$s[$i]['Sgf']['id'].'/'.$s[$i+1]['Sgf']['id'].'");';
+		?>
 		$("#dl1-<?php echo $s[$i]['Sgf']['id']; ?>").click(function(){
 			var blob<?php echo $s[$i]['Sgf']['id']; ?> = new Blob(["<?php echo $s[$i]['Sgf']['sgf']; ?>"],{
 				type: "sgf",

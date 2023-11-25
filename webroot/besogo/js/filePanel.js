@@ -181,7 +181,6 @@ besogo.makeFilePanel = function(container, editor)
     {
       let file = evt.target.files[0], // Selected file
           reader = new FileReader();
-
       let newChooser = makeDiffFileChooser(); // Create new file input to reset selection
 
       container.replaceChild(newChooser, diffFileChooser); // Replace with the reset selector
@@ -258,24 +257,14 @@ besogo.makeFilePanel = function(container, editor)
         link.click(); // Click on link to initiate download
         container.removeChild(link); // Immediately remove the link
       }
-      else if (redirect === 1)
-      {
-        //text = text.replaceAll(";", "@");
-        //text = text.replaceAll("ß", "ss");
-        //text = text.replaceAll("\n", "€");
-        //document.cookie = "requestProblem="+text;
-        //window.location.href = "/tsumegos/play/"+tsumegoFileLink+"?requestProblem=true";
-        //window.location.href = "/editor/?onSite="+text;
-        window.location.href = "/app/webroot/editor/?onSite="+clearFile2+"$"+tsumegoFileLink;
-      }
       else
       {
-        //text = text.replaceAll(";", "@");
-        text = text.replaceAll("ß", "ss");
-        text = text.replaceAll("\n", " ");
-        text = text.replaceAll("+", "%2B");
-        //text = text.replaceAll("\n", "€");
-        window.location.href = "/tsumegos/play/"+(besogo.onSite[1]/1337)+"?requestProblem="+besogo.onSite[1]+"&adminSGF="+text;
+        text = text.replaceAll(";", "@");
+        text = text.replaceAll("\n", "€");
+		text = text.replaceAll("+", "%2B");
+		text = text.replaceAll("ß", "ss");
+		document.cookie = "sgfForBesogo="+text+";path=/tsumegos/play";
+        window.location.href = "/tsumegos/play/"+(besogo.onSite[1]/1337)+"?requestProblem="+besogo.onSite[1];
       }
     }
 };

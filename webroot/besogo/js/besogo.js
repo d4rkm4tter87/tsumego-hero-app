@@ -36,7 +36,7 @@
     makers['file'] = besogo.makeFilePanel;
     return makers;
   }
-
+  
  // Sets dimensions with optional height param
   function setDimensions(width, height)
   {
@@ -267,11 +267,14 @@
       besogo.isEmbedded = true;
     if (typeof options.onSite === 'string')
     {
-      //besogo.onSite = options.onSite.replaceAll('', "\n");
-      besogo.onSite = options.onSite.replaceAll('%20', ' ');
+      besogo.onSite = options.onSite;
       besogo.onSite = besogo.onSite.split('$');
       options.sgf = 'https://'+besogo.onSite[0]+'/placeholder.sgf';
-      options.sgf2 = besogo.onSite[2];
+	  let cookieSgf = besogo.getCookie("sgfForBesogo");
+	  cookieSgf = cookieSgf.replaceAll('€', "\n");
+	  cookieSgf = cookieSgf.replaceAll('@', ";");
+	  cookieSgf = cookieSgf.replaceAll('%2B', "+");
+      options.sgf2 = cookieSgf;
     }
 
     let sgfLoaded =
@@ -659,20 +662,29 @@
       }
     }
 
-  let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
-  besogo.coordArea['lowestXconverted'] = convertedCoords.x[besogo.coordArea['lowestX']+1];
-  besogo.coordArea['highestXconverted'] = convertedCoords.x[besogo.coordArea['highestX']+1];
-  besogo.coordArea['lowestYconverted'] = convertedCoords.y[besogo.coordArea['lowestY']+1];
-  besogo.coordArea['highestYconverted'] = convertedCoords.y[besogo.coordArea['highestY']+1];
+    let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
+    besogo.coordArea['lowestXconverted'] = convertedCoords.x[besogo.coordArea['lowestX']+1];
+    besogo.coordArea['highestXconverted'] = convertedCoords.x[besogo.coordArea['highestX']+1];
+    besogo.coordArea['lowestYconverted'] = convertedCoords.y[besogo.coordArea['lowestY']+1];
+    besogo.coordArea['highestYconverted'] = convertedCoords.y[besogo.coordArea['highestY']+1];
   
-  if (besogo.isEmbedded) besogo.editor.adjustCommentCoords();
-
+    if (besogo.isEmbedded) besogo.editor.adjustCommentCoords();
     if (besogo.playerColor==="white")
     {
       let transformation = besogo.makeTransformation();
       transformation.invertColors = true;
       besogo.editor.applyTransformation(transformation);
     }
+	if (besogo.onSite !== null)
+	if (besogo.onSite[2] === 'diff')
+	{
+	  let cookieDiff = besogo.getCookie("diffForBesogo");
+	  cookieDiff = cookieDiff.replaceAll('€', "\n");
+	  cookieDiff = cookieDiff.replaceAll('@', ";");
+	  cookieDiff = cookieDiff.replaceAll('%2B', "+");
+	  cookieDiff = besogo.parseSgf(cookieDiff);
+	  besogo.loadSgf(cookieDiff, editor, 1);
+	}
     return besogo.scaleParameters;
   }
 
@@ -722,5 +734,6 @@
           else
             editor.nextNode(+part[i]); // Converts to number
     }
+	
   }
 })();

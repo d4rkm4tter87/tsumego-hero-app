@@ -124,7 +124,7 @@
 		color:#f0f0f0!important;
 	}
 	#show, #show2, #commentPosition, #show3, .selectable-text, .admin-panel #show2, .admin-panel #show3, .admin-panel #show4, .admin-panel #show5, .admin-panel font{
-		color:#f0f0f0!important;
+		color:#f0f0f0;
 	}
 	.achievement1, .achievement2, .achievementSmall{
 		background: linear-gradient(#dfdfdf, #979797);
@@ -146,6 +146,9 @@
 	}
 	.besogo-container {
 		background: #2a2a2a;
+	}
+	#theComment{
+		color:black;
 	}
 	
 	

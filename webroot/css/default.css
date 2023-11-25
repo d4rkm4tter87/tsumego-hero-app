@@ -3220,6 +3220,9 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		color:black;
 		font-weight:800;
 	}
+	.historyLink{
+		color:#c63c3c!important;
+	}
 	.dailyHighscoreTable{
 		color:black;
 	}

@@ -10,7 +10,7 @@ class SgfsController extends AppController {
     }
 	
 	public function view($id=null){
-		$_SESSION['title'] = 'Tsumego Hero';
+		
 		$_SESSION['page'] = 'play';
 		$this->loadModel('Tsumego');
 		$this->loadModel('Set');
@@ -31,7 +31,7 @@ class SgfsController extends AppController {
 		$t = $this->Tsumego->findById($id);
 		$set = $this->Set->findById($t['Tsumego']['set_id']);
 		$name = $set['Set']['title'].' '.$set['Set']['title2'].' '.$t['Tsumego']['num'];
-		
+		$_SESSION['title'] = 'Version History of '.$name;
 		if(isset($this->params['url']['user'])){
 			$s = $this->Sgf->find('all', array('order' => 'created DESC','limit' => 500,'conditions' => array('user_id' => $this->params['url']['user'])));
 			$type = 'user';
@@ -40,7 +40,9 @@ class SgfsController extends AppController {
 		}
 		
 		for($i=0; $i<count($s); $i++){
+			$s[$i]['Sgf']['sgf'] = str_replace("\r", '', $s[$i]['Sgf']['sgf']);
 			$s[$i]['Sgf']['sgf'] = str_replace("\n", '"+"\n"+"', $s[$i]['Sgf']['sgf']);
+			
 			$u = $this->User->findById($s[$i]['Sgf']['user_id']);
 			$s[$i]['Sgf']['user'] = $u['User']['name'];
 			$ux = $u['User']['name'];

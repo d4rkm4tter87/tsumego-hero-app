@@ -9,6 +9,7 @@
 <script src="/besogo/js/gameRoot.js"></script>
 <script src="/besogo/js/status.js"></script>
 <script src="/besogo/js/svgUtil.js"></script>
+<script src="/besogo/js/cookieUtil.js"></script>
 <script src="/besogo/js/parseSgf.js"></script>
 <script src="/besogo/js/loadSgf.js"></script>
 <script src="/besogo/js/saveSgf.js"></script>
@@ -26,9 +27,7 @@
 <?php if($t['Tsumego']['set_id']==208){ ?>
 	<script src="/js/multipleChoice.js"></script>
 	<style>
-		.alertBox{
-			height:auto!important;
-		}
+		.alertBox{height:auto!important;}
 	</style>
 <?php } ?>
 <?php
@@ -513,7 +512,7 @@
 			echo '<a id="showx3" class="selectable-text">Download SGF</a><br><br>';
 			
 			if($sgf['Sgf']['user_id']!=33) 
-				$adHighlight = 'color:#c63c3c;';
+				$adHighlight = 'historyLink';
 			else
 				$adHighlight = '';
 				
@@ -521,7 +520,7 @@
 					echo '<a id="showx4" style="margin-right:20px;" class="selectable-text">Admin-Download</a>';
 					echo '<a id="show4" style="margin-right:20px;" class="selectable-text">Admin-Upload<img id="greyArrow4" src="/img/greyArrow1.png"></a>';
 					echo '<a id="showx5" style="margin-right:20px;" class="selectable-text">Open</a>';
-					echo '<a id="showx6" style="margin-right:20px;'.$adHighlight.'" class="selectable-text">History</a>';
+					echo '<a id="showx6" style="margin-right:20px;" class="selectable-text '.$adHighlight.'">History</a>';
 					echo '<a id="show5" class="selectable-text">Settings<img id="greyArrow5" src="/img/greyArrow1.png"></a>';
 					if($virtual_children==1){
 						$vcOn = 'checked="checked"';
@@ -929,7 +928,6 @@
 	TESTING AREA
 	echo '<pre>'; print_r($u); echo '</pre>';
 	*/ 
-	
 	if($inFavorite!=null) echo $inFavorite;
 	else echo '<x>'
 	?>
@@ -1619,16 +1617,15 @@
 		$("#showx4").click(function(){
 			jsCreateDownloadFile("<?php echo $t['Tsumego']['num']; ?>");
 		});
-		
 		//if(cvn) setTimeout(function () {window.location.href = "/tsumegos/play/"+nextButtonLink}, 50);
-
 	});
 
 	function displaySettings(){
 		enableDownloads = true;
 		$("#showx3").css("display", "inline-block");
 		<?php if($_SESSION['loggedInUser']['User']['isAdmin']==1){ ?>
-		$("#showx5").attr("href", "<?php echo '/app/webroot/editor/?onSite='.$_SERVER['HTTP_HOST'].'$'.($t['Tsumego']['id']*1337).'$'.$sgf2; ?>");
+		//$("#showx5").attr("href", "<?php echo '/app/webroot/editor/?onSite='.$_SERVER['HTTP_HOST'].'$'.($t['Tsumego']['id']*1337).'$'.$sgf2; ?>");
+		$("#showx5").attr("href", "<?php echo '/tsumegos/open/'.$t['Tsumego']['id'].'/'.$sgf['Sgf']['id']; ?>");
 		$("#showx6").attr("href", "<?php echo '/sgfs/view/'.($t['Tsumego']['id']*1337); ?>");
 		$("#showx4").css("display", "inline-block");		
 		$("#showx5").css("display", "inline-block");		
