@@ -1023,7 +1023,9 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
     let found = false;
     let spin = 0;
     let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
-    if (typeof besogo.dynamicCommentCoords[0] !== 'undefined'){
+	
+    if (typeof besogo.dynamicCommentCoords[0] !== 'undefined')
+	{
       if (besogo.coordArea['lowestX']>besogo.coordArea['highestX'])
       {
         buffer = besogo.coordArea['lowestX'];

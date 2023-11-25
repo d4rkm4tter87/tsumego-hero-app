@@ -2,7 +2,7 @@
 		background: linear-gradient(#2a2a2a, #111);
 		background-attachment:fixed;
 	}
-	body, font, .filterLabel1, .timeTableColor11, .new1 b{
+	body, font, .filterLabel1, .timeTableColor11{
 		color:#f0f0f0;
 	}
 	.whitebox2, .imp{
@@ -16,7 +16,7 @@
 		color:#f0f0f0;
 		background:linear-gradient(#737373, #4a4a4a);
 	}
-	.new1 a, .new1 b, .deleteComment{
+	.deleteComment{
 		color:#f0f0f0;
 	}
 	.besogo-container{
@@ -131,6 +131,9 @@
 	}
 	.versionColor a{
 		color:#0066cc;
+	}
+	.versionColor a:visited{
+		color:#571e8c;
 	}
 	#status2 font font, .titleDescription1 font, .modify-description, .statsTable font{
 		color:grey;

@@ -1,6 +1,5 @@
 <link rel="stylesheet" type="text/css" href="/besogo/css/besogo.css">
 <link rel="stylesheet" type="text/css" href="/besogo/css/board-flat.css">
-
 <script src="/besogo/js/besogo.js"></script>
 <script src="/besogo/js/transformation.js"></script>
 <script src="/besogo/js/treeProblemUpdater.js"></script>
@@ -22,13 +21,10 @@
 <script src="/besogo/js/treePanel.js"></script>
 <script src="/besogo/js/diffInfo.js"></script>
 <script src="/besogo/js/scaleParameters.js"></script>
-
 <script src ="/FileSaver.min.js"></script>
 <?php if($t['Tsumego']['set_id']==208){ ?>
 	<script src="/js/multipleChoice.js"></script>
-	<style>
-		.alertBox{height:auto!important;}
-	</style>
+	<style>.alertBox{height:auto!important;}</style>
 <?php } ?>
 <?php
 	$choice = array();
@@ -88,7 +84,6 @@
 		}else{
 			echo '<script type="text/javascript">window.location.href = "/";</script>';
 		}
-
 		$sprintEnabled = 0;
 		$intuitionEnabled = 0;
 		$rejuvenationEnabled = 0;
@@ -101,7 +96,6 @@
 		$heroPower4 = 'hp4xx';
 		$heroPower5 = 'hp5xx';
 	}
-
 	if($t['Tsumego']['set_id']==11969) echo '<script type="text/javascript" src="/'.$boardSize.'/board23.js"></script>'; //Pretty Area
 	else if($t['Tsumego']['set_id']==29156) echo '<script type="text/javascript" src="/'.$boardSize.'/board24.js"></script>'; //Hunting
 	else if($t['Tsumego']['set_id']==31813) echo '<script type="text/javascript" src="/'.$boardSize.'/board25.js"></script>'; //The Ghost
@@ -355,16 +349,7 @@
 						echo '
 							<img id="potion" title="Potion (Passive): If you misplay and have no hearts left, you have a small chance to restore your health." src="/img/hp5.png">
 						';
-					}else{
-						/*echo '
-							<img id="potion" title="Potion (Passive): If you misplay and have no hearts left, you have a small chance to restore your health." src="/img/'.$heroPower5.'.png">
-						';*/
 					}
-
-				}else{
-					/*echo '
-						<img id="potion" title="Potion (Passive): If you misplay and have no hearts left, you have a small chance to restore your health." src="/img/'.$heroPower5.'.png">
-					';*/
 				}
 			}else{
 				echo '
@@ -446,7 +431,6 @@
 
 		</div>
 	</div>
-
 	<?php if($dailyMaximum) echo '<style>.upgradeLink{display:block;}</style>'; ?>
 	<div class="upgradeLink" align="center">
 		<a href="/users/donate">Upgrade to Premium</a>
@@ -1675,7 +1659,6 @@
 		if(move==0) heartLoss = false;
 		if(noXP==true||freePlayMode==true||locked==true||authorProblem==true) heartLoss = false;
 		if(mode==2) heartLoss = false;
-
 		freePlayMode = false;
 		freePlayMode2 = false;
 		freePlayMode2done = false;
@@ -2469,7 +2452,7 @@
 	  options.vChildrenEnabled = true;
 	  options.multipleChoice = false;
 	  options.multipleChoiceSetup = [];
-	  if(mode!=3) 
+	  if(mode!=3)
 		options.alternativeResponse = true;
 	  else
 		options.alternativeResponse = false;
@@ -2592,6 +2575,7 @@
 	<?php
 		for($i=0; $i<count($dynamicCommentCoords[0]); $i++){
 			echo 'besogo.editor.dynamicCommentCoords("'.$dynamicCommentCoords[0][$i].'", "'.$dynamicCommentCoords[1][$i].'");';
+			echo 'besogo.editor.adjustCommentCoords();';
 		}
 	?>
 	</script>

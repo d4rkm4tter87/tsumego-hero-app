@@ -232,7 +232,7 @@ besogo.makeToolPanel = function(container, editor)
           document.cookie = 'favorite=-' + tsumegoFileLink;
         }
         $("#favButton").attr('src',favImage);
-        });
+      });
     }
     if (!besogo.multipleChoice)
     {
@@ -281,6 +281,7 @@ besogo.makeToolPanel = function(container, editor)
       
           $(".besogo-board").css("box-shadow","0 8px 14px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
           besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
+		  console.log(heartLoss);
         }, 'besogo-reset-button');
       
         let nextButtonId;
@@ -305,9 +306,9 @@ besogo.makeToolPanel = function(container, editor)
       else if (mode == 3)
       {
         makeButtonText('Next',
-                       'next problem',
-                       function() { window.location.href = "/tsumegos/play/"+besogoMode3Next; },
-                       'besogo-next-button');
+		   'next problem',
+		   function() { window.location.href = "/tsumegos/play/"+besogoMode3Next; },
+		   'besogo-next-button');
       }
     
       let reviewButtonId;

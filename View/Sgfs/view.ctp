@@ -35,7 +35,7 @@
 	</tr>
 	<?php
 		for($i=0; $i<count($s); $i++){
-			echo '<tr>
+			echo '<tr id="'.$s[$i]['Sgf']['id'].'">
 			<td class="timeTableLeft versionColor" align="center">
 				'.$s[$i]['Sgf']['created'].'
 			</td>
@@ -95,5 +95,25 @@
 			});
 			saveAs(blob2<?php echo $s[$i]['Sgf']['id']; ?>, "<?php echo $tNum; ?>.sgf");
 		});
+		$("#<?php echo $s[$i]['Sgf']['id']; ?>").hover(
+		  function () {
+			$("#<?php echo $s[$i]['Sgf']['id']; ?> td").css("background","linear-gradient(#fff, #cacaca)");
+		  }, 
+		  function () {
+			$("#<?php echo $s[$i]['Sgf']['id']; ?> td").css("background","");
+		  }
+		);
+		<?php if($i!=count($s)-1){ ?>
+			$("#compare-<?php echo $s[$i]['Sgf']['id']; ?>").hover(
+			  function () {
+				$("#<?php echo $s[$i]['Sgf']['id']; ?> td").css("background","linear-gradient(#fff, #cacaca)");
+				$("#<?php echo $s[$i+1]['Sgf']['id']; ?> td").css("background","linear-gradient(#fff, #cacaca)");
+			  }, 
+			  function () {
+				$("#<?php echo $s[$i]['Sgf']['id']; ?> td").css("background","");
+				$("#<?php echo $s[$i+1]['Sgf']['id']; ?> td").css("background","");
+			  }
+			);
+		<?php } ?>
 	<?php } ?>
 </script>

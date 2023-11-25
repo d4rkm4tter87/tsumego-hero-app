@@ -16,5 +16,5 @@
 		<?php if($s2!=null){ ?>
 			document.cookie = "diffForBesogo=<?php echo $s2['Sgf']['sgf'].';path='.$rootPath; ?>/app/webroot/editor/";
 		<?php } ?>
-		window.location.href = "<?php echo '/tsumego-hero/app/webroot/editor/?onSite='.$_SERVER['HTTP_HOST'].'$'.($t['Tsumego']['id']*1337).$diff; ?>";
+		window.location.href = "<?php echo $rootPath.'/app/webroot/editor/?onSite='.$_SERVER['HTTP_HOST'].'$'.($t['Tsumego']['id']*1337).$diff; ?>";
 	</script>

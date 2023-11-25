@@ -661,14 +661,12 @@
         besogo.coordArea['highestY'] = 18-besogo.coordArea['highestY'];
       }
     }
-
     let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
     besogo.coordArea['lowestXconverted'] = convertedCoords.x[besogo.coordArea['lowestX']+1];
     besogo.coordArea['highestXconverted'] = convertedCoords.x[besogo.coordArea['highestX']+1];
     besogo.coordArea['lowestYconverted'] = convertedCoords.y[besogo.coordArea['lowestY']+1];
     besogo.coordArea['highestYconverted'] = convertedCoords.y[besogo.coordArea['highestY']+1];
   
-    if (besogo.isEmbedded) besogo.editor.adjustCommentCoords();
     if (besogo.playerColor==="white")
     {
       let transformation = besogo.makeTransformation();
