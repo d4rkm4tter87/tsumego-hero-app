@@ -265,7 +265,7 @@
 		if($mode==1) echo '<div id="titleDescription" class="titleDescription1">';
 		elseif($mode==2  || $mode==3) echo '<div id="titleDescription" class="titleDescription2">';
 			if($t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161) echo '<b>'.$t['Tsumego']['description'].'</b> '; 
-			else echo $t['Tsumego']['description'].' '; 
+			else echo '<a id="descriptionText">'.$t['Tsumego']['description'].'</a> '; 
 			if(isset($t['Tsumego']['hint']) && $t['Tsumego']['hint']!='') echo '<font color="grey" style="font-style:italic;">('.$t['Tsumego']['hint'].')</font>'; 
 		if($_SESSION['loggedInUser']['User']['isAdmin']>0 || $set['Set']['public']==0 && $_SESSION['loggedInUser']['User']['isAdmin']==2){
 		?>
@@ -2580,9 +2580,4 @@
 	?>
 	</script>
 	<?php } ?>
-	<style>
-	.besogo-panels{
-		display: none;
-		flex-basis: 50%;
-	}
-	</style>
+	<style>.besogo-panels{display: none;flex-basis: 50%;}</style>

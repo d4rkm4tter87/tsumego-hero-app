@@ -19,8 +19,6 @@ class UsersController extends AppController{
 		$this->loadModel('Schedule');
 		$this->loadModel('Sgf');
 		
-		
-		
 		/*
 		$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => 42)));
 		$sgfs = array();
@@ -34,7 +32,6 @@ class UsersController extends AppController{
 		}
 		echo '<pre>'; print_r(count($ts)); echo '</pre>'; 
 		echo '<pre>'; print_r(count($sgfs)); echo '</pre>'; 
-		
 		
 		$ts = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array(
 			'set_id' => 185,
@@ -755,6 +752,36 @@ Joschka Zimdars';
 		$this->set('u', $todaysUsers);
 		$this->set('comments', $comments);
 		$this->set('aa', $aa);
+	}
+	
+	public function uploads(){
+		$_SESSION['page'] = 'play';
+		$_SESSION['title'] = 'Uploads';
+		$this->LoadModel('Sgf');
+		$this->loadModel('Tsumego');
+		$this->loadModel('Set');
+		
+		$s = $this->Sgf->find('all', array('limit' => 100, 'order' => 'created DESC', 'conditions' =>  array(
+			'NOT' => array('user_id' => 33)
+		)));
+		
+		for($i=0; $i<count($s); $i++){
+			$s[$i]['Sgf']['sgf'] = str_replace("\r", '', $s[$i]['Sgf']['sgf']);
+			$s[$i]['Sgf']['sgf'] = str_replace("\n", '"+"\n"+"', $s[$i]['Sgf']['sgf']);
+			
+			$u = $this->User->findById($s[$i]['Sgf']['user_id']);
+			$s[$i]['Sgf']['user'] = $u['User']['name'];
+			$t = $this->Tsumego->findById($s[$i]['Sgf']['tsumego_id']);
+			$set = $this->Set->findById($t['Tsumego']['set_id']);
+			$s[$i]['Sgf']['title'] = $set['Set']['title'].' '.$set['Set']['title2'].' #'.$t['Tsumego']['num'];
+			$s[$i]['Sgf']['num'] = $t['Tsumego']['num'];
+			
+			$s[$i]['Sgf']['delete'] = false;
+			$sDiff = $this->Sgf->find('all', array('order' => 'created DESC','limit' => 2,'conditions' => array('tsumego_id' => $s[$i]['Sgf']['tsumego_id'])));			
+			$s[$i]['Sgf']['diff'] = $sDiff[1]['Sgf']['id'];
+		}
+		
+		$this->set('s', $s);
 	}
 	
 	public function adminstats($p=null){

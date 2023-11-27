@@ -1,7 +1,6 @@
 
 	<?php 
 	//echo $s1['Sgf']['sgf'];echo '<br><br>';echo $s2['Sgf']['sgf'];
-	//echo $_SERVER["HTTP_HOST"];
 	if($_SERVER["HTTP_HOST"]=='localhost') 
 		$rootPath = '/tsumego-hero';
 	else

@@ -206,6 +206,7 @@
 							echo '<ul class="newMenuLi2">';
 								echo '<li><a '.$refreshLinkToSandbox.' '.$sandboxA.' href="/sets/beta">Sandbox</a></li>';
 								if($_SESSION['loggedInUser']['User']['isAdmin']>=1){
+									echo '<li><a class="adminLink" href="/users/uploads">Uploads</a></li>';
 									echo '<li><a class="adminLink" href="/users/adminstats">Admin Activities</a></li>';
 									echo '<li><a class="adminLink" href="/users/userstats">User Activities</a></li>';
 									echo '<li><a class="adminLink" href="/app/webroot/editor">Editor</a></li>';

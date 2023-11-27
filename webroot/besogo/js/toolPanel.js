@@ -28,6 +28,12 @@ besogo.makeToolPanel = function(container, editor)
     {
       let transformation = besogo.makeTransformation();
       transformation.invertColors = true;
+	  let descriptionText = $('#descriptionText').text();
+	  if(descriptionText.includes('Black'))
+		descriptionText = descriptionText.replaceAll('Black', 'White');
+	  else if(descriptionText.includes('White'))
+		descriptionText = descriptionText.replaceAll('White', 'Black');
+	  $('#descriptionText').text(descriptionText);
       besogo.editor.applyTransformation(transformation);
     });
     if (besogo.scaleParameters['orientation']!=='full-board')

@@ -10,7 +10,6 @@ class SgfsController extends AppController {
     }
 	
 	public function view($id=null){
-		
 		$_SESSION['page'] = 'play';
 		$this->loadModel('Tsumego');
 		$this->loadModel('Set');
@@ -23,20 +22,20 @@ class SgfsController extends AppController {
 		
 		if(isset($this->params['url']['delete'])){
 			$sDel = $this->Sgf->findById($this->params['url']['delete']);
-			if($_SESSION['loggedInUser']['User']['id'] == $sDel['Sgf']['user_id']){
+			if($_SESSION['loggedInUser']['User']['id'] == $sDel['Sgf']['user_id'])
 				$this->Sgf->delete($sDel['Sgf']['id']);
-			}
 		}
 		
 		$t = $this->Tsumego->findById($id);
 		$set = $this->Set->findById($t['Tsumego']['set_id']);
 		$name = $set['Set']['title'].' '.$set['Set']['title2'].' '.$t['Tsumego']['num'];
-		$_SESSION['title'] = 'Version History of '.$name;
+		$_SESSION['title'] = 'Upload History of '.$name;
+		
 		if(isset($this->params['url']['user'])){
-			$s = $this->Sgf->find('all', array('order' => 'created DESC','limit' => 500,'conditions' => array('user_id' => $this->params['url']['user'])));
+			$s = $this->Sgf->find('all', array('order' => 'created DESC','limit' => 100,'conditions' => array('user_id' => $this->params['url']['user'])));
 			$type = 'user';
 		}else{
-			$s = $this->Sgf->find('all', array('order' => 'created DESC','limit' => 500,'conditions' => array('tsumego_id' => $id)));
+			$s = $this->Sgf->find('all', array('order' => 'created DESC','limit' => 100,'conditions' => array('tsumego_id' => $id)));
 		}
 		
 		for($i=0; $i<count($s); $i++){
@@ -49,6 +48,7 @@ class SgfsController extends AppController {
 			$t = $this->Tsumego->findById($s[$i]['Sgf']['tsumego_id']);
 			$set = $this->Set->findById($t['Tsumego']['set_id']);
 			$s[$i]['Sgf']['title'] = $set['Set']['title'].' '.$set['Set']['title2'].' #'.$t['Tsumego']['num'];;
+			$s[$i]['Sgf']['num'] = $t['Tsumego']['num'];
 			
 			if($s[$i]['Sgf']['user']=='noUser') 
 				$s[$i]['Sgf']['user'] = 'automatically generated';
@@ -56,6 +56,13 @@ class SgfsController extends AppController {
 				$s[$i]['Sgf']['delete'] = true;
 			else
 				$s[$i]['Sgf']['delete'] = false;
+			if($type=='user'){
+				$sDiff = $this->Sgf->find('all', array('order' => 'created DESC','limit' => 2,'conditions' => array('tsumego_id' => $s[$i]['Sgf']['tsumego_id'])));
+				$s[$i]['Sgf']['diff'] = $sDiff[1]['Sgf']['id'];
+			}else{
+				if($i!=count($s)-1) 
+					$s[$i]['Sgf']['diff'] = $s[$i+1]['Sgf']['id'];
+			}
 		}
 		
 		$this->set('ux', $ux);
