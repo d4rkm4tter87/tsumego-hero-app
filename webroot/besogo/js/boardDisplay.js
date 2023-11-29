@@ -21,7 +21,6 @@ besogo.makeBoardDisplay = function(container, editor, corner)
       lastHoverPosition = null,
       TOUCH_FLAG = false; // Flag for touch interfaces
 
-  
   try
   {
     besogo.scaleParameters['boardCoordSize'] = sizeX;
@@ -35,7 +34,7 @@ besogo.makeBoardDisplay = function(container, editor, corner)
   
   //Not a 19x19 board, so it should be full board view
   //or not embedded viewer
-  if(sizeX != 19 || !besogo.isEmbedded)
+  if (sizeX != 19 || !besogo.isEmbedded)
   {
     besogo.scaleParameters['orientation'] = 'full-board';
     besogo.boardParameters['fullBoard'] = true;

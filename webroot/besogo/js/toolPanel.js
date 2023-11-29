@@ -287,7 +287,6 @@ besogo.makeToolPanel = function(container, editor)
       
           $(".besogo-board").css("box-shadow","0 8px 14px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
           besogo.editor.notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
-		  console.log(heartLoss);
         }, 'besogo-reset-button');
       
         let nextButtonId;

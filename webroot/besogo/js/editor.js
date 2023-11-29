@@ -453,7 +453,8 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
 
   function tryToFinish(node)
   {
-    if (!node.hasNonLocalChildIncludingVirtual())
+	// added node.localEdit to fix an issue where the autoplay stops when it is not in the tree but finds a virtual child
+    if (!node.hasNonLocalChildIncludingVirtual() || node.localEdit)
       finish(node);
   }
 
@@ -469,7 +470,6 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
       return;
     setTimeout(function()
     {
-      //toggleBoardLock(true);
       let success = (!node.localEdit && node.correct == CORRECT_GOOD);
       if (!node.localEdit && !success && node.status && showComment && node.comment == '')
       {
@@ -644,7 +644,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
         notifyListeners({ treeChange: true, navChange: true, stoneChange: true });
       }
     }
-    else if(current.placeSetup(i, j, color)) // Try setup in current
+    else if (current.placeSetup(i, j, color)) // Try setup in current
         // Only need to update if change occurs
       notifyListeners({ stoneChange: true }); // Stones changed
   }
