@@ -2190,8 +2190,10 @@
 				document.getElementById("status").style.color = "<?php echo $playGreenColor; ?>";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
 				document.getElementById("xpDisplay").style.color = "white";
-				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(67, 255, 40, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
-				
+				if(light==true) 
+					$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(67, 255, 40, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
+				else
+					$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(67, 255, 40, 0.7), 0 6px 20px 0 rgba(80, 255, 0, 0.2)");
 				if(set159){document.getElementById("theComment").style.cssText = "visibility:visible;color:green;";
 				document.getElementById("theComment").innerHTML = "xxx";}
 				$("#commentSpace").show();
@@ -2257,7 +2259,10 @@
 				document.getElementById("status").style.color = "<?php echo $playGreenColor; ?>";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
 				document.getElementById("xpDisplay").style.color = "white";
-				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(67, 255, 40, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
+				if(light==true) 
+					$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(67, 255, 40, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
+				else
+					$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(67, 255, 40, 0.7), 0 6px 20px 0 rgba(80, 255, 0, 0.2)");
 				$("#commentSpace").show();
 				//locked = true;
 				noLastMark = true;
@@ -2297,7 +2302,10 @@
 				branch = "no";
 				document.getElementById("status").style.color = "#e03c4b";
 				document.getElementById("status").innerHTML = "<h2>Incorrect</h2>";
-				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(183, 19, 19, 0.8), 0 6px 20px 0 rgba(183, 19, 19, 0.2)");
+				if(light==true) 
+					$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(183, 19, 19, 0.8), 0 6px 20px 0 rgba(183, 19, 19, 0.2)");
+				else
+					$(".besogo-board").css("box-shadow","0 2px 14px 0 rgb(225, 34, 34), 0 6px 20px 0 rgba(253, 59, 59, 0.58)");
 				if(mode==3){
 					document.cookie = "rank=<?php echo $mode3ScoreArray[1]; ?>";
 					//locked = true;
@@ -2347,7 +2355,10 @@
 				noLastMark = true;
 				besogoMode2Solved = true;
 				$("#besogo-next-button-inactive").attr("id","besogo-next-button");
-				$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(183, 19, 19, 0.8), 0 6px 20px 0 rgba(183, 19, 19, 0.2)");
+				if(light==true) 
+					$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(183, 19, 19, 0.8), 0 6px 20px 0 rgba(183, 19, 19, 0.2)");
+				else
+					$(".besogo-board").css("box-shadow","0 2px 14px 0 rgb(225, 34, 34), 0 6px 20px 0 rgba(253, 59, 59, 0.58)");
 				if(!noXP){
 					sequence += "incorrect|";
 					document.cookie = "sequence="+sequence;
@@ -2442,7 +2453,7 @@
 	  
 	  options.panels = "tree+control";
 	  <?php 
-	  if($_SESSION['loggedInUser']['User']['isAdmin']>0) echo 'options.panels = "tree+control+tool+comment+file";';//echo 'options.panels = "tree+control";';
+	  if($_SESSION['loggedInUser']['User']['isAdmin']>0) echo 'options.panels = "tree+control+tool+comment+file";';
 	  ?> 
 	  options.tsumegoPlayTool = 'auto';
 	  options.realstones = true;
@@ -2502,7 +2513,7 @@
 			echo 'multipleChoiceLibertiesW = sStatusW;';
 			echo 'multipleChoiceVariance = '.$t['Tsumego']['variance'].';';
 			echo 'multipleChoiceLibertyCount = '.$t['Tsumego']['libertyCount'].';';
-			echo 'let mVariance = '.$multipleChoiceTriangles.';';//variance?
+			echo 'let mVariance = '.$multipleChoiceTriangles.';';
 			echo 'let a1 = []; let a2 = [];
 			for(i=0;i<mVariance;i++){
 				if(sStatusB>0) a1.push(1);
@@ -2524,11 +2535,7 @@
 	  const cornerArray = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
 	  shuffledCornerArray = cornerArray.sort((a, b) => 0.5 - Math.random());
 	  options.corner = shuffledCornerArray[0];
-	  
-	  
-	  
 	  options.playerColor = besogoPlayerColor;
-	  
       options.rootPath = '/besogo/';
 	  <?php
 		if(!isset($choice[0][1])) $choice[0][1] = 'texture4';
@@ -2538,7 +2545,7 @@
 	  options.coord = 'western';
 	  options.sgf = 'https://<?php echo $_SERVER['HTTP_HOST']; ?>/placeholder.sgf';
 	  options.sgf2 = "<?php echo $sgf['Sgf']['sgf']; ?>";
-	  
+	  options.light = "<?php echo $_COOKIE['lightDark']; ?>";
 	  if (options.theme) addStyleLink('https://<?php echo $_SERVER['HTTP_HOST']; ?>/besogo/css/board-'+options.theme+'.css');
 	  if (options.height && options.width && options.resize === 'fixed')
 	  {

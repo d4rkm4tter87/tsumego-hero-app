@@ -18,6 +18,7 @@
   besogo.soundsEnabled = false;
   besogo.controlButtonLock = true;
   besogo.theme = '';
+  besogo.light = null; //light or dark theme
   besogo.vChildrenEnabled = true;//recurring position merging
   besogo.alternativeResponse = true;//alternative response mode
   besogo.multipleChoice = null;//multiple choice problems
@@ -297,6 +298,7 @@
     }
 
     besogo.theme = options.theme;
+    besogo.light = options.light;
     if (typeof options.vChildrenEnabled === 'boolean')
       besogo.vChildrenEnabled = options.vChildrenEnabled;
     if (typeof options.alternativeResponse === 'boolean')

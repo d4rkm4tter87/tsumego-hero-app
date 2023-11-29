@@ -265,7 +265,12 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
     if (this.localEdit)
       return 'blue';
     if (this.correct == CORRECT_GOOD)
-      return 'green';
+	{
+      if (besogo.light==='dark') 
+	    return '#0cee0c';
+	  else
+		return 'green';
+	}
     if (this.correct == CORRECT_BAD)
       return 'red';
     if (this.correct == CORRECT_UNDEFINED)
