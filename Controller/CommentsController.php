@@ -254,7 +254,8 @@ class CommentsController extends AppController{
 					array_push($yourc, $yourComments[$i]);
 				}
 			}
-			$yourComments[$i]['Comment']['message'] = htmlspecialchars($yourComments[$i]['Comment']['message']);
+			if(strpos($yourComments[$i]['Comment']['message'], '<a href="/files/ul1/') === false)
+				$yourComments[$i]['Comment']['message'] = htmlspecialchars($yourComments[$i]['Comment']['message']);
 		}
 		if($yourreverseOrder){
 			$yourc = array_reverse($yourc);
@@ -296,11 +297,13 @@ class CommentsController extends AppController{
 		$currentPositionPlaceholder = '<img src="/img/positionIcon1.png" class="positionIcon1" style="cursor:context-menu;">';
 		
 		for($i=0; $i<count($c); $i++){
-			$c[$i]['Comment']['message'] = htmlspecialchars($c[$i]['Comment']['message']);
+			if(strpos($c[$i]['Comment']['message'], '<a href="/files/ul1/') === false)
+				$c[$i]['Comment']['message'] = htmlspecialchars($c[$i]['Comment']['message']);
 			$c[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $c[$i]['Comment']['message']);
 		}
 		for($i=0; $i<count($comments); $i++){
-			$comments[$i]['Comment']['message'] = htmlspecialchars($comments[$i]['Comment']['message']);
+			if(strpos($comments[$i]['Comment']['message'], '<a href="/files/ul1/') === false)
+				$comments[$i]['Comment']['message'] = htmlspecialchars($comments[$i]['Comment']['message']);
 			$comments[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $comments[$i]['Comment']['message']);
 		}
 		for($i=0; $i<count($yourc); $i++){

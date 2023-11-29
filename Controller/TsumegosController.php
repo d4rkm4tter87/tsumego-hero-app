@@ -637,7 +637,8 @@ class TsumegosController extends AppController{
 		$co = $this->Comment->find('all', array('conditions' => (array('tsumego_id' => $id))));
 		$counter1 = 1;
 		for($i=0; $i<count($co); $i++){
-			$co[$i]['Comment']['message'] = htmlspecialchars($co[$i]['Comment']['message']);
+			if(strpos($co[$i]['Comment']['message'], '<a href="/files/ul1/') === false)
+				$co[$i]['Comment']['message'] = htmlspecialchars($co[$i]['Comment']['message']);
 			$cou = $this->User->findById($co[$i]['Comment']['user_id']);
 			$co[$i]['Comment']['user'] = $cou['User']['name'];
 			$cad = $this->User->findById($co[$i]['Comment']['admin_id']);
@@ -1302,48 +1303,49 @@ class TsumegosController extends AppController{
 			if($_SESSION['loggedInUser']['User']['isAdmin']>=1){
 				if(($this->params['url']['requestProblem']/1337)==$id){
 					$requestProblem = $_COOKIE['sgfForBesogo'];
-					
 					$requestProblem = str_replace('@', ';', $requestProblem);
 					$requestProblem = str_replace('€', "\n", $requestProblem);
 					$requestProblem = str_replace('%2B', "+", $requestProblem);
 					
 					$lastV = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $id)));
-					$sgf = array();
-					$sgf['Sgf']['sgf'] = $requestProblem;
-					$sgf['Sgf']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-					$sgf['Sgf']['tsumego_id'] = $id;
-					
-					if($lastV['Sgf']['version']==1){
-						$sgf['Sgf']['version'] = 1.1;
-					}else{
-						if($lastV['Sgf']['user_id']!=$_SESSION['loggedInUser']['User']['id']){
-							$nextV = $lastV['Sgf']['version']*10;
-							if(floor($nextV)==$nextV)
-								$nextV += .01;
-							$nextV = ceil($nextV);
-							$sgf['Sgf']['version'] = $nextV/10;
+					if($requestProblem !== $lastV['Sgf']['sgf']){
+						$sgf = array();
+						$sgf['Sgf']['sgf'] = $requestProblem;
+						$sgf['Sgf']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+						$sgf['Sgf']['tsumego_id'] = $id;
+						
+						if($lastV['Sgf']['version']==1){
+							$sgf['Sgf']['version'] = 1.1;
 						}else{
-							if(strtotime($lastV['Sgf']['created'])<strtotime('-2 days')){
+							if($lastV['Sgf']['user_id']!=$_SESSION['loggedInUser']['User']['id']){
 								$nextV = $lastV['Sgf']['version']*10;
 								if(floor($nextV)==$nextV)
 									$nextV += .01;
 								$nextV = ceil($nextV);
 								$sgf['Sgf']['version'] = $nextV/10;
 							}else{
-								$sgf['Sgf']['version'] = $lastV['Sgf']['version'] + .01;
+								if(strtotime($lastV['Sgf']['created'])<strtotime('-2 days')){
+									$nextV = $lastV['Sgf']['version']*10;
+									if(floor($nextV)==$nextV)
+										$nextV += .01;
+									$nextV = ceil($nextV);
+									$sgf['Sgf']['version'] = $nextV/10;
+								}else{
+									$sgf['Sgf']['version'] = $lastV['Sgf']['version'] + .01;
+								}
 							}
 						}
+						$this->Sgf->save($sgf);
+						$sgf['Sgf']['sgf'] = str_replace("\r", '', $sgf['Sgf']['sgf']);
+						$sgf['Sgf']['sgf'] = str_replace("\n", '"+"\n"+"', $sgf['Sgf']['sgf']);
+						$this->AdminActivity->create();
+						$adminActivity = array();
+						$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+						$adminActivity['AdminActivity']['tsumego_id'] = $t['Tsumego']['id'];
+						$adminActivity['AdminActivity']['file'] = $t['Tsumego']['num'];
+						$adminActivity['AdminActivity']['answer'] = $t['Tsumego']['num'].'.sgf'.' <font color="grey">(direct save)</font>';
+						$this->AdminActivity->save($adminActivity);
 					}
-					$this->Sgf->save($sgf);
-					$sgf['Sgf']['sgf'] = str_replace("\r", '', $sgf['Sgf']['sgf']);
-					$sgf['Sgf']['sgf'] = str_replace("\n", '"+"\n"+"', $sgf['Sgf']['sgf']);
-					$this->AdminActivity->create();
-					$adminActivity = array();
-					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-					$adminActivity['AdminActivity']['tsumego_id'] = $t['Tsumego']['id'];
-					$adminActivity['AdminActivity']['file'] = $t['Tsumego']['num'];
-					$adminActivity['AdminActivity']['answer'] = $t['Tsumego']['num'].'.sgf'.' <font color="grey">(direct save)</font>';
-					$this->AdminActivity->save($adminActivity);
 				}
 			}
 		}

@@ -666,7 +666,7 @@
     besogo.coordArea['highestXconverted'] = convertedCoords.x[besogo.coordArea['highestX']+1];
     besogo.coordArea['lowestYconverted'] = convertedCoords.y[besogo.coordArea['lowestY']+1];
     besogo.coordArea['highestYconverted'] = convertedCoords.y[besogo.coordArea['highestY']+1];
-  
+
     if (besogo.playerColor==="white")
     {
       let transformation = besogo.makeTransformation();

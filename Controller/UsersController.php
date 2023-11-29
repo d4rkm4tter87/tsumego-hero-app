@@ -19,7 +19,25 @@ class UsersController extends AppController{
 		$this->loadModel('Schedule');
 		$this->loadModel('Sgf');
 		
+		
 		/*
+		2270 stephalamy@gmail.com
+		441  marioaliandoe@gmail.com
+		7732 semelis@gmail.com
+		
+		$c = $this->Comment->find('all', array('order' => 'created DESC', 'conditions' => array(
+			'created >' => '2023-10-00 07:58:47',
+			'NOT' => array(
+				'user_id' => 33,
+			)
+		)));
+		$cc = array();
+		for($i=0; $i<count($c); $i++){
+			$u = $this->User->findById($c[$i]['Comment']['user_id']);
+			array_push($cc, $u['User']['name']);
+		}
+		echo '<pre>'; print_r(array_count_values($cc)); echo '</pre>'; 
+		
 		$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => 42)));
 		$sgfs = array();
 		for($i=0; $i<count($ts); $i++){

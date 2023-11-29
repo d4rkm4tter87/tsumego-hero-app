@@ -1025,8 +1025,8 @@
 	}
 	
 	if($pl==1) echo 'besogoPlayerColor = "white";';
-	if($t['Tsumego']['set_id']==208) echo 'besogoPlayerColor = "black";';
-
+	if($t['Tsumego']['set_id']==208 || $t['Tsumego']['set_id']==109) echo 'besogoPlayerColor = "black";';
+	
 	if($authorx==$_SESSION['loggedInUser']['User']['name']) echo 'authorProblem = true;';
 	if($_SESSION['loggedInUser']['User']['id']==72) echo 'authorProblem = true;';
 	if($firstRanks!=0) echo 'document.cookie = "mode=3";';
@@ -2525,6 +2525,9 @@
 	  const cornerArray = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
 	  shuffledCornerArray = cornerArray.sort((a, b) => 0.5 - Math.random());
 	  options.corner = shuffledCornerArray[0];
+	  
+	  
+	  
 	  options.playerColor = besogoPlayerColor;
 	  
       options.rootPath = '/besogo/';
