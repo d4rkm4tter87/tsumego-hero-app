@@ -97,6 +97,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
     isMoveInTree: isMoveInTree,
     searchNodesForTreePosition: searchNodesForTreePosition,
     setFullEditor: setFullEditor,
+    displayError: displayError,
     test: test
   };
 
@@ -1133,6 +1134,14 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
   function setFullEditor(value)
   {
     fullEditor = value;
+  }
+  
+  function displayError(e)
+  {
+    $("#theComment").text(e);
+	$("#theComment").css("display", "block");
+	$("#theComment").css("color", "rgb(166, 27, 27)");
+	$("#theComment").css("border", "thick double rgb(166, 27, 27)");
   }
 
   function test()

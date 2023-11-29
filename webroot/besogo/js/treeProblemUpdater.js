@@ -137,8 +137,17 @@ besogo.updateStatusValuesInternal = function(root, node, goal)
   for (let i = 0; i < node.children.length; ++i)
     besogo.updateStatusValuesInternal(root, node.children[i], goal);
   for (let i = 0; i < node.virtualChildren.length; ++i)
-    besogo.updateStatusValuesInternal(root, node.virtualChildren[i].target, goal);
-
+  {
+	try
+    {
+	  besogo.updateStatusValuesInternal(root, node.virtualChildren[i].target, goal);
+	}
+	catch(e)
+	{
+	  if (besogo.isEmbedded)
+		besogo.editor.displayError("Error: too much recursion.");
+	}
+  }
   let solversMove = (node.nextMove() == root.firstMove);
 
   if (solversMove == (goal == GOAL_KILL))

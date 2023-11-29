@@ -554,6 +554,10 @@
   function parseAndLoad(text, editor)
   {
     var sgf;
+	if (!text.includes('+')) //no solution
+	  if (!text.includes('G[') && !text.includes('S[')) //not a status based problem
+	    if (besogo.isEmbedded)
+	      besogo.editor.displayError('This problem has no solution.');
     try
     {
       sgf = besogo.parseSgf(text);
@@ -563,12 +567,12 @@
       return; // Silently fail on parse error
     }
     besogo.scaleParameters = besogo.loadSgf(sgf, editor);
-
+	
     //if the setting is not full-board
     if (besogo.scaleParameters['orientation']!=='full-board')
     {
       //set default corner top-left
-      if( besogo.scaleParameters['hFlip'])
+      if (besogo.scaleParameters['hFlip'])
       {
         let transformation = besogo.makeTransformation();
         transformation.hFlip = true;
@@ -587,14 +591,14 @@
       besogo.scaleParameters.highest.x = 19;
     else
       besogo.scaleParameters.highest.x += 3;
-    if(besogo.scaleParameters.highest.y >= 14)
+    if (besogo.scaleParameters.highest.y >= 14)
       besogo.scaleParameters.highest.y = 19;
     else
       besogo.scaleParameters.highest.y += 3;
 
-    if(besogo.scaleParameters.highest.x===19 && besogo.scaleParameters.highest.y!==19)
+    if (besogo.scaleParameters.highest.x===19 && besogo.scaleParameters.highest.y!==19)
       besogo.scaleParameters['boardCanvasSize'] = 'horizontal half board';
-    else if(besogo.scaleParameters.highest.x!==19 && besogo.scaleParameters.highest.y===19)
+    else if (besogo.scaleParameters.highest.x!==19 && besogo.scaleParameters.highest.y===19)
       besogo.scaleParameters['boardCanvasSize'] = 'vertical half board';
     else
       besogo.scaleParameters['boardCanvasSize'] = 'regular board';
@@ -607,7 +611,7 @@
         corner = 'top-left';
         besogo.scaleParameters['orientation'] = 'top-left';
       }
-      else if(corner==='bottom-right')
+      else if (corner==='bottom-right')
       {
         corner = 'bottom-left';
         besogo.scaleParameters['orientation'] = 'bottom-left';

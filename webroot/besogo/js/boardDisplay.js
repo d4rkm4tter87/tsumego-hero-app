@@ -21,7 +21,18 @@ besogo.makeBoardDisplay = function(container, editor, corner)
       lastHoverPosition = null,
       TOUCH_FLAG = false; // Flag for touch interfaces
 
-  besogo.scaleParameters['boardCoordSize'] = sizeX;
+  
+  try
+  {
+    besogo.scaleParameters['boardCoordSize'] = sizeX;
+  }
+  catch (error)
+  {
+    if (besogo.isEmbedded)
+	  besogo.editor.displayError('Error: file not readable.');
+  }
+  
+  
   //Not a 19x19 board, so it should be full board view
   //or not embedded viewer
   if(sizeX != 19 || !besogo.isEmbedded)
