@@ -686,7 +686,7 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
     for (let i = 0; i < this.virtualChildren.length; ++i)
       if (this.isNonLocalChildWithNoBetterStatus(this.virtualChildren[i].target))
         ++result;
-    return false;
+    return result;
   }
 
   root.selectNonLocalChildIncludingVirtualWithNoBetterStatus = function(indexToSelect)

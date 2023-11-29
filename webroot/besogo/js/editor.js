@@ -453,7 +453,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
 
   function tryToFinish(node)
   {
-	// added node.localEdit to fix an issue where the autoplay stops when it is not in the tree but finds a virtual child
+  // added node.localEdit to fix an issue where the autoplay stops when it is not in the tree but finds a virtual child
     if (!node.hasNonLocalChildIncludingVirtual() || node.localEdit)
       finish(node);
   }
@@ -477,7 +477,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
         if (root.goal != GOAL_NONE &&
         node.status.blackFirst.type != STATUS_ALIVE && // when the current is clearly dead or alive, we don't say the obvious
         node.status.blackFirst.type != STATUS_DEAD)
-		  displayMessage(transformTextColors(root, "It is " + node.status.strLong() + ", but it should be: " + root.status.strLong()), 'Not the best solution');
+        displayMessage(transformTextColors(root, "It is " + node.status.strLong() + ", but it should be: " + root.status.strLong()), 'Not the best solution');
       }
       displayResult(success ? 'S' : 'F');
     }, 360);
@@ -505,8 +505,11 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
           return;
 
         let selectOpponentMove = 0;
-        if (current.children.length > 1)
-          selectOpponentMove = Math.floor(Math.random() * current.countOfNonLocalChildrenIncludingVirtualWithNoBetterStatus());
+        {
+          let selectionCount = current.countOfNonLocalChildrenIncludingVirtualWithNoBetterStatus();
+          if (selectionCount > 1)
+            selectOpponentMove = Math.floor(Math.random() * selectionCount);
+        }
 
         //if alternative response mode is turned on
         if (besogo.alternativeResponse)
@@ -1024,9 +1027,9 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
     let found = false;
     let spin = 0;
     let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
-	
+
     if (typeof besogo.dynamicCommentCoords[0] !== 'undefined')
-	{
+    {
       if (besogo.coordArea['lowestX']>besogo.coordArea['highestX'])
       {
         buffer = besogo.coordArea['lowestX'];
@@ -1139,9 +1142,9 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
   function displayError(e)
   {
     $("#theComment").text(e);
-	$("#theComment").css("display", "block");
-	$("#theComment").css("color", "rgb(166, 27, 27)");
-	$("#theComment").css("border", "thick double rgb(166, 27, 27)");
+    $("#theComment").css("display", "block");
+    $("#theComment").css("color", "rgb(166, 27, 27)");
+    $("#theComment").css("border", "thick double rgb(166, 27, 27)");
   }
 
   function test()
