@@ -772,8 +772,27 @@ Joschka Zimdars';
 		$this->set('aa', $aa);
 	}
 	
+	public function uservisits(){
+		$_SESSION['page'] = 'set';
+		$_SESSION['title'] = 'User Visits';
+		$this->loadModel('Answer');
+		
+		$ans = $this->Answer->find('all', array('order' => 'created DESC'));
+		$a = array();
+		for($i=0; $i<count($ans); $i++){
+			$a[$i]['date'] = $ans[$i]['Answer']['created'];
+			$a[$i]['num'] = $ans[$i]['Answer']['dismissed'];
+			$a[$i]['y'] = date('Y', strtotime($ans[$i]['Answer']['created']));;
+			$a[$i]['m'] = date('m', strtotime($ans[$i]['Answer']['created']));;
+			$a[$i]['d'] = date('d', strtotime($ans[$i]['Answer']['created']));;
+		}
+		
+		$this->set('a', $a);
+	}
+	
+	
 	public function uploads(){
-		$_SESSION['page'] = 'play';
+		$_SESSION['page'] = 'set';
 		$_SESSION['title'] = 'Uploads';
 		$this->LoadModel('Sgf');
 		$this->loadModel('Tsumego');

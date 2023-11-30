@@ -3053,6 +3053,10 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		font-size:15px;
 		text-decoration:none;
 	}
+	.statsText1{
+		width: 605px;
+		text-align: left;
+	}
 	#timeMode1, #timeMode2, #timeMode3{
 		margin:0 25px;
 	}
@@ -3218,6 +3222,9 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	}
 	.historyLink{
 		color:#c63c3c!important;
+	}
+	.historyLink2{
+		color:#ff9090!important;
 	}
 	.dailyHighscoreTable{
 		color:black;

@@ -77,35 +77,11 @@
 		?>
 		<div align="left">
 			If you have questions about creating/editing/deleting content or comments:
-			<a href="/files/Admin-Guide.pdf" target="_blank">
+			<a class="historyLink2" href="/files/Admin-Guide.pdf" target="_blank">
 				Admin-Guide.pdf
 			</a>
 			<br><br>
 			<table width="100%">
-			<tr>
-			<td>
-				<a href="/users/adminstats">Admin Activities</a>
-			</td>
-			<td>
-				<a href="/users/userstats">User Activities</a>
-			</td>
-			</tr>
-			<tr>
-			<td>
-				<a href="https://kovarex.github.io/besogo/testing.html">Editor</a>
-			</td>
-			<td>
-				<a href="/users/publish">Publish Schedule</a>
-			</td>
-			</tr>
-			<tr>
-			<td>
-				<a href="/users/likesview">Likes/Dislikes</a>
-			</td>
-			<td>
-			
-			</td>
-			</tr>
 			<tr>
 			<td>
 				<a href="/sets/create">Create Set</a>

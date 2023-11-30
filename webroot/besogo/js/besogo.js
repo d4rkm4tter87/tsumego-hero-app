@@ -556,7 +556,7 @@
   function parseAndLoad(text, editor)
   {
     var sgf;
-	if (!text.includes('+')) //no solution
+	if (!text.includes('+') && !besogo.multipleChoice) //no solution
 	  if (!text.includes('G[') && !text.includes('S[')) //not a status based problem
 	    if (besogo.isEmbedded)
 	      besogo.editor.displayError('This problem has no solution.');
