@@ -15,17 +15,19 @@ besogo.loadSgf = function(sgf, editor, mode = NORMAL_LOAD)
   loadNodeTree(sgf, root); // Load the rest of game tree
   root.figureFirstToMove();
   besogo.updateTreeAsProblem(root);
-  if (mode == NORMAL_LOAD)
-    editor.loadRoot(root); // Load root into the editor
-  else
-  {
-    editor.getRoot().incorporateDiff(root);
-    editor.notifyListeners({treeChange: true, navChange: true, stoneChange: true});
-  }
 
   besogo.scaleParameters = besogo.makeScaleParameters(size);
   besogo.scaleParameters.setupLimitsFromTree(root);
   besogo.scaleParameters.normalizeToTopLeft(size);
+
+  if (mode == NORMAL_LOAD)
+    editor.loadRoot(root); // Load root into the editor
+  else
+  {
+    besogo.scaleParameters.transform(root); // when applying diff, we need to transform now, as the other root is already normalised.
+    editor.getRoot().incorporateDiff(root);
+    editor.notifyListeners({treeChange: true, navChange: true, stoneChange: true});
+  }
 
   if (besogo.scaleParameters.checkFullBoard(size))
     besogo.boardParameters.fullBoard = true;

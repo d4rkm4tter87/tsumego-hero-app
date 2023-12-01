@@ -266,7 +266,7 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
       return 'blue';
     if (this.correct == CORRECT_GOOD)
 	{
-      if (besogo.light==='dark') 
+      if (besogo.light==='dark')
 	    return '#0cee0c';
 	  else
 		return 'green';
@@ -715,6 +715,12 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
     besogo.updateCorrectValues(this);
   }
 
+  root.applyTransformationOnRoot = function(transformation)
+  {
+    this.applyTransformation(this, transformation);
+    this.firstMove = transformation.applyOnColor(this.firstMove);
+  }
+
   root.applyTransformation = function(rootNode, transformation)
   {
     rootNode.nodeHashTable.erase(this);
@@ -809,7 +815,7 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
     for (let i = 0; i < this.children.length; ++i)
       this.children[i].unvisit();
   }
-  
+
   root.getCorrespondingChild = function(otherChild)
   {
     for (let i = 0; i < this.children.length; ++i)
@@ -817,20 +823,20 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
         return this.children[i];
     return null;
   }
-  
+
   root.wasAddedIncludingChildren = function()
   {
     this.diffInfo = besogo.makeAddedMoveDiffInfo();
     for (let i = 0; i < this.children.length; ++i)
       this.children[i].wasAddedIncludingChildren();
   }
-  
+
   root.incorporateDiff = function(otherRoot)
   {
     this.isDiff = true;
     this.incorporateDiffInternal(otherRoot);
   }
-  
+
   root.incorporateDiffInternal = function(otherRoot)
   {
     for (let i = 0; i < this.children.length; ++i)
@@ -841,7 +847,7 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
       else
         this.children[i].incorporateDiffInternal(correspondingChild);
     }
-    
+
     for (let i = 0; i < otherRoot.children.length; ++i)
     {
       let otherChild = otherRoot.children[i];

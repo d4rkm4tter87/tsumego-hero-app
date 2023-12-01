@@ -571,75 +571,65 @@
     besogo.scaleParameters = besogo.loadSgf(sgf, editor);
 	
     //if the setting is not full-board
-    if (besogo.scaleParameters['orientation']!=='full-board')
+    if (besogo.scaleParameters.orientation !== 'full-board')
     {
-      //set default corner top-left
-      if (besogo.scaleParameters['hFlip'])
-      {
-        let transformation = besogo.makeTransformation();
-        transformation.hFlip = true;
-        besogo.editor.applyTransformation(transformation);
-      }
-      if (besogo.scaleParameters['vFlip'])
-      {
-        let transformation = besogo.makeTransformation();
-        transformation.vFlip = true;
-        besogo.editor.applyTransformation(transformation);
-      }
-      besogo.scaleParameters['orientation'] = 'top-left';
+      let transformation = besogo.makeTransformation();
+      besogo.scaleParameters.prepareTransformation(transformation)
+      besogo.editor.applyTransformation(transformation);
+      besogo.scaleParameters.orientation = 'top-left';
 
-    //enlarge area based on places stones
-    if (besogo.scaleParameters.highest.x >= 10)
-      besogo.scaleParameters.highest.x = 19;
-    else
-      besogo.scaleParameters.highest.x += 3;
-    if (besogo.scaleParameters.highest.y >= 14)
-      besogo.scaleParameters.highest.y = 19;
-    else
-      besogo.scaleParameters.highest.y += 3;
+      //enlarge area based on places stones
+      if (besogo.scaleParameters.highest.x >= 10)
+        besogo.scaleParameters.highest.x = 19;
+      else
+        besogo.scaleParameters.highest.x += 3;
+      if (besogo.scaleParameters.highest.y >= 14)
+        besogo.scaleParameters.highest.y = 19;
+      else
+        besogo.scaleParameters.highest.y += 3;
 
-    if (besogo.scaleParameters.highest.x===19 && besogo.scaleParameters.highest.y!==19)
-      besogo.scaleParameters['boardCanvasSize'] = 'horizontal half board';
-    else if (besogo.scaleParameters.highest.x!==19 && besogo.scaleParameters.highest.y===19)
-      besogo.scaleParameters['boardCanvasSize'] = 'vertical half board';
-    else
-      besogo.scaleParameters['boardCanvasSize'] = 'regular board';
+      if (besogo.scaleParameters.highest.x===19 && besogo.scaleParameters.highest.y!==19)
+        besogo.scaleParameters.boardCanvasSize = 'horizontal half board';
+      else if (besogo.scaleParameters.highest.x!==19 && besogo.scaleParameters.highest.y===19)
+        besogo.scaleParameters.boardCanvasSize = 'vertical half board';
+      else
+        besogo.scaleParameters.boardCanvasSize = 'regular board';
 
-    //half boards only have 2 orientations, not 4
-    if (besogo.scaleParameters['boardCanvasSize']==='horizontal half board')
-    {
-      if (corner==='top-right')
+      //half boards only have 2 orientations, not 4
+      if (besogo.scaleParameters.boardCanvasSize === 'horizontal half board')
       {
-        corner = 'top-left';
-        besogo.scaleParameters['orientation'] = 'top-left';
+        if (corner === 'top-right')
+        {
+          corner = 'top-left';
+          besogo.scaleParameters.orientation = 'top-left';
+        }
+        else if (corner === 'bottom-right')
+        {
+          corner = 'bottom-left';
+          besogo.scaleParameters.orientation = 'bottom-left';
+        }
       }
-      else if (corner==='bottom-right')
+      else if (besogo.scaleParameters.boardCanvasSize === 'vertical half board')
       {
-        corner = 'bottom-left';
-        besogo.scaleParameters['orientation'] = 'bottom-left';
+        if (corner === 'bottom-left')
+        {
+          corner = 'top-left';
+          besogo.scaleParameters.orientation = 'top-left';
+        }
+        else if (corner === 'bottom-right')
+        {
+          corner = 'top-right';
+          besogo.scaleParameters.orientation = 'top-right';
+        }
       }
-    }
-    else if (besogo.scaleParameters['boardCanvasSize']==='vertical half board')
-    {
-      if (corner==='bottom-left')
-      {
-        corner = 'top-left';
-        besogo.scaleParameters['orientation'] = 'top-left';
-      }
-      else if (corner==='bottom-right')
-      {
-        corner = 'top-right';
-        besogo.scaleParameters['orientation'] = 'top-right';
-      }
-    }
 
-    //if another corner than top-left is set
+      //if another corner than top-left is set
       if (corner=='top-right')
       {
         let transformation = besogo.makeTransformation();
         transformation.hFlip = true;
         besogo.editor.applyTransformation(transformation);
-        besogo.scaleParameters['orientation'] = 'top-right';
+        besogo.scaleParameters.orientation = 'top-right';
         besogo.coordArea['lowestX'] = 18-besogo.coordArea['lowestX'];
         besogo.coordArea['highestX'] = 18-besogo.coordArea['highestX'];
       }
@@ -648,7 +638,7 @@
         let transformation = besogo.makeTransformation();
         transformation.vFlip = true;
         besogo.editor.applyTransformation(transformation);
-        besogo.scaleParameters['orientation'] = 'bottom-left';
+        besogo.scaleParameters.orientation = 'bottom-left';
         besogo.coordArea['lowestY'] = 18-besogo.coordArea['lowestY'];
         besogo.coordArea['highestY'] = 18-besogo.coordArea['highestY'];
       }
@@ -660,7 +650,7 @@
         transformation = besogo.makeTransformation();
         transformation.vFlip = true;
         besogo.editor.applyTransformation(transformation);
-        besogo.scaleParameters['orientation'] = 'bottom-right';
+        besogo.scaleParameters.orientation = 'bottom-right';
         besogo.coordArea['lowestX'] = 18-besogo.coordArea['lowestX'];
         besogo.coordArea['highestX'] = 18-besogo.coordArea['highestX'];
         besogo.coordArea['lowestY'] = 18-besogo.coordArea['lowestY'];
@@ -679,16 +669,15 @@
       transformation.invertColors = true;
       besogo.editor.applyTransformation(transformation);
     }
-	if (besogo.onSite !== null)
-	if (besogo.onSite[2] === 'diff')
-	{
-	  let cookieDiff = besogo.getCookie("diffForBesogo");
-	  cookieDiff = cookieDiff.replaceAll('€', "\n");
-	  cookieDiff = cookieDiff.replaceAll('@', ";");
-	  cookieDiff = cookieDiff.replaceAll('%2B', "+");
-	  cookieDiff = besogo.parseSgf(cookieDiff);
-	  besogo.loadSgf(cookieDiff, editor, 1);
-	}
+	  if (besogo.onSite !== null &&besogo.onSite[2] === 'diff')
+    {
+      let cookieDiff = besogo.getCookie("diffForBesogo");
+      cookieDiff = cookieDiff.replaceAll('€', "\n");
+      cookieDiff = cookieDiff.replaceAll('@', ";");
+      cookieDiff = cookieDiff.replaceAll('%2B', "+");
+      cookieDiff = besogo.parseSgf(cookieDiff);
+      besogo.loadSgf(cookieDiff, editor, OPEN_FOR_DIFF);
+    }
     return besogo.scaleParameters;
   }
 

@@ -92,6 +92,27 @@ besogo.makeScaleParameters = function(size)
     return true;
   }
 
+  scaleParameters.prepareTransformation = function(transformation)
+  {
+    if (this.hFlip)
+    {
+      transformation.hFlip = !transformation.hFlip;
+      this.hFlip = false;
+    }
+    if (this.vFlip)
+    {
+      transformation.vFlip = !transformation.vFlip;
+      this.vFlip = false;
+    }
+  }
+
+  scaleParameters.transform = function(root)
+  {
+    let transformation = besogo.makeTransformation();
+    this.prepareTransformation(transformation);
+    root.applyTransformationOnRoot(transformation);
+  }
+
   scaleParameters.clear(size);
 
   return scaleParameters;
