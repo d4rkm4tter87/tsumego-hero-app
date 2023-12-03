@@ -98,13 +98,10 @@ class TsumegosController extends AppController{
 		
 		if(isset($this->params['url']['potionAlert']))
 			$potionAlert = true;
-		
-		
 		if(isset($_COOKIE['ui']) && $_COOKIE['ui'] != '0'){
 			$ui = $_COOKIE['ui'];
 			unset($_COOKIE['ui']);
 		}
-		
 		if(isset($this->params['url']['modelink'])){
 			if($this->params['url']['modelink']==1) $tlength=15;
 			elseif($this->params['url']['modelink']==2) $tlength=16;
@@ -248,19 +245,16 @@ class TsumegosController extends AppController{
 		
 		if(isset($_SESSION['loggedInUser'])){
 			if($_SESSION['loggedInUser']['User']['mode']==0) $_SESSION['loggedInUser']['User']['mode'] = 1;
-			
 			if(isset($this->params['url']['mode'])){
 				$_SESSION['loggedInUser']['User']['mode'] = $this->params['url']['mode'];	
 				$mode = $this->params['url']['mode'];
 			}
-			
 			$difficulty = $u['User']['t_glicko'];
 			if(isset($_COOKIE['difficulty']) && $_COOKIE['difficulty'] != '0'){
 				$difficulty = $_COOKIE['difficulty'];
 				$u['User']['t_glicko'] = $_COOKIE['difficulty'];
 				unset($_COOKIE['difficulty']);
 			}
-			
 			if($mode==2){
 				$trs = $this->TsumegoRatingAttempt->find('all', array('order' => 'created DESC', 'conditions' => array(
 					'user_id' => $_SESSION['loggedInUser']['User']['id'],
@@ -739,10 +733,6 @@ class TsumegosController extends AppController{
 		if(isset($_COOKIE['preId'])){
 			$preTsumego = $this->Tsumego->findById($_COOKIE['preId']);
 			$utPre = $this->findUt($_COOKIE['preId'], $allUts, $idMap);
-			if($_COOKIE['preId']==$id)
-				if($refresh==null) 
-					$refresh = 8;
-						
 		}else $utPre = $this->findUt(15352, $allUts, $idMap);
 		
 		if($mode==1 || $mode==3){
