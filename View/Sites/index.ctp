@@ -28,14 +28,14 @@
 		if(count($scheduleTsumego)!=0){
 			echo '<font color="#444">Added today:</font><br>';
 			if(count($scheduleTsumego)<=1){
-				echo '<a style="color:#000;" href="/sets/view/'.$newT['Tsumego']['set_id'].'"><b>
-				'.$newT['Tsumego']['set'].' '.$newT['Tsumego']['set2'].'</b> - '.$newT['Tsumego']['num'].'</a><br>
+				echo '<a class="scheduleTsumego" href="/sets/view/'.$newT['Tsumego']['set_id'].'"><b>
+				'.$newT['Tsumego']['set'].' '.$newT['Tsumego']['set2'].' - '.$newT['Tsumego']['num'].'</b></a><br>
 					<li class="set'.$newT['Tsumego']['status'].'1" style="margin-top:4px;">
 						<a href="/tsumegos/play/'.$newT['Tsumego']['id'].'">'.$newT['Tsumego']['num'].'</a>
 					</li>';
 			}else{
-				echo '<a style="color:#000;" href="/sets/view/'.$newT['Tsumego']['set_id'].'"><b>
-				'.$newT['Tsumego']['set'].' '.$newT['Tsumego']['set2'].'</b> - '.count($scheduleTsumego).' problems</a><br>';
+				echo '<a class="scheduleTsumego" href="/sets/view/'.$newT['Tsumego']['set_id'].'"><b>
+				'.$newT['Tsumego']['set'].' '.$newT['Tsumego']['set2'].' - '.count($scheduleTsumego).' problems</b></a><br>';
 				for($i=0; $i<count($scheduleTsumego); $i++){
 					echo '<li class="set'.$scheduleTsumego[$i]['Tsumego']['status'].'1" style="margin-top:4px;">
 						<a href="/tsumegos/play/'.$scheduleTsumego[$i]['Tsumego']['id'].'">'.$scheduleTsumego[$i]['Tsumego']['num'].'</a>
@@ -597,7 +597,8 @@
 			if($date==date_create('2019-05-01')) $td[$j]['num'] -= 32;
 			if($date==date_create('2019-05-19')) $td[$j]['num'] -= 40;
 			if($date==date_create('2020-02-22')) $td[$j]['num'] -= 364;
-			if($date==date_create('2023-09-01')) $td[$j]['num'] -= 141;
+			//if($date==date_create('2023-09-01')) $td[$j]['num'] -= 141;
+			if($date==date_create('2023-09-01')) $td[$j]['num'] -= 4;
 			if($date==date_create('2023-10-04')) $td[$j]['num'] -= 10;
 			$x = $td[$j]['num'];
 			$sum = $x;
@@ -658,9 +659,19 @@
 		<div class="new1">
 			<table class="newx" border="0">
 				<tr>
+					<td><h1>02.12.2023</h1></td>
+					<td><h1>Tomislav Sokec</h1></td>
+					<td><h1>10,00 € <font size="2px">subscription</font></h1></td>
+				</tr>
+				<tr>
+					<td><h1>23.11.2023</h1></td>
+					<td><h1>Paul Cane</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
 					<td><h1>21.11.2023</h1></td>
 					<td><h1>Jeremy Bruzac</h1></td>
-					<td><h1>10,00 €</h1></td>
+					<td><h1>12,00 €</h1></td>
 				</tr>
 				<tr>
 					<td><h1>21.11.2023</h1></td>
@@ -670,16 +681,6 @@
 				<tr>
 					<td><h1>19.11.2023</h1></td>
 					<td><h1>Abhijeet Rajwade</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>14.11.2023</h1></td>
-					<td><h1>hoshi911</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>07.11.2023</h1></td>
-					<td><h1>Mykyta Shvetsov</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<!--

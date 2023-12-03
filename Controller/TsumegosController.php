@@ -126,7 +126,6 @@ class TsumegosController extends AppController{
 		if(isset($_SESSION['loggedInUser'])){
 			$_SESSION['loggedInUser']['User']['mode'] = 1;
 			$u =  $this->User->findById($_SESSION['loggedInUser']['User']['id']);
-		
 			if(isset($_COOKIE['mode']) && $_COOKIE['mode'] != '0'){
 				if(strlen($_SESSION['loggedInUser']['User']['activeRank'])>=15){
 					if($_COOKIE['mode']!=3){//switch 3=>2, 3=>1
@@ -147,14 +146,12 @@ class TsumegosController extends AppController{
 				}
 				$_SESSION['loggedInUser']['User']['mode'] = $_COOKIE['mode'];	
 				$mode = $_COOKIE['mode'];
-				
 			}
 			unset($_COOKIE['mode']);
 		}else{
 			$nextMode = $this->Tsumego->findById(15352);
 			$mode = 1;
 		}
-		
 		if(isset($_SESSION['loggedInUser'])){
 			if(strlen($_SESSION['loggedInUser']['User']['activeRank'])>=15){
 				if(strlen($_SESSION['loggedInUser']['User']['activeRank'])==15){
@@ -343,20 +340,15 @@ class TsumegosController extends AppController{
 					)));
 					$rangeIncrement+=50;
 				}
-				
 				for($i=0; $i<count($range); $i++){
 					array_push($range2, $range[$i]['Tsumego']['elo_rating_mode']);
 				}
-				
 				shuffle($range);
 				$nextMode = $range[0];
-				
 				$id = $nextMode['Tsumego']['id'];
 			}
 		}
-		if(isset($this->params['url']['refresh'])) $refresh = $this->params['url']['refresh'];
-		
-		$t = $this->Tsumego->findById($id);
+		$t = $this->Tsumego->findById($id);//the tsumego
 		
 		$fSet = $this->Set->find('first', array('conditions' => array('id' => $t['Tsumego']['set_id'])));
 		if($t==null) $t = $this->Tsumego->findById($_SESSION['lastVisit']);
@@ -482,11 +474,9 @@ class TsumegosController extends AppController{
 			if(in_array($file_ext,$extensions)=== false){
 			 $errors[]="Only SGF files are allowed.";
 			}
-
 			if($file_size > 2097152){
 			 $errors[]='The file is too large.';
 			}
-
 			$cox = count($this->Comment->find('all', array('conditions' => (array('tsumego_id' => $id)))));
 			if(empty($fSet['Set']['title2'])) $title2 = '';
 			else $title2 = '-';
@@ -681,6 +671,9 @@ class TsumegosController extends AppController{
 				$allUts = null;
 				$ut = null;
 			}
+			$idMap2 = array_count_values($idMap);
+			if($idMap2[$t['Tsumego']['id']]>1) 
+				$this->removeDuplicates($t['Tsumego']['id']);
 		}elseif($mode==2){
 			$allUts1 = $this->TsumegoStatus->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'tsumego_id' => $t['Tsumego']['id'])));
 			$_SESSION['loggedInUser']['User']['mode'] = 2;
@@ -746,9 +739,10 @@ class TsumegosController extends AppController{
 		if(isset($_COOKIE['preId'])){
 			$preTsumego = $this->Tsumego->findById($_COOKIE['preId']);
 			$utPre = $this->findUt($_COOKIE['preId'], $allUts, $idMap);
-			if($_COOKIE['preId']==$id){
-				if($refresh==null) $refresh = 8;
-			}				
+			if($_COOKIE['preId']==$id)
+				if($refresh==null) 
+					$refresh = 8;
+						
 		}else $utPre = $this->findUt(15352, $allUts, $idMap);
 		
 		if($mode==1 || $mode==3){
@@ -1275,7 +1269,7 @@ class TsumegosController extends AppController{
 			$sgf = $sgfdb;
 		}
 		
-		if($t['Tsumego']['set_id']==208){
+		if($t['Tsumego']['set_id']==208 || $t['Tsumego']['set_id']==210){
 			$aw = strpos($sgf['Sgf']['sgf'], 'AW');
 			$ab = strpos($sgf['Sgf']['sgf'], 'AB');
 			$tr = strpos($sgf['Sgf']['sgf'], 'TR');
@@ -1664,17 +1658,13 @@ class TsumegosController extends AppController{
 					if($u['User']['health']-$u['User']['damage']<=0) $potionActive = true;
 				}
 			}
-		
-			if(!isset($_SESSION['loggedInUser']['User']['id']) && isset($_SESSION['loggedInUser']['User']['premium'])){
+			if(!isset($_SESSION['loggedInUser']['User']['id']) && isset($_SESSION['loggedInUser']['User']['premium']))
 				unset($_SESSION['loggedInUser']);
-			}
-			
 			$achievementUpdate1 = $this->checkLevelAchievements();
 			$achievementUpdate2 = $this->checkProblemNumberAchievements();
 			$achievementUpdate3 = $this->checkNoErrorAchievements();
 			$achievementUpdate4 = $this->checkRatingAchievements();
 			$achievementUpdate = array_merge($achievementUpdate1, $achievementUpdate2, $achievementUpdate3, $achievementUpdate4);
-			
 			if(count($achievementUpdate)>0) $this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
 		}
 		
@@ -1773,7 +1763,6 @@ class TsumegosController extends AppController{
 		$this->set('stopParameter2', $stopParameter2);
 		$this->set('mode3ScoreArray', $mode3ScoreArray);
 		$this->set('potionAlert', $potionAlert);
-		//$this->set('sgfErrorMessage', $masterArrayBW[16]);
 		$this->set('file', $file);
 		$this->set('ui', $ui);
 		$this->set('requestProblem', $requestProblem);
@@ -1894,6 +1883,14 @@ class TsumegosController extends AppController{
 		}
 		if(substr($n, -1)==' ') $n = substr($n, 0, -1);
 		return $n;
+	}
+	
+	private function removeDuplicates($tid=null){
+		$ts = $this->TsumegoStatus->find('all', array('order' => 'created DESC', 'conditions' => array('tsumego_id' => $tid,'user_id' => $_SESSION['loggedInUser']['User']['id'])));
+		for($i=0; $i<count($ts); $i++){
+			if($i!=0)
+				$this->TsumegoStatus->delete($ts[$i]['TsumegoStatus']['id']);
+		}
 	}
 	
 	private function commentCoordinates($c=null, $counter=null, $noSyntax=null){
@@ -2041,27 +2038,6 @@ class TsumegosController extends AppController{
 			case '18': return 1;
 		}
 		return 0;
-	}
-	
-	private function encrypt($str=null){
-		$secret_key = 'my_simple_secret_keyx';
-		$secret_iv = 'my_simple_secret_ivx';
-		$encrypt_method = "AES-256-CBC";
-		$key = hash( 'sha256', $secret_key );
-		$iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
-		return base64_encode(openssl_encrypt($str, $encrypt_method, $key, 0, $iv));
-	}
-	
-	private function decrypt($str=null){
-		$string = $str;
-		$secret_key = 'my_simple_secret_keyx';
-		$secret_iv = 'my_simple_secret_ivx';
-		$output = false;
-		$encrypt_method = "AES-256-CBC";
-		$key = hash( 'sha256', $secret_key );
-		$iv = substr( hash( 'sha256', $secret_iv ), 0, 16);
-		return openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
-		//$outputArr = explode("number", $output);
 	}
 	
 	// Returns 2 updated ratings, RD initialization for user has to be done manually before this function

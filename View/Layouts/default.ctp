@@ -483,12 +483,12 @@
 			if(soundValue=="off"){
 				document.getElementById("soundButtonImage").src="/img/sound-icon2.png";
 				document.cookie = "sound=off";
-        updateSoundValue(false);
+				updateSoundValue(false);
 			}
 			if(soundValue=="on"){
 				document.getElementById("soundButtonImage").src="/img/sound-icon1.png";
 				document.cookie = "sound=on";
-        updateSoundValue(true);
+				updateSoundValue(true);
 			}
 
 			<?php
@@ -586,9 +586,21 @@
 					}
 				}
 			<?php } ?>
+			<?php if($resetCookies){ ?>
+				setCookie("preId", 0);
+				setCookie("score", 0);
+				setCookie("seconds", 0);
+			<?php } ?>
 		});
 		function updateCookie(c1,c2){
 			document.cookie = c1+c2;
+		}
+		
+		function setCookie(cookie, value=""){
+			let paths = ["/", "/sets", "/sets/view", "/tsumegos/play", "/users", "/users/view"];
+			for(let i=0;i<paths.length;i++){
+				document.cookie = cookie+"="+value+";path="+paths[i];
+			}
 		}
 
 		function logoHover(img){
@@ -841,7 +853,7 @@
 					clearInterval(timer);
 				}
 			}, stepTime);
-		}//
+		}
 	</script>
 	<?php
 	if(!isset($_SESSION['loggedInUser']['User']['id']))

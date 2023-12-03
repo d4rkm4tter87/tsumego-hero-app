@@ -2107,6 +2107,9 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		margin-left:20px;
 		color:white;
 	}
+	.scheduleTsumego{
+		color:#000!important;
+	}
 	.achievemetProfileLink{
 		position: absolute;
 		  float: right;

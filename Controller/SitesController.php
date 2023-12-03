@@ -32,9 +32,6 @@ class SitesController extends AppController{
 			}
 		}
 		
-		
-		$sets = $this->Set->find('all');
-		
 		$newTS = array();
 		$setIDs = array();
 		$setNames = array();

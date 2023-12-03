@@ -75,7 +75,7 @@ function darkAndLight(){
 		$(".admin-panel h1").css("color","#f0f0f0");
 		$("#uotdStartPage").css("background-color","none");
 		$("#uotdStartPage").css("background-color","transparent");
-		$(".new1 a, .new1 b").css("color","#f0f0f0");
+		$(".new1 a, .new1 b, .scheduleTsumego").css("color","#f0f0f0");
 	}else{//make light
 		document.cookie = "lightDark=light;path=/";
 		document.cookie = "lightDark=light;path=/sets/view";
@@ -152,7 +152,8 @@ function darkAndLight(){
 		$("#timeButton, #ratioButton, #numbersButton").css("color","#74d13f");
 		$("#uotdStartPage").css("background-color","none");
 		$("#uotdStartPage").css("background-color","transparent");
-		$(".new1 a, .new1 b").css("color","black");
+		$(".new1 a, .new1 b, .scheduleTsumego").css("color","black");
+		$(".setN1 a, .setV1 a, .setS1 a, .setC1 a, .setF1 a, .setX1 a, .setW1 a, .setG1 a, .setA1 a").css("color","white");
 	}
 	light = !light;
 }

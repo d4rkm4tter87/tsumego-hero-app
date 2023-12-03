@@ -448,6 +448,7 @@ class SetsController extends AppController{
 			$removeMap[81578] = 1;
 			$removeMap[88156] = 1;
 		}
+		$removeMap[42] = 1;
 		$removeMap[72] = 1;
 		$removeMap[73] = 1;
 		$removeMap[74] = 1;

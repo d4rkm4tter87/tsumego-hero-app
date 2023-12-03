@@ -251,11 +251,6 @@ class AppController extends Controller{
 	public function halfXP(){
 		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('DayRecord');
-		
-		//$dr = $this->DayRecord->find('first', array('conditions' =>  array('date' => '2022-11-21')));
-		//$dr['DayRecord']['tsumego'] = 21713;
-		//$this->DayRecord->save($dr);
-		
 		$week = $this->TsumegoStatus->find('all', array('order' => 'created DESC', 'conditions' => array('status' => 'S')));
 		$oneWeek = date('Y-m-d H:i:s', strtotime("-7 days"));
 		for($i=0; $i<count($week); $i++){
@@ -272,7 +267,6 @@ class AppController extends Controller{
 		$this->LoadModel('Schedule');
 		$date = date('Y-m-d', strtotime('today'));
 		$s = $this->Schedule->find('all', array('conditions' =>  array('date' => $date)));
-		//if(count($s)<=1){
 		if(false){
 			if($s!=null){
 				$id = $this->publishSingle($s['Schedule']['tsumego_id'], $s['Schedule']['set_id'], $s['Schedule']['date']);
@@ -473,6 +467,26 @@ class AppController extends Controller{
 		elseif($d==1) $elo = 900;
 		else $elo = 1500;
 		return $elo;
+	}
+	
+	public function encrypt($str=null){
+		$secret_key = 'my_simple_secret_keyx';
+		$secret_iv = 'my_simple_secret_ivx';
+		$encrypt_method = "AES-256-CBC";
+		$key = hash( 'sha256', $secret_key );
+		$iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
+		return base64_encode(openssl_encrypt($str, $encrypt_method, $key, 0, $iv));
+	}
+	
+	public function decrypt($str=null){
+		$string = $str;
+		$secret_key = 'my_simple_secret_keyx';
+		$secret_iv = 'my_simple_secret_ivx';
+		$output = false;
+		$encrypt_method = "AES-256-CBC";
+		$key = hash( 'sha256', $secret_key );
+		$iv = substr( hash( 'sha256', $secret_iv ), 0, 16);
+		return openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
 	}
 	
 	public function checkProblemNumberAchievements(){
@@ -1325,14 +1339,21 @@ class AppController extends Controller{
 		$this->loadModel('TsumegoRatingAttempt');
 		$this->loadModel('Set');
 		$this->loadModel('Rank');
-		//200 hrs
-		//server
+		$this->LoadModel('TsumegoStatus');
+		$this->LoadModel('Comment');
+		$this->LoadModel('UserBoard');
+		$this->LoadModel('TsumegoAttempt');
+		$this->LoadModel('AdminActivity');
+		$this->LoadModel('RankSetting');
+		$this->loadModel('Achievement');
+		$this->loadModel('AchievementStatus');
+		$this->loadModel('AchievementCondition');
+		
 		ini_set('session.gc_maxlifetime', 7200000);
-		//client
 		session_set_cookie_params(7200000);
-
 		$highscoreLink = 'highscore';
 		$lightDark = 'light';
+		$resetCookies = false;
 		
     	if(isset($_SESSION['loggedInUser'])){
 			if($_SESSION['loggedInUser']['User']['id']==33) unset($_SESSION['loggedInUser']);
@@ -1376,6 +1397,185 @@ class AppController extends Controller{
 		}
 		if(isset($_SESSION['loggedInUser']['User']['mode'])){
 			if($_SESSION['loggedInUser']['User']['mode']==2) $mode = 2;
+		}
+		
+		if(isset($_COOKIE['preId']) && $_COOKIE['preId'] != '0'){
+			$preTsumego = $this->Tsumego->findById($_COOKIE['preId']);
+			$utPre = $this->TsumegoStatus->find('first', array('conditions' => array('tsumego_id' => $_COOKIE['preId'], 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
+		}
+		
+		$correctSolveAttempt = false;
+		//Correct!
+		if(isset($_COOKIE['score']) && $_COOKIE['score'] != '0'){
+			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
+			$suspiciousBehavior=false;
+			$exploit=null;
+			
+			$_COOKIE['score'] = $this->decrypt($_COOKIE['score']);
+			$scoreArr = explode('-', $_COOKIE['score']);
+			$isNum = $preTsumego['Tsumego']['num']==$scoreArr[0];
+			$isSet = $preTsumego['Tsumego']['set_id']==$scoreArr[2];
+			$_COOKIE['score'] = $scoreArr[1];
+			if($isNum && $isSet){
+				if(isset($_COOKIE['preId'])){
+					$tPre = $this->Tsumego->findById($_COOKIE['preId']);
+					$resetCookies = true;
+				}
+				if($mode==1 || $mode==3){
+					if(isset($_SESSION['loggedInUser']) && !isset($_SESSION['noLogin'])){
+						//$exploit = $this->UserBoard->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'b1' => $_COOKIE['preId'])));
+						$ub = array();
+						$ub['UserBoard']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+						$ub['UserBoard']['b1'] = $_COOKIE['preId'];
+						$this->UserBoard->create();
+						$this->UserBoard->save($ub);
+						
+						if($_COOKIE['score']<3000) ;
+						else $_COOKIE['score'] = 0;
+						
+						if($_COOKIE['score']>=3000){
+							$suspiciousBehavior = true;
+							//$_SESSION['loggedInUser']['User']['reuse5'] = 1;
+							//$u['User']['reuse5'] = 1;
+						}
+						if($u['User']['reuse3']>10000){
+							$_SESSION['loggedInUser']['User']['reuse4'] = 1;
+							$u['User']['reuse4'] = 1;
+						}
+					}
+					if($mode==3){
+						$exploit=null;
+						$suspiciousBehavior=false;
+					}
+					if($exploit==null && $suspiciousBehavior==false){
+						if($mode==1){
+							$xpOld = $u['User']['xp'] + (intval($_COOKIE['score']));
+							$u['User']['reuse2']++;
+							$u['User']['reuse3'] += intval($_COOKIE['score']);
+							if($xpOld >= $u['User']['nextlvl']){
+								$xpOnNewLvl = -1 * ($u['User']['nextlvl'] - $xpOld);
+								$u['User']['xp'] = $xpOnNewLvl;
+								$u['User']['level'] += 1;
+								$u['User']['nextlvl'] += $this->getXPJump($u['User']['level']);
+								$u['User']['health'] = $this->getHealth($u['User']['level']);
+								$_SESSION['loggedInUser']['User']['level'] = $u['User']['level'];
+							}else{
+								$u['User']['xp'] = $xpOld;
+								$u['User']['ip'] = $_SERVER['REMOTE_ADDR'];
+							}
+						}
+						if($mode==1 && $u['User']['id']!=33){
+							if(isset($_SESSION['loggedInUser']['User']['id'])){
+								$this->TsumegoAttempt->create();
+								$ur = array();
+								$ur['TsumegoAttempt']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+								$ur['TsumegoAttempt']['tsumego_id'] = $_COOKIE['preId'];
+								$ur['TsumegoAttempt']['gain'] = $_COOKIE['score'];
+								$ur['TsumegoAttempt']['seconds'] = $_COOKIE['seconds'];
+								$ur['TsumegoAttempt']['solved'] = '1';
+								$this->TsumegoAttempt->save($ur);
+								$correctSolveAttempt = true;
+							}
+						}
+						if(isset($_COOKIE['rank']) && $_COOKIE['rank'] != '0'){
+							$ranks = $this->Rank->find('all', array('conditions' =>  array('session' => $_SESSION['loggedInUser']['User']['activeRank'])));
+							$currentNum = $ranks[0]['Rank']['currentNum'];
+							for($i=0; $i<count($ranks); $i++){
+								if($ranks[$i]['Rank']['num'] == $currentNum-1){
+									if($_COOKIE['rank']!='solved' && $_COOKIE['rank']!='failed' && $_COOKIE['rank']!='skipped' && $_COOKIE['rank']!='timeout'){
+										$_COOKIE['rank']='failed';
+									}
+									$ranks[$i]['Rank']['result'] = $_COOKIE['rank'];
+									$ranks[$i]['Rank']['seconds'] = $_COOKIE['seconds']/10/$_COOKIE['preId'];
+									$this->Rank->save($ranks[$i]);
+								}
+							}
+						}
+					}
+					if($utPre==null){
+						$utPre['TsumegoStatus'] = array();
+						$utPre['TsumegoStatus']['user_id'] = $u['User']['id'];
+						$utPre['TsumegoStatus']['tsumego_id'] = $_COOKIE['preId'];
+						$utPre['TsumegoStatus']['status'] = 'V';
+					}
+					if($utPre['TsumegoStatus']['status'] == 'W') $utPre['TsumegoStatus']['status'] = 'C';
+					else $utPre['TsumegoStatus']['status'] = 'S';
+				
+					$utPre['TsumegoStatus']['created'] = date('Y-m-d H:i:s');
+					if(isset($_SESSION['loggedInUser']) && !isset($_SESSION['noLogin'])){
+						if(!isset($utPre['TsumegoStatus']['status'])) $utPre['TsumegoStatus']['status'] = 'V';
+						$this->TsumegoStatus->save($utPre);
+					}
+				}elseif($mode==2 && $_COOKIE['transition']!=1){
+					/*
+					$userEloBefore = $u['User']['elo_rating_mode'];
+					$tsumegoEloBefore = $preTsumego['Tsumego']['elo_rating_mode'];
+					$diff = $preTsumego['Tsumego']['elo_rating_mode'] - $u['User']['elo_rating_mode'];
+					$newV = (($diff-$oldmin)/($oldmax-$oldmin))*($newmax-$newmin);
+					
+					$u = $this->compute_initial_user_rd($u);
+					//$this->compute_initial_user_rd($t);
+					$old_u = array();
+					$old_u['old_r'] = $u['User']['elo_rating_mode'];
+					$old_u['old_rd'] = $u['User']['rd'];
+					$old_t = array();
+					$old_t['old_r'] = $preTsumego['Tsumego']['elo_rating_mode'];
+					$old_t['old_rd'] = $preTsumego['Tsumego']['rd'];
+					$ratingDeviationArray = $this->compute_rating($old_u, $old_t, 1);
+					$u['User']['rd'] = round($ratingDeviationArray[0][1]);
+					
+					if(intval($_COOKIE['score']>100)) $_COOKIE['score'] = 100;
+					if($_COOKIE['seconds']>0){
+						$u['User']['elo_rating_mode'] += intval($_COOKIE['score']);
+						$user_deviation = intval($_COOKIE['score']);
+					}else{
+						$user_deviation = 0;
+					}
+					
+					$u['User']['solved2']++; 
+					$trSuccess = $this->TsumegoRatingAttempt->find('first', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'], 'tsumego_id' => $t['Tsumego']['id'])));
+					$trSuccess['TsumegoRatingAttempt']['status'] = 'S';
+					$trSuccess['TsumegoRatingAttempt']['user_id'] = $u['User']['id'];
+					$trSuccess['TsumegoRatingAttempt']['user_elo'] = $u['User']['elo_rating_mode'];
+					$trSuccess['TsumegoRatingAttempt']['user_deviation'] = $user_deviation;
+					$trSuccess['TsumegoRatingAttempt']['tsumego_id'] = $preTsumego['Tsumego']['id'];
+					$trSuccess['TsumegoRatingAttempt']['tsumego_elo'] = $tsumegoEloBefore;
+					$trSuccess['TsumegoRatingAttempt']['tsumego_deviation'] = round($ratingDeviationArray[1][1]);
+					$trSuccess['TsumegoRatingAttempt']['seconds'] = $_COOKIE['seconds'];
+					$trSuccess['TsumegoRatingAttempt']['sequence'] = $_COOKIE['sequence'];
+					$this->Tsumego->save($preTsumego);
+					$this->TsumegoRatingAttempt->save($trSuccess);
+					*/
+				}
+				/*
+				$aCondition = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array(
+					'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 'err'
+				)));
+				if($aCondition==null) $aCondition = array();
+				$aCondition['AchievementCondition']['category'] = 'err';
+				$aCondition['AchievementCondition']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+				$aCondition['AchievementCondition']['value']++;
+				$this->AchievementCondition->save($aCondition);
+				*/
+			}else{
+				$u['User']['penalty'] += 1;
+			}
+			unset($_COOKIE['score']);
+			unset($_COOKIE['transition']);
+			unset($_COOKIE['sequence']);
+		}
+		
+		if(isset($_COOKIE['correctNoPoints']) && $_COOKIE['correctNoPoints'] != '0'){
+			if($u['User']['id']!=33 && !$correctSolveAttempt){
+				$this->TsumegoAttempt->create();
+				$ur = array();
+				$ur['TsumegoAttempt']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+				$ur['TsumegoAttempt']['tsumego_id'] = $_COOKIE['preId'];
+				$ur['TsumegoAttempt']['gain'] = 0;
+				$ur['TsumegoAttempt']['seconds'] = $_COOKIE['seconds'];
+				$ur['TsumegoAttempt']['solved'] = '1';
+				$this->TsumegoAttempt->save($ur);
+			}
 		}
 		
 		$boardNames = array();
@@ -1436,11 +1636,7 @@ class AppController extends Controller{
 			if($_SESSION['loggedInUser']['User']['secretArea6']==1) $boardNames[$count+5] = 'Giants';
 			if($_SESSION['loggedInUser']['User']['secretArea7']==1) $boardNames[$count+6] = 'Gems';
 			//if($_SESSION['loggedInUser']['User']['secretArea10']==1) $boardNames[$count+7] = 'Hand of God';
-			
-			//Tsumego Grandmaster
-		
 			if($_SESSION['loggedInUser']['User']['premium']>0 || $_SESSION['loggedInUser']['User']['secretArea9']==1) $boardNames[$count+7] = 'Grandmaster';
-			
 		}
 		
 		$enabledBoards = array();
@@ -1591,6 +1787,7 @@ class AppController extends Controller{
 			$this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
 		
 		$nextDay = new DateTime('tomorrow');
+		
 		$this->set('mode', $mode);
 		$this->set('nextDay', $nextDay->format('m/d/Y'));
 		$this->set('boardNames', $boardNames);
@@ -1599,6 +1796,7 @@ class AppController extends Controller{
 		$this->set('highscoreLink', $highscoreLink);
 		$this->set('achievementUpdate', $achievementUpdate);
 		$this->set('lightDark', $lightDark);
+		$this->set('resetCookies', $resetCookies);
     }
 	
 	function afterFilter(){
