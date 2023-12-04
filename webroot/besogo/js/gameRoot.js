@@ -683,6 +683,10 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
     for (let i = 0; i < this.children.length; ++i)
       if (this.isNonLocalChildWithNoBetterStatus(this.children[i]))
         ++result;
+
+    if (result != 0) // if there are natural children, ignore the virtual child variations
+      return result;
+
     for (let i = 0; i < this.virtualChildren.length; ++i)
       if (this.isNonLocalChildWithNoBetterStatus(this.virtualChildren[i].target))
         ++result;

@@ -517,9 +517,11 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
           for (let i = 0; i < current.children.length; i++)
             if (i !== selectOpponentMove)
               addToRequired(current.children[i], current);
-          for (let i = 0; i < current.virtualChildren.length; i++)
-            if (i + current.children.length !== selectOpponentMove)
-              addToRequired(current.virtualChildren[i].target, current);
+
+          if (current.children.length == 0) // alternative responses are taken from the virtual moves only if direct moves aren't there
+            for (let i = 0; i < current.virtualChildren.length; i++)
+              if (i + current.children.length !== selectOpponentMove)
+                addToRequired(current.virtualChildren[i].target, current);
         }
         nextNode(1, selectOpponentMove, true /* autoplay move*/);
       }, 360);
@@ -1137,7 +1139,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
   {
     fullEditor = value;
   }
-  
+
   function displayError(e)
   {
     $("#theComment").text(e);
