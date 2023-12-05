@@ -5,7 +5,7 @@ class SgfsController extends AppController {
 		$_SESSION['title'] = 'Tsumego Hero';
 		$_SESSION['page'] = 'play';
 		$sgfs = $this->Sgf->find('all');
-		echo '<pre>'; print_r($sgfs); echo '</pre>';
+		//echo '<pre>'; print_r($sgfs); echo '</pre>';
 		$this->set('sgfs', $sgfs);
     }
 	
@@ -19,11 +19,23 @@ class SgfsController extends AppController {
 		$type = 'tsumego';
 		$id2 = $id;
 		$id /= 1337;
+		$dId = array();
+		$dTitle = array();
 		
 		if(isset($this->params['url']['delete'])){
 			$sDel = $this->Sgf->findById($this->params['url']['delete']);
 			if($_SESSION['loggedInUser']['User']['id'] == $sDel['Sgf']['user_id'])
 				$this->Sgf->delete($sDel['Sgf']['id']);
+		}
+		
+		if(isset($this->params['url']['duplicates'])){
+			$newDuplicates = explode('-', $this->params['url']['duplicates']);
+			for($i=0; $i<count($newDuplicates); $i++){
+				$dupl = $this->Tsumego->findById($newDuplicates[$i]);
+				$dSet = $this->Set->findById($dupl['Tsumego']['set_id']);
+				array_push($dId, $dupl['Tsumego']['id']);
+				array_push($dTitle, $dSet['Set']['title'].' - '.$dupl['Tsumego']['num']);
+			}
 		}
 		
 		$t = $this->Tsumego->findById($id);
@@ -72,6 +84,8 @@ class SgfsController extends AppController {
 		$this->set('id', $id);
 		$this->set('id2', $id2);
 		$this->set('tNum', $t['Tsumego']['num']);
+		$this->set('dId', $dId);
+		$this->set('dTitle', $dTitle);
 	}
 	
 }

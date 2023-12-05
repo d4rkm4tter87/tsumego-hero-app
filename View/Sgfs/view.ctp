@@ -19,7 +19,18 @@
 			Upload History of <?php echo $ux; ?>
 		<?php } ?>
 		<br><br> 
-		</p>
+	</p>
+	<?php if(!empty($dId)){ ?>
+		<div>
+			Duplicate with: <?php
+			for($i=0; $i<count($dId); $i++){
+				echo '<a href="/tsumegos/play/'.$dId[$i].'">'.$dTitle[$i].'</a>';
+				if($i!=count($dId)-1)
+					echo ', ';
+			}
+			?>
+		</div>
+	<?php } ?>
 	<div align="left">
 		<?php if($type=='tsumego'){ ?>
 			<a href="/tsumegos/play/<?php echo $id; ?>">back</a>

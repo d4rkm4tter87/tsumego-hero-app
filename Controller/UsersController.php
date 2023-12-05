@@ -19,7 +19,24 @@ class UsersController extends AppController{
 		$this->loadModel('Schedule');
 		$this->loadModel('Sgf');
 		
-		
+		$ts1 = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => 72, 'tsumego_id' => '25262')));
+		echo '<pre>'; print_r($ts1); echo '</pre>'; 
+		$ts2 = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => 72, 'tsumego_id' => 3540)));
+		echo '<pre>'; print_r($ts2); echo '</pre>'; 
+		$t1 = $this->Tsumego->findById(10406);
+		$t2 = $this->Tsumego->findById(15441);
+		$t3 = $this->Tsumego->findById(10606);
+		echo '<pre>'; print_r($t1); echo '</pre>'; 
+		echo '<pre>'; print_r($t2); echo '</pre>'; 
+		echo '<pre>'; print_r($t3); echo '</pre>';
+		/*
+		$t1['Tsumego']['duplicate'] = 2;
+		$t2['Tsumego']['duplicate'] = $t1['Tsumego']['id'];
+		$t3['Tsumego']['duplicate'] = $t1['Tsumego']['id'];
+		$this->Tsumego->save($t1);
+		$this->Tsumego->save($t2);
+		$this->Tsumego->save($t3);
+		*/
 		/*
 		2270 stephalamy@gmail.com
 		441  marioaliandoe@gmail.com
@@ -790,6 +807,148 @@ Joschka Zimdars';
 		$this->set('a', $a);
 	}
 	
+	public function duplicates(){
+		$_SESSION['page'] = 'set';
+		$_SESSION['title'] = 'Duplicates';
+		$this->loadModel('Tsumego');
+		$this->loadModel('TsumegoStatus');
+		$this->loadModel('Set');
+		$this->loadModel('AdminActivity');
+		
+		$d = array();
+		$idMap = array();
+		$idMap2 = array();
+		$marks = array();
+		$aMessage = null;
+		
+		if(isset($this->params['url']['remove'])){
+			$remove = $this->Tsumego->findById($this->params['url']['remove']);
+			if(!empty($remove)){
+				$remove['Tsumego']['duplicate'] = 0;
+				$this->Tsumego->save($remove);
+			}
+		}
+		if(isset($this->params['url']['removeDuplicate'])){
+			$remove = $this->Tsumego->findById($this->params['url']['removeDuplicate']);
+			if(!empty($remove) && $remove['Tsumego']['duplicate']>9){
+				$r1 = $this->Tsumego->findById($remove['Tsumego']['duplicate']);
+				$r2 = $this->Tsumego->find('all', array('conditions' => array('duplicate' => $remove['Tsumego']['duplicate'])));
+				array_push($r2, $r1);
+				if(count($r2)==2){
+					for($i=0; $i<count($r2); $i++){
+						$r2[$i]['Tsumego']['duplicate'] = 0;
+						$this->Tsumego->save($r2[$i]);
+					}
+				}else if(count($r2)>2){
+					$remove['Tsumego']['duplicate'] = 0;
+					$this->Tsumego->save($remove);
+				}
+				$sx = $this->Set->findById($remove['Tsumego']['set_id']);
+				$title = $sx['Set']['title'].' - '.$remove['Tsumego']['num'];
+				$adminActivity = array();
+				$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+				$adminActivity['AdminActivity']['tsumego_id'] = $this->params['url']['removeDuplicate'];
+				$adminActivity['AdminActivity']['file'] = 'settings';
+				$adminActivity['AdminActivity']['answer'] = 'Removed duplicate: '.$title;
+				$this->AdminActivity->save($adminActivity);
+			}else{
+				$aMessage = 'You can\'t remove the main duplicate.';
+			}
+		}
+		if(isset($this->params['url']['setMain'])){
+			$main = $this->Tsumego->findById($this->params['url']['setMain']);
+			if(!empty($main) && $main['Tsumego']['duplicate']>9){
+				$m1 = $this->Tsumego->findById($main['Tsumego']['duplicate']);
+				$m2 = $this->Tsumego->find('all', array('conditions' => array('duplicate' => $main['Tsumego']['duplicate'])));
+				array_push($m2, $m1);
+				for($i=0; $i<count($m2); $i++){
+					if($m2[$i]['Tsumego']['id'] == $this->params['url']['setMain'])
+						$m2[$i]['Tsumego']['duplicate'] = count($m2)-1;
+					else
+						$m2[$i]['Tsumego']['duplicate'] = $this->params['url']['setMain'];
+					$this->Tsumego->save($m2[$i]);
+				}
+				$sx = $this->Set->findById($main['Tsumego']['set_id']);
+				$title = $sx['Set']['title'].' - '.$main['Tsumego']['num'];
+				$adminActivity = array();
+				$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+				$adminActivity['AdminActivity']['tsumego_id'] = $this->params['url']['setMain'];
+				$adminActivity['AdminActivity']['file'] = 'settings';
+				$adminActivity['AdminActivity']['answer'] = 'Set duplicate main: '.$title;
+				$this->AdminActivity->save($adminActivity);
+			}
+		}
+		if(isset($this->params['url']['main']) && isset($this->params['url']['duplicates'])){
+			$newDuplicates = explode('-', $this->params['url']['duplicates']);
+			$newD = array();
+			for($i=0; $i<count($newDuplicates); $i++){
+				$newD = $this->Tsumego->findById($newDuplicates[$i]);
+				if($newD['Tsumego']['id']==$this->params['url']['main'])
+					$newD['Tsumego']['duplicate'] = count($newDuplicates)-1;
+				else
+					$newD['Tsumego']['duplicate'] = $this->params['url']['main'];
+				$newD['Tsumego']['created'] = date('Y-m-d H:i:s');
+				$this->Tsumego->save($newD);
+			}
+			$sx = $this->Set->findById($newD['Tsumego']['set_id']);
+			$title = $sx['Set']['title'].' - '.$newD['Tsumego']['num'];
+			$adminActivity = array();
+			$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+			$adminActivity['AdminActivity']['tsumego_id'] = $newD['Tsumego']['id'];
+			$adminActivity['AdminActivity']['file'] = 'settings';
+			$adminActivity['AdminActivity']['answer'] = 'Created duplicate group: '.$title.' (and more)';
+			$this->AdminActivity->save($adminActivity);
+		}
+		if(!empty($this->data['Mark'])){
+			$mark = $this->Tsumego->findById($this->data['Mark']['tsumego_id']);
+			if(!empty($mark) && $mark['Tsumego']['duplicate']==0){
+				$mark['Tsumego']['duplicate'] = -1;
+				$this->Tsumego->save($mark);
+			}
+		}
+		
+		$marks = $this->Tsumego->find('all', array('conditions' => array('duplicate' => -1)));
+		for($i=0; $i<count($marks); $i++)
+			array_push($idMap2, $marks[$i]['Tsumego']['id']);
+		$uts2 = $this->TsumegoStatus->find('all', array('conditions' => array('tsumego_id'=>$idMap2, 'user_id'=>$_SESSION['loggedInUser']['User']['id'])));
+		$counter2 = 0;
+		for($i=0; $i<count($marks); $i++){
+			$s = $this->Set->findById($marks[$i]['Tsumego']['set_id']);
+			$marks[$i]['Tsumego']['title'] = $s['Set']['title'].' - '.$marks[$i]['Tsumego']['num'];
+			$marks[$i]['Tsumego']['status'] = $uts2[$counter2]['TsumegoStatus']['status'];
+			$counter2++;
+		}
+		
+		$duplicates1 = $this->Tsumego->find('all', array('order' => 'created DESC', 'conditions' => array(
+			'duplicate >' => 0,
+			'duplicate <' => 10
+		)));
+		for($i=0; $i<count($duplicates1); $i++){
+			$d[$i] = array();
+			$duplicates1[$i]['Tsumego']['status'] = 'N';
+			array_push($idMap, $duplicates1[$i]['Tsumego']['id']);
+			array_push($d[$i], $duplicates1[$i]);
+			$ts = $this->Tsumego->find('all', array('order' => 'created DESC', 'conditions' =>  array('duplicate' => $duplicates1[$i]['Tsumego']['id'])));
+			for($j=0; $j<count($ts); $j++){
+				$ts[$j]['Tsumego']['status'] = 'N';
+				array_push($idMap, $ts[$j]['Tsumego']['id']);
+				array_push($d[$i], $ts[$j]);
+			}
+		}
+		$uts = $this->TsumegoStatus->find('all', array('conditions' => array('tsumego_id'=>$idMap, 'user_id'=>$_SESSION['loggedInUser']['User']['id'])));
+		for($i=0; $i<count($d); $i++){
+			for($j=0; $j<count($d[$i]); $j++){
+				$s = $this->Set->findById($d[$i][$j]['Tsumego']['set_id']);
+				$d[$i][$j]['Tsumego']['title'] = $s['Set']['title'].' - '.$d[$i][$j]['Tsumego']['num'];
+				for($k=0; $k<count($uts); $k++)
+					if($uts[$k]['TsumegoStatus']['tsumego_id'] == $d[$i][$j]['Tsumego']['id'])
+						$d[$i][$j]['Tsumego']['status'] = $uts[$k]['TsumegoStatus']['status'];
+			}
+		}
+		$this->set('d', $d);
+		$this->set('marks', $marks);
+		$this->set('aMessage', $aMessage);
+	}
 	
 	public function uploads(){
 		$_SESSION['page'] = 'set';

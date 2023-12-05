@@ -2259,7 +2259,6 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.achievementColorRating3{color:#4e28c9;}
 	.achievementColorTime3{color:#4e28c9;}
 
-	
 	.achievement2{
 	    border: 1px solid black;
 	    width: 220px;
@@ -2332,6 +2331,9 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.acDate2{
 		font-style: italic;
 		margin:20px 8px;
+	}
+	#customText a{
+		color:black;
 	}
 	.newsdate1{
 		padding: 8px;
@@ -3362,6 +3364,37 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		margin:12px 5px 0 1px;
 		cursor:pointer;
 	}
+	.default-submit-button{
+	  -webkit-border-radius: 5px;
+	  -moz-border-radius: 5px;
+	  border-radius: 5px;
+	  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.16, rgb(207, 207, 207)), color-stop(0.79, rgb(252, 252, 252)));
+	  background-image: -moz-linear-gradient(center bottom, rgb(207, 207, 207) 16%, rgb(252, 252, 252) 79%);
+	  background-image: linear-gradient(to top, rgb(207, 207, 207) 16%, rgb(252, 252, 252) 79%); 
+	  padding: 3px;
+	  color: black;
+	  border: 1px solid #676774;
+	  text-decoration: none;
+	  cursor:pointer;
+	}
+	.default-submit-button:hover{
+		background-image:none;
+		background-color:#d0d0d7;
+	}
+	.default-submit-button-inactive{
+	  -webkit-border-radius: 5px;
+	  -moz-border-radius: 5px;
+	  border-radius: 5px;
+	  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.16, rgb(207, 207, 207)), color-stop(0.79, rgb(252, 252, 252)));
+	  background-image: -moz-linear-gradient(center bottom, rgb(207, 207, 207) 16%, rgb(252, 252, 252) 79%);
+	  background-image: linear-gradient(to top, rgb(207, 207, 207) 16%, rgb(252, 252, 252) 79%); 
+	  padding: 3px;
+	  color: #2b2b2b;
+	  border: 1px solid #676774;
+	  text-decoration: none;
+	  background: #6c6c6c;
+	  cursor:context-menu;
+	}
 	#author-notice{
 		position:relative;
 		font-family: Georgia;
@@ -3435,7 +3468,9 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		top: 2px;
 		cursor: pointer;
 	}
-	
+	.duplicateTable{
+		max-width:340px;
+	}
 	
 	
 	

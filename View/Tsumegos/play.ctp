@@ -520,6 +520,13 @@
 						$arOn = '';
 						$arOff = 'checked="checked"';
 					}
+					if($set_duplicate==-1){
+						$duOn = 'checked="checked"';
+						$duOff = '';
+					}else{
+						$duOn = '';
+						$duOff = 'checked="checked"';
+					}
 					echo '
 						<div id="msg4">
 							<br>
@@ -542,6 +549,27 @@
 										<td><input type="radio" id="r39" name="data[Settings][r39]" value="on" '.$arOn.'><label for="r39">on</label></td>
 										<td><input type="radio" id="r39" name="data[Settings][r39]" value="off" '.$arOff.'><label for="r39">off</label></td>
 									</tr>
+									<tr>';
+										if($t['Tsumego']['duplicate']==0 || $t['Tsumego']['duplicate']==-1){
+											echo '<td>Mark as duplicate</td>
+											<td><input type="radio" id="r40" name="data[Settings][r40]" value="off" '.$duOff.'><label for="r40">no</label></td>
+											<td><input type="radio" id="r40" name="data[Settings][r40]" value="on" '.$duOn.'><label for="r40">yes</label></td>';
+										}else{
+											if($t['Tsumego']['duplicate']<=9)
+												$mainOrNot = ' (main)';
+											else
+												$mainOrNot = '';
+											echo '<td><div class="duplicateTable">Is duplicate'.$mainOrNot.' with:<br>';
+											for($i=0; $i<count($duplicates); $i++){
+												echo '<a href="/tsumegos/play/'.$duplicates[$i]['Tsumego']['id'].'">'.$duplicates[$i]['Tsumego']['title'].'</a>';
+												if($i!=count($duplicates)-1)
+													echo ', ';
+											}
+											echo '</div></td>
+											<td></td>
+											<td></td>';
+										}
+									echo '</tr>
 								</table>
 								<br>
 								<input value="Submit" type="submit"/>
@@ -1602,14 +1630,43 @@
 			jsCreateDownloadFile("<?php echo $t['Tsumego']['num']; ?>");
 		});
 		//if(cvn) setTimeout(function () {window.location.href = "/tsumegos/play/"+nextButtonLink}, 50);
+		<?php if(!empty($utd)){ ?>
+			if(mode==1){
+				displayMessage('You already solved this position:<br> <a href="/tsumegos/play/<?php echo $utd[0]; ?>"><?php echo $utd[1]; ?></a>', 'Position already solved', 'green');
+				displayResult('S');
+			}
+		<?php } ?>
 	});
 
 	function displaySettings(){
 		enableDownloads = true;
 		$("#showx3").css("display", "inline-block");
 		<?php if($_SESSION['loggedInUser']['User']['isAdmin']==1){ ?>
-		$("#showx5").attr("href", "<?php echo '/tsumegos/open/'.$t['Tsumego']['id'].'/'.$sgf['Sgf']['id']; ?>");
-		$("#showx6").attr("href", "<?php echo '/sgfs/view/'.($t['Tsumego']['id']*1337); ?>");
+		<?php if($t['Tsumego']['duplicate']==0 || $t['Tsumego']['duplicate']==-1){ ?>
+			$("#showx5").attr("href", "<?php echo '/tsumegos/open/'.$t['Tsumego']['id'].'/'.$sgf['Sgf']['id']; ?>");
+			$("#showx6").attr("href", "<?php echo '/sgfs/view/'.($t['Tsumego']['id']*1337); ?>");
+		<?php }else{
+			$duplicateOther = array();
+			if($t['Tsumego']['duplicate']<=9)
+				$duplicateMain = $t['Tsumego']['id'];
+			else
+				array_push($duplicateOther, $t['Tsumego']['id']);
+			for($i=0; $i<count($duplicates); $i++){
+				if($duplicates[$i]['Tsumego']['duplicate']<=9)
+					$duplicateMain = $duplicates[$i]['Tsumego']['id'];
+				else
+					array_push($duplicateOther, $duplicates[$i]['Tsumego']['id']);
+			}
+			$duplicateParamsUrl = '?duplicates=';
+			for($i=0; $i<count($duplicateOther); $i++){
+				$duplicateParamsUrl .= $duplicateOther[$i];
+				if($i!=count($duplicateOther)-1)
+					$duplicateParamsUrl .= '-';
+			}
+			?>
+			$("#showx5").attr("href", "<?php echo '/tsumegos/open/'.$duplicateMain.'/'.$sgf['Sgf']['id']; ?>");
+			$("#showx6").attr("href", "<?php echo '/sgfs/view/'.($duplicateMain*1337).$duplicateParamsUrl; ?>");
+		<?php } ?>
 		$("#showx4").css("display", "inline-block");		
 		$("#showx5").css("display", "inline-block");		
 		$("#show4").css("display", "inline-block");
@@ -2397,10 +2454,13 @@
 		if(multipleChoice) multipleChoiceEnabled = true;
 	}
 	
-	function displayMessage(message='text', topic='Message'){
+	function displayMessage(message='text', topic='Message', color='red'){
 		$('#customText').html(message);
 		$("#customAlerts").fadeIn(500);
-		$(".alertBanner").addClass("alertBannerIncorrect");
+		if(color==='red')
+			$(".alertBanner").addClass("alertBannerIncorrect");
+		else
+			$(".alertBanner").addClass("alertBannerCorrect");
 		$(".alertBanner").html(topic+"<span class=\"alertClose\">x</span>");
 	}
 	
@@ -2555,7 +2615,7 @@
     {
       $("#theComment").css("display", commentText.length == 0 ? "none" : "block");
       $("#xpDisplayDiv").css("display", commentText.length == 0 ? "block" : "none");
-      $('#theComment').text(commentText);
+      $("#theComment").text(commentText);
     });
 	function addStyleLink(cssURL)
 	{
