@@ -2265,6 +2265,7 @@
 					setCookie("score", "<?php echo $score1; ?>");
 					//document.cookie = "preId=<?php echo $t['Tsumego']['id']; ?>";
 					setCookie("preId", "<?php echo $t['Tsumego']['id']; ?>");
+					setCookie("mode", mode);
 					$("#time-mode-countdown").css("color","<?php echo $playGreenColor; ?>");
 					$("#reviewButton").show();
 					$("#reviewButton-inactive").hide();
@@ -2288,6 +2289,7 @@
 					}
 					//updateCookie("score=",x2);
 					setCookie("score", x2);
+					setCookie("mode", mode);
 					$("#skipButton").text("Next");
 					xpReward = (<?php echo $t['Tsumego']['difficulty']; ?>*x3) + <?php echo $user['User']['xp']; ?>;
 					userNextlvl = <?php echo $user['User']['nextlvl']; ?>;
@@ -2332,6 +2334,7 @@
 					sequence += "correct|";
 					//updateCookie("score=","<?php echo $score3; ?>");
 					setCookie("score", "<?php echo $score3; ?>");
+					setCookie("mode", mode);
 					secondsy = seconds;
 					//document.cookie = "seconds="+secondsy;
 					setCookie("seconds", secondsy);

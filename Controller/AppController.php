@@ -1407,6 +1407,7 @@ class AppController extends Controller{
 		$correctSolveAttempt = false;
 		//Correct!
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
+		if(isset($_COOKIE['mode']) && $_COOKIE['mode'] == '1'){
 		if(isset($_COOKIE['score']) && $_COOKIE['score'] != '0'){
 			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
 			$suspiciousBehavior=false;
@@ -1564,6 +1565,7 @@ class AppController extends Controller{
 			unset($_COOKIE['score']);
 			unset($_COOKIE['transition']);
 			unset($_COOKIE['sequence']);
+		}
 		}
 		}
 		
