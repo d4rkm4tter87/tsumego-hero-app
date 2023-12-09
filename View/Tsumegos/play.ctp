@@ -133,7 +133,7 @@
 	elseif($colorOrientation=='white') $pl = 1;
 	else $pl = rand(0,1);
 	
-	if($firstPlayer=='w' || $checkBSize!=19 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161) $pl=0;
+	if($checkBSize!=19 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161) $pl=0;
 	if($pl==0){
 		$playerColor[0] = 'BLACK';
 		$playerColor[1] = 'WHITE';
@@ -1056,7 +1056,7 @@
 	if($t['Tsumego']['set_id']==208 || $t['Tsumego']['set_id']==210 || $t['Tsumego']['set_id']==109) echo 'besogoPlayerColor = "black";';
 	
 	if($authorx==$_SESSION['loggedInUser']['User']['name']) echo 'authorProblem = true;';
-	if($_SESSION['loggedInUser']['User']['id']==72) echo 'authorProblem = true;';
+	//if($_SESSION['loggedInUser']['User']['id']==72) echo 'authorProblem = true;';
 	if($firstRanks!=0) echo 'document.cookie = "mode=3";';
 	if($mode==3){
 		echo 'seconds = 0.0;';
@@ -2604,8 +2604,8 @@
     options.reviewMode = false;
     options.reviewEnabled = <?php echo $reviewEnabled ? 'true' : 'false'; ?>;
 	<?php
-		if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72){
-		//if(isset($_SESSION['loggedInUser'])){if(false){
+		//if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72){
+		if(isset($_SESSION['loggedInUser'])){if(false){
 			echo 'options.reviewEnabled = true;';
 		}}
 	?>

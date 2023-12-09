@@ -849,15 +849,17 @@ class TsumegosController extends AppController{
 			}else{
 				if($mode==1 && $u['User']['id']!=33){
 					if(isset($_SESSION['loggedInUser']['User']['id'])){
-						$this->TsumegoAttempt->create();
-						$ur1 = array();
-						$ur1['TsumegoAttempt']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-						$ur1['TsumegoAttempt']['tsumego_id'] = $_COOKIE['preId'];
-						$ur1['TsumegoAttempt']['gain'] = 0;
-						$ur1['TsumegoAttempt']['seconds'] = $_COOKIE['seconds'];
-						$ur1['TsumegoAttempt']['solved'] = '0';
-						$ur1['TsumegoAttempt']['misplays'] = $_COOKIE['misplay'];
-						$this->TsumegoAttempt->save($ur1);
+						if(isset($_COOKIE['preId']) && $_COOKIE['preId']!=0){
+							$this->TsumegoAttempt->create();
+							$ur1 = array();
+							$ur1['TsumegoAttempt']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+							$ur1['TsumegoAttempt']['tsumego_id'] = $_COOKIE['preId'];
+							$ur1['TsumegoAttempt']['gain'] = 0;
+							$ur1['TsumegoAttempt']['seconds'] = $_COOKIE['seconds'];
+							$ur1['TsumegoAttempt']['solved'] = '0';
+							$ur1['TsumegoAttempt']['misplays'] = $_COOKIE['misplay'];
+							$this->TsumegoAttempt->save($ur1);
+						}
 					}
 				}
 				if($mode==1 || $mode==3){
@@ -1034,15 +1036,17 @@ class TsumegosController extends AppController{
 						}
 						if($mode==1 && $u['User']['id']!=33){
 							if(isset($_SESSION['loggedInUser']['User']['id'])){
-								$this->TsumegoAttempt->create();
-								$ur = array();
-								$ur['TsumegoAttempt']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-								$ur['TsumegoAttempt']['tsumego_id'] = $_COOKIE['preId'];
-								$ur['TsumegoAttempt']['gain'] = $_COOKIE['score'];
-								$ur['TsumegoAttempt']['seconds'] = $_COOKIE['seconds'];
-								$ur['TsumegoAttempt']['solved'] = '1';
-								$this->TsumegoAttempt->save($ur);
-								$correctSolveAttempt = true;
+								if(isset($_COOKIE['preId']) && $_COOKIE['preId']!=0){
+									$this->TsumegoAttempt->create();
+									$ur = array();
+									$ur['TsumegoAttempt']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+									$ur['TsumegoAttempt']['tsumego_id'] = $_COOKIE['preId'];
+									$ur['TsumegoAttempt']['gain'] = $_COOKIE['score'];
+									$ur['TsumegoAttempt']['seconds'] = $_COOKIE['seconds'];
+									$ur['TsumegoAttempt']['solved'] = '1';
+									$this->TsumegoAttempt->save($ur);
+									$correctSolveAttempt = true;
+								}
 							}
 						}
 						if(isset($_COOKIE['rank']) && $_COOKIE['rank'] != '0'){
@@ -1141,14 +1145,16 @@ class TsumegosController extends AppController{
 		
 		if(isset($_COOKIE['correctNoPoints']) && $_COOKIE['correctNoPoints'] != '0'){
 			if($u['User']['id']!=33 && !$correctSolveAttempt){
-				$this->TsumegoAttempt->create();
-				$ur = array();
-				$ur['TsumegoAttempt']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-				$ur['TsumegoAttempt']['tsumego_id'] = $_COOKIE['preId'];
-				$ur['TsumegoAttempt']['gain'] = 0;
-				$ur['TsumegoAttempt']['seconds'] = $_COOKIE['seconds'];
-				$ur['TsumegoAttempt']['solved'] = '1';
-				$this->TsumegoAttempt->save($ur);
+				if(isset($_COOKIE['preId']) && $_COOKIE['preId']!=0){
+					$this->TsumegoAttempt->create();
+					$ur = array();
+					$ur['TsumegoAttempt']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$ur['TsumegoAttempt']['tsumego_id'] = $_COOKIE['preId'];
+					$ur['TsumegoAttempt']['gain'] = 0;
+					$ur['TsumegoAttempt']['seconds'] = $_COOKIE['seconds'];
+					$ur['TsumegoAttempt']['solved'] = '1';
+					$this->TsumegoAttempt->save($ur);
+				}
 			}
 		}
 		unset($_COOKIE['preId']);
@@ -1933,6 +1939,7 @@ class TsumegosController extends AppController{
 		$n2 = '';
 		$hasLink = false;
 		for($i=0; $i<count($m); $i++){
+			if(isset($m[$i+1]))
 			if(preg_match('/[a-tA-T]/', $m[$i]) && is_numeric($m[$i+1])){
 				if(!preg_match('/[a-tA-T]/', $m[$i-1]) && !is_numeric($m[$i-1])){
 					if(is_numeric($m[$i+2])){
@@ -1948,6 +1955,7 @@ class TsumegosController extends AppController{
 					}
 				}
 			}
+			
 			if($m[$i]=='<' && $m[$i+1]=='/' && $m[$i+2]=='a' && $m[$i+3]=='>') $hasLink=true;
 		}
 		if(substr($n, -1)==' ') $n = substr($n, 0, -1);

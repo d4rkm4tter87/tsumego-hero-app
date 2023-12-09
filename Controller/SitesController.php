@@ -99,11 +99,13 @@ class SitesController extends AppController{
 				}
 				
 				
+				if(isset($totd['Tsumego']['id']))
+					if($uts[$i]['TsumegoStatus']['tsumego_id'] == $totd['Tsumego']['id']) 
+						$totd['Tsumego']['status'] = $uts[$i]['TsumegoStatus']['status'];
 				
-				if($uts[$i]['TsumegoStatus']['tsumego_id'] == $totd['Tsumego']['id']) $totd['Tsumego']['status'] = $uts[$i]['TsumegoStatus']['status'];
-				
-				
-				if($uts[$i]['TsumegoStatus']['tsumego_id'] == $newT['Tsumego']['id']) $newT['Tsumego']['status'] = $uts[$i]['TsumegoStatus']['status'];
+				if(isset($newT['Tsumego']['id']))
+					if($uts[$i]['TsumegoStatus']['tsumego_id'] == $newT['Tsumego']['id']) 
+						$newT['Tsumego']['status'] = $uts[$i]['TsumegoStatus']['status'];
 			}
 			
 			//echo '<pre>'; print_r($scheduleTsumego); echo '</pre>';
