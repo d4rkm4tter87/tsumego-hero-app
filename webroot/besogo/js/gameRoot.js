@@ -672,6 +672,8 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
       return false;
     if (this.correct == CORRECT_GOOD)
       return true; // nothing better than correct;
+    if (this.status)
+      return !child.status.better(this.status, this.getRoot().goal);
     if (child.correct == CORRECT_BAD)
       return true;
     return false;
