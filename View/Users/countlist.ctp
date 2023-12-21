@@ -30,7 +30,7 @@ for($i=0; $i<count($ux); $i++){
 	if($stop=='t'){
 		echo '
 			setTimeout(function () {
-			   window.location.href = "/users/archivelist"; 
+			   window.location.href = "/users/set_full_tsumego_scores?t=0"; 
 			}, 100);
 		';
 	}

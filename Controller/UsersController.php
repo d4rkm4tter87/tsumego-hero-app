@@ -5,6 +5,9 @@ class UsersController extends AppController{
 	public $pageTitle = "Users";
 	public $helpers = array('Html', 'Form');
 	
+	
+
+	
 	public function playerdb5(){
 		$this->loadModel('TsumegoStatus');
 		$this->loadModel('Tsumego');
@@ -19,17 +22,20 @@ class UsersController extends AppController{
 		$this->loadModel('Schedule');
 		$this->loadModel('Sgf');
 		
-		$ts1 = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => 72, 'tsumego_id' => '25262')));
-		echo '<pre>'; print_r($ts1); echo '</pre>'; 
-		$ts2 = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => 72, 'tsumego_id' => 3540)));
-		echo '<pre>'; print_r($ts2); echo '</pre>'; 
-		$t1 = $this->Tsumego->findById(10406);
-		$t2 = $this->Tsumego->findById(15441);
-		$t3 = $this->Tsumego->findById(10606);
-		echo '<pre>'; print_r($t1); echo '</pre>'; 
-		echo '<pre>'; print_r($t2); echo '</pre>'; 
-		echo '<pre>'; print_r($t3); echo '</pre>';
+		
 		/*
+		$ts1 = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => 5080)));
+		$correctCounter = 0;
+		$ts2 = array();
+		for($j=0; $j<count($ts1); $j++){
+			if($ts1[$j]['TsumegoStatus']['status']=='S' || $ts1[$j]['TsumegoStatus']['status']=='W' || $ts1[$j]['TsumegoStatus']['status']=='C'){
+				$correctCounter++;
+				
+			}
+			array_push($ts2, $ts1[$j]['TsumegoStatus']['tsumego_id']);			
+		}
+		echo '<pre>'; print_r($correctCounter); echo '</pre>';
+		echo '<pre>'; print_r(array_count_values($ts2)); echo '</pre>';
 		$t1['Tsumego']['duplicate'] = 2;
 		$t2['Tsumego']['duplicate'] = $t1['Tsumego']['id'];
 		$t3['Tsumego']['duplicate'] = $t1['Tsumego']['id'];
@@ -794,14 +800,16 @@ Joschka Zimdars';
 		$_SESSION['title'] = 'User Visits';
 		$this->loadModel('Answer');
 		
+		
+		
 		$ans = $this->Answer->find('all', array('order' => 'created DESC'));
 		$a = array();
 		for($i=0; $i<count($ans); $i++){
 			$a[$i]['date'] = $ans[$i]['Answer']['created'];
 			$a[$i]['num'] = $ans[$i]['Answer']['dismissed'];
-			$a[$i]['y'] = date('Y', strtotime($ans[$i]['Answer']['created']));;
-			$a[$i]['m'] = date('m', strtotime($ans[$i]['Answer']['created']));;
-			$a[$i]['d'] = date('d', strtotime($ans[$i]['Answer']['created']));;
+			$a[$i]['y'] = date('Y', strtotime($ans[$i]['Answer']['created']));
+			$a[$i]['m'] = date('m', strtotime($ans[$i]['Answer']['created']));
+			$a[$i]['d'] = date('d', strtotime($ans[$i]['Answer']['created']));
 		}
 		
 		$this->set('a', $a);

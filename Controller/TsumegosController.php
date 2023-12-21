@@ -25,7 +25,88 @@ class TsumegosController extends AppController{
 		$this->set('s1', $s1);
 		$this->set('s2', $s2);
 	}
-
+	public function duplicatesearch($id=null){
+		$this->loadModel('Sgf');
+		$this->loadModel('Set');
+		
+		$maxDifference = 1;
+		$includeSandbox = 'true';
+		$includeColorSwitch = 'false';
+		if(isset($this->params['url']['diff'])){
+			$maxDifference = $this->params['url']['diff'];
+			$includeSandbox = $this->params['url']['sandbox'];
+			$includeColorSwitch = $this->params['url']['colorSwitch'];
+		}
+		$similarId = array();
+		$similarArr = array();
+		$similarArrInfo = array();
+		$similarTitle = array();
+		$similarDiff = array();
+		$similarDiffType = array();
+		$similarOrder = array();
+		$t = $this->Tsumego->findById($id);
+		$s = $this->Set->findById($t['Tsumego']['set_id']);
+		$title = $s['Set']['title'].' - '.$t['Tsumego']['num'];
+		$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $id)));
+		$tSgfArr = $this->processSGF($sgf['Sgf']['sgf']);
+		$tNumStones = count($tSgfArr[1]);
+		
+		$sets2 = array();
+		$sets1 = $this->Set->find('all', array('conditions' => array('public' => '1')));
+		if($includeSandbox=='true')
+			$sets2 = $this->Set->find('all', array('conditions' => array('public' => '0')));
+		$sets = array_merge($sets1, $sets2);
+		for($h=0; $h<count($sets); $h++){
+			$ts = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array('set_id' => $sets[$h]['Set']['id'])));
+			for($i=0; $i<count($ts); $i++){
+				if($ts[$i]['Tsumego']['id']!=$id){
+					$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
+					$sgfArr = $this->processSGF($sgf['Sgf']['sgf']);
+					$numStones = count($sgfArr[1]);
+					$stoneNumberDiff = abs($numStones-$tNumStones);
+					if($stoneNumberDiff<=$maxDifference){
+						if($includeColorSwitch=='true')
+							$compare = $this->compare($tSgfArr[0], $sgfArr[0], true);
+						else
+							$compare = $this->compare($tSgfArr[0], $sgfArr[0], false);
+						if($compare[0]<=$maxDifference){
+							array_push($similarId, $ts[$i]['Tsumego']['id']);
+							array_push($similarArr, $sgfArr[0]);
+							array_push($similarArrInfo, $sgfArr[2]);
+							array_push($similarDiff, $compare[0]);
+							if($compare[1]==0) array_push($similarDiffType, '');
+							else if($compare[1]==1) array_push($similarDiffType, 'Shifted position.');
+							else if($compare[1]==2) array_push($similarDiffType, 'Shifted and rotated.');
+							else if($compare[1]==3) array_push($similarDiffType, 'Switched colors.');
+							else if($compare[1]==4) array_push($similarDiffType, 'Switched colors and shifted position.');
+							else if($compare[1]==5) array_push($similarDiffType, 'Switched colors, shifted and rotated.');
+							array_push($similarOrder, $compare[2]);
+							$set = $this->Set->findById($ts[$i]['Tsumego']['set_id']);
+							$title2 = $set['Set']['title'].' - '.$ts[$i]['Tsumego']['num'];
+							array_push($similarTitle, $title2);
+						}
+					}
+				}
+			}
+		}
+		
+		
+		array_multisort($similarOrder, $similarArr, $similarArrInfo, $similarTitle, $similarDiff, $similarDiffType, $similarId);
+		//echo '<pre>'; print_r($similarArrInfo); echo '</pre>';
+		$this->set('tSgfArr', $tSgfArr[0]);
+		$this->set('tSgfArrInfo', $tSgfArr[2]);
+		$this->set('similarId', $similarId);
+		$this->set('similarArr', $similarArr);
+		$this->set('similarArrInfo', $similarArrInfo);
+		$this->set('similarTitle', $similarTitle);
+		$this->set('similarDiff', $similarDiff);
+		$this->set('similarDiffType', $similarDiffType);
+		$this->set('title', $title);
+		$this->set('t', $t);
+		$this->set('maxDifference', $maxDifference);
+		$this->set('includeSandbox', $includeSandbox);
+		$this->set('includeColorSwitch', $includeColorSwitch);
+	}
 	public function play($id = null){
 		$_SESSION['page'] = 'play';
 		$this->loadModel('User');
@@ -1288,7 +1369,6 @@ class TsumegosController extends AppController{
 		$anzahl = $ts[count($ts)-1]['Tsumego']['num'];
 		$_SESSION['title'] = $set['Set']['title'].' '.$t['Tsumego']['num'].'/'.$anzahl.' on Tsumego Hero';
 		
-		
 		$sgf = array();
 		if($t['Tsumego']['duplicate']<=9)
 			$sgfdb = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $id)));//§
@@ -1579,6 +1659,15 @@ class TsumegosController extends AppController{
 		for($i=0; $i<count($tsNext); $i++) array_push($navi, $tsNext[$i]);
 		array_push($navi, $tsLast);
 		
+		$tooltipSgfs = array();
+		$tooltipInfo = array();
+		for($i=0; $i<count($navi); $i++){
+			$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $navi[$i]['Tsumego']['id'])));
+			$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
+			array_push($tooltipSgfs, $tArr[0]);
+			array_push($tooltipInfo, $tArr[2]);
+		}
+		
 		if($t['Tsumego']['set_id']==161){
 			$joseki = $this->Joseki->find('first', array('conditions' =>  array('tsumego_id' => $t['Tsumego']['id'])));
 			$josekiLevel = $joseki['Joseki']['hints'];
@@ -1735,7 +1824,11 @@ class TsumegosController extends AppController{
 		}
 		$ui = 2;
 		
-		//echo '<pre>'; print_r($duplicates); echo '</pre>'; 
+		$file = '6473k339312/easycapture/1.sgf';
+		
+		//echo '<pre>'; print_r($sgf['Sgf']['sgf']); echo '</pre>'; 
+		//echo '<pre>'; print_r($tooltipInfo); echo '</pre>';
+		
 		
 		$this->set('sgf', $sgf);
 		$this->set('sgf2', $sgf2);
@@ -1809,7 +1902,157 @@ class TsumegosController extends AppController{
 		$this->set('achievementUpdate', $achievementUpdate);
 		$this->set('utd', $utd);
 		$this->set('duplicates', $duplicates);
+		$this->set('tooltipSgfs', $tooltipSgfs);
+		$this->set('tooltipInfo', $tooltipInfo);
     }
+	
+		
+	private function getLowest($a){
+		$lowestX = 19;
+		$lowestY = 19;
+		for($y=0; $y<count($a); $y++){
+			for($x=0; $x<count($a[$y]); $x++){
+				if($a[$x][$y]=='x' || $a[$x][$y]=='o'){
+					if($x<$lowestX)
+						$lowestX = $x;
+					if($y<$lowestY)
+						$lowestY = $y;
+				}					
+			}
+		}
+		$arr = array();
+		array_push($arr, $lowestX);
+		array_push($arr, $lowestY);
+		return $arr;
+	}
+	private function shiftToCorner($a, $lowestX, $lowestY){
+		if($lowestX!=0){
+			for($y=0; $y<count($a); $y++){
+				for($x=0; $x<count($a[$y]); $x++){
+					if($a[$x][$y]=='x' || $a[$x][$y]=='o'){
+						$c = $a[$x][$y];
+						$a[$x-$lowestX][$y] = $c;
+						$a[$x][$y] = '-';
+					}					
+				}
+			}
+		}
+		if($lowestY!=0){
+			for($y=0; $y<count($a); $y++){
+				for($x=0; $x<count($a[$y]); $x++){
+					if($a[$x][$y]=='x' || $a[$x][$y]=='o'){
+						$c = $a[$x][$y];
+						$a[$x][$y-$lowestY] = $c;
+						$a[$x][$y] = '-';
+					}					
+				}
+			}
+		}
+		return $a;
+	}
+	private function displayArray($b, $trigger=false){
+		if($trigger)
+		for($y=0; $y<count($b); $y++){
+			for($x=0; $x<count($b[$y]); $x++){
+				echo '&nbsp;&nbsp;'.$b[$x][$y].' ';
+			}
+			if($y!=18) echo '<br>';
+		}
+	}
+	private function compare($a, $b, $switch=false){
+		$compare = array();
+		
+		$this->displayArray($a);
+		//echo '<pre>';print_r('------------------------');echo '</pre>';
+		
+		$diff1 = $this->compareSingle($a, $b);
+		array_push($compare, $diff1);
+		$this->displayArray($b);
+		//echo '<pre>';print_r('diff1 '.$diff1);echo '</pre>';
+		
+		if($switch)
+			$d = $this->colorSwitch($b);
+		
+		$arr = $this->getLowest($a);
+		$a = $this->shiftToCorner($a, $arr[0], $arr[1]);
+		$arr = $this->getLowest($b);
+		$b = $this->shiftToCorner($b, $arr[0], $arr[1]);
+		if($switch)
+			$c = $this->colorSwitch($b);
+		$diff2 = $this->compareSingle($a, $b);
+		array_push($compare, $diff2);
+		$this->displayArray($b);
+		//echo '<pre>';print_r('diff shape '.$diff2);echo '</pre>';
+	
+		$b = $this->mirror($b);
+		$diff3 = $this->compareSingle($a, $b);
+		array_push($compare, $diff3);
+		$this->displayArray($b);
+		//echo '<pre>';print_r('diff mirror '.$diff3);echo '</pre>';
+		
+		if($switch){
+			$diff4 = $this->compareSingle($a, $d);
+			array_push($compare, $diff4);
+			$this->displayArray($d);
+			//echo '<pre>';print_r('diff switch '.$diff4);echo '</pre>';
+			
+			$this->displayArray($c);
+			$diff5 = $this->compareSingle($a, $c);
+			array_push($compare, $diff5);
+			//echo '<pre>';print_r('color switch shape'.$diff5);echo '</pre>';
+			
+			$c = $this->mirror($c);
+			$diff6 = $this->compareSingle($a, $c);
+			array_push($compare, $diff6);
+			$this->displayArray($c);
+			//echo '<pre>';print_r('color switch mirror'.$diff6);echo '</pre>';
+			//echo '<pre>';print_r($compare);echo '</pre>';
+		}
+		$lowestCompare = 6;
+		$lowestCompareNum = 100;
+		for($i=0; $i<count($compare); $i++){
+			if($compare[$i]<$lowestCompareNum){
+				$lowestCompareNum = $compare[$i];
+				$lowestCompare = $i;
+			}	
+		}
+		$order = $lowestCompare.'-'.$lowestCompareNum;
+		
+		return array($lowestCompareNum, $lowestCompare, $order);
+	}
+	private function colorSwitch($b){
+		for($y=0; $y<count($b); $y++){
+			for($x=0; $x<count($b[$y]); $x++){
+				if($b[$x][$y]=='x')
+					$b[$x][$y]='o';
+				else if($b[$x][$y]=='o')
+					$b[$x][$y]='x';
+			}
+		}
+		return $b;
+	}
+	private function compareSingle($a, $b){
+		$diff = 0;
+		for($y=0; $y<count($b); $y++){
+			for($x=0; $x<count($b[$y]); $x++){
+				if($a[$x][$y]!=$b[$x][$y])
+					$diff++;
+			}
+		}
+		return $diff;
+	}
+	
+	private function mirror($a){
+		$a1 = array();
+		$black = array();
+		$white = array();
+		for($y=0; $y<count($a); $y++){
+			$a1[$y] = array();
+			for($x=0; $x<count($a[$y]); $x++)
+				$a1[$y][$x] = $a[$x][$y];
+		}
+		return $a1;
+	}
 	
 	private function findUt($id=null, $allUts=null, $map=null){
 		$currentUt = array_search($id, $map);
@@ -1822,7 +2065,7 @@ class TsumegosController extends AppController{
 		return $ut;
 	}
 	
-	private function getHealth($lvl = null) {
+	private function getHealth($lvl = null){
 		$hp = 10;
 		if($lvl>=2) $hp = 10;
 		if($lvl>=4) $hp = 11;
@@ -2143,7 +2386,6 @@ class TsumegosController extends AppController{
 		}
 		return $user;
 	}
-
 }
 
 ?>

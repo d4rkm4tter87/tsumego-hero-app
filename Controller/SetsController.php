@@ -699,6 +699,7 @@ class SetsController extends AppController{
 		$this->LoadModel('Achievement');
 		$this->LoadModel('AchievementStatus');
 		$this->LoadModel('AchievementCondition');
+		$this->LoadModel('Sgf');
 		$_SESSION['page'] = 'set';
 		
 		$josekiOrder = 0;
@@ -1166,6 +1167,17 @@ class SetsController extends AppController{
 				$pSsum += $pS;
 				$pFsum += $pF;
 			}
+			
+			$tooltipSgfs = array();
+			$tooltipInfo = array();
+			for($i=0; $i<count($ts); $i++){
+				$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
+				$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
+				array_push($tooltipSgfs, $tArr[0]);
+				array_push($tooltipInfo, $tArr[2]);
+			}
+			
+			
 			if($urSecCounter==0)
 				$avgTime = 60;
 			else
@@ -1206,6 +1218,8 @@ class SetsController extends AppController{
 		$this->set('acS', $acS);
 		$this->set('acA', $acA);
 		$this->set('achievementUpdate', $achievementUpdate);
+		$this->set('tooltipSgfs', $tooltipSgfs);
+		$this->set('tooltipInfo', $tooltipInfo);
     }
 	
 	public function updateAchievementConditions($sid, $avgTime, $accuracy){

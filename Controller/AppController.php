@@ -7,6 +7,114 @@ define('C', 30.0);
 define('Q', 0.0057564);
 
 class AppController extends Controller{
+	public function processSGF($sgf){
+		$aw = strpos($sgf, 'AW');
+		$ab = strpos($sgf, 'AB');
+		$sgfArr = str_split($sgf);
+		
+		$black = $this->getInitialPosition($ab, $sgfArr, 'x');
+		$white = $this->getInitialPosition($aw, $sgfArr, 'o');
+		$stones = array_merge($black, $white);
+		
+		$board = array();
+		for($i=0; $i<19; $i++){
+			$board[$i] = array();
+			for($j=0; $j<19; $j++){
+				$board[$i][$j] = '-';
+			}
+		}
+		
+		$lowestX = 18;
+		$lowestY = 18;
+		$highestX = 0;
+		$highestY = 0;
+		for($i=0; $i<count($stones); $i++){
+			if($stones[$i][0]<$lowestX)
+				$lowestX = $stones[$i][0];
+			if($stones[$i][0]>$highestX)
+				$highestX = $stones[$i][0];
+			if($stones[$i][1]<$lowestY)
+				$lowestY = $stones[$i][1];
+			if($stones[$i][1]>$highestY)
+				$highestY = $stones[$i][1];
+		}
+		//echo '<pre>';print_r($stones);echo '</pre>';
+		if(18-$lowestX < $lowestX){
+			$stones = $this->xFlip($stones);
+		}
+		if(18-$lowestY < $lowestY){
+			$stones = $this->yFlip($stones);
+		}
+		$highestX = 0;
+		$highestY = 0;
+		for($i=0; $i<count($stones); $i++){
+			if($stones[$i][0]>$highestX)
+				$highestX = $stones[$i][0];
+			if($stones[$i][1]>$highestY)
+				$highestY = $stones[$i][1];
+			$board[$stones[$i][0]][$stones[$i][1]] = $stones[$i][2];
+		}
+		/*
+		for($y=0; $y<count($board); $y++){
+			for($x=0; $x<count($board[$y]); $x++){
+				echo '&nbsp;&nbsp;'.$board[$x][$y].' ';
+			}
+			echo '<br>';
+		}*/
+		$tInfo = array();
+		$tInfo[0] = $highestX;
+		$tInfo[1] = $highestY;
+		
+		$arr = array();
+		$arr[0] = $board;
+		$arr[1] = $stones;
+		$arr[2] = $tInfo;
+		
+		return $arr;
+	}
+	
+	public function xFlip($stones){
+		for($i=0; $i<count($stones); $i++)
+			$stones[$i][0] = 18-$stones[$i][0];
+		return $stones;
+	}
+	
+	public function yFlip($stones){
+		for($i=0; $i<count($stones); $i++)
+			$stones[$i][1] = 18-$stones[$i][1];
+		return $stones;
+	}
+	
+	public function getInitialPosition($pos, $sgfArr, $color){
+		$arr = array();
+		for($i=$pos+2; $i<count($sgfArr); $i++){
+			if($sgfArr[$i]=='A')
+				break;
+			else if($sgfArr[$i]=='(' || $sgfArr[$i]==';'){
+				array_pop($arr);
+				break;
+			}else
+				if($sgfArr[$i]!='[' && $sgfArr[$i]!=']')
+					array_push($arr, strtolower($sgfArr[$i]));
+		}
+		$alphabet = array_flip(array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'));
+		$xy = true;
+		$arr2 = array();
+		$c = 0;
+		for($i=0; $i<count($arr); $i++){
+			$arr[$i] = $alphabet[$arr[$i]];
+			if($xy){
+				$arr2[$c] = array();
+				$arr2[$c][0] = $arr[$i];
+			}else{
+				$arr2[$c][1] = $arr[$i];
+				$arr2[$c][2] = $color;
+				$c++;
+			}
+			$xy = !$xy;
+		}
+		return $arr2;
+	}
 
 	public function getInvisibleSets(){
 		$this->LoadModel('Set');
@@ -288,6 +396,7 @@ class AppController extends Controller{
 	
 	public function publishSingle($t=null, $to=null, $date=null){
 		$this->LoadModel('Tsumego');
+		$this->LoadModel('Sgf');
 		$ts = $this->Tsumego->findById($t);
 		$id = $this->Tsumego->find('first', array('limit' => 1, 'order' => 'id DESC'));
 		$id = $id['Tsumego']['id'];
@@ -303,6 +412,13 @@ class AppController extends Controller{
 		$this->Tsumego->create();
 		$this->Tsumego->save($ts);
 		$this->Tsumego->delete($sid);
+		
+		$sgfs = $this->Sgf->find('all', array('conditions' => array('tsumego_id' => $t)));
+		for($i=0; $i<count($sgfs); $i++){
+			$sgfs[$i]['Sgf']['tsumego_id'] = $id;
+			$this->Sgf->save($sgfs[$i]);
+		}
+		
 		return $id;
 	}
 	

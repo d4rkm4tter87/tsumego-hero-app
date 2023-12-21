@@ -1,12 +1,7 @@
+<script src ="/js/previewBoard.js"></script>
 <?php 
 	if(!isset($_SESSION['loggedInUser'])) echo '<script type="text/javascript">window.location.href = "/";</script>';
-	/*
-	echo count($comments).'<br>';
-	echo '<pre>';print_r($comments);echo '</pre>';
-	echo $num1.'<br>';
-	echo ($num1-20).'<br>';
-	echo $idToken2.'<br>';
-	*/
+
 	$empty = false;
 	$num1 = 0;
 	$idToken1 = 0;
@@ -118,7 +113,7 @@
 								<tr>
 								<td width="73%">		
 								<div style="padding-bottom:7px;"><b>#'.$comments[$j]['Comment']['counter'].'</b> | 
-								<a target="_blank" href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].'?mode=1">
+								<a target="_blank" href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].'">
 									'.$comments[$j]['Comment']['set'].' '.$comments[$j]['Comment']['set2'].' - '.$comments[$j]['Comment']['num'].'
 								</a><br>
 								
@@ -157,7 +152,9 @@
 										<div width="100%">
 											<div align="center">
 												<li id="naviElement0" class="set'.$comments[$j]['Comment']['user_tsumego'].'1" style="float:left;margin-top:14px;">
-													<a target="_blank" href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].'?mode=1">'.$comments[$j]['Comment']['num'].'</a>
+													<a id="tooltip-hover'.$j.'" class="tooltip" target="_blank" href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id']
+													.'?mode=1">'.$comments[$j]['Comment']['num']
+													.'<span><div id="tooltipSvg'.$j.'"></div></span></a>
 													
 												</li>
 											</div>
@@ -331,7 +328,8 @@
 										<div width="100%">
 											<div align="center">
 												<li id="naviElement0" class="set'.$yourComments[$j]['Comment']['user_tsumego'].'1" style="float:left;margin-top:14px;">
-													<a target="_blank" href="/tsumegos/play/'.$yourComments[$j]['Comment']['tsumego_id'].'?mode=1">'.$yourComments[$j]['Comment']['num'].'</a>
+													<a id="tooltip-hover'.(99+$j).'" class="tooltip" target="_blank" href="/tsumegos/play/'.$yourComments[$j]['Comment']['tsumego_id'].'?mode=1">'.$yourComments[$j]['Comment']['num']
+													.'<span><div id="tooltipSvg'.(99+$j).'"></div></span></a>
 												</li>
 											</div>
 										</div>
@@ -401,6 +399,34 @@
 					counter2++;
 				}
 			});
+			let tooltipSgfs = [];
+			<?php
+			for($a=0; $a<count($tooltipSgfs); $a++){
+				echo 'tooltipSgfs['.$a.'] = [];';
+				for($y=0; $y<count($tooltipSgfs[$a]); $y++){
+					echo 'tooltipSgfs['.$a.']['.$y.'] = [];';
+					for($x=0; $x<count($tooltipSgfs[$a][$y]); $x++){
+						echo 'tooltipSgfs['.$a.']['.$y.'].push("'.$tooltipSgfs[$a][$x][$y].'");';
+					}
+				}
+			}
+			for($i=0; $i<10; $i++)
+				echo 'createPreviewBoard('.$i.', tooltipSgfs['.$i.'], '.$tooltipInfo[$i][0].', '.$tooltipInfo[$i][1].');';
+			?>
+			let tooltipSgfs2 = [];
+			<?php
+			for($a=0; $a<count($tooltipSgfs2); $a++){
+				echo 'tooltipSgfs2['.$a.'] = [];';
+				for($y=0; $y<count($tooltipSgfs2[$a]); $y++){
+					echo 'tooltipSgfs2['.$a.']['.$y.'] = [];';
+					for($x=0; $x<count($tooltipSgfs[$a][$y]); $x++){
+						echo 'tooltipSgfs2['.$a.']['.$y.'].push("'.$tooltipSgfs2[$a][$x][$y].'");';
+					}
+				}
+			}
+			for($i=0; $i<10; $i++)
+				echo 'createPreviewBoard('.(99+$i).', tooltipSgfs2['.$i.'], '.$tooltipInfo2[$i][0].', '.$tooltipInfo2[$i][1].');';
+			?>
 		</script>
 		<style>
 			.unresolved-tab-list{

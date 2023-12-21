@@ -1,9 +1,6 @@
-
+	<script src ="/js/previewBoard.js"></script>
 	<div class="homeRight">
-	
-		
 		<p class="title4">Modes</p>
-		
 		<?php
 			echo '<img id="title-image" src="/img/new-modeselect.png" width="100%" alt="Tsumego Hero Modes" title="Tsumego Hero Modes">';
 		?>
@@ -38,7 +35,8 @@
 				'.$newT['Tsumego']['set'].' '.$newT['Tsumego']['set2'].' - '.count($scheduleTsumego).' problems</b></a><br>';
 				for($i=0; $i<count($scheduleTsumego); $i++){
 					echo '<li class="set'.$scheduleTsumego[$i]['Tsumego']['status'].'1" style="margin-top:4px;">
-						<a href="/tsumegos/play/'.$scheduleTsumego[$i]['Tsumego']['id'].'">'.$scheduleTsumego[$i]['Tsumego']['num'].'</a>
+						<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$scheduleTsumego[$i]['Tsumego']['id'].'">'
+						.$scheduleTsumego[$i]['Tsumego']['num'].'<span><div id="tooltipSvg'.$i.'"></div></span></a>
 					</li>';
 				}
 			}
@@ -87,7 +85,8 @@
 		<font color="#444">Most popular today:</font><br>
 		<a id="mostPopularToday" href="/sets/view/<?php echo $totd['Tsumego']['set_id']; ?>"><b><?php echo $totd['Tsumego']['set'].' '.$totd['Tsumego']['set2']; ?></b> - <?php echo $totd['Tsumego']['num']; ?></a><br>
 			<li class="set<?php echo $totd['Tsumego']['status']; ?>1" style="margin-top:4px;">
-				<a href="/tsumegos/play/<?php echo $totd['Tsumego']['id']; ?>"><?php echo $totd['Tsumego']['num']; ?></a>
+				<a id="tooltip-hover99" class="tooltip" href="/tsumegos/play/<?php echo $totd['Tsumego']['id']; ?>">
+				<?php echo $totd['Tsumego']['num']; ?><span><div id="tooltipSvg99"></div></span></a>
 			</li>
 			<br><br>
 		</div>
@@ -861,6 +860,31 @@
 		function goMode3(){
 			<?php echo 'window.location.href = "/ranks/overview";'; ?>
 		}
+		let tooltipSgfs = [];
+		let popularTooltip = [];
+		<?php
+		for($a=0; $a<count($tooltipSgfs); $a++){
+			echo 'tooltipSgfs['.$a.'] = [];';
+			for($y=0; $y<count($tooltipSgfs[$a]); $y++){
+				echo 'tooltipSgfs['.$a.']['.$y.'] = [];';
+				for($x=0; $x<count($tooltipSgfs[$a][$y]); $x++){
+					echo 'tooltipSgfs['.$a.']['.$y.'].push("'.$tooltipSgfs[$a][$x][$y].'");';
+				}
+			}
+		}
+		
+		for($y=0; $y<count($popularTooltip); $y++){
+			echo 'popularTooltip['.$y.'] = [];';
+			for($x=0; $x<count($popularTooltip[$y]); $x++){
+				echo 'popularTooltip['.$y.'].push("'.$popularTooltip[$x][$y].'");';
+			}
+		}
+		
+		for($i=0; $i<count($scheduleTsumego); $i++)
+			echo 'createPreviewBoard('.$i.', tooltipSgfs['.$i.'], '.$tooltipInfo[$i][0].', '.$tooltipInfo[$i][1].');';
+		echo 'createPreviewBoard(99, popularTooltip, '.$popularTooltipInfo[0].', '.$popularTooltipInfo[1].');';	
+		
+		?>
 	</script>
 	
 	

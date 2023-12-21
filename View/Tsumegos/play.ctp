@@ -22,6 +22,7 @@
 <script src="/besogo/js/diffInfo.js"></script>
 <script src="/besogo/js/scaleParameters.js"></script>
 <script src ="/FileSaver.min.js"></script>
+<script src ="/js/previewBoard.js"></script>
 <?php if($t['Tsumego']['set_id']==208 || $t['Tsumego']['set_id']==210){ ?>
 	<script src="/js/multipleChoice.js"></script>
 	<style>.alertBox{height:auto!important;}</style>
@@ -458,25 +459,13 @@
 	<div class="tsumegoNavi1">
 		<div class="tsumegoNavi2">
 			<?php
-			$josekiThumb = '';
-			$josekiThumb2 = '';
-			$josekiButton = '';
-			$josekiHeight = '';
 			for($i=0; $i<count($navi); $i++){
-				if($set['Set']['id']==161){
-					$jt = 'josekiThumb1.png';
-					if($navi[$i]['Tsumego']['type']==1) $jt = 'josekiThumb1.png';
-					elseif($navi[$i]['Tsumego']['type']==2) $jt = 'josekiThumb2.png';
-					if($navi[$i]['Tsumego']['num']!='') $jx = '<img src="/img/'.$jt.'" width="45px">';
-					else $jx = '';
-					$josekiThumb = '<br>'.$jx.'<span id="tooltip-span"><img width="200px" alt="" src="/img/thumbs/'.$navi[$i]['Tsumego']['thumbnail'].'.PNG"/></span>';
-					$josekiThumb2 = 'class="tooltip"';
-					if($navi[$i]['Tsumego']['num']!='') $josekiButton = 'style="height:71px;background-image: url(\'/img/viewButton3.png\');"';
-				}
 				if($t['Tsumego']['id'] == $navi[$i]['Tsumego']['id']) $additionalId = 'id="currentElement"';
 				else $additionalId = '';
-				echo '<li '.$additionalId.$josekiButton.' id="naviElement'.$i.'" class="'.$navi[$i]['Tsumego']['status'].'">
-					<a '.$josekiThumb2.' href="/tsumegos/play/'.$navi[$i]['Tsumego']['id'].$inFavorite.'">'.$navi[$i]['Tsumego']['num'].$josekiThumb.'</a></li>';
+				echo '<li '.$additionalId.' id="naviElement'.$i.'" class="'.$navi[$i]['Tsumego']['status'].'">
+					<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$navi[$i]['Tsumego']['id'].$inFavorite.'">
+					'.$navi[$i]['Tsumego']['num'].'<span><div id="tooltipSvg'.$i.'"></div></span></a>
+					</li>';
 				if($i==0 || $i==count($navi)-2) echo '<li class="setBlank"><a></a></li>';
 			}
 			?>
@@ -505,6 +494,7 @@
 					echo '<a id="show4" style="margin-right:20px;" class="selectable-text">Admin-Upload<img id="greyArrow4" src="/img/greyArrow1.png"></a>';
 					echo '<a id="showx5" style="margin-right:20px;" class="selectable-text">Open</a>';
 					echo '<a id="showx6" style="margin-right:20px;" class="selectable-text '.$adHighlight.'">History</a>';
+					echo '<a id="showx7" style="margin-right:20px;" class="selectable-text">Similar Problems</a>';
 					echo '<a id="show5" class="selectable-text">Settings<img id="greyArrow5" src="/img/greyArrow1.png"></a>';
 					if($virtual_children==1){
 						$vcOn = 'checked="checked"';
@@ -612,6 +602,7 @@
 				</form>
 			</div>
 		</div>
+		
 		<?php }
 		if($firstRanks==0){
 		?>
@@ -937,9 +928,10 @@
 	/* 
 	TESTING AREA
 	TESTING AREA
-	TESTING AREA
+	TESTING AREA§
 	echo '<pre>'; print_r($u); echo '</pre>';
 	*/ 
+	
 	if($inFavorite!=null) echo $inFavorite;
 	else echo '<x>'
 	?>
@@ -1636,12 +1628,37 @@
 				displayResult('S');
 			}
 		<?php } ?>
+		var mouseX;
+		var mouseY;
+		$(document).mousemove(function(e){
+		   mouseX = e.pageX; 
+		   mouseY = e.pageY;
+		}); 
+		const w3 = 'http://www.w3.org/2000/svg';//§
+		const w32 = 'http://www.w3.org/1999/xlink';
+		
+		let tooltipSgfs = [];
+		<?php
+		for($a=0; $a<count($tooltipSgfs); $a++){
+			echo 'tooltipSgfs['.$a.'] = [];';
+			for($y=0; $y<count($tooltipSgfs[$a]); $y++){
+				echo 'tooltipSgfs['.$a.']['.$y.'] = [];';
+				for($x=0; $x<count($tooltipSgfs[$a][$y]); $x++){
+					echo 'tooltipSgfs['.$a.']['.$y.'].push("'.$tooltipSgfs[$a][$x][$y].'");';
+				}
+			}
+		}
+		for($i=0; $i<count($navi); $i++)
+			echo 'createPreviewBoard('.$i.', tooltipSgfs['.$i.'], '.$tooltipInfo[$i][0].', '.$tooltipInfo[$i][1].');';
+		?>
 	});
 
 	function displaySettings(){
 		enableDownloads = true;
 		$("#showx3").css("display", "inline-block");
 		<?php if($_SESSION['loggedInUser']['User']['isAdmin']==1){ ?>
+		$("#showx7").css("display", "inline-block");
+		$("#showx7").attr("href", "<?php echo '/tsumegos/duplicatesearch/'.$t['Tsumego']['id']; ?>");
 		<?php if($t['Tsumego']['duplicate']==0 || $t['Tsumego']['duplicate']==-1){ ?>
 			$("#showx5").attr("href", "<?php echo '/tsumegos/open/'.$t['Tsumego']['id'].'/'.$sgf['Sgf']['id']; ?>");
 			$("#showx6").attr("href", "<?php echo '/sgfs/view/'.($t['Tsumego']['id']*1337); ?>");
@@ -2434,10 +2451,17 @@
 	
 	function toggleBoardLock(t, customHeight=false, multipleChoice=false){
 		if(t){
-			let besogoBoardHeight = $('.besogo-board').height() + "px";
-			let besogoBoardWidth = $('.besogo-board').width() + "px";
+			//let besogoBoardHeight = $('.besogo-board').height() + "px";
+			//let besogoBoardWidth = $('.besogo-board').width() + "px";
+			let besogoBoardHeight = $('.besogo-container').height() * .88;
+			let besogoBoardWidth = $('.besogo-container').width() * .78;
+			besogoBoardHeight = Math.floor(besogoBoardHeight);
+			besogoBoardWidth = Math.floor(besogoBoardWidth);
+			besogoBoardHeight += "px";
+			besogoBoardWidth += "px";
+			 
 			$("#targetLockOverlay").css("width", "633px");
-			if(!customHeight){ 
+			if(!customHeight){
 				$("#targetLockOverlay").css("height", besogoBoardHeight);
 				$("#targetLockOverlay").css("width", besogoBoardWidth);
 				//$("#targetLockOverlay").css("top", $('.besogo-board').offset().top);
@@ -2446,9 +2470,9 @@
 				//console.log($('.besogo-board').offset().left);
 			}
 			else $("#targetLockOverlay").css("height", "633px");
-			$("#targetLockOverlay").css("z-index", "1000");
+			$("#targetLockOverlay").css("z-index", "101");
 			//$("#targetLockOverlay").css("background", "#3c3cae");
-			//$("#targetLockOverlay").css("opacity", ".2");
+			//$("#targetLockOverlay").css("opacity", ".3");
 		}else{
 			$("#targetLockOverlay").css("width", "0");
 			$("#targetLockOverlay").css("height", "0");
@@ -2604,8 +2628,8 @@
     options.reviewMode = false;
     options.reviewEnabled = <?php echo $reviewEnabled ? 'true' : 'false'; ?>;
 	<?php
-		//if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72){
-		if(isset($_SESSION['loggedInUser'])){if(false){
+		if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72){
+		//if(isset($_SESSION['loggedInUser'])){if(false){
 			echo 'options.reviewEnabled = true;';
 		}}
 	?>

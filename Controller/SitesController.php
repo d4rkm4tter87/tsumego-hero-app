@@ -13,6 +13,7 @@ class SitesController extends AppController{
 		$this->LoadModel('UserBoard');
 		$this->LoadModel('Schedule');
 		$this->LoadModel('RankOverview');
+		$this->LoadModel('Sgf');
 		
 		$ts = $this->Tsumego->find('all', 
 			array('order' => array('Tsumego.created'))
@@ -57,12 +58,28 @@ class SitesController extends AppController{
 		if(count($dateUser)==0) $dateUser = $this->DayRecord->find('first', array('conditions' =>  array('date' => date('Y-m-d', strtotime('yesterday')))));
 		
 		$totd = $this->Tsumego->findById($dateUser['DayRecord']['tsumego']);
+		$popularTooltip = array();
+		$popularTooltipInfo = array();
+		$ptts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $totd['Tsumego']['id'])));
+		$ptArr = $this->processSGF($ptts[0]['Sgf']['sgf']);
+		$popularTooltip = $ptArr[0];
+		$popularTooltipInfo = $ptArr[2];
+		
 		$newT = $this->Tsumego->findById($dateUser['DayRecord']['newTsumego']);
 		$newTschedule = $this->Schedule->find('all', array('conditions' =>  array('date' => $today)));
 		
 		$scheduleTsumego = array();
 		for($i=0; $i<count($newTschedule); $i++){
 			array_push($scheduleTsumego, $this->Tsumego->findById($newTschedule[$i]['Schedule']['tsumego_id']));
+		}
+		
+		$tooltipSgfs = array();
+		$tooltipInfo = array();
+		for($i=0; $i<count($scheduleTsumego); $i++){
+			$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $scheduleTsumego[$i]['Tsumego']['id'])));
+			$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
+			array_push($tooltipSgfs, $tArr[0]);
+			array_push($tooltipInfo, $tArr[2]);
 		}
 		
 		if(isset($_SESSION['loggedInUser'])){
@@ -203,6 +220,10 @@ class SitesController extends AppController{
 		$this->set('newT', $newT);
 		$this->set('scheduleTsumego', $scheduleTsumego);
 		$this->set('dateUser', $dateUser);
+		$this->set('tooltipSgfs', $tooltipSgfs);
+		$this->set('tooltipInfo', $tooltipInfo);
+		$this->set('popularTooltip', $popularTooltip);
+		$this->set('popularTooltipInfo', $popularTooltipInfo);
     }
 	
 	public function view($id=null){

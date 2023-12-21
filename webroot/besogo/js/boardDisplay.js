@@ -401,10 +401,12 @@ besogo.makeBoardDisplay = function(container, editor, corner)
 
   function updateHoverState()
   {
-    if (lastHoverPosition == null)
-      return;
-    if (element = hoverLayer[fromXY(lastHoverPosition.x, lastHoverPosition.y)]) // Make tool action visible on hover over
-      element.setAttribute('visibility', 'visible');
+	if(!besogo.multipleChoice){
+      if (lastHoverPosition == null)
+        return;
+      if (element = hoverLayer[fromXY(lastHoverPosition.x, lastHoverPosition.y)]) // Make tool action visible on hover over
+        element.setAttribute('visibility', 'visible');
+	}
   }
 
   function handleOut(i, j)  // Returns function for mouse off

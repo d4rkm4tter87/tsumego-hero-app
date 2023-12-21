@@ -5,6 +5,7 @@ class CommentsController extends AppController{
 		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Set');
 		$this->LoadModel('User');
+		$this->LoadModel('Sgf');
 		$_SESSION['title'] = 'Tsumego Hero - Discuss';
 		$_SESSION['page'] = 'discuss';
 		$c = array();
@@ -296,20 +297,38 @@ class CommentsController extends AppController{
 		
 		$currentPositionPlaceholder = '<img src="/img/positionIcon1.png" class="positionIcon1" style="cursor:context-menu;">';
 		
+		$tooltipSgfs = array();
+		$tooltipInfo = array();
+		$tooltipSgfs2 = array();
+		$tooltipInfo2 = array();
 		for($i=0; $i<count($c); $i++){
 			if(strpos($c[$i]['Comment']['message'], '<a href="/files/ul1/') === false)
 				$c[$i]['Comment']['message'] = htmlspecialchars($c[$i]['Comment']['message']);
 			$c[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $c[$i]['Comment']['message']);
-		}
-		for($i=0; $i<count($comments); $i++){
-			if(strpos($comments[$i]['Comment']['message'], '<a href="/files/ul1/') === false)
-				$comments[$i]['Comment']['message'] = htmlspecialchars($comments[$i]['Comment']['message']);
-			$comments[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $comments[$i]['Comment']['message']);
+			
+			$tBuffer = $this->Tsumego->findById($c[$i]['Comment']['tsumego_id']);
+			$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $tBuffer['Tsumego']['id'])));
+			$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
+			array_push($tooltipSgfs, $tArr[0]);
+			array_push($tooltipInfo, $tArr[2]);
 		}
 		for($i=0; $i<count($yourc); $i++){
 			$yourc[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $yourc[$i]['Comment']['message']);
+			
+			$tBuffer = $this->Tsumego->findById($yourc[$i]['Comment']['tsumego_id']);
+			$tts2 = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $tBuffer['Tsumego']['id'])));
+			$tArr2 = $this->processSGF($tts2[0]['Sgf']['sgf']);
+			$tooltipSgfs2[$i] = $tArr2[0];
+			$tooltipInfo2[$i] = $tArr2[2];
 		}
 		$admins = $this->User->find('all', array('conditions' => array('isAdmin' => 1))); 
+		
+		echo '<pre>'; print_r(count($tooltipSgfs2)); echo '</pre>';
+		//echo '<pre>'; print_r($tooltipInfo2); echo '</pre>';
+		//echo '<pre>'; print_r($c); echo '</pre>';
+		//echo '<pre>'; print_r($tooltipSgfs); echo '</pre>';
+		//echo '<pre>'; print_r($c); echo '</pre>';
+		
 		$this->set('admins', $admins);
 		$this->set('paramindex', $paramindex);
 		$this->set('paramdirection', $paramdirection);
@@ -320,11 +339,14 @@ class CommentsController extends AppController{
 		$this->set('index', $index);
 		$this->set('yourindex', $yourindex);
 		$this->set('comments', $c);
-		$this->set('comments2', $comments);
 		$this->set('yourComments', $yourc);
 		$this->set('userTsumegos', $keyList);
 		$this->set('firstPage', $firstPage);
 		$this->set('yourfirstPage', $yourfirstPage);
+		$this->set('tooltipSgfs', $tooltipSgfs);
+		$this->set('tooltipInfo', $tooltipInfo);
+		$this->set('tooltipSgfs2', $tooltipSgfs2);
+		$this->set('tooltipInfo2', $tooltipInfo2);
     }
 
 }

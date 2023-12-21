@@ -1,4 +1,4 @@
-
+<script src ="/js/previewBoard.js"></script>
 <?php
 	$noImage = false;
 	
@@ -33,7 +33,6 @@
 		<?php
 		if($set['Set']['id']!=1) $fav = '';
 		else $fav = '?favorite=1';
-		
 		if($set['Set']['id']!=58 && $set['Set']['id']!=62 && $set['Set']['id']!=91 && $set['Set']['id']!=72 && $set['Set']['id']!=73 && $set['Set']['id']!=74 
 		&& $set['Set']['id']!=75 && $set['Set']['id']!=76 && $set['Set']['id']!=77 && $set['Set']['id']!=78 && $set['Set']['id']!=79 && $set['Set']['id']!=80
 		&& $set['Set']['id']!=51 && $set['Set']['id']!=56 && $set['Set']['id']!=57 && $set['Set']['id']!=119 
@@ -43,46 +42,31 @@
 		if($_SESSION['loggedInUser']['User']['id']==72) $beta2 = false;
 		
 		if(!$beta2){
-			$josekiThumb = '';
-			$josekiThumb2 = '';
 			for($i=0; $i<count($ts); $i++){
 				if(!isset($ts[$i]['Tsumego']['status'])) $ts[$i]['Tsumego']['status'] = 'N';
-				if($josekiOrder==0){
-					$num = $ts[$i]['Tsumego']['num'];
-					$num = '<div class="setViewButtons1">'.$num.'</div>';
-					$persormanceS = substr_count($ts[$i]['Tsumego']['performance'], '1');
-					$persormanceF = substr_count($ts[$i]['Tsumego']['performance'], 'F');
-					if($persormanceS==0 && $persormanceF==0) $num2 = '-';
-					else $num2 = $persormanceS.'/'.$persormanceF;
-					$num2 = '<div class="setViewButtons2">'.$num2.'</div>';
-					if($ts[$i]['Tsumego']['seconds']=='') $num3 = '-';
-					else $num3 = $ts[$i]['Tsumego']['seconds'].'s';
-					$num3 = '<div class="setViewButtons3">'.$num3.'</div>';
-				}
-				elseif($josekiOrder==1) $num = $ts[$i]['Tsumego']['order'];
-				if($set['Set']['id']==161){
-					$jt = 'josekiThumb1.png';
-					if($ts[$i]['Tsumego']['type']==1) $jt = 'thumbnail-example2.png';
-					elseif( $ts[$i]['Tsumego']['type']==2) $jt = 'thumbnail-example.png';
-					$josekiThumb = '<img src="/img/'.$jt.'"><span id="tooltip-span"><img width="200px" alt="" src="/img/thumbs/'.$ts[$i]['Tsumego']['thumbnail'].'.PNG"/></span>';
-					$josekiThumb2 = 'class="tooltip"';
-					$josekiButton = 'style="background-image: url(\'/img/viewButton3.png\');"';
-				}
 				
-				echo '<li class="set'.$ts[$i]['Tsumego']['status'].'1" '.$josekiButton.'>
-					<a '.$josekiThumb2.' href="/tsumegos/play/'
-					.$ts[$i]['Tsumego']['id'].$fav.'">'.$num.$num2.$num3.$josekiThumb.'</a></li>';
+				$num = $ts[$i]['Tsumego']['num'];
+				$num = '<div class="setViewButtons1">'.$num.'</div>';
+				$persormanceS = substr_count($ts[$i]['Tsumego']['performance'], '1');
+				$persormanceF = substr_count($ts[$i]['Tsumego']['performance'], 'F');
+				if($persormanceS==0 && $persormanceF==0) $num2 = '-';
+				else $num2 = $persormanceS.'/'.$persormanceF;
+				$num2 = '<div class="setViewButtons2">'.$num2.'</div>';
+				if($ts[$i]['Tsumego']['seconds']=='') $num3 = '-';
+				else $num3 = $ts[$i]['Tsumego']['seconds'].'s';
+				$num3 = '<div class="setViewButtons3">'.$num3.'</div>';
+				
+				echo '<li class="set'.$ts[$i]['Tsumego']['status'].'1">
+					<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$ts[$i]['Tsumego']['id'].$fav.'">
+					'.$num.$num2.$num3.'<span><div id="tooltipSvg'.$i.'"></div></span></a>
+					</li>';
 			}
 		}
 		
 		if($set['Set']['public']==0){
 			if(isset($_SESSION['loggedInUser'])){
 				if($_SESSION['loggedInUser']['User']['isAdmin']>0){
-					
-					//echo '<li class="setA1"><a href="/sets/view/'.$set['Set']['id'].'?add=1">+</a></li>';
-					
 					echo '<div align="left" width="100%">';
-					
 					echo '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>';
 					if(isset($_SESSION['loggedInUser'])){
 						if($_SESSION['loggedInUser']['User']['id']==72 && $set['Set']['id']==161){
@@ -94,18 +78,14 @@
 							echo '<br><br>';
 						}
 					}
-					
 					echo '</div>';
 				}
 			}
 		}
 		?>
 	</div>
-	
 	<div class="homeLeft">
-		<?php 
-		//if($set['Set']['title2']==null) $set['Set']['title2'] = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo '<p class="title4">'.$set['Set']['title'].'</p>';?>
+		<?php echo '<p class="title4">'.$set['Set']['title'].'</p>';?>
 		<div class="new1">
 		<table border="0" width="100%">
 		<tr>
@@ -555,13 +535,23 @@
 			tooltipSpan.style.left = (x + 20) + 'px';
 		};
 		*/
+		let tooltipSgfs = [];
 		<?php
 			if($refreshView) echo 'window.location.href = "/sets/view/'.$set['Set']['id'].'";';
 			
+			for($a=0; $a<count($tooltipSgfs); $a++){
+				echo 'tooltipSgfs['.$a.'] = [];';
+				for($y=0; $y<count($tooltipSgfs[$a]); $y++){
+					echo 'tooltipSgfs['.$a.']['.$y.'] = [];';
+					for($x=0; $x<count($tooltipSgfs[$a][$y]); $x++){
+						echo 'tooltipSgfs['.$a.']['.$y.'].push("'.$tooltipSgfs[$a][$x][$y].'");';
+					}
+				}
+			}
+			for($i=0; $i<count($ts); $i++)
+				echo 'createPreviewBoard('.$i.', tooltipSgfs['.$i.'], '.$tooltipInfo[$i][0].', '.$tooltipInfo[$i][1].');';
 		?>
 	</script>
 	<style>
-	#show5{
-		display:block;
-	}
+	#show5{display:block;}
 	</style>
