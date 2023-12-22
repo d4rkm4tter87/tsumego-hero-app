@@ -764,13 +764,13 @@ class SetsController extends AppController{
 			$allArInactive = true;
 			
 			for($i=0; $i<count($ts); $i++){
-				if($ts[$i]['Tsumego']['virtual_children']==0) 
+				if($ts[$i]['Tsumego']['virtual_children']==0)
 					$allVcActive = false;
-				if($ts[$i]['Tsumego']['virtual_children']==1) 
+				if($ts[$i]['Tsumego']['virtual_children']==1)
 					$allVcInactive = false;
-				if($ts[$i]['Tsumego']['alternative_response']==0) 
+				if($ts[$i]['Tsumego']['alternative_response']==0)
 					$allArActive = false;
-				if($ts[$i]['Tsumego']['alternative_response']==1) 
+				if($ts[$i]['Tsumego']['alternative_response']==1)
 					$allArInactive = false;
 			}
 			
@@ -944,7 +944,6 @@ class SetsController extends AppController{
 				}
 				$this->set('formRedirect', true);
 			}
-			
 			if(isset($this->data['Tsumego'])){
 				if(!$formChange){
 					$tf = array();
@@ -970,7 +969,8 @@ class SetsController extends AppController{
 						$js['Joseki']['thumbnail'] = $this->data['Tsumego']['thumb'];
 						$this->Joseki->save($js);
 					}
-					$ts = $this->Tsumego->find('all', array('order' => 'num',	'direction' => 'DESC', 'conditions' =>  array('set_id' => $id)));
+					$tsIds = array();
+					$ts = $this->Tsumego->find('all', array('order' => 'num', 'direction' => 'DESC', 'conditions' => array('set_id' => $id)));
 					for($i=0; $i<count($ts); $i++) array_push($tsIds, $ts[$i]['Tsumego']['id']);
 				}
 			}
@@ -983,6 +983,10 @@ class SetsController extends AppController{
 				array_push($statusMap, $allUts[$i]['TsumegoStatus']['status']);
 			}
 			$fav = $this->Favorite->find('all', array('order' => 'created',	'direction' => 'DESC', 'conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+			
+			if(count($fav)>0)
+				$achievementUpdate = $this->checkSetAchievements(-1);
+			
 			$ts = array();
 			$difficultyCount = 0;
 			$solvedCount = 0;
@@ -994,6 +998,13 @@ class SetsController extends AppController{
 				if($utx['TsumegoStatus']['status'] == 'S' || $utx['TsumegoStatus']['status'] == 'W' || $utx['TsumegoStatus']['status'] == 'C') $solvedCount++;
 				$sizeCount++;
 				array_push($ts, $tx);
+			}
+			for($i=0; $i<count($allUts); $i++){
+				for($j=0; $j<count($ts); $j++){
+					if($allUts[$i]['TsumegoStatus']['tsumego_id'] == $ts[$j]['Tsumego']['id']){
+						$ts[$j]['Tsumego']['status'] = $allUts[$i]['TsumegoStatus']['status'];
+					}
+				}
 			}
 
 			$difficultyCount /= $sizeCount;
@@ -1176,8 +1187,6 @@ class SetsController extends AppController{
 				array_push($tooltipSgfs, $tArr[0]);
 				array_push($tooltipInfo, $tArr[2]);
 			}
-			
-			
 			if($urSecCounter==0)
 				$avgTime = 60;
 			else
@@ -1189,15 +1198,30 @@ class SetsController extends AppController{
 			
 			if($urSecCounter<100) $avgTime2 = 60;
 			else $avgTime2 = $avgTime;
-			
+			$achievementUpdate2 = array();
 			if($set['Set']['solved']>=100){
 				$this->updateAchievementConditions($set['Set']['id'], $avgTime2, $accuracy);
-				$achievementUpdate = $this->checkSetAchievements($set['Set']['id']);
+				$achievementUpdate1 = $this->checkSetAchievements($set['Set']['id']);
+				
+				if($id==50||$id==52||$id==53||$id==54){
+					$achievementUpdate2 = $this->setAchievementSpecial('cc1');
+				}else if($id==41||$id==49||$id==65||$id==66){
+					$achievementUpdate2 = $this->setAchievementSpecial('cc2');
+				}else if($id==186||$id==187||$id==196||$id==203){
+					$achievementUpdate2 = $this->setAchievementSpecial('cc3');
+				}else if($id==190||$id==193||$id==198){
+					$achievementUpdate2 = $this->setAchievementSpecial('1000w1');
+				}
+				$achievementUpdate = array_merge($achievementUpdate1, $achievementUpdate2);
 			}
 			if(count($achievementUpdate)>0) $this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
 			
-			$acS = $this->AchievementCondition->find('first', array('order' => 'value ASC', 'conditions' => array('set_id' => $id, 'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 's')));
-			$acA = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array('set_id' => $id, 'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => '%')));
+			$acS = $this->AchievementCondition->find('first', array('order' => 'value ASC', 'conditions' => array(
+				'set_id' => $id, 'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 's'
+			)));
+			$acA = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array(
+				'set_id' => $id, 'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => '%'
+			)));
 		}else{
 			$scoring = false;
 		}

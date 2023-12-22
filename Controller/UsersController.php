@@ -5,9 +5,6 @@ class UsersController extends AppController{
 	public $pageTitle = "Users";
 	public $helpers = array('Html', 'Form');
 	
-	
-
-	
 	public function playerdb5(){
 		$this->loadModel('TsumegoStatus');
 		$this->loadModel('Tsumego');
@@ -965,7 +962,7 @@ Joschka Zimdars';
 		$this->loadModel('Tsumego');
 		$this->loadModel('Set');
 		
-		$s = $this->Sgf->find('all', array('limit' => 100, 'order' => 'created DESC', 'conditions' =>  array(
+		$s = $this->Sgf->find('all', array('limit' => 250, 'order' => 'created DESC', 'conditions' =>  array(
 			'NOT' => array('user_id' => 33)
 		)));
 		

@@ -153,7 +153,7 @@
 											<div align="center">
 												<li id="naviElement0" class="set'.$comments[$j]['Comment']['user_tsumego'].'1" style="float:left;margin-top:14px;">
 													<a id="tooltip-hover'.$j.'" class="tooltip" target="_blank" href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id']
-													.'?mode=1">'.$comments[$j]['Comment']['num']
+													.'">'.$comments[$j]['Comment']['num']
 													.'<span><div id="tooltipSvg'.$j.'"></div></span></a>
 													
 												</li>
@@ -169,7 +169,7 @@
 								<tr>
 								<td width="73%">		
 								<div><b>#'.$comments[$j]['Comment']['counter'].'</b> | 
-								<a target="_blank" href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].'?mode=1">
+								<a target="_blank" href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].'">
 									'.$comments[$j]['Comment']['set'].' '.$comments[$j]['Comment']['set2'].' - '.$comments[$j]['Comment']['num'].'
 								</a><br>
 								<div class="commentAnswer" style="color:#5e5e5e;"><div style="padding-top:14px;"></div>[You need to solve this problem to see the comment]</div>
@@ -184,7 +184,7 @@
 										<div width="100%">
 											<div align="center">
 												<li id="naviElement0" class="set'.$comments[$j]['Comment']['user_tsumego'].'1" style="float:left;margin-top:14px;">
-													<a target="_blank" href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].'?mode=1">'.$comments[$j]['Comment']['num'].'</a>
+													<a target="_blank" href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].'">'.$comments[$j]['Comment']['num'].'</a>
 													
 												</li>
 											</div>
@@ -288,7 +288,7 @@
 								<tr>
 								<td width="73%">		
 								<div style="padding-bottom:7px;"><b>#'.$yourComments[$j]['Comment']['counter'].'</b> | 
-								<a target="_blank" href="/tsumegos/play/'.$yourComments[$j]['Comment']['tsumego_id'].'?mode=1">
+								<a target="_blank" href="/tsumegos/play/'.$yourComments[$j]['Comment']['tsumego_id'].'">
 									'.$yourComments[$j]['Comment']['set'].' '.$yourComments[$j]['Comment']['set2'].' - '.$yourComments[$j]['Comment']['num'].'
 								</a><br>
 								
@@ -328,7 +328,7 @@
 										<div width="100%">
 											<div align="center">
 												<li id="naviElement0" class="set'.$yourComments[$j]['Comment']['user_tsumego'].'1" style="float:left;margin-top:14px;">
-													<a id="tooltip-hover'.(99+$j).'" class="tooltip" target="_blank" href="/tsumegos/play/'.$yourComments[$j]['Comment']['tsumego_id'].'?mode=1">'.$yourComments[$j]['Comment']['num']
+													<a id="tooltip-hover'.(99+$j).'" class="tooltip" target="_blank" href="/tsumegos/play/'.$yourComments[$j]['Comment']['tsumego_id'].'">'.$yourComments[$j]['Comment']['num']
 													.'<span><div id="tooltipSvg'.(99+$j).'"></div></span></a>
 												</li>
 											</div>

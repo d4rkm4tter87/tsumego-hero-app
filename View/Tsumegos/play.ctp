@@ -397,29 +397,8 @@
 				<div id="status2" align="center" style="color:black;">
 				<font size="4">
 				<?php
-				if($t['Tsumego']['userWin']!=0){
-					if($t['Tsumego']['userWin']>=0 && $t['Tsumego']['userWin']<=22) $tRank='5d';
-					elseif($t['Tsumego']['userWin']<=26.5) $tRank='4d';
-					elseif($t['Tsumego']['userWin']<=30) $tRank='3d';
-					elseif($t['Tsumego']['userWin']<=34) $tRank='2d';
-					elseif($t['Tsumego']['userWin']<=38) $tRank='1d';
-					elseif($t['Tsumego']['userWin']<=42) $tRank='1k';
-					elseif($t['Tsumego']['userWin']<=46) $tRank='2k';
-					elseif($t['Tsumego']['userWin']<=50) $tRank='3k';
-					elseif($t['Tsumego']['userWin']<=54.5) $tRank='4k';
-					elseif($t['Tsumego']['userWin']<=58.5) $tRank='5k';
-					elseif($t['Tsumego']['userWin']<=63) $tRank='6k';
-					elseif($t['Tsumego']['userWin']<=67) $tRank='7k';
-					elseif($t['Tsumego']['userWin']<=70.8) $tRank='8k';
-					elseif($t['Tsumego']['userWin']<=74.8) $tRank='9k';
-					elseif($t['Tsumego']['userWin']<=79) $tRank='10k';
-					elseif($t['Tsumego']['userWin']<=83.5) $tRank='11k';
-					elseif($t['Tsumego']['userWin']<=88) $tRank='12k';
-					elseif($t['Tsumego']['userWin']<=92) $tRank='13k';
-					elseif($t['Tsumego']['userWin']<=96) $tRank='14k';
-					else $tRank='15k';
+				if($t['Tsumego']['userWin']!=0)
 					echo  $tRank.' <font color="grey">('.$t['Tsumego']['userWin'].'%)</font>';
-				}
 				?>
 				</font>
 				</div>

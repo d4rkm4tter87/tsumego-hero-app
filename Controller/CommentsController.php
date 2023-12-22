@@ -323,7 +323,7 @@ class CommentsController extends AppController{
 		}
 		$admins = $this->User->find('all', array('conditions' => array('isAdmin' => 1))); 
 		
-		echo '<pre>'; print_r(count($tooltipSgfs2)); echo '</pre>';
+		//echo '<pre>'; print_r(count($tooltipSgfs2)); echo '</pre>';
 		//echo '<pre>'; print_r($tooltipInfo2); echo '</pre>';
 		//echo '<pre>'; print_r($c); echo '</pre>';
 		//echo '<pre>'; print_r($tooltipSgfs); echo '</pre>';

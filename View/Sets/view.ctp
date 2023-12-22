@@ -1,7 +1,6 @@
 <script src ="/js/previewBoard.js"></script>
 <?php
 	$noImage = false;
-	
 	if($isFav) $noImage = true;
 	if($set['Set']['id']==11969 || $set['Set']['id']==29156 || $set['Set']['id']==31813 || $set['Set']['id']==33007 
 	|| $set['Set']['id']==71790 || $set['Set']['id']==74761 || $set['Set']['id']==81578 || $set['Set']['id']==88156){

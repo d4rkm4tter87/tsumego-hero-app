@@ -178,6 +178,7 @@ class TsumegosController extends AppController{
 		$pdCounter = 0;
 		$duplicates = array();
 		$utd = array();
+		$tRank = '15k';
 		
 		if(isset($this->params['url']['potionAlert']))
 			$potionAlert = true;
@@ -314,6 +315,7 @@ class TsumegosController extends AppController{
 				}
 			}
 		}
+		
 		if(isset($this->params['url']['refresh'])) $refresh = $this->params['url']['refresh'];
 		if(!is_numeric($id)) $id = 15352;
 		if(!empty($rankTs)){
@@ -415,6 +417,8 @@ class TsumegosController extends AppController{
 			}
 		}
 		$t = $this->Tsumego->findById($id);//the tsumego
+		$tRank = $this->getTsumegoRank($t['Tsumego']['userWin']);
+		
 		if($t['Tsumego']['duplicate']>9){//§duplicate and not main
 			$tDuplicate = $this->Tsumego->findById($t['Tsumego']['duplicate']);
 			$t['Tsumego']['difficulty'] = $tDuplicate['Tsumego']['difficulty'];
@@ -1061,10 +1065,10 @@ class TsumegosController extends AppController{
 			$isNum = $preTsumego['Tsumego']['num']==$scoreArr[0];
 			$isSet = $preTsumego['Tsumego']['set_id']==$scoreArr[2];
 			$_COOKIE['score'] = $scoreArr[1];
+			
+			$solvedTsumegoRank = $this->getTsumegoRank($preTsumego['Tsumego']['userWin']);
+			
 			if($isNum && $isSet){
-				if(isset($_COOKIE['preId'])){
-					$tPre = $this->Tsumego->findById($_COOKIE['preId']);
-				}
 				if($mode==1 || $mode==3){
 					if(isset($_SESSION['loggedInUser']) && !isset($_SESSION['noLogin'])){
 						//$exploit = $this->UserBoard->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'b1' => $_COOKIE['preId'])));
@@ -1087,6 +1091,9 @@ class TsumegosController extends AppController{
 							$u['User']['reuse4'] = 1;
 						}
 					}
+					
+					
+					
 					
 					if($mode==3){
 						$exploit=null;
@@ -1131,6 +1138,8 @@ class TsumegosController extends AppController{
 							}
 						}
 						if(isset($_COOKIE['rank']) && $_COOKIE['rank'] != '0'){
+							$this->saveDanSolveCondition($solvedTsumegoRank, $preTsumego['Tsumego']['id']);
+							$this->updateGems($solvedTsumegoRank);
 							$ranks = $this->Rank->find('all', array('conditions' =>  array('session' => $_SESSION['loggedInUser']['User']['activeRank'])));
 							$currentNum = $ranks[0]['Rank']['currentNum'];
 							for($i=0; $i<count($ranks); $i++){
@@ -1193,7 +1202,8 @@ class TsumegosController extends AppController{
 					}else{
 						$user_deviation = 0;
 					}
-					
+					$this->saveDanSolveCondition($solvedTsumegoRank, $preTsumego['Tsumego']['id']);
+					$this->updateGems($solvedTsumegoRank);
 					$u['User']['solved2']++; 
 					$trSuccess = $this->TsumegoRatingAttempt->find('first', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'], 'tsumego_id' => $t['Tsumego']['id'])));
 					$trSuccess['TsumegoRatingAttempt']['status'] = 'S';
@@ -1791,7 +1801,8 @@ class TsumegosController extends AppController{
 			$achievementUpdate2 = $this->checkProblemNumberAchievements();
 			$achievementUpdate3 = $this->checkNoErrorAchievements();
 			$achievementUpdate4 = $this->checkRatingAchievements();
-			$achievementUpdate = array_merge($achievementUpdate1, $achievementUpdate2, $achievementUpdate3, $achievementUpdate4);
+			$achievementUpdate5 = $this->checkDanSolveAchievements();
+			$achievementUpdate = array_merge($achievementUpdate1, $achievementUpdate2, $achievementUpdate3, $achievementUpdate4, $achievementUpdate5);
 			if(count($achievementUpdate)>0) $this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
 		}
 		
@@ -1822,14 +1833,11 @@ class TsumegosController extends AppController{
 			$sgfx = file_get_contents($file);
 			$requestProblem = '?v='.strlen($sgfx);
 		}
-		$ui = 2;
 		
+		$ui = 2;
 		$file = '6473k339312/easycapture/1.sgf';
 		
-		//echo '<pre>'; print_r($sgf['Sgf']['sgf']); echo '</pre>'; 
-		//echo '<pre>'; print_r($tooltipInfo); echo '</pre>';
-		
-		
+		$this->set('tRank', $tRank);
 		$this->set('sgf', $sgf);
 		$this->set('sgf2', $sgf2);
 		$this->set('sandboxComment2', $sandboxComment2);
