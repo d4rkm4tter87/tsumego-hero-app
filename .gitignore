@@ -1,3 +1,4 @@
 *.sgf
 /tmp
 /img/set_*
+webroot/mainPageAjax.txt

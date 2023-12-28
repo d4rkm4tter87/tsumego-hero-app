@@ -1016,14 +1016,14 @@ class AppController extends Controller{
 			array_push($updated, $achievementId);
 		}
 		$achievementId = 97;
-		if(!isset($existingAs[$achievementId]) && $ac1['golden']>=1){
+		if(!isset($existingAs[$achievementId]) && $ac1['golden']>=10){
 			$as['AchievementStatus']['achievement_id'] = $achievementId;
 			$this->AchievementStatus->create();
 			$this->AchievementStatus->save($as);
 			array_push($updated, $achievementId);
 		}
 		$achievementId = 98;
-		if(!isset($existingAs[$achievementId]) && $ac1['potion']==1){
+		if(!isset($existingAs[$achievementId]) && $ac1['potion']>=1){
 			$as['AchievementStatus']['achievement_id'] = $achievementId;
 			$this->AchievementStatus->create();
 			$this->AchievementStatus->save($as);

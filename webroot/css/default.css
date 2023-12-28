@@ -272,6 +272,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	li.setBlank{
 		background-color:white;
 		width:5px;
+		opacity:0;
 	}
 	li.setN1{
 		background-color:#7f8287;

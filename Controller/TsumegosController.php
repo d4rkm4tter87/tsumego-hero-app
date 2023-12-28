@@ -1400,8 +1400,8 @@ class TsumegosController extends AppController{
 		}
 		
 		$set = $this->Set->findById($t['Tsumego']['set_id']);
-		$ts = $this->findTsumegoSet($set['Set']['id']);
-		
+		//$ts = $this->findTsumegoSet($set['Set']['id']);
+		$ts = $this->Tsumego->find('all', array('order' => 'num',	'direction' => 'DESC', 'conditions' =>  array('set_id' => $set['Set']['id'])));
 		$anzahl = $ts[count($ts)-1]['Tsumego']['num'];
 		$_SESSION['title'] = $set['Set']['title'].' '.$t['Tsumego']['num'].'/'.$anzahl.' on Tsumego Hero';
 		
@@ -1857,6 +1857,7 @@ class TsumegosController extends AppController{
 		
 		$ui = 2;
 		$file = '6473k339312/easycapture/1.sgf';
+		
 		
 		$this->startPageUpdate();
 		
