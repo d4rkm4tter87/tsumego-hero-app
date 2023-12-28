@@ -2286,6 +2286,8 @@
 					//updateCookie("score=",x2);
 					setCookie("score", x2);
 					setCookie("mode", mode);
+					if(goldenTsumego)
+						document.cookie = "type=g";
 					$("#skipButton").text("Next");
 					xpReward = (<?php echo $t['Tsumego']['difficulty']; ?>*x3) + <?php echo $user['User']['xp']; ?>;
 					userNextlvl = <?php echo $user['User']['nextlvl']; ?>;
@@ -2331,6 +2333,8 @@
 					//updateCookie("score=","<?php echo $score3; ?>");
 					setCookie("score", "<?php echo $score3; ?>");
 					setCookie("mode", mode);
+					if(goldenTsumego)
+						document.cookie = "type=g";
 					secondsy = seconds;
 					//document.cookie = "seconds="+secondsy;
 					setCookie("seconds", secondsy);
@@ -2391,6 +2395,7 @@
 					}
 					if(goldenTsumego){
 						document.cookie = "refinement=-1";
+						document.cookie = "type=g";
 						window.location.href = "/tsumegos/play/<?php echo $t['Tsumego']['id']; ?>";
 					}
 				}
@@ -2429,6 +2434,8 @@
 	}
 	
 	function toggleBoardLock(t, customHeight=false, multipleChoice=false){
+		if(tryAgainTomorrow)
+			t = true;
 		if(t){
 			//let besogoBoardHeight = $('.besogo-board').height() + "px";
 			//let besogoBoardWidth = $('.besogo-board').width() + "px";

@@ -700,6 +700,7 @@ class SetsController extends AppController{
 		$this->LoadModel('AchievementStatus');
 		$this->LoadModel('AchievementCondition');
 		$this->LoadModel('Sgf');
+		//$this->LoadModel('SetConnection');
 		$_SESSION['page'] = 'set';
 		
 		$josekiOrder = 0;
@@ -757,6 +758,8 @@ class SetsController extends AppController{
 		if($id!=1){
 			$set = $this->Set->find('first', array('conditions' =>  array('id' => $id)));
 			$ts = $this->Tsumego->find('all', array('order' => 'num', 'direction' => 'DESC', 'conditions' => array('set_id' => $id)));
+			
+			//$ts = $this->findTsumegoSet($id);
 			
 			$allVcActive = true;
 			$allVcInactive = true;

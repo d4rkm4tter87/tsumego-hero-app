@@ -451,12 +451,8 @@
 		document.cookie = "correctNoPoints=0";
 		document.cookie = "ui=0";
 		document.cookie = "requestProblem=0";
-		document.cookie = "lightDark=<?php echo $lightDark; ?>;path=/";
-		document.cookie = "lightDark=<?php echo $lightDark; ?>;path=/sets/view";
-		document.cookie = "lightDark=<?php echo $lightDark; ?>;path=/tsumegos/play";
-		document.cookie = "lightDark=<?php echo $lightDark; ?>;path=/users";
-		document.cookie = "lightDark=<?php echo $lightDark; ?>;path=/users/view";
-
+		setCookie("lightDark", "<?php echo $lightDark; ?>");
+		setCookie("type", "0");
 		<?php
 			if(isset($textureCookies)){
 				for($i=0;$i<count($textureCookies);$i++){

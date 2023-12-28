@@ -28,6 +28,7 @@ class TsumegosController extends AppController{
 	public function duplicatesearch($id=null){
 		$this->loadModel('Sgf');
 		$this->loadModel('Set');
+		//$this->loadModel('SetConnection');
 		
 		$maxDifference = 1;
 		$includeSandbox = 'true';
@@ -46,6 +47,8 @@ class TsumegosController extends AppController{
 		$similarOrder = array();
 		$t = $this->Tsumego->findById($id);
 		$s = $this->Set->findById($t['Tsumego']['set_id']);
+		//$sc = $this->SetConnection->find('first', array('conditions' =>  array('tsumego_id' => $id)));
+		//$s = $this->Set->findById($sc['SetConnection']['set_id']);
 		$title = $s['Set']['title'].' - '.$t['Tsumego']['num'];
 		$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $id)));
 		$tSgfArr = $this->processSGF($sgf['Sgf']['sgf']);
@@ -58,6 +61,7 @@ class TsumegosController extends AppController{
 		$sets = array_merge($sets1, $sets2);
 		for($h=0; $h<count($sets); $h++){
 			$ts = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array('set_id' => $sets[$h]['Set']['id'])));
+			//$ts = $this->findTsumegoSet($sets[$h]['Set']['id']);
 			for($i=0; $i<count($ts); $i++){
 				if($ts[$i]['Tsumego']['id']!=$id){
 					$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
@@ -128,6 +132,7 @@ class TsumegosController extends AppController{
 		$this->loadModel('AchievementCondition');
 		$this->loadModel('ProgressDeletion');
 		$this->loadModel('Sgf');
+		//$this->loadModel('SetConnection');
 		
 		$noUser;
 		$noLogin;
@@ -179,6 +184,9 @@ class TsumegosController extends AppController{
 		$duplicates = array();
 		$utd = array();
 		$tRank = '15k';
+		
+		//$sc = $this->SetConnection->find('all');
+		//echo '<pre>'; print_r($sc); echo '</pre>';
 		
 		if(isset($this->params['url']['potionAlert']))
 			$potionAlert = true;
@@ -272,9 +280,9 @@ class TsumegosController extends AppController{
 					else{ $r1=96; $r2=100; }
 					$rs = $this->RankSetting->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
 					$allowedRs = array();
-					for($i=0; $i<count($rs); $i++){
+					for($i=0; $i<count($rs); $i++)
 						if($rs[$i]['RankSetting']['status']==1) array_push($allowedRs, $rs[$i]['RankSetting']['set_id']);
-					}
+					
 					$rankTs = $this->Tsumego->find('all', array(
 						'conditions' =>  array(
 							'set_id' => $allowedRs,
@@ -282,6 +290,15 @@ class TsumegosController extends AppController{
 							'userWin <=' => $r2
 						)
 					));
+					/*
+					$rankTs2 = array();
+					for($i=0; $i<count($rankTs); $i++){
+						$rankTs[$i]['Tsumego']['set_id'] = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $rankTs[$i]['Tsumego']['id'])));
+						if($this->isAllowedSet($allowedRs, $rankTs[$i]['Tsumego']['set_id']))
+							array_push($rankTs2, $rankTs[$i]);
+					}
+					$ranksTs = $ranksTs2;
+					*/
 					shuffle($rankTs);
 					for($i=0; $i<$stopParameter; $i++){
 						$rm = array();
@@ -417,6 +434,10 @@ class TsumegosController extends AppController{
 			}
 		}
 		$t = $this->Tsumego->findById($id);//the tsumego
+		
+		//$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+		//$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
+		
 		$tRank = $this->getTsumegoRank($t['Tsumego']['userWin']);
 		
 		if($t['Tsumego']['duplicate']>9){//§duplicate and not main
@@ -603,7 +624,7 @@ class TsumegosController extends AppController{
 
 			if(empty($errors)==true){
 				if($t['Tsumego']['duplicate']<=9)
-					$lastV = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $id)));//§
+					$lastV = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $id)));
 				else
 					$lastV = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $t['Tsumego']['duplicate'])));
 				$sgf = array();
@@ -848,9 +869,9 @@ class TsumegosController extends AppController{
 			$ut = $allUts[0];
 		}
 		
-		if(isset($ut['TsumegoStatus']['status'])){
+		if(isset($ut['TsumegoStatus']['status']))
 			if($ut['TsumegoStatus']['status']=='G') $goldenTsumego = true;
-		}
+		
 		if(isset($_COOKIE['preId'])){
 			$preTsumego = $this->Tsumego->findById($_COOKIE['preId']);
 			$utPre = $this->findUt($_COOKIE['preId'], $allUts, $idMap);
@@ -922,6 +943,9 @@ class TsumegosController extends AppController{
 			$_COOKIE['rank'] = $drCookie2[1];
 		}
 		
+		if($_SESSION['loggedInUser']['User']['potion']>=15)
+			$this->setPotionCondition();
+		
 		//Incorrect
 		if(isset($_COOKIE['misplay']) && $_COOKIE['misplay']!=0){
 			if($_COOKIE['misplay']<0 && $mode!=3){
@@ -949,7 +973,6 @@ class TsumegosController extends AppController{
 				}
 				if($mode==1 || $mode==3){
 					if($mode==1) $u['User']['damage'] += $_COOKIE['misplay'];
-					
 					if(isset($_COOKIE['rank']) && $_COOKIE['rank'] != '0'){
 						$ranks = $this->Rank->find('all', array('conditions' =>  array('session' => $_SESSION['loggedInUser']['User']['activeRank'])));
 						$currentNum = $ranks[0]['Rank']['currentNum'];
@@ -961,6 +984,8 @@ class TsumegosController extends AppController{
 							}
 						}
 					}
+					if($_COOKIE['type']=='g')
+						$this->updateGoldenCondition(false);
 				}elseif($mode==2){
 					$userEloBefore = $u['User']['elo_rating_mode'];
 					$tsumegoEloBefore = $preTsumego['Tsumego']['elo_rating_mode'];
@@ -989,7 +1014,8 @@ class TsumegosController extends AppController{
 						$trFail['TsumegoRatingAttempt']['tsumego_deviation'] = round($ratingDeviationArray[1][1]);
 						$trFail['TsumegoRatingAttempt']['seconds'] = $_COOKIE['seconds'];
 						if(isset($_COOKIE['sequence']) && $_COOKIE['sequence'] != 0) $trFail['TsumegoRatingAttempt']['sequence'] = $_COOKIE['sequence'];
-						
+						if($_COOKIE['type']=='g')
+							$this->updateGoldenCondition(false);
 						$this->Tsumego->save($preTsumego);
 						$this->TsumegoRatingAttempt->save($trFail);
 					}
@@ -1028,7 +1054,7 @@ class TsumegosController extends AppController{
 							$_SESSION['loggedInUser']['User']['potion']++;
 							$u['User']['potion']++;
 							$potion = $_SESSION['loggedInUser']['User']['potion'];
-							$potionPercent = 0;
+							$potionPercent = 0;//§
 							$potionPercent2 = 0;
 							$potionSuccess = false;
 							if($potion>=5){
@@ -1055,6 +1081,7 @@ class TsumegosController extends AppController{
 			$noUser['damage'] = $u['User']['damage'];
 			unset($_COOKIE['misplay']);
 			unset($_COOKIE['sequence']);
+			unset($_COOKIE['type']);
 		}
 		
 		$correctSolveAttempt = false;
@@ -1091,15 +1118,10 @@ class TsumegosController extends AppController{
 							$u['User']['reuse4'] = 1;
 						}
 					}
-					
-					
-					
-					
 					if($mode==3){
 						$exploit=null;
 						$suspiciousBehavior=false;
 					}
-					
 					if($exploit==null && $suspiciousBehavior==false){
 						if($mode==1){
 							$xpOld = $u['User']['xp'] + (intval($_COOKIE['score']));
@@ -1202,6 +1224,8 @@ class TsumegosController extends AppController{
 					}else{
 						$user_deviation = 0;
 					}
+					if($_COOKIE['type']=='g')
+						$this->updateGoldenCondition(true);
 					$this->saveDanSolveCondition($solvedTsumegoRank, $preTsumego['Tsumego']['id']);
 					$this->updateGems($solvedTsumegoRank);
 					$u['User']['solved2']++; 
@@ -1232,6 +1256,7 @@ class TsumegosController extends AppController{
 			unset($_COOKIE['score']);
 			unset($_COOKIE['transition']);
 			unset($_COOKIE['sequence']);
+			unset($_COOKIE['type']);
 		}
 		
 		if(isset($_COOKIE['correctNoPoints']) && $_COOKIE['correctNoPoints'] != '0'){
@@ -1375,7 +1400,8 @@ class TsumegosController extends AppController{
 		}
 		
 		$set = $this->Set->findById($t['Tsumego']['set_id']);
-		$ts = $this->Tsumego->find('all', array('order' => 'num',	'direction' => 'DESC', 'conditions' =>  array('set_id' => $set['Set']['id'])));
+		$ts = $this->findTsumegoSet($set['Set']['id']);
+		
 		$anzahl = $ts[count($ts)-1]['Tsumego']['num'];
 		$_SESSION['title'] = $set['Set']['title'].' '.$t['Tsumego']['num'].'/'.$anzahl.' on Tsumego Hero';
 		
@@ -1471,7 +1497,6 @@ class TsumegosController extends AppController{
 				}
 			}
 		}
-		
 		$prev = 0;
 		$next = 0;
 		$tsBack = array();
@@ -1688,7 +1713,6 @@ class TsumegosController extends AppController{
 				
 			}
 		}
-		
 		if(isset($_SESSION['noLogin'])){
 			for($i=0; $i<count($navi); $i++){
 				for($j=0; $j<count($noLogin); $j++){
@@ -1719,7 +1743,6 @@ class TsumegosController extends AppController{
 			$this->set('rejuvenationEnabled', $u['User']['rejuvenation']);
 			$this->set('refinementEnabled', $u['User']['refinement']);
 			$this->set('maxNoUserLevel', false);
-			
 			if($u['User']['reuse4']==0) $_SESSION['loggedInUser']['User']['reuse4'] = 0;
 			if($_SESSION['loggedInUser']['User']['premium']>0) $_SESSION['loggedInUser']['User']['reuse4'] = 0;
 			if($_SESSION['loggedInUser']['User']['reuse4']==1) $dailyMaximum = true;
@@ -1735,18 +1758,16 @@ class TsumegosController extends AppController{
 		}
 		
 		if($goldenTsumego) $t['Tsumego']['difficulty'] *= 8;
-		
 		$or = array();
 		$publicSets = $this->Set->find('all', array('conditions' => array('public' => 1)));
 		for($i=0; $i<count($publicSets); $i++) array_push($or, $publicSets[$i]['Set']['id']);
 		
-		$gDifficulty = rand(4,8);
 		$refinementT = $this->Tsumego->find('all', array('limit' => 1000, 'conditions' => array(
 			'OR' => array('set_id' => $or),
 			'NOT' => array(
-				'set_id' => array(42, 113, 114, 115, 11969, 29156, 31813, 33007, 71790, 74761, 81578, 88156),
-				'difficulty' => array(1, 2, 3)
+				'set_id' => array(42, 113, 114, 115, 11969, 29156, 31813, 33007, 71790, 74761, 81578, 88156)
 			),
+			'difficulty >' => 35
 		)));
 		
 		$hasAnyFavorite = $this->Favorite->find('first', array('conditions' => array('user_id' => $u['User']['id'])));
@@ -1837,6 +1858,8 @@ class TsumegosController extends AppController{
 		$ui = 2;
 		$file = '6473k339312/easycapture/1.sgf';
 		
+		$this->startPageUpdate();
+		
 		$this->set('tRank', $tRank);
 		$this->set('sgf', $sgf);
 		$this->set('sgf2', $sgf2);
@@ -1913,7 +1936,6 @@ class TsumegosController extends AppController{
 		$this->set('tooltipSgfs', $tooltipSgfs);
 		$this->set('tooltipInfo', $tooltipInfo);
     }
-	
 		
 	private function getLowest($a){
 		$lowestX = 19;
@@ -2331,6 +2353,14 @@ class TsumegosController extends AppController{
 			case '18': return 1;
 		}
 		return 0;
+	}
+	
+	private function isAllowedSet($sets, $s){
+		$found = false;
+		for($i=0; $i<count($sets); $i++)
+			if($sets[$i]==$s)
+				$found = true;
+		return $found;
 	}
 	
 	// Returns 2 updated ratings, RD initialization for user has to be done manually before this function

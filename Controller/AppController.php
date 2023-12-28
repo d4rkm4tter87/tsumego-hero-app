@@ -135,6 +135,27 @@ class AppController extends Controller{
 		return $dSets;
 	}
 	
+	public function startPageUpdate(){
+		$this->LoadModel('User');
+		$this->LoadModel('Achievement');
+		$this->LoadModel('AchievementStatus');
+		$str = '';
+		$latest = $this->AchievementStatus->find('all', array('limit' => 6, 'order' => 'created DESC'));
+		for($i=0; $i<count($latest); $i++){
+			$a = $this->Achievement->findById($latest[$i]['AchievementStatus']['achievement_id']);
+			$u = $this->User->findById($latest[$i]['AchievementStatus']['user_id']);
+			$latest[$i]['AchievementStatus']['name'] = $a['Achievement']['name'];
+			$latest[$i]['AchievementStatus']['color'] = $a['Achievement']['color'];
+			$latest[$i]['AchievementStatus']['image'] = $a['Achievement']['image'];
+			$latest[$i]['AchievementStatus']['user'] = $u['User']['name'];
+			$str.='<div class="quote1"><div class="quote1a"><a href="/achievements/view/'.$a['Achievement']['id'].'"><img src="/img/'.$a['Achievement']['image'].'.png" width="40px"></a></div>';
+			$str.='<div class="quote1b">Achievement gained by '.$u['User']['name'].':<br><div class=""><b>'.$a['Achievement']['name'].'</b></div></div></div>';
+		}
+		
+		file_put_contents('mainPageAjax.txt', $str);
+		//echo '<pre>'; print_r($latest); echo '</pre>';
+	}
+	
 	public function uotd(){//routine1
 		$this->LoadModel('User');
 		$this->LoadModel('DayRecord');
@@ -289,6 +310,19 @@ class AppController extends Controller{
 				$duplicates[$key]--;
 			}
 		}
+	}
+	
+	public function findTsumegoSet($id){
+		$this->LoadModel('Tsumego');
+		$this->LoadModel('SetConnection');
+		$scIds = array();
+		$sc = $this->SetConnection->find('all', array('order' => 'num', 'direction' => 'ASC', 'conditions' => array('set_id' => $id)));
+		for($i=0; $i<count($sc); $i++)
+			array_push($scIds, $sc[$i]['SetConnection']['tsumego_id']);
+		$ts = $this->Tsumego->find('all', array('conditions' => array('id' => $scIds)));
+		for($i=0; $i<count($ts); $i++)
+			$ts[$i]['Tsumego']['set_id'] = $id;
+		return $ts;
 	}
 	
 	public function userRefresh($range = null){
@@ -682,6 +716,52 @@ class AppController extends Controller{
 		}
 	}
 	
+	public function updateSprintCondition($trigger){
+		$sprintCondition = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array(
+			'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 'sprint'
+		)));
+		if($sprintCondition==null){
+			$sprintCondition = array();
+			$sprintCondition['AchievementCondition']['value'] = 0;
+		}
+		$sprintCondition['AchievementCondition']['category'] = 'sprint';
+		$sprintCondition['AchievementCondition']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+		if($trigger)
+			$sprintCondition['AchievementCondition']['value']++;
+		else
+			$sprintCondition['AchievementCondition']['value'] = 0;
+		$this->AchievementCondition->save($sprintCondition);
+	}
+	
+	public function updateGoldenCondition($trigger){
+		$goldenCondition = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array(
+			'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 'golden'
+		)));
+		if($goldenCondition==null){
+			$goldenCondition = array();
+			$goldenCondition['AchievementCondition']['value'] = 0;
+		}
+		$goldenCondition['AchievementCondition']['category'] = 'golden';
+		$goldenCondition['AchievementCondition']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+		if($trigger)
+			$goldenCondition['AchievementCondition']['value']++;
+		else
+			$goldenCondition['AchievementCondition']['value'] = 0;
+		$this->AchievementCondition->save($goldenCondition);
+	}
+	
+	public function setPotionCondition(){
+		$potionCondition = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array(
+			'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 'potion'
+		)));
+		if($potionCondition==null)
+			$potionCondition = array();
+		$potionCondition['AchievementCondition']['category'] = 'potion';
+		$potionCondition['AchievementCondition']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+		$potionCondition['AchievementCondition']['value'] = 1;
+		$this->AchievementCondition->save($potionCondition);
+	}
+	
 	public function updateGems($r){
 		$this->loadModel('DayRecord');
 		$this->loadModel('AchievementCondition');
@@ -793,7 +873,10 @@ class AppController extends Controller{
 				array('category' => 'danSolve5d'),
 				array('category' => 'emerald'),
 				array('category' => 'sapphire'),
-				array('category' => 'ruby')
+				array('category' => 'ruby'),
+				array('category' => 'sprint'),
+				array('category' => 'golden'),
+				array('category' => 'potion')
 			)
 		)));
 		for($i=0;$i<count($ac);$i++){
@@ -813,6 +896,12 @@ class AppController extends Controller{
 				$ac1['sapphire'] = $ac[$i]['AchievementCondition']['value'];
 			else if($ac[$i]['AchievementCondition']['category']=='ruby')
 				$ac1['ruby'] = $ac[$i]['AchievementCondition']['value'];
+			else if($ac[$i]['AchievementCondition']['category']=='sprint')
+				$ac1['sprint'] = $ac[$i]['AchievementCondition']['value'];
+			else if($ac[$i]['AchievementCondition']['category']=='golden')
+				$ac1['golden'] = $ac[$i]['AchievementCondition']['value'];
+			else if($ac[$i]['AchievementCondition']['category']=='potion')
+				$ac1['potion'] = $ac[$i]['AchievementCondition']['value'];
 		}
 		
 		$existingAs = array();
@@ -827,8 +916,6 @@ class AppController extends Controller{
 			$this->AchievementStatus->create();
 			$this->AchievementStatus->save($as);
 			array_push($updated, $achievementId);
-			echo '<pre>'; print_r($ac1); echo '</pre>';
-			echo '<pre>'; print_r($existingAs[$achievementId]); echo '</pre>';
 		}
 		$achievementId = 102;
 		if($ac1['2d']>0 && !isset($existingAs[$achievementId])){
@@ -916,6 +1003,27 @@ class AppController extends Controller{
 		}
 		$achievementId = 114;
 		if(!isset($existingAs[$achievementId]) && isset($existingAs[111]) && isset($existingAs[112]) && isset($existingAs[113])){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 96;
+		if(!isset($existingAs[$achievementId]) && $ac1['sprint']>=42){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 97;
+		if(!isset($existingAs[$achievementId]) && $ac1['golden']>=1){
+			$as['AchievementStatus']['achievement_id'] = $achievementId;
+			$this->AchievementStatus->create();
+			$this->AchievementStatus->save($as);
+			array_push($updated, $achievementId);
+		}
+		$achievementId = 98;
+		if(!isset($existingAs[$achievementId]) && $ac1['potion']==1){
 			$as['AchievementStatus']['achievement_id'] = $achievementId;
 			$this->AchievementStatus->create();
 			$this->AchievementStatus->save($as);
@@ -1879,11 +1987,24 @@ class AppController extends Controller{
 				}
 			}
 			$achievementId = 46;
-			if($acA['AchievementCondition']['value']>=100 && !isset($existingAs[$achievementId])){
-				$as['AchievementStatus']['achievement_id'] = $achievementId;
-				$this->AchievementStatus->create();
-				$this->AchievementStatus->save($as);
-				array_push($updated, $achievementId);
+			if($acA['AchievementCondition']['value']>=100){
+				$ac100 = $this->AchievementCondition->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => '%', 'value >=' => 100)));
+				$ac100counter = 0;
+				for($j=0; $j<count($ac100); $j++)
+					if(count($this->Tsumego->find('all', array('conditions' => array('set_id' => $ac100[$j]['AchievementCondition']['set_id']))))>=100)
+						$ac100counter++;
+				$as100 = $this->AchievementStatus->find('first', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'], 'achievement_id' => $achievementId)));
+				if($as100==null){
+					$as['AchievementStatus']['achievement_id'] = $achievementId;
+					$as['AchievementStatus']['value'] = 1;
+					$this->AchievementStatus->create();
+					$this->AchievementStatus->save($as);
+					array_push($updated, $achievementId);
+				}else if($as100['AchievementStatus']['value']!=$ac100counter){
+					$as100['AchievementStatus']['value'] = $ac100counter;
+					$this->AchievementStatus->save($as100);
+					array_push($updated, $achievementId);
+				}
 			}
 		}
 		for($i=0; $i<count($updated); $i++){
@@ -2064,6 +2185,9 @@ class AppController extends Controller{
 			$utPre = $this->TsumegoStatus->find('first', array('conditions' => array('tsumego_id' => $_COOKIE['preId'], 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
 		}
 		
+		if($_COOKIE['sprint']!=1)
+			$this->updateSprintCondition(false);
+		
 		$correctSolveAttempt = false;
 		//Correct!
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
@@ -2080,7 +2204,6 @@ class AppController extends Controller{
 			$_COOKIE['score'] = $scoreArr[1];
 			
 			$solvedTsumegoRank = $this->getTsumegoRank($preTsumego['Tsumego']['userWin']);
-			
 			if($isNum && $isSet){
 				if(isset($_COOKIE['preId'])){
 					$tPre = $this->Tsumego->findById($_COOKIE['preId']);
@@ -2140,6 +2263,12 @@ class AppController extends Controller{
 									
 									$this->saveDanSolveCondition($solvedTsumegoRank, $preTsumego['Tsumego']['id']);
 									$this->updateGems($solvedTsumegoRank);
+									if($_COOKIE['sprint']==1)
+										$this->updateSprintCondition(true);
+									else
+										$this->updateSprintCondition(false);
+									if($_COOKIE['type']=='g')
+										$this->updateGoldenCondition(true);
 								}
 							}
 						}
@@ -2179,6 +2308,7 @@ class AppController extends Controller{
 			unset($_COOKIE['score']);
 			unset($_COOKIE['transition']);
 			unset($_COOKIE['sequence']);
+			unset($_COOKIE['type']);
 		}
 		}
 		}

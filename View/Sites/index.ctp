@@ -90,6 +90,18 @@
 			</li>
 			<br><br>
 		</div>
+		<p class="title4">Update 28.12.2023</p>
+		<div class="new1">
+		<b>Board previews and more achievements</b><br><br>
+		
+		It is now possible to see previews of the problems. A preview is shown when you move your mouse over a problem.
+		There are also 23 new <a href="/achievements">achievements.</a><br><br>
+		<div align="center">
+		<img src="/img/boardPreviewExample.PNG" title="Board preview example" alt="Board preview example">
+		
+		<br>
+		</div>
+		</div>
 		<p class="title4">Update 23.11.2023</p>
 		<div class="new1">
 		<br>
@@ -320,7 +332,7 @@
 	</div>
 	
 	<div class="homeLeft">
-		<p class="title4">Message of the Day | <?php echo $d1; ?></p>
+		<p class="title4">Most Recent Achievements | <?php echo $d1; ?></p>
 		<?php
 			
 			if(!isset($_SESSION['lastVisit'])) $_SESSION['lastVisit'] = 15352;
@@ -330,10 +342,9 @@
 			if($ac) $modeActions2 = 'class="modeboxes"';
 			else $modeActions2 = 'class="modeboxes"';
 		
+			
+			echo '<div class="egc2023promo" id="ajaxWallpaper"></div>';
 			/*
-			echo '<div class="egc2023promo">';
-			echo '<a href="https://www.egc2023.de/en/home-en/" target="_blank" alt="EGC 2023 Leipzig" title="EGC 2023 Leipzig">Go to the website >></a>';
-			echo '</div>';
 			if(isset($_SESSION['loggedInUser'])){
 				$url1 = '';
 				$url2 = '';
@@ -362,7 +373,8 @@
 				echo $url3;
 				echo $url4;
 				echo '</div>';
-			}*/
+			}
+			*/
 		?>
 		
 		<div class="modeBox1" onmouseover="mode1hover()" onmouseout="modeNoHover()" onclick="goMode1()">
@@ -399,7 +411,7 @@
 			</div>
 		</div>
 		<?php
-		echo '<img src="/img/'.$quote.'.PNG" width="100%" alt="Tsumego Hero Message of the Day" title="Tsumego Hero Message of the Day">';
+		echo '<img src="/img/new_startpage/1.PNG" width="100%" alt="Tsumego Hero Message of the Day" title="Tsumego Hero Message of the Day">';
 		
 		/*
 		<div class="danielml-bg">
@@ -658,30 +670,31 @@
 		<div class="new1">
 			<table class="newx" border="0">
 				<tr>
+					<td><h1>26.12.2023</h1></td>
+					<td><h1>Elias Aarab</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>15.12.2023</h1></td>
+					<td><h1>Jost Boddem</h1></td>
+					<td><h1>20,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>10.12.2023</h1></td>
+					<td><h1>Joris De Ridder</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>03.12.2023</h1></td>
+					<td><h1>Bret Kugler</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
 					<td><h1>02.12.2023</h1></td>
 					<td><h1>Tomislav Sokec</h1></td>
 					<td><h1>10,00 € <font size="2px">subscription</font></h1></td>
 				</tr>
-				<tr>
-					<td><h1>23.11.2023</h1></td>
-					<td><h1>Paul Cane</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>21.11.2023</h1></td>
-					<td><h1>Jeremy Bruzac</h1></td>
-					<td><h1>12,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>21.11.2023</h1></td>
-					<td><h1>Joshua Slater</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>19.11.2023</h1></td>
-					<td><h1>Abhijeet Rajwade</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
+				
 				<!--
 				<tr>
 					<td><h1>10,00 € <font size="2px">subscription</font></h1></td>
@@ -860,6 +873,27 @@
 		function goMode3(){
 			<?php echo 'window.location.href = "/ranks/overview";'; ?>
 		}
+		function getContent(){
+			var xmlHttp = new XMLHttpRequest();
+			xmlHttp.open("GET", "mainPageAjax.txt", false);
+			
+			xmlHttp.send(null);
+			
+			var element = document.getElementById("ajaxWallpaper");
+			element.innerHTML = xmlHttp.responseText;
+		}
+		var ajaxCall = $.ajax({
+			type: 'GET',
+			url: "mainPageAjax.txt",
+			dataType: 'txt'
+		});
+		
+		$(document).ready(function(){
+			ajaxCall.done(function(data){
+			});
+			setInterval(getContent, 350);
+		});
+		
 		let tooltipSgfs = [];
 		let popularTooltip = [];
 		<?php

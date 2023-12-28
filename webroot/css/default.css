@@ -2180,7 +2180,10 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.achievementColorRed:hover,
 	.achievementColorRating:hover,
 	.achievementColorTime:hover,
-	.achievementColorBlue:hover
+	.achievementColorBlue:hover,
+	.achievementColorBluex:hover,
+	.achievementColorTeal:hover,
+	.achievementColorGold:hover
 	{
 		box-shadow: 5px 5px 8px black;
 		left:-1px;
@@ -2247,15 +2250,36 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		top:0;
 		left:0;
 	}
+	.achievementColorBluex, .achievementColorBluex2{
+		color:#190e66;
+		position:relative;
+		top:0;
+		left:0;
+	}
+	.achievementColorTeal, .achievementColorTeal2{
+		color:#0e7377;
+		position:relative;
+		top:0;
+		left:0;
+	}
+	.achievementColorGold, .achievementColorGold2{
+		color:#685f15;
+		position:relative;
+		top:0;
+		left:0;
+	}
 	.achievementColorBlack3{color:#000;}
 	.achievementColorPurple3{color:#be00cf;}
 	.achievementColorGreen3{color:#008c15;}
 	.achievementColorOrange3{color:#d16133;}
 	.achievementColorBlue3{color:#4e28c9;}
 	.achievementColorDarkblue3{color:#4e28c9;}
-	.achievementColorRed3{color:#4e28c9;}
+	.achievementColorRed3{color:#e61313;}
 	.achievementColorRating3{color:#4e28c9;}
 	.achievementColorTime3{color:#4e28c9;}
+	.achievementColorBluex3{color:#190e66;}
+	.achievementColorTeal3{color:#0e7377;}
+	.achievementColorGold3{color:#685f15;}
 
 	.achievement2{
 	    border: 1px solid black;
@@ -2315,6 +2339,14 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		position:relative;
 		top:-8px;
 		font-size:13px;
+	}
+	.acImgXp2{
+		position:relative;
+		font-size:14px;
+		color:#555;
+		top: -51px;
+	    left: -1px;
+		font-weight:800;
 	}
 	.acDesc{
 		padding:15px 5px;
@@ -3443,14 +3475,26 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		background-color:#cc6464!important
 	}
 	.egc2023promo{
-		font-size: 34px;
+		font-size: 20px;
 		position: absolute;
-		top: 154px;
-		left: 129px;
+		top: 140px;
+		left: 100px;
 	}
 	.egc2023promo a{
 		color: white!important;
 	}
+	.quote1{
+		width: 455px;
+		height: 59px;
+		color:white!important;
+	}
+	.quote1a{
+		float:left;
+		padding: 5px;
+	}
+	.quote1b{
+	}
+	
 	#commentPosition{
 		margin-top:10px;
 		margin-bottom:17px;

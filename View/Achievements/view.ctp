@@ -29,7 +29,16 @@
 		</div>
 		<div class="acImg">
 			<img src="/img/<?php echo $a['Achievement']['image']; ?>.png">
-			<div class="acImgXp">
+			<?php 
+			$a46style = '';
+			if(!empty($as) && $a['Achievement']['id']==46){ 
+				$a46style = ' style="top:-22px;"';
+			?>
+			<div class="acImgXp2">
+				<?php echo $as['AchievementStatus']['value']; ?>
+			</div>
+			<?php } ?>
+			<div class="acImgXp"<?php echo $a46style; ?>>
 			<?php echo $a['Achievement']['xp']; ?> XP
 			</div>
 		</div>

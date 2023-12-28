@@ -20,6 +20,8 @@ class AchievementsController extends AppController {
 			$a[$i]['Achievement']['unlocked'] = false;
 			$a[$i]['Achievement']['created'] = '';
 			if(isset($existingAs[$a[$i]['Achievement']['id']])){
+				if($a[$i]['Achievement']['id']==46)
+					$a[$i]['Achievement']['a46value'] = $existingAs[$a[$i]['Achievement']['id']]['AchievementStatus']['value'];
 				$a[$i]['Achievement']['unlocked'] = true;
 				$a[$i]['Achievement']['created'] = $existingAs[$a[$i]['Achievement']['id']]['AchievementStatus']['created'];
 				$date=date_create($a[$i]['Achievement']['created']);
@@ -35,6 +37,7 @@ class AchievementsController extends AppController {
 		$this->LoadModel('AchievementStatus');
 		$this->LoadModel('User');
 		$a = $this->Achievement->findById($id);
+		
 		$as = array();
 		$asAll = $this->AchievementStatus->find('all', array('order' => 'created DESC','conditions' => array('achievement_id' => $id)));
 		$aCount = count($asAll);

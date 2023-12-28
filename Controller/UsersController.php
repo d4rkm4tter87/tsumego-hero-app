@@ -18,9 +18,32 @@ class UsersController extends AppController{
 		$this->loadModel('Comment');
 		$this->loadModel('Schedule');
 		$this->loadModel('Sgf');
+		//$this->loadModel('SetConnection');
 		
 		
+		$ac100 = $this->AchievementCondition->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => '%', 'value >=' => 95)));
+		$as100 = $this->AchievementStatus->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'], 'achievement_id' => 46)));
+		$ac100counter = 0;
+		for($j=0; $j<count($ac100); $j++)
+			if(count($this->Tsumego->find('all', array('conditions' => array('set_id' => $ac100[$j]['AchievementCondition']['set_id']))))>=100)
+				$ac100counter++;
+		
+		echo '<pre>'; print_r($ac100counter); echo '</pre>';
+		echo '<pre>'; print_r($ac100); echo '</pre>';
+		echo '<pre>'; print_r($as100); echo '</pre>';
+		
+		//$s = $this->Tsumego->find('all', array('conditions' => array('id >' => 14000)));
+		//echo '<pre>'; print_r(count($s)); echo '</pre>';
 		/*
+		for($j=0; $j<count($s); $j++){
+			//$this->SetConnection->create();
+			$sc = array();
+			$sc['SetConnection']['tsumego_id'] = $s[$j]['Tsumego']['id'];
+			$sc['SetConnection']['set_id'] = $s[$j]['Tsumego']['set_id'];
+			$sc['SetConnection']['num'] = $s[$j]['Tsumego']['num'];
+			//$this->SetConnection->save($sc);
+		}
+		
 		$ts1 = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => 5080)));
 		$correctCounter = 0;
 		$ts2 = array();
@@ -819,12 +842,21 @@ Joschka Zimdars';
 		$this->loadModel('TsumegoStatus');
 		$this->loadModel('Set');
 		$this->loadModel('AdminActivity');
+		//$this->loadModel('SetConnection');
 		
 		$d = array();
 		$idMap = array();
 		$idMap2 = array();
 		$marks = array();
 		$aMessage = null;
+		
+		//$sc1 = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => 3537, 'set_id' => 71790)));
+		//$sc2 = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => 25984, 'set_id' => 190)));
+		//$sc2['SetConnection']['tsumego_id'] = 25984;
+		//$this->SetConnection->save($sc2);
+		
+		//echo '<pre>'; print_r($sc1); echo '</pre>';
+		//echo '<pre>'; print_r($sc2); echo '</pre>';
 		
 		if(isset($this->params['url']['remove'])){
 			$remove = $this->Tsumego->findById($this->params['url']['remove']);
@@ -1313,10 +1345,19 @@ Joschka Zimdars';
 		$as = $this->AchievementStatus->find('all');
 		$as2 = array();
 		for($i=0; $i<count($as); $i++){
-			array_push($as2, $as[$i]['AchievementStatus']['user_id']);
+			if($as[$i]['AchievementStatus']['achievement_id']!=46){
+				array_push($as2, $as[$i]['AchievementStatus']['user_id']);
+			}else{
+				$as46counter = $as[$i]['AchievementStatus']['value'];
+				while($as46counter>0){
+					array_push($as2, $as[$i]['AchievementStatus']['user_id']);
+					$as46counter--;
+				}
+			}
 		}
-		$as3 = array_count_values($as2);
 		
+		$as3 = array_count_values($as2);
+		//echo '<pre>'; print_r($as2); echo '</pre>';
 		$uName = array();
 		$uaNum = array();
 		foreach ($as3 as $key => $value){
