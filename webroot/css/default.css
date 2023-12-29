@@ -3475,19 +3475,118 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	#besogo-review-button:hover{
 		background-color:#cc6464!important
 	}
-	.egc2023promo{
+	.quotePick1{
 		font-size: 20px;
 		position: absolute;
 		top: 140px;
 		left: 100px;
 	}
-	.egc2023promo a{
-		color: white!important;
+	.quotePick1 .quote1{color:white!important;}
+	.quotePick2{
+		font-size: 20px;
+		position: absolute;
+		top: 140px;
+		left: 140px;
 	}
+	.quotePick2 .quote1{color:white!important;}
+	.quotePick3{
+		font-size: 20px;
+		position: absolute;
+		top: 140px;
+		left: 140px;
+	}
+	.quotePick3 .quote1{color:#01f1d8!important;}
+	.quotePick4{
+		font-size: 20px;
+		position: absolute;
+		top: 125px;
+		left: 160px;
+	}
+	.quotePick4 .quote1{color:#429cd9!important;}
+	.quotePick5{
+		font-size: 20px;
+		position: absolute;
+		top: 140px;
+		left: 120px;
+	}
+	.quotePick5 .quote1{color:#ffcc00!important;}
+	.quotePick6{
+		font-size: 20px;
+		position: absolute;
+		top: 140px;
+		left: 140px;
+	}
+	.quotePick6 .quote1{color:#faf4d9!important;}
+	.quotePick7{
+		font-size: 20px;
+		position: absolute;
+		top: 140px;
+		left: 100px;
+	}
+	.quotePick7 .quote1{color:black!important;}
+	.quotePick8{
+		font-size: 20px;
+		position: absolute;
+		top: 140px;
+		left: 140px;
+	}
+	.quotePick8 .quote1{color:#ffd88a!important;}
+	.quotePick9{
+		font-size: 20px;
+		position: absolute;
+		top: 140px;
+		left: 140px;
+	}
+	.quotePick9 .quote1{color:#d96270!important;}
+	.quotePick10{
+		font-size: 20px;
+		position: absolute;
+		top: 140px;
+		left: 140px;
+	}
+	.quotePick10 .quote1{color:#da477f!important;}
+	.quotePick11{
+		font-size: 20px;
+		position: absolute;
+		top: 140px;
+		left: 150px;
+	}
+	.quotePick11 .quote1{color:#c5377f!important;}
+	.quotePick12{
+		font-size: 20px;
+		position: absolute;
+		top: 140px;
+		left: 140px;
+		
+	}
+	.quotePick12 .quote1{color:white!important;}
+	.quotePick13{
+		font-size: 20px;
+		position: absolute;
+		top: 140px;
+		left: 155px;
+		
+	}
+	.quotePick13 .quote1{color:#b83330!important;}
+	.quotePick14{
+		font-size: 20px;
+		position: absolute;
+		top: 140px;
+		left: 140px;
+		
+	}
+	.quotePick14 .quote1{color:#fff4fb!important;}
+	.quotePick15{
+		font-size: 20px;
+		position: absolute;
+		top: 140px;
+		left: 155px;
+		
+	}
+	.quotePick15 .quote1{color:#6f988f!important;}
 	.quote1{
 		width: 455px;
 		height: 59px;
-		color:white!important;
 	}
 	.quote1a{
 		float:left;

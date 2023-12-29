@@ -334,7 +334,7 @@
 	<div class="homeLeft">
 		<p class="title4">Most Recent Achievements | <?php echo $d1; ?></p>
 		<?php
-			
+			$quotePick = ceil(substr($quote, 1)/3);
 			if(!isset($_SESSION['lastVisit'])) $_SESSION['lastVisit'] = 15352;
 			$modeActions = '';
 			$modeActions2 = 'class="modeboxes"';
@@ -343,7 +343,7 @@
 			else $modeActions2 = 'class="modeboxes"';
 		
 			
-			echo '<div class="egc2023promo" id="ajaxWallpaper"></div>';
+			echo '<div class="quotePick'.$quotePick.'" id="ajaxWallpaper"></div>';
 			/*
 			if(isset($_SESSION['loggedInUser'])){
 				$url1 = '';
@@ -411,7 +411,9 @@
 			</div>
 		</div>
 		<?php
-		echo '<img src="/img/new_startpage/1.PNG" width="100%" alt="Tsumego Hero Message of the Day" title="Tsumego Hero Message of the Day">';
+		
+		
+		echo '<img src="/img/new_startpage/'.$quotePick.'.PNG" width="100%" alt="Tsumego Hero Message of the Day" title="Tsumego Hero Message of the Day">';
 		
 		/*
 		<div class="danielml-bg">
@@ -670,6 +672,11 @@
 		<div class="new1">
 			<table class="newx" border="0">
 				<tr>
+					<td><h1>29.12.2023</h1></td>
+					<td><h1>Béatrice Machin</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
 					<td><h1>26.12.2023</h1></td>
 					<td><h1>Elias Aarab</h1></td>
 					<td><h1>10,00 €</h1></td>
@@ -689,12 +696,6 @@
 					<td><h1>Bret Kugler</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
-				<tr>
-					<td><h1>02.12.2023</h1></td>
-					<td><h1>Tomislav Sokec</h1></td>
-					<td><h1>10,00 € <font size="2px">subscription</font></h1></td>
-				</tr>
-				
 				<!--
 				<tr>
 					<td><h1>10,00 € <font size="2px">subscription</font></h1></td>

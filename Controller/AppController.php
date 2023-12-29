@@ -16,6 +16,8 @@ class AppController extends Controller{
 		$white = $this->getInitialPosition($aw, $sgfArr, 'o');
 		$stones = array_merge($black, $white);
 		
+		//echo '<pre>'; print_r($white); echo '</pre>';
+		
 		$board = array();
 		for($i=0; $i<19; $i++){
 			$board[$i] = array();
@@ -85,17 +87,24 @@ class AppController extends Controller{
 		return $stones;
 	}
 	
+	public function getInitialPositionEnd($pos, $sgfArr){
+		$endCondition = 0;
+		$currentPos1 = $pos+2;
+		$currentPos2 = $pos+5;
+		while($sgfArr[$currentPos1]=='[' && $sgfArr[$currentPos2]==']'){
+			$endCondition = $currentPos2;
+			$currentPos1+=4;
+			$currentPos2+=4;
+		}
+		return $endCondition;
+	}
+	
 	public function getInitialPosition($pos, $sgfArr, $color){
 		$arr = array();
-		for($i=$pos+2; $i<count($sgfArr); $i++){
-			if($sgfArr[$i]=='A')
-				break;
-			else if($sgfArr[$i]=='(' || $sgfArr[$i]==';'){
-				array_pop($arr);
-				break;
-			}else
-				if($sgfArr[$i]!='[' && $sgfArr[$i]!=']')
-					array_push($arr, strtolower($sgfArr[$i]));
+		$end = $this->getInitialPositionEnd($pos, $sgfArr);
+		for($i=$pos+2; $i<$end; $i++){
+			if($sgfArr[$i]!='[' && $sgfArr[$i]!=']')
+				array_push($arr, strtolower($sgfArr[$i]));
 		}
 		$alphabet = array_flip(array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'));
 		$xy = true;
@@ -697,22 +706,24 @@ class AppController extends Controller{
 	}
 	
 	public function saveDanSolveCondition($solvedTsumegoRank, $tId){
+		$this->loadModel('AchievementCondition');
 		if($solvedTsumegoRank=='1d'||$solvedTsumegoRank=='2d'||$solvedTsumegoRank=='3d'||$solvedTsumegoRank=='4d'||$solvedTsumegoRank=='5d'){
 			$danSolveCategory = 'danSolve'.$solvedTsumegoRank;
 			$danSolveCondition = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array(
 				'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => $danSolveCategory
 			)));
-			if($danSolveCondition['AchievementCondition']['set_id']!=$tId){
-				if($danSolveCondition==null){
-					$danSolveCondition = array();
-					$danSolveCondition['AchievementCondition']['value'] = 0;
-				}
-				$danSolveCondition['AchievementCondition']['category'] = $danSolveCategory;
-				$danSolveCondition['AchievementCondition']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-				$danSolveCondition['AchievementCondition']['set_id'] = $tId;
-				$danSolveCondition['AchievementCondition']['value']++;
-				$this->AchievementCondition->save($danSolveCondition);
+			if($danSolveCondition==null){
+				$danSolveCondition = array();
+				$danSolveCondition['AchievementCondition']['value'] = 0;
+				$this->AchievementCondition->create();
 			}
+			$danSolveCondition['AchievementCondition']['category'] = $danSolveCategory;
+			$danSolveCondition['AchievementCondition']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+			$danSolveCondition['AchievementCondition']['set_id'] = $tId;
+			$danSolveCondition['AchievementCondition']['value']++;
+			
+			$this->AchievementCondition->save($danSolveCondition);
+			
 		}
 	}
 	
@@ -723,6 +734,7 @@ class AppController extends Controller{
 		if($sprintCondition==null){
 			$sprintCondition = array();
 			$sprintCondition['AchievementCondition']['value'] = 0;
+			$this->AchievementCondition->create();
 		}
 		$sprintCondition['AchievementCondition']['category'] = 'sprint';
 		$sprintCondition['AchievementCondition']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
@@ -740,6 +752,7 @@ class AppController extends Controller{
 		if($goldenCondition==null){
 			$goldenCondition = array();
 			$goldenCondition['AchievementCondition']['value'] = 0;
+			$this->AchievementCondition->create();
 		}
 		$goldenCondition['AchievementCondition']['category'] = 'golden';
 		$goldenCondition['AchievementCondition']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
@@ -754,8 +767,10 @@ class AppController extends Controller{
 		$potionCondition = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array(
 			'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 'potion'
 		)));
-		if($potionCondition==null)
+		if($potionCondition==null){
 			$potionCondition = array();
+			$this->AchievementCondition->create();
+		}
 		$potionCondition['AchievementCondition']['category'] = 'potion';
 		$potionCondition['AchievementCondition']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
 		$potionCondition['AchievementCondition']['value'] = 1;

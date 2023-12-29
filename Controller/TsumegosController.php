@@ -1156,6 +1156,14 @@ class TsumegosController extends AppController{
 									$ur['TsumegoAttempt']['solved'] = '1';
 									$this->TsumegoAttempt->save($ur);
 									$correctSolveAttempt = true;
+									$this->saveDanSolveCondition($solvedTsumegoRank, $preTsumego['Tsumego']['id']);
+									$this->updateGems($solvedTsumegoRank);
+									if($_COOKIE['sprint']==1)
+										$this->updateSprintCondition(true);
+									else
+										$this->updateSprintCondition(false);
+									if($_COOKIE['type']=='g')
+										$this->updateGoldenCondition(true);
 								}
 							}
 						}
