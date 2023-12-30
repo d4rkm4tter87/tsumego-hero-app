@@ -3488,7 +3488,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		top: 140px;
 		left: 140px;
 	}
-	.quotePick2 .quote1{color:white!important;}
+	.quotePick2 .quote1{color:#e0d7d3!important;}
 	.quotePick3{
 		font-size: 20px;
 		position: absolute;
@@ -3516,7 +3516,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		top: 140px;
 		left: 140px;
 	}
-	.quotePick6 .quote1{color:#faf4d9!important;}
+	.quotePick6 .quote1{color:#fbf2e2!important;}
 	.quotePick7{
 		font-size: 20px;
 		position: absolute;
@@ -3580,7 +3580,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		font-size: 20px;
 		position: absolute;
 		top: 140px;
-		left: 155px;
+		left: 168px;
 		
 	}
 	.quotePick15 .quote1{color:#6f988f!important;}

@@ -90,6 +90,14 @@
 			</li>
 			<br><br>
 		</div>
+		<p class="title4">New Collection: Kano Yoshinori | 31.12.2023</p>
+		<div class="new1">
+			This series written by Kano Yoshinori in 1985 covers a large range of fundamental topics. 
+			Volume 1 contains problems about recognizing atari, ladders, snapbacks and basic life and death problems.    
+			<div align="center"><img width="95%" src="/img/kano-yoshinori-promo.png" alt="New Collection: Kano Yoshinori" title="New Collection: Kano Yoshinori">
+			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/214">Play</a><br><br></div>
+		</div>
 		<p class="title4">Update 28.12.2023</p>
 		<div class="new1">
 		<b>Board previews and more achievements</b><br><br>
@@ -671,9 +679,14 @@
 		<p class="title4">Recent Donations and Upgrades</p>
 		<div class="new1">
 			<table class="newx" border="0">
+			<tr>
+					<td><h1>30.12.2023</h1></td>
+					<td><h1>Ralf Wurzinger</h1></td>
+					<td><h1>20,00 €</h1></td>
+				</tr>
 				<tr>
-					<td><h1>29.12.2023</h1></td>
-					<td><h1>Béatrice Machin</h1></td>
+					<td><h1>30.12.2023</h1></td>
+					<td><h1>GoInfluenchess </h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<tr>
@@ -689,11 +702,6 @@
 				<tr>
 					<td><h1>10.12.2023</h1></td>
 					<td><h1>Joris De Ridder</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>03.12.2023</h1></td>
-					<td><h1>Bret Kugler</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<!--
@@ -892,7 +900,7 @@
 		$(document).ready(function(){
 			ajaxCall.done(function(data){
 			});
-			setInterval(getContent, 350);
+			setInterval(getContent, 500);
 		});
 		
 		let tooltipSgfs = [];
@@ -916,8 +924,8 @@
 		}
 		
 		for($i=0; $i<count($scheduleTsumego); $i++)
-			echo 'createPreviewBoard('.$i.', tooltipSgfs['.$i.'], '.$tooltipInfo[$i][0].', '.$tooltipInfo[$i][1].');';
-		echo 'createPreviewBoard(99, popularTooltip, '.$popularTooltipInfo[0].', '.$popularTooltipInfo[1].');';	
+			echo 'createPreviewBoard('.$i.', tooltipSgfs['.$i.'], '.$tooltipInfo[$i][0].', '.$tooltipInfo[$i][1].', '.$tooltipBoardSize[$i].');';
+		echo 'createPreviewBoard(99, popularTooltip, '.$popularTooltipInfo[0].', '.$popularTooltipInfo[1].', '.$popularTooltipBoardSize.');';	
 		
 		?>
 	</script>

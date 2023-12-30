@@ -10,13 +10,20 @@ class AppController extends Controller{
 	public function processSGF($sgf){
 		$aw = strpos($sgf, 'AW');
 		$ab = strpos($sgf, 'AB');
+		$boardSizePos = strpos($sgf, 'SZ');
+		$boardSize = 19;
 		$sgfArr = str_split($sgf);
+		
+		
+		if($boardSizePos!=null)
+			$boardSize = $sgfArr[$boardSizePos+3].''.$sgfArr[$boardSizePos+4];
+		if(substr($boardSize, 1) == ']')
+			$boardSize = substr($boardSize, 0, 1);
+		//echo '<pre>'; print_r($boardSize); echo '</pre>';
 		
 		$black = $this->getInitialPosition($ab, $sgfArr, 'x');
 		$white = $this->getInitialPosition($aw, $sgfArr, 'o');
 		$stones = array_merge($black, $white);
-		
-		//echo '<pre>'; print_r($white); echo '</pre>';
 		
 		$board = array();
 		for($i=0; $i<19; $i++){
@@ -71,6 +78,7 @@ class AppController extends Controller{
 		$arr[0] = $board;
 		$arr[1] = $stones;
 		$arr[2] = $tInfo;
+		$arr[3] = $boardSize;
 		
 		return $arr;
 	}
@@ -245,27 +253,27 @@ class AppController extends Controller{
 		
 		$arch1 = $this->Achievement->findById(111);
 		if($gemRand1==0)
-			$arch1['Achievement']['description'] = 'Triggers once a day on an easy ddk problem.';
+			$arch1['Achievement']['description'] = 'Has a chance to trigger once a day on an easy ddk problem.';
 		else if($gemRand1==1)
-			$arch1['Achievement']['description'] = 'Triggers once a day on a regular ddk problem.';
+			$arch1['Achievement']['description'] = 'Has a chance to trigger once a day on a regular ddk problem.';
 		else if($gemRand1==2)
-			$arch1['Achievement']['description'] = 'Triggers once a day on a difficult ddk problem.';
+			$arch1['Achievement']['description'] = 'Has a chance to trigger once a day on a difficult ddk problem.';
 		$this->Achievement->save($arch1);
 		$arch2 = $this->Achievement->findById(112);
 		if($gemRand2==0)
-			$arch2['Achievement']['description'] = 'Triggers once a day on an easy sdk problem.';
+			$arch2['Achievement']['description'] = 'Has a chance to trigger once a day on an easy sdk problem.';
 		else if($gemRand2==1)
-			$arch2['Achievement']['description'] = 'Triggers once a day on a regular sdk problem.';
+			$arch2['Achievement']['description'] = 'Has a chance to trigger once a day on a regular sdk problem.';
 		else if($gemRand2==2)
-			$arch2['Achievement']['description'] = 'Triggers once a day on a difficult sdk problem.';
+			$arch2['Achievement']['description'] = 'Has a chance to trigger once a day on a difficult sdk problem.';
 		$this->Achievement->save($arch2);
 		$arch3 = $this->Achievement->findById(113);
 		if($gemRand3==0)
-			$arch3['Achievement']['description'] = 'Triggers once a day on an easy dan problem.';
+			$arch3['Achievement']['description'] = 'Has a chance to trigger once a day on an easy dan problem.';
 		else if($gemRand3==1)
-			$arch3['Achievement']['description'] = 'Triggers once a day on a regular dan problem.';
+			$arch3['Achievement']['description'] = 'Has a chance to trigger once a day on a regular dan problem.';
 		else if($gemRand3==2)
-			$arch3['Achievement']['description'] = 'Triggers once a day on a difficult dan problem.';
+			$arch3['Achievement']['description'] = 'Has a chance to trigger once a day on a difficult dan problem.';
 		$this->Achievement->save($arch3);
 		
 		$this->DayRecord->create();
@@ -572,7 +580,6 @@ class AppController extends Controller{
 					$x['tid'] = $out2[$i]['TsumegoAttempt']['tsumego_id'];
 					$tx = $this->Tsumego->findById($x['tid']);
 					$x['sid'] = $tx['Tsumego']['set_id'];
-
 					$x['status'] = $out2[$i]['TsumegoAttempt']['solved'];
 					$x['seconds'] = $out2[$i]['TsumegoAttempt']['seconds'];
 
@@ -787,7 +794,7 @@ class AppController extends Controller{
 			$gems = explode('-', $dateGem['DayRecord']['gems']);
 			$gemValue = '';
 			$condition1 = 500;
-			$condition2 = 400;
+			$condition2 = 200;
 			$condition3 = 50;
 			$found1 = false;
 			$found2 = false;
@@ -795,9 +802,9 @@ class AppController extends Controller{
 			if($r=='15k'||$r=='14k'||$r=='13k'||$r=='12k'||$r=='11k'||$r=='10k'){
 				if($gems[0]==0)
 					$gemValue = '15k';
-				else if($gems[0]==1) 
+				else if($gems[0]==1)
 					$gemValue = '12k';
-				else if($gems[0]==2) 
+				else if($gems[0]==2)
 					$gemValue = '10k';
 				if($r==$gemValue){
 					$dateGem['DayRecord']['gemCounter1']++;
@@ -1024,7 +1031,7 @@ class AppController extends Controller{
 			array_push($updated, $achievementId);
 		}
 		$achievementId = 96;
-		if(!isset($existingAs[$achievementId]) && $ac1['sprint']>=42){
+		if(!isset($existingAs[$achievementId]) && $ac1['sprint']>=40){
 			$as['AchievementStatus']['achievement_id'] = $achievementId;
 			$this->AchievementStatus->create();
 			$this->AchievementStatus->save($as);

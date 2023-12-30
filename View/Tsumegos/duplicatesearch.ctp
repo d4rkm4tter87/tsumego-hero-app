@@ -79,9 +79,9 @@
 				}
 			}
 		}
-		echo 'createPreviewBoard(-1, tSgfArr, '.$tSgfArrInfo[0].', '.$tSgfArrInfo[1].');';
+		echo 'createPreviewBoard(-1, tSgfArr, '.$tSgfArrInfo[0].', '.$tSgfArrInfo[1].', '.$tSgfArrBoardSize.');';
 		for($i=0; $i<count($similarArr); $i++){
-			echo 'createPreviewBoard('.$i.', similarArr['.$i.'], '.$similarArrInfo[$i][0].', '.$similarArrInfo[$i][1].');';
+			echo 'createPreviewBoard('.$i.', similarArr['.$i.'], '.$similarArrInfo[$i][0].', '.$similarArrInfo[$i][1].', '.$similarArrBoardSize[$i].');';
 		}
 		?>
 		

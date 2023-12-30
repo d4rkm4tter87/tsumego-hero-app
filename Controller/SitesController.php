@@ -60,10 +60,12 @@ class SitesController extends AppController{
 		$totd = $this->Tsumego->findById($dateUser['DayRecord']['tsumego']);
 		$popularTooltip = array();
 		$popularTooltipInfo = array();
+		$popularTooltipBoardSize = array();
 		$ptts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $totd['Tsumego']['id'])));
 		$ptArr = $this->processSGF($ptts[0]['Sgf']['sgf']);
 		$popularTooltip = $ptArr[0];
 		$popularTooltipInfo = $ptArr[2];
+		$popularTooltipBoardSize = $ptArr[3];
 		
 		$newT = $this->Tsumego->findById($dateUser['DayRecord']['newTsumego']);
 		$newTschedule = $this->Schedule->find('all', array('conditions' =>  array('date' => $today)));
@@ -75,11 +77,13 @@ class SitesController extends AppController{
 		
 		$tooltipSgfs = array();
 		$tooltipInfo = array();
+		$tooltipBoardSize = array();
 		for($i=0; $i<count($scheduleTsumego); $i++){
 			$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $scheduleTsumego[$i]['Tsumego']['id'])));
 			$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
 			array_push($tooltipSgfs, $tArr[0]);
 			array_push($tooltipInfo, $tArr[2]);
+			array_push($tooltipBoardSize, $tArr[3]);
 		}
 		
 		if(isset($_SESSION['loggedInUser'])){
@@ -222,8 +226,10 @@ class SitesController extends AppController{
 		$this->set('dateUser', $dateUser);
 		$this->set('tooltipSgfs', $tooltipSgfs);
 		$this->set('tooltipInfo', $tooltipInfo);
+		$this->set('tooltipBoardSize', $tooltipBoardSize);
 		$this->set('popularTooltip', $popularTooltip);
 		$this->set('popularTooltipInfo', $popularTooltipInfo);
+		$this->set('popularTooltipBoardSize', $popularTooltipBoardSize);
     }
 	
 	public function view($id=null){

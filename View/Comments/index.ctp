@@ -411,7 +411,7 @@
 				}
 			}
 			for($i=0; $i<10; $i++)
-				echo 'createPreviewBoard('.$i.', tooltipSgfs['.$i.'], '.$tooltipInfo[$i][0].', '.$tooltipInfo[$i][1].');';
+				echo 'createPreviewBoard('.$i.', tooltipSgfs['.$i.'], '.$tooltipInfo[$i][0].', '.$tooltipInfo[$i][1].', '.$tooltipBoardSize[$i].');';
 			?>
 			let tooltipSgfs2 = [];
 			<?php
@@ -425,7 +425,7 @@
 				}
 			}
 			for($i=0; $i<10; $i++)
-				echo 'createPreviewBoard('.(99+$i).', tooltipSgfs2['.$i.'], '.$tooltipInfo2[$i][0].', '.$tooltipInfo2[$i][1].');';
+				echo 'createPreviewBoard('.(99+$i).', tooltipSgfs2['.$i.'], '.$tooltipInfo2[$i][0].', '.$tooltipInfo2[$i][1].', '.$tooltipBoardSize2[$i].');';
 			?>
 		</script>
 		<style>

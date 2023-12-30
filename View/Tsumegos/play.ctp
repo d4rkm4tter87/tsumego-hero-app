@@ -1612,9 +1612,7 @@
 		$(document).mousemove(function(e){
 		   mouseX = e.pageX; 
 		   mouseY = e.pageY;
-		}); 
-		const w3 = 'http://www.w3.org/2000/svg';//§
-		const w32 = 'http://www.w3.org/1999/xlink';
+		});
 		
 		let tooltipSgfs = [];
 		<?php
@@ -1628,7 +1626,7 @@
 			}
 		}
 		for($i=0; $i<count($navi); $i++)
-			echo 'createPreviewBoard('.$i.', tooltipSgfs['.$i.'], '.$tooltipInfo[$i][0].', '.$tooltipInfo[$i][1].');';
+			echo 'createPreviewBoard('.$i.', tooltipSgfs['.$i.'], '.$tooltipInfo[$i][0].', '.$tooltipInfo[$i][1].', '.$tooltipBoardSize[$i].');';
 		?>
 	});
 

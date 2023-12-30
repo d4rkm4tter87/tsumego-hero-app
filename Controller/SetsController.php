@@ -1184,11 +1184,13 @@ class SetsController extends AppController{
 			
 			$tooltipSgfs = array();
 			$tooltipInfo = array();
+			$tooltipBoardSize = array();
 			for($i=0; $i<count($ts); $i++){
 				$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
 				$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
 				array_push($tooltipSgfs, $tArr[0]);
 				array_push($tooltipInfo, $tArr[2]);
+				array_push($tooltipBoardSize, $tArr[3]);
 			}
 			if($urSecCounter==0)
 				$avgTime = 60;
@@ -1247,6 +1249,7 @@ class SetsController extends AppController{
 		$this->set('achievementUpdate', $achievementUpdate);
 		$this->set('tooltipSgfs', $tooltipSgfs);
 		$this->set('tooltipInfo', $tooltipInfo);
+		$this->set('tooltipBoardSize', $tooltipBoardSize);
     }
 	
 	public function updateAchievementConditions($sid, $avgTime, $accuracy){

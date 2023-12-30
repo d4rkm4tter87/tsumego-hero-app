@@ -299,8 +299,10 @@ class CommentsController extends AppController{
 		
 		$tooltipSgfs = array();
 		$tooltipInfo = array();
+		$tooltipBoardSize = array();
 		$tooltipSgfs2 = array();
 		$tooltipInfo2 = array();
+		$tooltipBoardSize2 = array();
 		for($i=0; $i<count($c); $i++){
 			if(strpos($c[$i]['Comment']['message'], '<a href="/files/ul1/') === false)
 				$c[$i]['Comment']['message'] = htmlspecialchars($c[$i]['Comment']['message']);
@@ -311,6 +313,7 @@ class CommentsController extends AppController{
 			$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
 			array_push($tooltipSgfs, $tArr[0]);
 			array_push($tooltipInfo, $tArr[2]);
+			array_push($tooltipBoardSize, $tArr[3]);
 		}
 		for($i=0; $i<count($yourc); $i++){
 			$yourc[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $yourc[$i]['Comment']['message']);
@@ -320,13 +323,11 @@ class CommentsController extends AppController{
 			$tArr2 = $this->processSGF($tts2[0]['Sgf']['sgf']);
 			$tooltipSgfs2[$i] = $tArr2[0];
 			$tooltipInfo2[$i] = $tArr2[2];
+			array_push($tooltipBoardSize2, $tArr2[3]);
 		}
 		$admins = $this->User->find('all', array('conditions' => array('isAdmin' => 1))); 
 		
-		//echo '<pre>'; print_r(count($tooltipSgfs2)); echo '</pre>';
-		//echo '<pre>'; print_r($tooltipInfo2); echo '</pre>';
-		//echo '<pre>'; print_r($c); echo '</pre>';
-		//echo '<pre>'; print_r($tooltipSgfs); echo '</pre>';
+		
 		//echo '<pre>'; print_r($c); echo '</pre>';
 		
 		$this->set('admins', $admins);
@@ -347,6 +348,8 @@ class CommentsController extends AppController{
 		$this->set('tooltipInfo', $tooltipInfo);
 		$this->set('tooltipSgfs2', $tooltipSgfs2);
 		$this->set('tooltipInfo2', $tooltipInfo2);
+		$this->set('tooltipBoardSize', $tooltipBoardSize);
+		$this->set('tooltipBoardSize2', $tooltipBoardSize2);
     }
 
 }
