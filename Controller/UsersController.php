@@ -18,20 +18,26 @@ class UsersController extends AppController{
 		$this->loadModel('Comment');
 		$this->loadModel('Schedule');
 		$this->loadModel('Sgf');
-		//$this->loadModel('SetConnection');
+		$this->loadModel('SetConnection');
 		
 		
-		$ac100 = $this->AchievementCondition->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => '%', 'value >=' => 95)));
-		$as100 = $this->AchievementStatus->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'], 'achievement_id' => 46)));
-		$ac100counter = 0;
-		for($j=0; $j<count($ac100); $j++)
-			if(count($this->Tsumego->find('all', array('conditions' => array('set_id' => $ac100[$j]['AchievementCondition']['set_id']))))>=100)
-				$ac100counter++;
+		$ttt = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => 72, 'tsumego_id' => 26952)));
+		echo '<pre>'; print_r($ttt); echo '</pre>';
+		/*
+		$comments = $this->Comment->find('all');
+		$c = array();
+		for($i=0; $i<count($comments); $i++){
+			array_push($c, $comments[$i]['Comment']['user_id']);
+		}
+		$c = array_count_values($c);
+		$this->set('c', $c);
 		
-		echo '<pre>'; print_r($ac100counter); echo '</pre>';
-		echo '<pre>'; print_r($ac100); echo '</pre>';
-		echo '<pre>'; print_r($as100); echo '</pre>';
+		echo '<pre>'; print_r(count($comments)); echo '</pre>';
+		echo '<pre>'; print_r(count($c)); echo '</pre>';
+		*/
 		
+		
+		//$this->SetConnection->save($sc);
 		//$s = $this->Tsumego->find('all', array('conditions' => array('id >' => 14000)));
 		//echo '<pre>'; print_r(count($s)); echo '</pre>';
 		/*
@@ -831,7 +837,21 @@ Joschka Zimdars';
 			$a[$i]['m'] = date('m', strtotime($ans[$i]['Answer']['created']));
 			$a[$i]['d'] = date('d', strtotime($ans[$i]['Answer']['created']));
 		}
-		
+		array_pop($a);
+		$aNew = array();
+		$aNew['date'] = '2019-02-06 07:15:05';
+		$aNew['num'] = 53;
+		$aNew['y'] = 2019;
+		$aNew['m'] = '02';
+		$aNew['d'] = '06';
+		array_push($a, $aNew);
+		$aNew = array();
+		$aNew['date'] = '2019-01-09 07:15:05';
+		$aNew['num'] = 28;
+		$aNew['y'] = 2019;
+		$aNew['m'] = '01';
+		$aNew['d'] = '09';
+		array_push($a, $aNew);
 		$this->set('a', $a);
 	}
 	
@@ -842,9 +862,9 @@ Joschka Zimdars';
 		$this->loadModel('TsumegoStatus');
 		$this->loadModel('Set');
 		$this->loadModel('AdminActivity');
-		//$this->loadModel('SetConnection');
+		$this->loadModel('SetConnection');
+		$this->loadModel('Sgf');
 		
-		$d = array();
 		$idMap = array();
 		$idMap2 = array();
 		$marks = array();
@@ -892,49 +912,57 @@ Joschka Zimdars';
 				$aMessage = 'You can\'t remove the main duplicate.';
 			}
 		}
-		if(isset($this->params['url']['setMain'])){
-			$main = $this->Tsumego->findById($this->params['url']['setMain']);
-			if(!empty($main) && $main['Tsumego']['duplicate']>9){
-				$m1 = $this->Tsumego->findById($main['Tsumego']['duplicate']);
-				$m2 = $this->Tsumego->find('all', array('conditions' => array('duplicate' => $main['Tsumego']['duplicate'])));
-				array_push($m2, $m1);
-				for($i=0; $i<count($m2); $i++){
-					if($m2[$i]['Tsumego']['id'] == $this->params['url']['setMain'])
-						$m2[$i]['Tsumego']['duplicate'] = count($m2)-1;
-					else
-						$m2[$i]['Tsumego']['duplicate'] = $this->params['url']['setMain'];
-					$this->Tsumego->save($m2[$i]);
-				}
-				$sx = $this->Set->findById($main['Tsumego']['set_id']);
-				$title = $sx['Set']['title'].' - '.$main['Tsumego']['num'];
-				$adminActivity = array();
-				$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-				$adminActivity['AdminActivity']['tsumego_id'] = $this->params['url']['setMain'];
-				$adminActivity['AdminActivity']['file'] = 'settings';
-				$adminActivity['AdminActivity']['answer'] = 'Set duplicate main: '.$title;
-				$this->AdminActivity->save($adminActivity);
-			}
-		}
 		if(isset($this->params['url']['main']) && isset($this->params['url']['duplicates'])){
 			$newDuplicates = explode('-', $this->params['url']['duplicates']);
 			$newD = array();
-			for($i=0; $i<count($newDuplicates); $i++){
-				$newD = $this->Tsumego->findById($newDuplicates[$i]);
-				if($newD['Tsumego']['id']==$this->params['url']['main'])
-					$newD['Tsumego']['duplicate'] = count($newDuplicates)-1;
-				else
-					$newD['Tsumego']['duplicate'] = $this->params['url']['main'];
-				$newD['Tsumego']['created'] = date('Y-m-d H:i:s');
-				$this->Tsumego->save($newD);
+			$newDmain = array();
+			$checkSc = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $this->params['url']['main'])));
+			$errSet = '';
+			$errNotNull = '';
+			if($checkSc==null){
+				$validSc = true;
+			}else{
+				$validSc = false;
+				$errNotNull = 'Already set as duplicate.';
 			}
-			$sx = $this->Set->findById($newD['Tsumego']['set_id']);
-			$title = $sx['Set']['title'].' - '.$newD['Tsumego']['num'];
-			$adminActivity = array();
-			$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-			$adminActivity['AdminActivity']['tsumego_id'] = $newD['Tsumego']['id'];
-			$adminActivity['AdminActivity']['file'] = 'settings';
-			$adminActivity['AdminActivity']['answer'] = 'Created duplicate group: '.$title.' (and more)';
-			$this->AdminActivity->save($adminActivity);
+			$newD0check = array();
+			for($i=0; $i<count($newDuplicates); $i++){
+				$newD0 = $this->Tsumego->findById($newDuplicates[$i]);
+				array_push($newD0check, $newD0['Tsumego']['set_id']);
+			}
+			$newD0check = array_count_values($newD0check);
+			foreach($newD0check as $key => $value)
+				if($value>1){
+					$validSc = false;
+					$errSet = 'You can\'t link duplicates in the same collection.';
+				}
+			
+			if($validSc){
+				for($i=0; $i<count($newDuplicates); $i++){
+					$newD = $this->Tsumego->findById($newDuplicates[$i]);
+					if($newD['Tsumego']['id']==$this->params['url']['main']){
+						$newDmain = $newD;
+						$newD['Tsumego']['duplicate'] = $this->params['url']['main'];
+						$this->Tsumego->save($newD);
+					}else{
+						$this->Tsumego->delete($newD['Tsumego']['id']);
+					}
+					$this->SetConnection->create();
+					$setC = array();
+					$setC['SetConnection']['tsumego_id'] = $this->params['url']['main'];
+					$setC['SetConnection']['set_id'] = $newD['Tsumego']['set_id'];
+					$setC['SetConnection']['num'] = $newD['Tsumego']['num'];
+					$this->SetConnection->save($setC);
+				}
+				$sx = $this->Set->findById($newDmain['Tsumego']['set_id']);
+				$title = $sx['Set']['title'].' - '.$newDmain['Tsumego']['num'];
+				$adminActivity = array();
+				$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+				$adminActivity['AdminActivity']['tsumego_id'] = $this->params['url']['main'];
+				$adminActivity['AdminActivity']['file'] = 'settings';
+				$adminActivity['AdminActivity']['answer'] = 'Created duplicate group: '.$title;
+				$this->AdminActivity->save($adminActivity);
+			}
 		}
 		if(!empty($this->data['Mark'])){
 			$mark = $this->Tsumego->findById($this->data['Mark']['tsumego_id']);
@@ -949,42 +977,104 @@ Joschka Zimdars';
 			array_push($idMap2, $marks[$i]['Tsumego']['id']);
 		$uts2 = $this->TsumegoStatus->find('all', array('conditions' => array('tsumego_id'=>$idMap2, 'user_id'=>$_SESSION['loggedInUser']['User']['id'])));
 		$counter2 = 0;
+		$markTooltipSgfs = array();
+		$markTooltipInfo = array();
+		$markTooltipBoardSize = array();
 		for($i=0; $i<count($marks); $i++){
 			$s = $this->Set->findById($marks[$i]['Tsumego']['set_id']);
 			$marks[$i]['Tsumego']['title'] = $s['Set']['title'].' - '.$marks[$i]['Tsumego']['num'];
 			$marks[$i]['Tsumego']['status'] = $uts2[$counter2]['TsumegoStatus']['status'];
+			$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $marks[$i]['Tsumego']['id'])));
+			$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
+			$markTooltipSgfs[$i] = $tArr[0];
+			$markTooltipInfo[$i] = $tArr[2];
+			$markTooltipBoardSize[$i] = $tArr[3];
 			$counter2++;
 		}
 		
-		$duplicates1 = $this->Tsumego->find('all', array('order' => 'created DESC', 'conditions' => array(
-			'duplicate >' => 0,
-			'duplicate <' => 10
-		)));
-		for($i=0; $i<count($duplicates1); $i++){
-			$d[$i] = array();
-			$duplicates1[$i]['Tsumego']['status'] = 'N';
-			array_push($idMap, $duplicates1[$i]['Tsumego']['id']);
-			array_push($d[$i], $duplicates1[$i]);
-			$ts = $this->Tsumego->find('all', array('order' => 'created DESC', 'conditions' =>  array('duplicate' => $duplicates1[$i]['Tsumego']['id'])));
-			for($j=0; $j<count($ts); $j++){
-				$ts[$j]['Tsumego']['status'] = 'N';
-				array_push($idMap, $ts[$j]['Tsumego']['id']);
-				array_push($d[$i], $ts[$j]);
+		$sc = $this->SetConnection->find('all');
+		$scCount = array();
+		$scCount2 = array();
+		for($i=0; $i<count($sc); $i++)
+			array_push($scCount, $sc[$i]['SetConnection']['tsumego_id']);
+		$scCount = array_count_values($scCount);
+		foreach($scCount as $key => $value)
+			array_push($scCount2, $key);
+		
+		$duplicates1 = array();
+		$counter = 0;
+		for($i=0; $i<count($scCount2); $i++){
+			$duplicates1[$i] = array();
+			for($j=0; $j<count($sc); $j++){
+				if($sc[$j]['SetConnection']['tsumego_id']==$scCount2[$i]){
+					$scT1 = $this->Tsumego->findById($sc[$j]['SetConnection']['tsumego_id']);
+					$scT1['Tsumego']['num'] = $sc[$j]['SetConnection']['num'];
+					$scT1['Tsumego']['set_id'] = $sc[$j]['SetConnection']['set_id'];
+					$scT1['Tsumego']['status'] = 'N';
+					array_push($duplicates1[$i], $scT1);
+					array_push($idMap, $scT1['Tsumego']['id']);
+				}
 			}
 		}
+		
+		
 		$uts = $this->TsumegoStatus->find('all', array('conditions' => array('tsumego_id'=>$idMap, 'user_id'=>$_SESSION['loggedInUser']['User']['id'])));
+		$tooltipSgfs = array();
+		$tooltipInfo = array();
+		$tooltipBoardSize = array();
+		for($i=0; $i<count($duplicates1); $i++){
+			$tooltipSgfs[$i] = array();
+			$tooltipInfo[$i] = array();
+			$tooltipBoardSize[$i] = array();
+			for($j=0; $j<count($duplicates1[$i]); $j++){
+				$s = $this->Set->findById($duplicates1[$i][$j]['Tsumego']['set_id']);
+				if($s!=null){
+					$duplicates1[$i][$j]['Tsumego']['title'] = $s['Set']['title'].' - '.$duplicates1[$i][$j]['Tsumego']['num'];
+					$duplicates1[$i][$j]['Tsumego']['duplicateLink'] = '/'.$duplicates1[$i][$j]['Tsumego']['set_id'];
+					for($k=0; $k<count($uts); $k++)
+						if($uts[$k]['TsumegoStatus']['tsumego_id'] == $duplicates1[$i][$j]['Tsumego']['id'])
+							$duplicates1[$i][$j]['Tsumego']['status'] = $uts[$k]['TsumegoStatus']['status'];
+					$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $duplicates1[$i][$j]['Tsumego']['id'])));
+					$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
+					$tooltipSgfs[$i][$j] = $tArr[0];
+					$tooltipInfo[$i][$j] = $tArr[2];
+					$tooltipBoardSize[$i][$j] = $tArr[3];
+				}
+			}
+		}
+		//echo '<pre>'; print_r($duplicates1); echo '</pre>';
+		/*
+		
+		
 		for($i=0; $i<count($d); $i++){
 			for($j=0; $j<count($d[$i]); $j++){
-				$s = $this->Set->findById($d[$i][$j]['Tsumego']['set_id']);
-				$d[$i][$j]['Tsumego']['title'] = $s['Set']['title'].' - '.$d[$i][$j]['Tsumego']['num'];
-				for($k=0; $k<count($uts); $k++)
-					if($uts[$k]['TsumegoStatus']['tsumego_id'] == $d[$i][$j]['Tsumego']['id'])
-						$d[$i][$j]['Tsumego']['status'] = $uts[$k]['TsumegoStatus']['status'];
+				$tooltipSgfs[$i] = array();
+				
 			}
 		}
-		$this->set('d', $d);
+		
+		for($i=0; $i<count($navi); $i++){
+			$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $navi[$i]['Tsumego']['id'])));
+			$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
+			array_push($tooltipSgfs, $tArr[0]);
+			array_push($tooltipInfo, $tArr[2]);
+			array_push($tooltipBoardSize, $tArr[3]);
+		}
+		*/
+		//echo '<pre>'; print_r($tooltipInfo); echo '</pre>';
+		
+		
+		$this->set('d', $duplicates1);
 		$this->set('marks', $marks);
 		$this->set('aMessage', $aMessage);
+		$this->set('tooltipSgfs', $tooltipSgfs);
+		$this->set('tooltipInfo', $tooltipInfo);
+		$this->set('tooltipBoardSize', $tooltipBoardSize);
+		$this->set('markTooltipSgfs', $markTooltipSgfs);
+		$this->set('markTooltipInfo', $markTooltipInfo);
+		$this->set('markTooltipBoardSize', $markTooltipBoardSize);
+		$this->set('errSet', $errSet);
+		$this->set('errNotNull', $errNotNull);
 	}
 	
 	public function uploads(){
@@ -1889,7 +1979,7 @@ Joschka Zimdars';
 		$this->loadModel('Set');
 		
 		$_SESSION['page'] = 'about';
-		$_SESSION['title'] = 'Tsumego Hero - Authors';
+		$_SESSION['title'] = 'Tsumego Hero - About';
 		/*
 		$comments = $this->Comment->find('all');
 		$c = array();
@@ -1897,8 +1987,9 @@ Joschka Zimdars';
 			array_push($c, $comments[$i]['Comment']['user_id']);
 		}
 		$c = array_count_values($c);
-		rsort($c);
 		$this->set('c', $c);
+		
+		echo '<pre>'; print_r($c); echo '</pre>';
 		*/
 		$authors = $this->Tsumego->find('all', array('order' => 'created DESC', 'conditions' =>  array(
 			'NOT' => array(

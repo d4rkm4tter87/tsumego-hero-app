@@ -4,7 +4,7 @@
 <div align="center">
 <p class="title">
 	About
-	<br><br> 
+	<br> 
 </p>
 </div>
 <br>
@@ -12,7 +12,7 @@
 <table border="0">
 <tr>
 <td>
-[Updated on 15.03.2023]
+[Updated on 03.01.2024]
 <br><br>
 <i>The goal of Tsumego Hero is to make solving Go problems more enjoyable.</i>
 <br><br>
@@ -23,82 +23,123 @@ but I always wanted to do this when I find some time and answers to the open que
 
 In 2017, I was a scholar of the Yunguseng Dojang by <b>In-seong Hwang</b> (<a target="_blank" href="https://yunguseng.com/">yunguseng.com</a>) and I helped creating files for the EYD practice room. The way Go files were stored, red and displayed on the website were my inspiration for the back-end. I programmed the SGF-reader for Tsumego Hero based on that concept. <br><br>
 
-As the Adobe Flash Player was in 2017 already an outdated technology, I had to start from scratch with the digital Go board. As base, I took jGoBoard by 
-<b>Joonas Pihlajamaa</b> (<a target="_blank" href="https://github.com/jokkebk/jgoboard">https://github.com/jokkebk/jgoboard</a>). This looked so amazing, that it gave me a lot of inspiration for later designs. <br><br>
+As the Adobe Flash Player was in 2017 already an outdated technology, I had to start from scratch with the digital Go board. As base, I took 
+<a target="_blank" href="https://github.com/jokkebk/jgoboard">jGoBoard</a> by <b>Joonas Pihlajamaa</b>. This looked so amazing, that it gave me 
+ inspiration for later designs. <br><br>
+ 
+ The development of the rating mode is a collaboration with <b>Théo Barollet</b>. <br><br>
+ 
+ We recently switched the technology of the board viewer from <a target="_blank" href="https://github.com/jokkebk/jgoboard">jGoBoard</a> 
+ to <a target="_blank" href="https://github.com/yewang/besogo">BesoGo</a>. The technology swich had big technical advantages as it came with 
+ many new functions and much more room for further extensions.
+ All recent updates regarding the go problems were much easier or only possible in BesoGo. 
 </td>
 <td>
 <img src="/img/img5214.JPG" height="230px">
 </td>
 </tr>
 <tr>
-<td colspan="2">
+<td colspan="2" style="padding-top:15px">
+In 2023, the website took a big step forward in terms of quality, content and features. This was made possible by <b>Michal Kovářík</b>, 
+who financially supports the website. He was also part of the development in many updates and he creates new problems. 
+<b>Michal Kovářík</b> is known for being the director and lead developer of the game <a href="https://www.factorio.com/" target="_blank">Factorio</a>,
+which is a very popular construction and management simulation game. 
+<br><br>
 
-The first admin I involved in 2019 was <b>Akos “Farkas” Balogh</b>, a high dan player from Hungary. Now we have an awesome crew of 7 admins.<br>
-
-The development of the rating mode is a collaboration with <b>Théo Barollet</b>, a Computer Science PhD student from Grenoble, France. <br><br>
 
 
+The first admin I involved in 2019 was <b>Farkas</b>, a high dan player from Hungary. Currently, we have a great crew of 12 admins.
+There is not really a reason to limit the number of admins so far. So if you would like to contribute to the website by adding problems or 
+moderating, please contact me.<br><br>
 
+Go problems are the core of the website. Here is a list of the people who created the problems for Tsumego Hero: <br>
+<table border="0">
+	<tr>
+		<td><b>Joschka Zimdars aka d4rkm4tter</b></td>
+		<td>6757 problems</td>
+	</tr>
+	<tr>
+		<td><b>Xiang Zhang aka Sadaharu</b></td>
+		<td>1074 problems</td>
+	</tr>
+	<tr>
+		<td><b>Ryan Smith</b></td>
+		<td>750 problems</td>
+	</tr>
+	<tr>
+		<td><b>Michal Kovářík aka kovarex</b></td>
+		<td>734 problems</td>
+	</tr>
+	<tr>
+		<td><b>Stepan Trubitsin aka Stepan</b></td>
+		<td>647 problems</td>
+	</tr>
+	<tr>
+		<td><b>Kaan Malçok aka posetcay</b></td>
+		<td>598 problems</td>
+	</tr>
+	<tr>
+		<td><b>Jerome Hubert aka jhubert</b></td>
+		<td>497 problems</td>
+	</tr>
+	<tr>
+		<td><b>Innokentiy Zabirov aka Neri</b></td>
+		<td>361 problems</td>
+	</tr>
+	<tr>
+		<td><b>Akos Balogh aka Farkas</b></td>
+		<td>333 problems</td>
+	</tr>
+	<tr>
+		<td><b>Bradford Malbon</b></td>
+		<td>224 problems</td>
+	</tr>
+	<tr>
+		<td><b>саша черных aka Silent Gentleman</b></td>
+		<td>218 problems</td>
+	</tr>
+	<tr>
+		<td><b>David Ulbricht aka GoDave89</b></td>
+		<td>196 problems</td>
+	</tr>
+	<tr>
+		<td><b>Omicron </b></td>
+		<td>120 problems</td>
+	</tr>
+	<tr>
+		<td><b>Timo Kreuzer</b></td>
+		<td>114 problems</td>
+	</tr>
+	<tr>
+		<td><b>David Mitchell aka Daviid</b></td>
+		<td>100 problems</td>
+	</tr>
+	<tr>
+		<td><b>Andrey </b></td>
+		<td>58 problems</td>
+	</tr>
+	<tr>
+		<td><b>Olaf Voß aka richyfourtytwo</b></td>
+		<td>46 problems</td>
+	</tr>
+	<tr>
+		<td><b>Alexandre Dinerchtein</b></td>
+		<td>45 problems</td>
+	</tr>
+</table>
+<br>
 
-<b>d4rkm4tter</b> wrote 39 comments and 1374 replies. <br>
-<b>caranthir</b> wrote 132 comments and 480 replies. <br>
-<b>Farkas</b> wrote 15 comments and 450 replies. <br>
-<b>Ivan Detkov</b> wrote 105 comments and 210 replies. <br>
-<b>Sadaharu</b> wrote 189 comments and 89 replies. <br>
-<b>posetcay</b> wrote 120 comments and 158 replies. <br>
-<b>jhubert</b> wrote 92 comments and 50 replies. <br>
-<b>todbeibrot</b> wrote 89 comments. <br>
-<b>Andrey</b> wrote 88 comments. <br>
-<b>yaya</b> wrote 65 comments. <br>
-<b>Djab</b> wrote 60 comments. <br><br>
+	<b>d4rkm4tter</b> wrote 124 comments and 1814 replies.<br>
+	<b>posetcay</b> wrote 560 comments and 569 replies.<br>
+	<b>caranthir</b> wrote 231 comments and 516 replies.<br>
+	<b>Sadaharu</b> wrote 411 comments and 328 replies.<br>
+	<b>Ivan Detkov</b> wrote 236 comments and 324 replies.<br>
+	<b>jhubert</b> wrote 149 comments and 75 replies.<br>
+	<b>kovarex</b> wrote 114 comments and 64 replies.<br>
 
-Go problems are the core of the website. Here is a list of the file authors (excluding me): <br>
 </div>
 
-<?php
-	echo '<b>'.$count[10]['author'].'</b> provided '.$count[10]['count'].' files for the collections'.$count[10]['collections'].'<br>';
-	echo '<b>'.$count[12]['author'].'</b> provided '.$count[12]['count'].' files for the collection'.$count[12]['collections'].'<br>';
-	echo '<b>'.$count[11]['author'].'</b> provided '.$count[11]['count'].' files for the collections'.$count[11]['collections'].'<br>';
-	echo '<b>'.$count[9]['author'].'</b> provided '.$count[9]['count'].' files for the collection'.$count[9]['collections'].'<br>';
-	echo '<b>'.$count[8]['author'].'</b> provided '.$count[8]['count'].' files for the collection'.$count[8]['collections'].'<br>';
-	
-	echo '<b>'.$count[4]['author'].'</b> provided '.$count[4]['count'].' files for the collection'.$count[4]['collections'].'<br>';
-	echo '<b>'.$count[0]['author'].'</b> provided '.$count[0]['count'].' files for the collection'.$count[0]['collections'].'<br>';
-	echo '<b>'.$count[3]['author'].'</b> provided '.$count[3]['count'].' files for the collection'.$count[3]['collections'].'<br>';
-	
-	echo '<b>'.$count[2]['author'].'</b> provided '.$count[2]['count'].' files for the collection'.$count[2]['collections'].'<br>';
-	echo '<b>'.$count[7]['author'].'</b> provided '.$count[7]['count'].' files for the collection'.$count[7]['collections'].'<br>';
-	
-	
-	echo '<b>'.$count[5]['author'].'</b> provided '.$count[5]['count'].' files for the collection'.$count[5]['collections'].'<br>';
-	echo '<b>'.$count[6]['author'].'</b> provided 70 files for the collection'.$count[6]['collections'].'<br>';
-	echo '<b>'.$count[1]['author'].'</b> provided '.$count[1]['count'].' files for the collection'.$count[1]['collections'].'<br>';
-	
-	echo '<br>';
-	echo 'Here is Dinerchtein\'s website for Go lessons: <a target="_blank" href="http://breakfast.go4go.net/">breakfast.go4go.net</a>';
-?>
-<div align="center" class="authors">
-<table width="100%" class="highscoreTable">
-<tr><th></th><th></th><th></th></tr>
-<tr><th align="left">Problem</th><th align="left">Author</th><th align="left">Published</th></tr>
-<?php
-for($i=0; $i<count($t); $i++){
-	if($t[$i]['Tsumego']['public']==1){
-		echo '<tr class="color12">';
-		echo '<td>';
-			echo '<a href="/tsumegos/play/'.$t[$i]['Tsumego']['id'].'">'.$t[$i]['Tsumego']['set'].' - '.$t[$i]['Tsumego']['num'].'</a>';
-		echo '</td>';
-		echo '<td>';
-			echo $t[$i]['Tsumego']['author'];
-		echo '</td>';
-		echo '<td>';
-			echo $t[$i]['Tsumego']['created'];
-		echo '</td>';
-		echo '</tr>';
-	}
-}
-?>
-</table>
+</td>
 </tr>
 </table>
-</div>
+<br><br>

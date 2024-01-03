@@ -700,7 +700,7 @@ class SetsController extends AppController{
 		$this->LoadModel('AchievementStatus');
 		$this->LoadModel('AchievementCondition');
 		$this->LoadModel('Sgf');
-		//$this->LoadModel('SetConnection');
+		$this->LoadModel('SetConnection');
 		$_SESSION['page'] = 'set';
 		
 		$josekiOrder = 0;
@@ -757,8 +757,28 @@ class SetsController extends AppController{
 
 		if($id!=1){
 			$set = $this->Set->find('first', array('conditions' =>  array('id' => $id)));
-			$ts = $this->Tsumego->find('all', array('order' => 'num', 'direction' => 'DESC', 'conditions' => array('set_id' => $id)));
-			
+			$ts = $this->Tsumego->find('all', array('order' => 'num', 'direction' => 'ASC', 'conditions' => array('set_id' => $id)));
+			$scTs = $this->SetConnection->find('all', array('conditions' => array('set_id' => $set['Set']['id'])));
+			for($i=0; $i<count($scTs); $i++){
+				$scT = $this->Tsumego->findById($scTs[$i]['SetConnection']['tsumego_id']);
+				$scT['Tsumego']['set_id'] = $scTs[$i]['SetConnection']['set_id'];
+				$scT['Tsumego']['num'] = $scTs[$i]['SetConnection']['num'];
+				$scT['Tsumego']['duplicateLink'] = '/'.$scT['Tsumego']['set_id'];//§
+				array_push($ts, $scT);
+			}
+			$tsBuffer = array();
+			$tsBufferLowest=10000;
+			$tsBufferHighest=0;
+			for($i=0; $i<count($ts); $i++){
+				$tsBuffer[$ts[$i]['Tsumego']['num']] = $ts[$i];
+				if($ts[$i]['Tsumego']['num']<$tsBufferLowest)
+					$tsBufferLowest = $ts[$i]['Tsumego']['num'];
+				if($ts[$i]['Tsumego']['num']>$tsBufferHighest)
+					$tsBufferHighest = $ts[$i]['Tsumego']['num'];
+			}
+			$ts = array();
+			for($i=$tsBufferLowest; $i<=$tsBufferHighest; $i++)
+				array_push($ts, $tsBuffer[$i]);
 			//$ts = $this->findTsumegoSet($id);
 			
 			$allVcActive = true;

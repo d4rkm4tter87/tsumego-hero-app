@@ -58,7 +58,12 @@
 		$xpDisplayColor = '#b5910b';
 		echo '<style>#xpDisplay{font-weight:800;color:#b5910b;}</style>';
 	}
-	if(isset($formRedirect)) echo '<script type="text/javascript">window.location.href = "/tsumegos/play/'.$t['Tsumego']['id'].'";</script>';
+	if(isset($formRedirect)){
+		$duplicateLink = '';
+		if(isset($t['Tsumego']['duplicateLink']))
+			$duplicateLink = $t['Tsumego']['duplicateLink'];
+		echo '<script type="text/javascript">window.location.href = "/tsumegos/play/'.$t['Tsumego']['id'].$t['Tsumego']['duplicateLink'].'";</script>';
+	}
 	if(isset($deleteProblem2)) echo '<script type="text/javascript">window.location.href = "/sets/view/'.$t['Tsumego']['set_id'].'";</script>';
 	if($r10==1) echo '<script type="text/javascript">window.location.href = "/ranks/result";</script>';
 	if($isSandbox){
@@ -441,8 +446,13 @@
 			for($i=0; $i<count($navi); $i++){
 				if($t['Tsumego']['id'] == $navi[$i]['Tsumego']['id']) $additionalId = 'id="currentElement"';
 				else $additionalId = '';
+				if(!isset($navi[$i]['Tsumego']['duplicateLink']))
+					$duplicateLink = '';
+				else{
+					$duplicateLink = $navi[$i]['Tsumego']['duplicateLink'];
+				}
 				echo '<li '.$additionalId.' id="naviElement'.$i.'" class="'.$navi[$i]['Tsumego']['status'].'">
-					<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$navi[$i]['Tsumego']['id'].$inFavorite.'">
+					<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$navi[$i]['Tsumego']['id'].$duplicateLink.$inFavorite.'">
 					'.$navi[$i]['Tsumego']['num'].'<span><div id="tooltipSvg'.$i.'"></div></span></a>
 					</li>';
 				if($i==0 || $i==count($navi)-2) echo '<li class="setBlank"><a></a></li>';
@@ -520,8 +530,8 @@
 									</tr>
 									<tr>';
 										if($t['Tsumego']['duplicate']==0 || $t['Tsumego']['duplicate']==-1){
-											echo '<td>Mark as duplicate</td>
-											<td><input type="radio" id="r40" name="data[Settings][r40]" value="off" '.$duOff.'><label for="r40">no</label></td>
+											echo '<td>Mark as duplicate</td>';
+											echo '<td><input type="radio" id="r40" name="data[Settings][r40]" value="off" '.$duOff.'><label for="r40">no</label></td>
 											<td><input type="radio" id="r40" name="data[Settings][r40]" value="on" '.$duOn.'><label for="r40">yes</label></td>';
 										}else{
 											if($t['Tsumego']['duplicate']<=9)
@@ -982,8 +992,8 @@
 	var reviewModeActive = false;
 	var ui = <?php echo $ui; ?>;
 	var userXP = <?php echo $user['User']['xp']; ?>;
-	var prevButtonLink = <?php echo $prev; ?>;
-	var nextButtonLink = <?php echo $next; ?>;
+	var prevButtonLink = "<?php echo $prev; ?>";
+	var nextButtonLink = "<?php echo $next; ?>";
 	var nextButtonLinkSet = <?php echo $t['Tsumego']['set_id']; ?>;
 	var nextButtonLinkLv = <?php echo $lv; ?>;
 	var isMutable = true;
@@ -1528,7 +1538,8 @@
 		});
 		$('#targetLockOverlay').click(function(){
 			if(!multipleChoiceEnabled){
-				if(nextButtonLink!==0) window.location.href = "/tsumegos/play/"+nextButtonLink+inFavorite;
+				if(nextButtonLink!=0) 
+					window.location.href = "/tsumegos/play/"+nextButtonLink+inFavorite;
 				else if(mode==1){
 					window.location.href = "/sets/view/"+<?php echo $t['Tsumego']['set_id']; ?>;
 				}
@@ -1601,12 +1612,7 @@
 			jsCreateDownloadFile("<?php echo $t['Tsumego']['num']; ?>");
 		});
 		//if(cvn) setTimeout(function () {window.location.href = "/tsumegos/play/"+nextButtonLink}, 50);
-		<?php if(!empty($utd)){ ?>
-			if(mode==1){
-				displayMessage('You already solved this position:<br> <a href="/tsumegos/play/<?php echo $utd[0]; ?>"><?php echo $utd[1]; ?></a>', 'Position already solved', 'green');
-				displayResult('S');
-			}
-		<?php } ?>
+		
 		var mouseX;
 		var mouseY;
 		$(document).mousemove(function(e){
@@ -2435,10 +2441,8 @@
 		if(tryAgainTomorrow)
 			t = true;
 		if(t){
-			//let besogoBoardHeight = $('.besogo-board').height() + "px";
-			//let besogoBoardWidth = $('.besogo-board').width() + "px";
-			let besogoBoardHeight = $('.besogo-container').height() * .88;
-			let besogoBoardWidth = $('.besogo-container').width() * .78;
+			let besogoBoardHeight = $('.besogo-board').height();
+			let besogoBoardWidth = $('.besogo-board').width();
 			besogoBoardHeight = Math.floor(besogoBoardHeight);
 			besogoBoardWidth = Math.floor(besogoBoardWidth);
 			besogoBoardHeight += "px";

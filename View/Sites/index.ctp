@@ -93,7 +93,7 @@
 		<p class="title4">New Collection: Kano Yoshinori | 31.12.2023</p>
 		<div class="new1">
 			This series written by Kano Yoshinori in 1985 covers a large range of fundamental topics. 
-			Volume 1 contains problems about recognizing atari, ladders, snapbacks and basic life and death problems.    
+			Volume 1 contains problems about recognizing atari, ladders, snapbacks and basic life and death problems. Created for Tsumego Hero by Stepan Trubitsin.
 			<div align="center"><img width="95%" src="/img/kano-yoshinori-promo.png" alt="New Collection: Kano Yoshinori" title="New Collection: Kano Yoshinori">
 			
 			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/214">Play</a><br><br></div>
@@ -343,6 +343,8 @@
 		<p class="title4">Most Recent Achievements | <?php echo $d1; ?></p>
 		<?php
 			$quotePick = ceil(substr($quote, 1)/3);
+			
+			//$quotePick = 8;
 			if(!isset($_SESSION['lastVisit'])) $_SESSION['lastVisit'] = 15352;
 			$modeActions = '';
 			$modeActions2 = 'class="modeboxes"';
@@ -679,7 +681,22 @@
 		<p class="title4">Recent Donations and Upgrades</p>
 		<div class="new1">
 			<table class="newx" border="0">
-			<tr>
+				<tr>
+					<td><h1>31.12.2023</h1></td>
+					<td><h1>Alexander Chalk</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>31.12.2023</h1></td>
+					<td><h1>Mathieu Lalonde</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>31.12.2023</h1></td>
+					<td><h1>Mariano Lopez Jimenez</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
 					<td><h1>30.12.2023</h1></td>
 					<td><h1>Ralf Wurzinger</h1></td>
 					<td><h1>20,00 €</h1></td>
@@ -687,21 +704,6 @@
 				<tr>
 					<td><h1>30.12.2023</h1></td>
 					<td><h1>GoInfluenchess </h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>26.12.2023</h1></td>
-					<td><h1>Elias Aarab</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>15.12.2023</h1></td>
-					<td><h1>Jost Boddem</h1></td>
-					<td><h1>20,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>10.12.2023</h1></td>
-					<td><h1>Joris De Ridder</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<!--
@@ -882,15 +884,24 @@
 		function goMode3(){
 			<?php echo 'window.location.href = "/ranks/overview";'; ?>
 		}
+		let textBuffer = "";
 		function getContent(){
 			var xmlHttp = new XMLHttpRequest();
 			xmlHttp.open("GET", "mainPageAjax.txt", false);
-			
 			xmlHttp.send(null);
 			
-			var element = document.getElementById("ajaxWallpaper");
-			element.innerHTML = xmlHttp.responseText;
+			if(xmlHttp.responseText!==textBuffer){
+				textBuffer = xmlHttp.responseText;
+				$("#ajaxWallpaper").css("display", "none");
+				setTimeout(nextFadeIn(xmlHttp.responseText), 100);
+				setTimeout($("#ajaxWallpaper").fadeIn(600), 500);
+			}
 		}
+		function nextFadeIn(responseText){
+			var element = document.getElementById("ajaxWallpaper");
+			element.innerHTML = responseText;
+		}
+		
 		var ajaxCall = $.ajax({
 			type: 'GET',
 			url: "mainPageAjax.txt",
@@ -900,8 +911,9 @@
 		$(document).ready(function(){
 			ajaxCall.done(function(data){
 			});
-			setInterval(getContent, 500);
+			setInterval(getContent, 1000);
 		});
+		getContent();
 		
 		let tooltipSgfs = [];
 		let popularTooltip = [];

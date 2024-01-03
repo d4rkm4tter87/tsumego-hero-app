@@ -3530,7 +3530,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		top: 140px;
 		left: 140px;
 	}
-	.quotePick8 .quote1{color:#ffd88a!important;}
+	.quotePick8 .quote1{color:black!important;}
 	.quotePick9{
 		font-size: 20px;
 		position: absolute;
@@ -3593,6 +3593,9 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		padding: 5px;
 	}
 	.quote1b{
+	}
+	#ajaxWallpaper{
+		display:none;
 	}
 	
 	#commentPosition{

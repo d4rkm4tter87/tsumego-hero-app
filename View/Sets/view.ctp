@@ -44,6 +44,11 @@
 			for($i=0; $i<count($ts); $i++){
 				if(!isset($ts[$i]['Tsumego']['status'])) $ts[$i]['Tsumego']['status'] = 'N';
 				
+				if(!isset($ts[$i]['Tsumego']['duplicateLink']))
+					$duplicateLink = '';
+				else{
+					$duplicateLink = $ts[$i]['Tsumego']['duplicateLink'];
+				}
 				$num = $ts[$i]['Tsumego']['num'];
 				$num = '<div class="setViewButtons1">'.$num.'</div>';
 				$persormanceS = substr_count($ts[$i]['Tsumego']['performance'], '1');
@@ -56,7 +61,7 @@
 				$num3 = '<div class="setViewButtons3">'.$num3.'</div>';
 				
 				echo '<li class="set'.$ts[$i]['Tsumego']['status'].'1">
-					<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$ts[$i]['Tsumego']['id'].$fav.'">
+					<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$ts[$i]['Tsumego']['id'].$duplicateLink.$fav.'">
 					'.$num.$num2.$num3.'<span><div id="tooltipSvg'.$i.'"></div></span></a>
 					</li>';
 			}

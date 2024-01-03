@@ -1,3 +1,4 @@
+<script src ="/js/previewBoard.js"></script>
 <?php
 	if(isset($_SESSION['loggedInUser'])){
 		if($_SESSION['loggedInUser']['User']['isAdmin']<1){
@@ -27,7 +28,7 @@
 	<hr>
 	<h1>Marked as duplicate:</h1>
 		<?php if(!empty($marks)){ ?>
-		<font color="gray"><i>(main/duplicate)</i></font>
+		<font color="gray"><i>(main/duplicate group)</i></font>
 		<table class="statsTable" border="0" width="100%">
 		<?php
 		for($i=0; $i<count($marks); $i++){
@@ -38,7 +39,8 @@
 			</td>';
 			echo '<td id="t1">
 				<li class="set'.$marks[$i]['Tsumego']['status'].'1" style="margin-top:4px;">
-					<a href="/tsumegos/play/'.$marks[$i]['Tsumego']['id'].'">'.$marks[$i]['Tsumego']['num'].'</a>
+					<a id="tooltip-hover'.(999+$i).'" class="tooltip" href="/tsumegos/play/'.$marks[$i]['Tsumego']['id'].'">'
+					.$marks[$i]['Tsumego']['num'].'<span><div id="tooltipSvg'.(999+$i).'"></div></span></a>
 				</li>
 			</td>';
 			echo '<td id="t2">'.$marks[$i]['Tsumego']['title'].' </td>';
@@ -51,11 +53,15 @@
 		<div id="createD1"><br></div>
 		<div id="createD2"><br></div>
 		<br>
-		<a id="submitDuplicates" class="default-submit-button-inactive">Create duplicates</a>
+		<a id="submitDuplicates" class="default-submit-button-inactive">Create duplicate group</a>
+		<br><br>
+		<i style="color:#777">Main is the problem that is kept in the databse. The other problems of the group get <b style="color:#cb382c">deleted</b>
+		and linked to the main problem.</i>
 		<?php }else{ ?>
 			<br>
 			There are no duplicate marks.
 		<?php } ?>
+		<br><br><br>
 	</div>
 	<script>
 	let markIds = [];
@@ -143,70 +149,78 @@
 	<h1>Duplicates</h1>
 		<?php
 			if($aMessage!=null)
-				echo $aMessage;
+				echo '<p style="color:#cb382c">'.$aMessage.'</p>';
+			if($errSet!='')
+				echo '<p style="color:#cb382c">'.$errSet.'</p>';
+			if($errSet!='')
+				echo '<p style="color:#cb382c">'.$errNotNull.'</p>';
+			echo '<hr>';
+			$cx = 0;
 			for($i=0; $i<count($d); $i++){
-				echo '<hr><table class="statsTable" border="0" width="100%">';
 				for($j=0; $j<count($d[$i]); $j++){
-					echo '<tr>';
+					echo '<a href="/tsumegos/play/'.$d[$i][$j]['Tsumego']['id'].$d[$i][$j]['Tsumego']['duplicateLink'].'">'.$d[$i][$j]['Tsumego']['title'].'</a>';
+					
+					if($j<count($d[$i])-1)
+						echo ', ';
+				}
+				echo '<br>';
+				for($j=0; $j<count($d[$i]); $j++){
 					echo '<td id="t1">
 						<li class="set'.$d[$i][$j]['Tsumego']['status'].'1" style="margin-top:4px;">
-							<a href="/tsumegos/play/'.$d[$i][$j]['Tsumego']['id'].'">'.$d[$i][$j]['Tsumego']['num'].'</a>
+							<a id="tooltip-hover'.$cx.'" class="tooltip" href="/tsumegos/play/'.$d[$i][$j]['Tsumego']['id'].$d[$i][$j]['Tsumego']['duplicateLink']
+							.'">'.$d[$i][$j]['Tsumego']['num'].'<span><div id="tooltipSvg'.$cx.'"></div></span></a>
 						</li>
 					</td>';
-					echo '<td id="t2">'.$d[$i][$j]['Tsumego']['title'].'</td>';
-					if($j==0)
-						$mainOrNot = '<div id="mainLine'.$i.'"><a class="ml" id="mainLineA'.$i.'">main</a></div>
-						<div class="mainLineX'.$i.'"><input type="text" id="mainCommand'.$d[$i][$j]['Tsumego']['id'].'" value="main" size="6" maxlength="6"></div>';
-					else
-						$mainOrNot = '<div class="mainLineX'.$i.'"><input type="text" id="mainCommand'.$d[$i][$j]['Tsumego']['id'].'" value="" size="6" maxlength="6"></div>';
-					echo '<td id="t3">'.$mainOrNot.'</td>';
-					echo '</tr>';
+					$cx++;
 				}
-				echo '</table>';
-				echo '<div id="duplicateFooter'.$i.'" align="right"><i>commands: main, remove</i> &nbsp;&nbsp;&nbsp; 
-				<a id="command'.$i.'" class="default-submit-button">Submit</a></div>';
+				
+				echo '<br><br><br>';
 			}
+			
+			
 		?>
+		<br><br><br><br><br><br><br><br><br><br>
+		
 	</div>
+	<div style="clear:both;"></div>
 	<script>
-		let commandGroups = [];
-		let temp;
-		<?php for($i=0; $i<count($d); $i++){ ?>
-			$("#mainLineA<?php echo $i; ?>").click(function(){
-				$(".mainLineX<?php echo $i; ?>").css("display", "block");
-				$("#duplicateFooter<?php echo $i; ?>").css("display", "block");
-				$("#mainLine<?php echo $i; ?>").css("display", "none");
-			});
-			temp = [];
-			<?php for($j=0; $j<count($d[$i]); $j++){ ?>
-				temp.push(<?php echo $d[$i][$j]['Tsumego']['id']; ?>);
-			<?php } ?>
-			commandGroups.push(temp);
-			$("#command<?php echo $i; ?>").click(function(){
-				let found = false;
-				for(x=0; x<commandGroups[<?php echo $i; ?>].length; x++){
-					if($("#mainCommand"+commandGroups[<?php echo $i; ?>][x]).val() === "remove"){
-						window.location.href = "/users/duplicates/?removeDuplicate="+commandGroups[<?php echo $i; ?>][x];
-						found = true;
-						break;
+		let markTooltipSgfs = [];
+		<?php
+		for($a=0; $a<count($markTooltipSgfs); $a++){
+			echo 'markTooltipSgfs['.$a.'] = [];';
+			for($y=0; $y<count($markTooltipSgfs[$a]); $y++){
+				echo 'markTooltipSgfs['.$a.']['.$y.'] = [];';
+				for($x=0; $x<count($markTooltipSgfs[$a][$y]); $x++){
+					echo 'markTooltipSgfs['.$a.']['.$y.'].push("'.$markTooltipSgfs[$a][$x][$y].'");';
+				}
+			}
+		}
+		for($i=0; $i<count($markTooltipBoardSize); $i++)
+			echo 'createPreviewBoard('.(999+$i).', markTooltipSgfs['.$i.'], '.$markTooltipInfo[$i][0].', '.$markTooltipInfo[$i][1].', '.$markTooltipBoardSize[$i].');';
+		?>
+		let tooltipSgfs = [];
+		<?php
+		for($z=0; $z<count($tooltipSgfs); $z++){
+			echo 'tooltipSgfs['.$z.'] = [];';
+			for($a=0; $a<count($tooltipSgfs[$z]); $a++){
+				echo 'tooltipSgfs['.$z.']['.$a.'] = [];';
+				for($y=0; $y<count($tooltipSgfs[$z][$a]); $y++){
+					echo 'tooltipSgfs['.$z.']['.$a.']['.$y.'] = [];';
+					for($x=0; $x<count($tooltipSgfs[$z][$a][$y]); $x++){
+						echo 'tooltipSgfs['.$z.']['.$a.']['.$y.'].push("'.$tooltipSgfs[$z][$a][$x][$y].'");';
 					}
 				}
-				if(!found){
-					for(x=0; x<commandGroups[<?php echo $i; ?>].length; x++){
-						if($("#mainCommand"+commandGroups[<?php echo $i; ?>][x]).val() === "main"){
-							window.location.href = "/users/duplicates/?setMain="+commandGroups[<?php echo $i; ?>][x];
-							break;
-						}
-					}
-				}
-			});
-		<?php } ?>
+			}
+		}
+		$cx = 0;
+		for($i=0; $i<count($d); $i++)
+			for($j=0; $j<count($d[$i]); $j++){
+				echo 'createPreviewBoard('.$cx.', tooltipSgfs['.$i.']['.$j.'], '.$tooltipInfo[$i][$j][0].', '.$tooltipInfo[$i][$j][1].', '.$tooltipBoardSize[$i][$j].');';
+				$cx++;
+			}	
+		?>
 	</script>
 	<style>
-		<?php for($i=0; $i<count($d); $i++){
-			echo '.mainLineX'.$i.'{display:none;}';
-			echo '#duplicateFooter'.$i.'{display:none;margin:11px;}';
-		} ?>
 		.ml{text-decoration:underline;cursor:pointer;}
 		#t0{margin:0;padding:0;width:55px;}
 		#t1{text-align:left;width:77px;}

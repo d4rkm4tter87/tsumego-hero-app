@@ -689,7 +689,8 @@ class AppController extends Controller{
 	}
 	
 	public function getTsumegoRank($t){
-		if($t>=0 && $t<=22) $tRank='5d';
+		if($t<=0) return '15k';
+		if($t>0 && $t<=22) $tRank='5d';
 		elseif($t<=26.5) $tRank='4d';
 		elseif($t<=30) $tRank='3d';
 		elseif($t<=34) $tRank='2d';
@@ -1031,7 +1032,7 @@ class AppController extends Controller{
 			array_push($updated, $achievementId);
 		}
 		$achievementId = 96;
-		if(!isset($existingAs[$achievementId]) && $ac1['sprint']>=40){
+		if(!isset($existingAs[$achievementId]) && $ac1['sprint']>=39){
 			$as['AchievementStatus']['achievement_id'] = $achievementId;
 			$this->AchievementStatus->create();
 			$this->AchievementStatus->save($as);
@@ -2151,6 +2152,7 @@ class AppController extends Controller{
 		$this->loadModel('Achievement');
 		$this->loadModel('AchievementStatus');
 		$this->loadModel('AchievementCondition');
+		$this->loadModel('SetConnection');
 		
 		ini_set('session.gc_maxlifetime', 7200000);
 		session_set_cookie_params(7200000);
@@ -2204,6 +2206,7 @@ class AppController extends Controller{
 		
 		if(isset($_COOKIE['preId']) && $_COOKIE['preId'] != '0'){
 			$preTsumego = $this->Tsumego->findById($_COOKIE['preId']);
+			$preSc = $this->SetConnection->find('all', array('conditions' => array('tsumego_id' => $_COOKIE['preId'])));
 			$utPre = $this->TsumegoStatus->find('first', array('conditions' => array('tsumego_id' => $_COOKIE['preId'], 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
 		}
 		
@@ -2223,6 +2226,20 @@ class AppController extends Controller{
 			$scoreArr = explode('-', $_COOKIE['score']);
 			$isNum = $preTsumego['Tsumego']['num']==$scoreArr[0];
 			$isSet = $preTsumego['Tsumego']['set_id']==$scoreArr[2];
+			
+			if($preSc!=null){
+				$isNumSc = false;
+				$isSetSc = false;
+				for($i=0;$i<count($preSc);$i++){
+					if($preSc[$i]['SetConnection']['set_id']==$preTsumego['Tsumego']['set_id'])
+						$isSetSc = true;
+					if($preSc[$i]['SetConnection']['num']==$preTsumego['Tsumego']['num'])
+						$isNumSc = true;
+				}
+				$isNum = $isNumSc;
+				$isSet = $isSetSc;
+			}
+			
 			$_COOKIE['score'] = $scoreArr[1];
 			
 			$solvedTsumegoRank = $this->getTsumegoRank($preTsumego['Tsumego']['userWin']);
@@ -2291,6 +2308,14 @@ class AppController extends Controller{
 										$this->updateSprintCondition(false);
 									if($_COOKIE['type']=='g')
 										$this->updateGoldenCondition(true);
+									$aCondition = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array(
+										'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 'err'
+									)));
+									if($aCondition==null) $aCondition = array();
+									$aCondition['AchievementCondition']['category'] = 'err';
+									$aCondition['AchievementCondition']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+									$aCondition['AchievementCondition']['value']++;
+									$this->AchievementCondition->save($aCondition);
 								}
 							}
 						}
