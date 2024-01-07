@@ -59,6 +59,83 @@ class SetsController extends AppController{
 			}
 		}
 	}
+	
+	public function duplicates($id=null){
+		$this->LoadModel('Tsumego');
+		$this->LoadModel('Sgf');
+		$this->LoadModel('Duplicate');
+		
+		$tIds = array();
+		$d2 = array();
+		
+		$ts = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array('set_id' => $id)));
+		$set = $this->Set->findById($ts[0]['Tsumego']['set_id']);
+		for($i=0; $i<count($ts); $i++)
+			array_push($tIds, $ts[$i]['Tsumego']['id']);
+		$d0 = $this->Duplicate->find('all', array('conditions' => array('tsumego_id' => $tIds)));
+		
+		//$dx = $this->Duplicate->find('all', array('conditions' => array('tsumego_id' => 201)));
+		
+		$d = array();
+		for($i=0; $i<count($d0); $i++){
+			$d01 = $this->Duplicate->find('all', array('conditions' => array(
+				'dGroup' => $d0[$i]['Duplicate']['dGroup'],
+				'NOT' => array('tsumego_id' => $d0[$i]['Duplicate']['tsumego_id'])
+			)));
+			array_push($d, $d0[$i]);
+			for($j=0; $j<count($d01); $j++){
+				array_push($d, $d01[$j]);
+			}
+		}
+		
+		$similarArr = array();
+		$similarArrInfo = array();
+		$similarArrBoardSize = array();
+		
+		$counter2 = 0;
+		$counter = -1;
+		
+		$currentGroup = -1;
+		for($i=0; $i<count($d); $i++){
+			if($currentGroup!=$d[$i]['Duplicate']['dGroup']){
+				$counter++;
+				$d2[$counter] = array();
+			}
+			$td = $this->Tsumego->findById($d[$i]['Duplicate']['tsumego_id']);
+			$setx = $this->Set->findById($td['Tsumego']['set_id']);
+			$td['Tsumego']['title'] = $setx['Set']['title'].' - '.$td['Tsumego']['num'];
+			
+			array_push($d2[$counter], $td);
+			$currentGroup = $d[$i]['Duplicate']['dGroup'];
+			
+			$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $td['Tsumego']['id'])));
+			$sgfArr = $this->processSGF($sgf['Sgf']['sgf']);
+			
+			array_push($similarArr, $sgfArr[0]);
+			array_push($similarArrInfo, $sgfArr[2]);
+			array_push($similarArrBoardSize, $sgfArr[3]);
+		}
+		
+		$this->set('set', $set);
+		$this->set('ts', $ts);
+		$this->set('d', $d);
+		$this->set('d2', $d2);
+		$this->set('similarArr', $similarArr);
+		$this->set('similarArrInfo', $similarArrInfo);
+		$this->set('similarArrBoardSize', $similarArrBoardSize);
+	}
+	
+	public function duplicatesearch(){
+		$_SESSION['page'] = 'sandbox';
+		$_SESSION['title'] = 'Duplicate Search Results';
+		$s = $this->Set->find('all', array('order' => 'created DESC', 'conditions' => array(
+			'OR' => array(
+				array('public' => 1),
+				array('public' => 0)
+			)
+		)));
+		$this->set('s', $s);
+	}
 
 	public function beta(){
 		$this->LoadModel('User');

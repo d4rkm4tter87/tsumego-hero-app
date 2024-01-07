@@ -1032,7 +1032,7 @@ class AppController extends Controller{
 			array_push($updated, $achievementId);
 		}
 		$achievementId = 96;
-		if(!isset($existingAs[$achievementId]) && $ac1['sprint']>=39){
+		if(!isset($existingAs[$achievementId]) && $ac1['sprint']>=38){
 			$as['AchievementStatus']['achievement_id'] = $achievementId;
 			$this->AchievementStatus->create();
 			$this->AchievementStatus->save($as);

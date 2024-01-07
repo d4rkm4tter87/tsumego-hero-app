@@ -1,7 +1,6 @@
 	function createPreviewBoard(n=null, masterArrayBW=null, xMax=0, yMax=0, boardSize=19){
 		const w3 = "http://www.w3.org/2000/svg";
 		const w32 = "http://www.w3.org/1999/xlink";
-		console.log(boardSize);
 		let svg = document.createElementNS(w3,"svg");
 		let zoom = (xMax>=9||yMax>=13) ? false : true;
 		if(boardSize==13) zoom = false;

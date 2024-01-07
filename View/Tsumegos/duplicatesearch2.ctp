@@ -32,34 +32,36 @@
 	<a id="command0" class="default-submit-button">Search</a><br><br>
 	</div>
 	<table width="100%" border="0" class="duplicateSearchTable">
-		<tr>
-		<td width="50%">
-			<div align="right">
-			<?php echo '<a href="/tsumegos/play/'.$t['Tsumego']['id'].'">'.$title.'</a><br><br>'; ?>
-			<div id="tooltipSvg-1"></div>
-			</div>
-		</td>
-		<td width="50%">
-		<?php 
-			for($i=0; $i<count($similarArr); $i++){
-				if($similarDiff[$i]==0) $description1 = 'No difference. ';
-				else if($similarDiff[$i]==1) $description1 = $similarDiff[$i].' stone different. ';
-				else $description1 = $similarDiff[$i].' stones different. ';
-				echo '<a href="/tsumegos/play/'.$similarId[$i].'">'.$similarTitle[$i].'</a><br>';
-				echo $description1;
-				echo $similarDiffType[$i].'<br>';
-				echo '<div id="tooltipSvg'.$i.'"></div><br>';
-			}
-			if(count($similarArr)==0)
-				echo 'No problems found.';
-		?>
-		</td>
-		</tr>
+	<tr>
+	<td width="50%">
+		<div align="right">
+		<?php echo '<a href="/tsumegos/play/'.$t['Tsumego']['id'].'">'.$title.'</a><br><br>'; ?>
+		<div id="tooltipSvg-1"></div>
+		</div>
+	</td>
+	<td width="50%">
+	<?php 
+		for($i=0; $i<count($similarArr); $i++){
+			if($similarDiff[$i]==0) $description1 = 'No difference. ';
+			else if($similarDiff[$i]==1) $description1 = $similarDiff[$i].' stone different. ';
+			else $description1 = $similarDiff[$i].' stones different. ';
+			echo '<a href="/tsumegos/play/'.$similarId[$i].'">'.$similarTitle[$i].'</a><br>';
+			echo $description1;
+			echo $similarDiffType[$i].'<br>';
+			echo '<div id="tooltipSvg'.$i.'"></div><br>';
+		}
+		if(count($similarArr)==0)
+			echo 'No problems found.';
+	?>
+	</td>
+	</tr>
 	</table>
 	<?php	
 	//echo '<pre>'; print_r($t); echo '</pre>';
 	?>
 	<script>
+		<?php if($foundSomething>0){ ?>
+	
 		let similarArr = [];
 		<?php
 		echo 'let tSgfArr = [];';
@@ -85,6 +87,8 @@
 		}
 		?>
 		
+	
+	
 	var rangeInput = document.getElementById("rangeInput");
 	const Slider = document.querySelector('input[name=rangeInput]');
 	let sliderText = [];
@@ -138,5 +142,12 @@
 		let colorSwitch = document.getElementById('i2').checked;
 		window.location.href="/tsumegos/duplicatesearch/<?php echo $t['Tsumego']['id']; ?>?diff="+range+"&sandbox="+sandbox+"&colorSwitch="+colorSwitch;
 	});
+	<?php } ?>
+	
+	<?php if($loop){ ?>
+	setTimeout(function () {
+	   window.location.href = "/tsumegos/duplicatesearch2"; 
+	}, 100);
+	<?php } ?>
 	</script>
 	<style>.duplicateSearchTable td{vertical-align: top;padding:14px;}</style>
