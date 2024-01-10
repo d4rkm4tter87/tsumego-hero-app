@@ -630,6 +630,7 @@ besogo.makeBoardDisplay = function(container, editor, corner)
 
     var group = besogo.svgEl("g");
     var circleSize = 15;
+    var virtualCircleSize = 15;
     if (editor.getReviewMode())
     {
       var current = editor.getCurrent();

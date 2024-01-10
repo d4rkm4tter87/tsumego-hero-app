@@ -19,10 +19,9 @@ class UsersController extends AppController{
 		$this->loadModel('Schedule');
 		$this->loadModel('Sgf');
 		$this->loadModel('SetConnection');
+		$this->loadModel('Duplicate');
 		
 		
-		$ttt = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => 72, 'tsumego_id' => 26952)));
-		echo '<pre>'; print_r($ttt); echo '</pre>';
 		/*
 		$comments = $this->Comment->find('all');
 		$c = array();
@@ -856,14 +855,15 @@ Joschka Zimdars';
 	}
 	
 	public function duplicates(){
-		$_SESSION['page'] = 'set';
-		$_SESSION['title'] = 'Duplicates';
+		$_SESSION['page'] = 'sandbox';
+		$_SESSION['title'] = 'Merge Duplicates';
 		$this->loadModel('Tsumego');
 		$this->loadModel('TsumegoStatus');
 		$this->loadModel('Set');
 		$this->loadModel('AdminActivity');
 		$this->loadModel('SetConnection');
 		$this->loadModel('Sgf');
+		$this->loadModel('Duplicate');
 		
 		$idMap = array();
 		$idMap2 = array();
@@ -953,6 +953,9 @@ Joschka Zimdars';
 					$setC['SetConnection']['set_id'] = $newD['Tsumego']['set_id'];
 					$setC['SetConnection']['num'] = $newD['Tsumego']['num'];
 					$this->SetConnection->save($setC);
+					$dupDel = $this->Duplicate->find('all', array('conditions' => array('tsumego_id' => $newDuplicates[$i])));
+					for($j=0; $j<count($dupDel); $j++)
+						$this->Duplicate->delete($dupDel[$j]['Duplicate']['id']);
 				}
 				$sx = $this->Set->findById($newDmain['Tsumego']['set_id']);
 				$title = $sx['Set']['title'].' - '.$newDmain['Tsumego']['num'];
@@ -2108,7 +2111,7 @@ Joschka Zimdars';
 			$ans = '
 Hello '.$_SESSION['loggedInUser']['User']['name'].',
 			
-thanks for your support, your account will be upgraded as soon as I see the notification. 
+thanks for your donation. Your account should be upgraded automatically. 
 
 -- 
 Best Regards

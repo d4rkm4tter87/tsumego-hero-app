@@ -682,28 +682,28 @@
 		<div class="new1">
 			<table class="newx" border="0">
 				<tr>
-					<td><h1>31.12.2023</h1></td>
-					<td><h1>Alexander Chalk</h1></td>
+					<td><h1>09.01.2024</h1></td>
+					<td><h1>Daniel Vargas </h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<tr>
-					<td><h1>31.12.2023</h1></td>
-					<td><h1>Mathieu Lalonde</h1></td>
+					<td><h1>08.01.2024</h1></td>
+					<td><h1>Scotty Reed</h1></td>
+					<td><h1>2,17 € <font size="2px">subscription</font></h1></td>
+				</tr>
+				<tr>
+					<td><h1>06.01.2024</h1></td>
+					<td><h1>Steve Van Looy</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<tr>
-					<td><h1>31.12.2023</h1></td>
-					<td><h1>Mariano Lopez Jimenez</h1></td>
+					<td><h1>06.01.2024</h1></td>
+					<td><h1>Pavel Chalmoviansky</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<tr>
-					<td><h1>30.12.2023</h1></td>
-					<td><h1>Ralf Wurzinger</h1></td>
-					<td><h1>20,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>30.12.2023</h1></td>
-					<td><h1>GoInfluenchess </h1></td>
+					<td><h1>05.01.2024</h1></td>
+					<td><h1>Sofia Malatesta</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<!--

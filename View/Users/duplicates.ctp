@@ -53,7 +53,7 @@
 		<div id="createD1"><br></div>
 		<div id="createD2"><br></div>
 		<br>
-		<a id="submitDuplicates" class="default-submit-button-inactive">Create duplicate group</a>
+		<a id="submitDuplicates" class="default-submit-button-inactive">Merge duplicates</a>
 		<br><br>
 		<i style="color:#777">Main is the problem that is kept in the databse. The other problems of the group get <b style="color:#cb382c">deleted</b>
 		and linked to the main problem.</i>
@@ -146,7 +146,7 @@
 	}
 	</script>
 	<div class="homeLeft" style="border-right:1px solid #a0a0a0;">
-	<h1>Duplicates</h1>
+	<h1>Merged Duplicates</h1>
 		<?php
 			if($aMessage!=null)
 				echo '<p style="color:#cb382c">'.$aMessage.'</p>';

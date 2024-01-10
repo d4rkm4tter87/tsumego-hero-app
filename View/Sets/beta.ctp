@@ -90,6 +90,13 @@
 				<a href="/sets/remove">Delete Set</a>
 			</td>
 			</tr>
+			<tr>
+			<td>
+				<a href="/sets/beta2">Show Removed Sets</a>
+			</td>
+			<td>
+			</td>
+			</tr>
 			</table>
 		</div>
 		<?php }} ?>

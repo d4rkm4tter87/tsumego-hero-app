@@ -39,6 +39,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
       fullEditor = false, // when true, it enables the moves to be considered when calculating correct status, and these are also allowed to be played by autoplay
                           // when false, the moves are blue and considered to be just explore moves by the review/testing when solving and don't affect autoplay nor correct calculations
       remainingRequiredNodes = [],
+	  commentParamList = [],
       displayResult = null,
       showComment = null;
 
@@ -74,7 +75,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
     notifyListeners: notifyListeners,
     setShift: setShift,
     isShift: isShift,
-    applyTransformation : applyTransformation,
+    applyTransformation: applyTransformation,
     setAutoPlay: setAutoPlay,
     getReviewMode: getReviewMode,
     setReviewMode: setReviewMode,
@@ -98,7 +99,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
     searchNodesForTreePosition: searchNodesForTreePosition,
     setFullEditor: setFullEditor,
     displayError: displayError,
-    test: test
+    compareFoundCommentMoves: compareFoundCommentMoves
   };
 
   // Returns the active tool
@@ -850,80 +851,129 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
 
   function commentPosition(positionParams)
   {
+	commentParamList = [];
+	var positionParams2 = [];
+	if(typeof positionParams[9]!=='undefined'){
+		console.log(positionParams[9]);
+		positionParams2 = positionParams[9].split("+");
+		for(let i=0; i<positionParams2.length; i++)
+			positionParams2[i] = positionParams2[i].split("/");
+	}
+	
     let hasParent = true;
     if(positionParams[2]==-1)
-    hasParent = false;
+		hasParent = false;
 
+	//normalizing orientation
     let counter = 0;
-    if(positionParams[8]==='top-right')
-    {
+    if(positionParams[8]==='top-right'){
       counter = 0;
-      while(counter<=5)
-      {
+      while(counter<=5){
         if(counter%2==0)
           positionParams[counter] = 20-positionParams[counter];
         counter++;
       }
-    }
-    else if(positionParams[8]==='bottom-left')
-    {
+	  for(let i=0; i<positionParams2.length; i++)
+		positionParams2[i][0] = 20-positionParams2[i][0];
+    }else if(positionParams[8]==='bottom-left'){
       counter = 0;
-      while(counter<=5)
-      {
+      while(counter<=5){
         if(counter%2!=0)
           positionParams[counter] = 20-positionParams[counter];
         counter++;
       }
-    }
-    else if(positionParams[8]==='bottom-right')
-    {
+	  for(let i=0; i<positionParams2.length; i++)
+		positionParams2[i][1] = 20-positionParams2[i][1];
+    }else if(positionParams[8]==='bottom-right'){
       counter = 0;
-      while(counter<=5)
-      {
+      while(counter<=5){
         positionParams[counter] = 20-positionParams[counter];
         counter++;
       }
+	  for(let i=0; i<positionParams2.length; i++){
+		positionParams2[i][0] = 20-positionParams2[i][0];
+		positionParams2[i][1] = 20-positionParams2[i][1];
+	  }
     }
-    //---
-    if (besogo.scaleParameters['orientation']!=='full-board')
-    {
-      if (besogo.boardParameters['corner']==='top-right')
-      {
+    //apply transformation after normalizing
+    if (besogo.scaleParameters['orientation']!=='full-board'){
+      if (besogo.boardParameters['corner']==='top-right'){
         counter = 0;
-        while (counter<=5)
-        {
+        while (counter<=5){
           if (counter%2==0)
             positionParams[counter] = 20-positionParams[counter];
           counter++;
         }
-      }
-      else if (besogo.boardParameters['corner']==='bottom-left')
-      {
+		for(let i=0; i<positionParams2.length; i++)
+		  positionParams2[i][0] = 20-positionParams2[i][0];
+      }else if (besogo.boardParameters['corner']==='bottom-left'){
         counter = 0;
-        while (counter<=5)
-        {
+        while (counter<=5){
           if (counter%2!=0)
             positionParams[counter] = 20-positionParams[counter];
           counter++;
         }
-      }
-      else if (besogo.boardParameters['corner']==='bottom-right')
-      {
+		for(let i=0; i<positionParams2.length; i++)
+		  positionParams2[i][1] = 20-positionParams2[i][1];
+      }else if (besogo.boardParameters['corner']==='bottom-right'){
         counter = 0;
-        while (counter<=5)
-        {
+        while (counter<=5){
           positionParams[counter] = 20-positionParams[counter];
           counter++;
         }
+		for(let i=0; i<positionParams2.length; i++){
+		  positionParams2[i][0] = 20-positionParams2[i][0];
+		  positionParams2[i][1] = 20-positionParams2[i][1];
+	    }
       }
     }
-    if (positionParams[8]!=="0")
-      commentTreeSearch(root, 0, 0, nextOpen, positionParams);
-    else
+	
+    if (positionParams[8]!=="0"){
+      commentTreeSearch(root, 0, 0, nextOpen, positionParams, true, positionParams2);
+	 
+	  if(positionParams2.length!==0){
+	    let foundMatch = false;
+	    for(let i=0; i<commentParamList.length; i++){
+		  console.log("i"+i);
+	      if(compareFoundCommentMoves(positionParams2, commentParamList[i], i)!==false){
+			  console.log("found"+i);
+			  foundMatch = i;
+			  break;
+		  }
+	    }
+	    if(foundMatch!==false)
+		  setCurrent(commentParamList[foundMatch]);
+	    else
+		  setCurrent(root);
+	    }
+    }else
       setCurrent(root);
   }
-
-  function commentTreeSearch(node, x, y, nextOpen, positionParams, hasParent=true)
+  
+  function compareFoundCommentMoves(positionParams2, commentParams, currentIndex)
+  {
+	let newP = commentParams;
+	let counter = 0;
+	let match = true;
+	while(newP!==null && newP.move!==null){
+	  if(typeof positionParams2[counter]==='undefined')
+		return false;
+	  console.log(newP.move.x+" "+newP.move.y);
+	  console.log(positionParams2[counter][0]+" "+positionParams2[counter][1]);
+	  console.log("___");
+	    
+	  if(newP.move.x!=positionParams2[counter][0])
+		return false;
+	  if(newP.move.y!=positionParams2[counter++][1])
+		return false;
+	  newP = newP.parent;
+	}
+	console.log(positionParams2.length+"=="+counter);
+	if(positionParams2.length!=counter)
+		return false;
+	return currentIndex;
+  }  
+  function commentTreeSearch(node, x, y, nextOpen, positionParams, hasParent=true, positionParams2=null)
   {
     var children = node.children,
         position,
@@ -939,16 +989,15 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
       if (y < position - 1) // Check if first child natural drop > 1
         y = position - 1; // Bring current y within 1 of first child drop
       // Place first child and extend path
-      path = commentTreeSearch(children[0], x + 1, position, nextOpen, positionParams, hasParent) + commentTreeSearchExtendPath(x, y, nextOpen);
+      path = commentTreeSearch(children[0], x + 1, position, nextOpen, positionParams, hasParent, positionParams2) + commentTreeSearchExtendPath(x, y, nextOpen);
       // Place other children (intentionally starting at i = 1)
       for (i = 1; i < children.length; i++)
       {
         position = nextOpen[x + 1];
-        childPath = commentTreeSearch(children[i], x + 1, position, nextOpen, positionParams, hasParent) + commentTreeSearchExtendPath(x, y, nextOpen, position - 1);
+        childPath = commentTreeSearch(children[i], x + 1, position, nextOpen, positionParams, hasParent, positionParams2) + commentTreeSearchExtendPath(x, y, nextOpen, position - 1);
         // End path at beginning of branch
       }
     }
-
   let childrenMoveX = 0;
   let childrenMoveY = 0;
   if (node.children.length===0)
@@ -961,7 +1010,6 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
     childrenMoveX = node.children[0].move.x;
     childrenMoveY = node.children[0].move.y;
   }
-  //this is not well written, maybe I improve it later
   if (node.parent!==null && node.parent.move!==null)
   {
     if (node.move.x==positionParams[0] &&
@@ -970,8 +1018,10 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
         node.parent.move.y==positionParams[3] &&
         childrenMoveX==positionParams[4] &&
         childrenMoveY==positionParams[5] &&
-        node.moveNumber==positionParams[6])
-      setCurrent(node);
+        node.moveNumber==positionParams[6]){
+		  if(positionParams2.length===0)
+			setCurrent(node);
+		}
   }
   else if (node.move !== null)
   {
@@ -979,8 +1029,15 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
         node.move.y==positionParams[1] &&
         childrenMoveX==positionParams[4] &&
         childrenMoveY==positionParams[5] &&
-        node.moveNumber==positionParams[6])
-      setCurrent(node);
+        node.moveNumber==positionParams[6]){
+          if(positionParams2.length===0)
+			setCurrent(node);
+		}
+  }
+  
+  if (positionParams2.length!==0 && node.move!==null){
+	  if(node.move.x==positionParams2[0][0] && node.move.y==positionParams2[0][1])
+		commentParamList.push(node);
   }
 
     nextOpen[x] = y + 1;
@@ -1093,12 +1150,14 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
     let returnArray = [];
     let convertedCoords = besogo.coord['western'](besogo.scaleParameters['boardCoordSize'], besogo.scaleParameters['boardCoordSize']);
     let exitCounter = 0;
-
+	console.log(cu);
     if (treeX!==0)
     {
+	  let cu2 = cu;
       while (found===null)
       {
-        found = searchNodesForTreePosition(treeX, treeY);
+        found = searchNodesForTreePosition(cu2);
+		cu2 = cu2.parent;
         treeX--;
         depth++;
         exitCounter++;
@@ -1120,17 +1179,18 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
 
     if (exitCounter > 1000)
       found = null;
-    returnArray[0] = found;
+    console.log(found);
+	returnArray[0] = found;
     returnArray[1] = notInTreeCoords;
 
     return returnArray;
   }
 
-  function searchNodesForTreePosition(x, y)
+  function searchNodesForTreePosition(cu)
   {
     let found = null;
-    for (let i = 0; i < besogo.nodes.length; i++)
-      if (x === besogo.nodes[i].navTreeX && y===besogo.nodes[i].navTreeY)
+    for (let i=0; i<besogo.nodes.length; i++)
+      if (cu == besogo.nodes[i])
         found = besogo.nodes[i];
     return found;
   }
@@ -1146,10 +1206,5 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
     $("#theComment").css("display", "block");
     $("#theComment").css("color", "rgb(166, 27, 27)");
     $("#theComment").css("border", "thick double rgb(166, 27, 27)");
-  }
-
-  function test()
-  {
-    console.log("hello world");
   }
 };

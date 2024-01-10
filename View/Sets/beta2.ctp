@@ -72,10 +72,18 @@
 	<div align="center" class="display1" style="padding-top:10px;">
 		
 	<div id="sandbox">
-	<h4>Welcome to the Sandbox</h4>
+	<h4>Removed Collections</h4>
 		<div align="left">
-		Collections that you find here are not yet published and need to be checked for improvement.
-		While solving them, please look for misplays and bugs.<br>
+		Collections that you find here have been removed.<br>
+		<table width="100%">
+			<tr>
+			<td>
+				<a href="/sets/beta">Sandbox</a>
+			</td>
+			<td>
+			</td>
+			</tr>
+			</table>
 		</div>
 	</div>	
 	<section class="scontainer">
@@ -83,8 +91,6 @@
 		<div class="col-12@sm">
 		  <div id="my-shuffle" class="items">
 			<?php 
-				
-			
 				for($i=0; $i<count($sets); $i++) {
 					if($sets[$i]['Set']['solved']==0) $solvedBar = '000';
 					else if($sets[$i]['Set']['solved']<2.5) $solvedBar = '025';

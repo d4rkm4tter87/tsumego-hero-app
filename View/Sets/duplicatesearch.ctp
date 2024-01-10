@@ -14,7 +14,9 @@
 						$sb = '<font style="color:gray;"> (sandbox)</font>';
 					else
 						$sb = '';
-					echo '<a href="/sets/duplicates/'.$s[$i]['Set']['id'].'">'.$s[$i]['Set']['title'].' '.$s[$i]['Set']['title2'].'</a>'.$sb;
+					
+					$dup = '<b style="color:#6088c2;"> '.$s[$i]['Set']['dNum'].'</b>';
+					echo '<a href="/sets/duplicates/'.$s[$i]['Set']['id'].'">'.$s[$i]['Set']['title'].' '.$s[$i]['Set']['title2'].'</a>'.$sb.$dup;
 				?>
 				</td>
 			</tr>

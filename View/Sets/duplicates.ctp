@@ -5,7 +5,7 @@
 	<div align="center">
 	<p class="title">
 		<br>
-		<?php echo 'Automatic duplicate search for '.$set['Set']['title'].' '.$set['Set']['title2'];?><br><br>
+		<?php echo 'Duplicate Search Results for '.$set['Set']['title'].' '.$set['Set']['title2'];?><br><br>
 	</p>
 	</div>
 	<table width="100%" border="0" class="duplicateSearchTable">

@@ -628,8 +628,16 @@
 					
 					$cpArray = null;
 					if($showComment[$i]['Comment']['position']!=null){
-						$cp = explode('/', $showComment[$i]['Comment']['position']);
+						$cpNew = null;
+						if(strpos($showComment[$i]['Comment']['position'], '|') !== false){
+							$cpNew = explode("|", $showComment[$i]['Comment']['position']);
+							$cp = explode('/', $cpNew[0]);
+							$cpNew[1] = ',\''.$cpNew[1].'\'';
+						}else
+							$cp = explode('/', $showComment[$i]['Comment']['position']);
 						$cpArray = $cp[0].','.$cp[1].','.$cp[2].','.$cp[3].','.$cp[4].','.$cp[5].','.$cp[6].','.$cp[7].',\''.$cp[8].'\'';
+						if($cpNew!=null)
+							$cpArray .= $cpNew[1];
 						$cpArray = '<img src="/img/positionIcon1.png" class="positionIcon1" onclick="commentPosition('.$cpArray.');">';
 					}
 					$showComment[$i]['Comment']['message'] = '|'.$showComment[$i]['Comment']['message'];
@@ -1553,6 +1561,7 @@
 		  if(besogoOrientation[1]=="full-board")
 			besogoOrientation[0] = besogoOrientation[1];
 		  let isInTree = besogo.editor.isMoveInTree(current);
+		  //console.log(isInTree);
 		  current = isInTree[0];
 		  
 		  if(isInTree[1]['x'].length>0){
@@ -1584,8 +1593,15 @@
 				cY = current.children[0].move.y;
 			}
 			
+			let newP = current.parent;
+			let newPcoords = current.move.x+"/"+current.move.y+"+";
+			  while(newP!==null && newP.move!==null){
+				  newPcoords += newP.move.x+"/"+newP.move.y+"+"
+				  newP = newP.parent;
+			  }
+			  newPcoords = newPcoords.slice(0, -1);
 			$("#CommentPosition").val(
-			  current.move.x+"/"+current.move.y+"/"+pX+"/"+pY+"/"+cX+"/"+cY+"/"+current.moveNumber+"/"+current.children.length+"/"+besogoOrientation[0]
+			  current.move.x+"/"+current.move.y+"/"+pX+"/"+pY+"/"+cX+"/"+cY+"/"+current.moveNumber+"/"+current.children.length+"/"+besogoOrientation[0]+"|"+newPcoords
 			);
 		  }
 		}); 
@@ -1930,7 +1946,7 @@
 		}
 	}
 	
-	function commentPosition(x, y, pX, pY, cX, cY, mNum, cNum, orientation){
+	function commentPosition(x, y, pX, pY, cX, cY, mNum, cNum, orientation, newX=false, newY=false){
 		positionParams = [];
 		positionParams[0] = x;
 		positionParams[1] = y;
@@ -1941,6 +1957,8 @@
 		positionParams[6] = mNum;
 		positionParams[7] = cNum;
 		positionParams[8] = orientation;
+		if(newX!=false)
+			positionParams[9] = newX;
 		besogo.editor.commentPosition(positionParams);
 	}
 	

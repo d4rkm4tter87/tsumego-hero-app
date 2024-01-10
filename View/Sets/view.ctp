@@ -232,7 +232,7 @@
 			
 			echo '<font color="gray">XP reduced by '.$pdCounterValue.'%. ('.$pdCounter.' reset'.$plural.' this month.)</font>';
 		}
-		if($set['Set']['solved']>50){ ?>
+		if($set['Set']['solved']>=50){ ?>
 		<div id="msg1x"><a id="showx">Reset<img id="greyArrow1" src="/img/greyArrow1.png"></a></div>
 		<br>
 		<?php }else{
@@ -265,7 +265,7 @@
 		<?php } ?>
 		</td>
 		<td>
-		<?php if($set['Set']['solved']>50){ ?>
+		<?php if($set['Set']['solved']>=50){ ?>
 		<div id="msg2x">
 		Type "reset" to remove all your progress on this collection.<br><br>
 		<?php
@@ -306,10 +306,18 @@
 					<div id="msg3">';
 						echo $this->Form->create('Set');
 						echo $this->Form->input('color', array('label' => '', 'type' => 'text', 'placeholder' => 'color', 'value' => $set['Set']['color']));
-						echo '<div class="submit"><input style="margin:0px;" value="Submit" type="submit"></div><br>';
+						echo '<div class="submit"><input style="margin:0px;" value="Submit" type="submit"></div>';
 						echo '<i><a href="https://www.w3schools.com/colors/colors_picker.asp" target="_blank">hex color picker</a>&nbsp;(external link)</i><br>';
 					echo '</div>';
+					echo '<a id="show6">Edit Order<img id="greyArrow6" src="/img/greyArrow1.png"></a><br>
+					<div id="msg6">';
+						echo $this->Form->create('Set');
+						echo $this->Form->input('order', array('label' => '', 'type' => 'text', 'placeholder' => 'Order', 'value' => $set['Set']['order']));
+						echo '<div class="submit"><input style="margin:0px;" value="Submit" type="submit"></div>';
+						echo '<i>Low numbers are on top, high numbers at the bottom.</i><br>';
+					echo '</div>';
 					echo '<a href="/sets/ui/'.$set['Set']['id'].'">Upload Image</a><br>';
+					echo '<a href="#" onclick="remove()">Remove Collection</a><br><br>';
 				}
 				echo '<a href="/sets/duplicates/'.$set['Set']['id'].'">Show duplicate search</a><br><br>';
 				echo '<a id="show5" class="selectable-text">Settings<img id="greyArrow5" src="/img/greyArrow1.png"></a>';
@@ -379,6 +387,9 @@
 					echo '<div align="right">
 					<a class="new-button new-buttonx" href="/users/userstats3/'.$set['Set']['id'].'">Activities</a>
 					</div>';
+				}else if($set['Set']['public']==-1){
+					echo '<a href="#" onclick="restore()">Restore Collection</a>';
+					
 				}
 				echo '</td>
 				</tr>
@@ -405,10 +416,12 @@
 	var t2 = false;
 	var t3 = false;
 	var msg5selected = false;
+	var msg6selected = false;
 	$("#msg1").hide();
 	$("#msg2").hide();
 	$("#msg3").hide();
 	$("#msg5").hide();
+	$("#msg6").hide();
 	
 	$("#show").click(function(){
 		if(!t1){
@@ -450,6 +463,25 @@
 		}
 		msg5selected = !msg5selected;
 	});
+	$("#show6").click(function(){
+		if(!msg6selected){
+			$("#msg6").fadeIn(250);
+			document.getElementById("greyArrow6").src = "/img/greyArrow2.png";
+		}else{
+			$("#msg6").fadeOut(250);
+			document.getElementById("greyArrow6").src = "/img/greyArrow1.png";
+		}
+		msg6selected = !msg6selected;
+	});
+	
+	function restore(){
+		var confirmed = confirm("Are you sure?");
+		if(confirmed) window.location.href = "/sets/beta?restore="+<?php echo $set['Set']['id']; ?>;
+	}
+	function remove(){
+		var confirmed = confirm("Are you sure?");
+		if(confirmed) window.location.href = "/sets/beta2?remove="+<?php echo $set['Set']['id']; ?>;
+	}
 	</script>
 	<?php } ?>
 	
@@ -559,4 +591,5 @@
 	</script>
 	<style>
 	#show5{display:block;}
+	#show6{text-decoration:underline;cursor:pointer;}
 	</style>

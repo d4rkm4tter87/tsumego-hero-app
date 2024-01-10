@@ -11,8 +11,6 @@
 				$rank = 0;
 			}
 		?>
-	
-		
 		<table border="0" width="100%">
 		<tr>
 		<td style="vertical-align:top;padding:8px 0 0 14px;" width="63%" height="150px">
