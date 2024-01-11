@@ -513,7 +513,7 @@ class SetsController extends AppController{
 
 		$removeMap[6473] = 1;
 
-		if(isset($_SESSION['loggedInUser'])){
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			if(isset($_COOKIE['sandbox']) && $_COOKIE['sandbox']!='0'){
 				$ux = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
 				$ux['User']['reuse1'] = $_COOKIE['sandbox'];
@@ -895,7 +895,8 @@ class SetsController extends AppController{
 			}
 			$ts = array();
 			for($i=$tsBufferLowest; $i<=$tsBufferHighest; $i++)
-				array_push($ts, $tsBuffer[$i]);
+				if(isset($tsBuffer[$i]))
+					array_push($ts, $tsBuffer[$i]);
 			//$ts = $this->findTsumegoSet($id);
 			
 			$allVcActive = true;
@@ -1216,6 +1217,7 @@ class SetsController extends AppController{
 					}
 				}
 			}
+			
 			for($i=0; $i<count($ts); $i++){
 				$urTemp = array();
 				$urSum = '';
@@ -1334,16 +1336,6 @@ class SetsController extends AppController{
 				$pFsum += $pF;
 			}
 			
-			$tooltipSgfs = array();
-			$tooltipInfo = array();
-			$tooltipBoardSize = array();
-			for($i=0; $i<count($ts); $i++){
-				$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
-				$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
-				array_push($tooltipSgfs, $tArr[0]);
-				array_push($tooltipInfo, $tArr[2]);
-				array_push($tooltipBoardSize, $tArr[3]);
-			}
 			if($urSecCounter==0)
 				$avgTime = 60;
 			else
@@ -1381,6 +1373,17 @@ class SetsController extends AppController{
 			)));
 		}else{
 			$scoring = false;
+		}
+		
+		$tooltipSgfs = array();
+		$tooltipInfo = array();
+		$tooltipBoardSize = array();
+		for($i=0; $i<count($ts); $i++){
+			$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
+			$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
+			array_push($tooltipSgfs, $tArr[0]);
+			array_push($tooltipInfo, $tArr[2]);
+			array_push($tooltipBoardSize, $tArr[3]);
 		}
 		
 		$this->set('tfs', $tfs[0]);

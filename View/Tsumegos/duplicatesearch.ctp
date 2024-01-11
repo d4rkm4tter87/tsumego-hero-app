@@ -21,9 +21,12 @@
 				$includeSandbox = 'checked="checked"';
 			if($includeColorSwitch=='true')
 				$includeColorSwitch = 'checked="checked"';
+		if(!$hideSandbox){
 		?>
+		
 		<input type="checkbox" value="1" id="i1" <?php echo $includeSandbox; ?>>
 		<label for="i1">Include sandbox</label><br>
+		<?php } ?>
 		<input type="checkbox" value="2" id="i2" <?php echo $includeColorSwitch; ?>>
 		<label for="i2">Include color switch</label>
 	</td>
@@ -56,6 +59,13 @@
 		</td>
 		</tr>
 	</table>
+	<div class="loader-container">
+		<div class="loader-content">
+			<div class="loader-text">
+				searching...
+			</div>
+		</div>
+	</div>
 	<?php	
 	//echo '<pre>'; print_r($t); echo '</pre>';
 	?>
@@ -134,8 +144,12 @@
 	});
 	$("#command0").click(function(){
 		let range = $('#rangeInput').val();
-		let sandbox = document.getElementById('i1').checked;
+		let sandbox = 'false';
+		<?php if(!$hideSandbox){ ?>
+		sandbox = document.getElementById('i1').checked;
+		<?php } ?>
 		let colorSwitch = document.getElementById('i2').checked;
+		$('.loader-container').css({"display":"flex"});
 		window.location.href="/tsumegos/duplicatesearch/<?php echo $t['Tsumego']['id']; ?>?diff="+range+"&sandbox="+sandbox+"&colorSwitch="+colorSwitch;
 	});
 	</script>

@@ -31,12 +31,17 @@ class TsumegosController extends AppController{
 		$this->loadModel('SetConnection');
 		
 		$maxDifference = 1;
-		$includeSandbox = 'true';
+		$includeSandbox = 'false';
 		$includeColorSwitch = 'false';
+		$hideSandbox=false;
+		
 		if(isset($this->params['url']['diff'])){
 			$maxDifference = $this->params['url']['diff'];
 			$includeSandbox = $this->params['url']['sandbox'];
 			$includeColorSwitch = $this->params['url']['colorSwitch'];
+			$loop = false;
+		}else{
+			$loop = true;
 		}
 		$similarId = array();
 		$similarArr = array();
@@ -55,51 +60,86 @@ class TsumegosController extends AppController{
 		$tNumStones = count($tSgfArr[1]);
 		
 		$sets2 = array();
-		$sets1 = $this->Set->find('all', array('conditions' => array('public' => '1')));
+		$sets3 = array();
+		$sets3content = array();
+		$sets1 = $this->Set->find('all', array('conditions' => array(
+			'public' => '1',
+			'NOT' => array(
+				'id' => array(6473, 11969, 29156, 31813, 33007, 71790, 74761, 81578)
+			)
+		)));
+		
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			if($_SESSION['loggedInUser']['User']['premium']==0 && $_SESSION['loggedInUser']['User']['level']<60){
+				$includeSandbox='false';
+				$hideSandbox=true;
+			}
+			if($_SESSION['loggedInUser']['User']['premium']>=1)
+				array_push($sets3content, 6473);
+			if($_SESSION['loggedInUser']['User']['secretArea1']==1)
+				array_push($sets3content, 11969);
+			if($_SESSION['loggedInUser']['User']['secretArea2']==1)
+				array_push($sets3content, 29156);
+			if($_SESSION['loggedInUser']['User']['secretArea3']==1)
+				array_push($sets3content, 31813);
+			if($_SESSION['loggedInUser']['User']['secretArea4']==1)
+				array_push($sets3content, 33007);
+			if($_SESSION['loggedInUser']['User']['secretArea5']==1)
+				array_push($sets3content, 71790);
+			if($_SESSION['loggedInUser']['User']['secretArea6']==1)
+				array_push($sets3content, 74761);
+			if($_SESSION['loggedInUser']['User']['secretArea7']==1)
+				array_push($sets3content, 81578);
+			$sets3 = $this->Set->find('all', array('conditions' => array('id' => $sets3content)));
+		}else{
+			$includeSandbox='false';
+			$hideSandbox=true;
+		}
 		if($includeSandbox=='true')
 			$sets2 = $this->Set->find('all', array('conditions' => array('public' => '0')));
-		$sets = array_merge($sets1, $sets2);
+		$sets = array_merge($sets1, $sets2, $sets3);
+		
 		for($h=0; $h<count($sets); $h++){
-			$ts = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array('set_id' => $sets[$h]['Set']['id'])));
-			//$ts = $this->findTsumegoSet($sets[$h]['Set']['id']);
-			for($i=0; $i<count($ts); $i++){
-				if($ts[$i]['Tsumego']['id']!=$id){
-					$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
-					$sgfArr = $this->processSGF($sgf['Sgf']['sgf']);
-					$numStones = count($sgfArr[1]);
-					$stoneNumberDiff = abs($numStones-$tNumStones);
-					if($stoneNumberDiff<=$maxDifference){
-						if($includeColorSwitch=='true')
-							$compare = $this->compare($tSgfArr[0], $sgfArr[0], true);
-						else
-							$compare = $this->compare($tSgfArr[0], $sgfArr[0], false);
-						if($compare[0]<=$maxDifference){
-							array_push($similarId, $ts[$i]['Tsumego']['id']);
-							array_push($similarArr, $sgfArr[0]);
-							array_push($similarArrInfo, $sgfArr[2]);
-							array_push($similarArrBoardSize, $sgfArr[3]);
-							array_push($similarDiff, $compare[0]);
-							if($compare[1]==0) array_push($similarDiffType, '');
-							else if($compare[1]==1) array_push($similarDiffType, 'Shifted position.');
-							else if($compare[1]==2) array_push($similarDiffType, 'Shifted and rotated.');
-							else if($compare[1]==3) array_push($similarDiffType, 'Switched colors.');
-							else if($compare[1]==4) array_push($similarDiffType, 'Switched colors and shifted position.');
-							else if($compare[1]==5) array_push($similarDiffType, 'Switched colors, shifted and rotated.');
-							array_push($similarOrder, $compare[2]);
-							$set = $this->Set->findById($ts[$i]['Tsumego']['set_id']);
-							$title2 = $set['Set']['title'].' - '.$ts[$i]['Tsumego']['num'];
-							array_push($similarTitle, $title2);
+				$ts = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array('set_id' => $sets[$h]['Set']['id'])));
+				for($i=0; $i<count($ts); $i++){
+					if($ts[$i]['Tsumego']['id']!=$id){
+						$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
+						$sgfArr = $this->processSGF($sgf['Sgf']['sgf']);
+						$numStones = count($sgfArr[1]);
+						$stoneNumberDiff = abs($numStones-$tNumStones);
+						if($stoneNumberDiff<=$maxDifference){
+							if($includeColorSwitch=='true')
+								$compare = $this->compare($tSgfArr[0], $sgfArr[0], true);
+							else
+								$compare = $this->compare($tSgfArr[0], $sgfArr[0], false);
+							if($compare[0]<=$maxDifference){
+								array_push($similarId, $ts[$i]['Tsumego']['id']);
+								array_push($similarArr, $sgfArr[0]);
+								array_push($similarArrInfo, $sgfArr[2]);
+								array_push($similarArrBoardSize, $sgfArr[3]);
+								array_push($similarDiff, $compare[0]);
+								if($compare[1]==0) array_push($similarDiffType, '');
+								else if($compare[1]==1) array_push($similarDiffType, 'Shifted position.');
+								else if($compare[1]==2) array_push($similarDiffType, 'Shifted and rotated.');
+								else if($compare[1]==3) array_push($similarDiffType, 'Switched colors.');
+								else if($compare[1]==4) array_push($similarDiffType, 'Switched colors and shifted position.');
+								else if($compare[1]==5) array_push($similarDiffType, 'Switched colors, shifted and rotated.');
+								array_push($similarOrder, $compare[2]);
+								$set = $this->Set->findById($ts[$i]['Tsumego']['set_id']);
+								$title2 = $set['Set']['title'].' - '.$ts[$i]['Tsumego']['num'];
+								array_push($similarTitle, $title2);
+							}
 						}
 					}
 				}
 			}
-		}
+		
 		array_multisort($similarOrder, $similarArr, $similarArrInfo, $similarTitle, $similarDiff, $similarDiffType, $similarId);
 		
 		
 		//echo '<pre>'; print_r($similarId); echo '</pre>';
-		
 		//echo '<pre>'; print_r($similarArrInfo); echo '</pre>';
+		
 		$this->set('tSgfArr', $tSgfArr[0]);
 		$this->set('tSgfArrInfo', $tSgfArr[2]);
 		$this->set('tSgfArrBoardSize', $tSgfArr[3]);
@@ -115,6 +155,7 @@ class TsumegosController extends AppController{
 		$this->set('maxDifference', $maxDifference);
 		$this->set('includeSandbox', $includeSandbox);
 		$this->set('includeColorSwitch', $includeColorSwitch);
+		$this->set('hideSandbox', $hideSandbox);
 	}
 	
 	public function play($id=null,$setId=null){
@@ -190,6 +231,7 @@ class TsumegosController extends AppController{
 		$duplicates = array();
 		$preSc = array();
 		$tRank = '15k';
+		$requestSolution = false;
 		
 		//$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
 		//echo '<pre>'; print_r($scT); echo '</pre>';
@@ -205,6 +247,20 @@ class TsumegosController extends AppController{
 		$t = $this->Tsumego->find('first', array('conditions' => array('id' => $scT['SetConnection']['tsumego_id'])));
 		$id = $t['Tsumego']['id'];
 		*/
+		
+		if(isset($this->params['url']['requestSolution'])){
+			$requestSolutionUser = $this->User->findById($this->params['url']['requestSolution']);
+			if($requestSolutionUser['User']['isAdmin']>=1){
+				$requestSolution = true;
+				$adminActivity = array();
+				$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+				$adminActivity['AdminActivity']['tsumego_id'] = $id;
+				$adminActivity['AdminActivity']['file'] = 'settings';
+				$adminActivity['AdminActivity']['answer'] = 'requested solution';
+				$this->AdminActivity->create();
+				$this->AdminActivity->save($adminActivity);
+			}
+		}
 		
 		if(isset($this->params['url']['potionAlert']))
 			$potionAlert = true;
@@ -1433,7 +1489,8 @@ class TsumegosController extends AppController{
 		}
 		$ts = array();
 		for($i=$tsBufferLowest; $i<=$tsBufferHighest; $i++)
-			array_push($ts, $tsBuffer[$i]);
+			if(isset($tsBuffer[$i]))
+				array_push($ts, $tsBuffer[$i]);
 		
 		$anzahl = $ts[count($ts)-1]['Tsumego']['num'];
 		$_SESSION['title'] = $set['Set']['title'].' '.$t['Tsumego']['num'].'/'.$anzahl.' on Tsumego Hero';
@@ -1983,6 +2040,7 @@ class TsumegosController extends AppController{
 		$this->set('tooltipSgfs', $tooltipSgfs);
 		$this->set('tooltipInfo', $tooltipInfo);
 		$this->set('tooltipBoardSize', $tooltipBoardSize);
+		$this->set('requestSolution', $requestSolution);
     }
 		
 	private function getLowest($a){

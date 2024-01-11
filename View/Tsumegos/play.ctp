@@ -471,19 +471,21 @@
 		if($firstRanks==0){
 			$getTitle = str_replace('&','and',$set['Set']['title']);
 			$getTitle .= ' '.$t['Tsumego']['num'];
-			echo '<a id="showx3" class="selectable-text">Download SGF</a><br><br>';
+			echo '<a id="showx3" style="margin-right:20px;" class="selectable-text">Download SGF</a>';
+			echo '<a id="showx7x" style="margin-right:20px;" class="selectable-text">Find similar problems</a>';
 			
-			if($sgf['Sgf']['user_id']!=33) 
+			echo '<br><br>';
+			if($sgf['Sgf']['user_id']!=33)
 				$adHighlight = 'historyLink';
 			else
 				$adHighlight = '';
 				
-			if($_SESSION['loggedInUser']['User']['isAdmin']==1){
+			if($_SESSION['loggedInUser']['User']['isAdmin']>=1){
+					echo '<a id="showx99" style="margin-right:20px;" class="selectable-text">Admin-Request Solution</a>';
 					echo '<a id="showx4" style="margin-right:20px;" class="selectable-text">Admin-Download</a>';
 					echo '<a id="show4" style="margin-right:20px;" class="selectable-text">Admin-Upload<img id="greyArrow4" src="/img/greyArrow1.png"></a>';
 					echo '<a id="showx5" style="margin-right:20px;" class="selectable-text">Open</a>';
 					echo '<a id="showx6" style="margin-right:20px;" class="selectable-text '.$adHighlight.'">History</a>';
-					echo '<a id="showx7" style="margin-right:20px;" class="selectable-text">Similar Problems</a>';
 					echo '<a id="show5" class="selectable-text">Settings<img id="greyArrow5" src="/img/greyArrow1.png"></a>';
 					if($virtual_children==1){
 						$vcOn = 'checked="checked"';
@@ -910,12 +912,21 @@
 	<?php } ?>
 	<?php } ?>
 	
-	<?php echo '</div>';
+	<?php echo '</div>'; ?>
+	<div class="loader-container">
+		<div class="loader-content">
+			<div class="loader-text">
+				searching...
+			</div>
+		</div>
+	</div>
+	<?php
 	if(count($showComment)>0){
 		echo '<div align="center">';
 		echo '<font color="grey"></font>';
 		echo '</div>';
 	}
+	
 	$browser = $_SERVER['HTTP_USER_AGENT'] . "\n\n";
 
 	echo '<audio><source src="/sounds/newStone.ogg"></audio>';
@@ -1046,6 +1057,8 @@
 	
 	if($authorx==$_SESSION['loggedInUser']['User']['name']) echo 'authorProblem = true;';
 	//if($_SESSION['loggedInUser']['User']['id']==72) echo 'authorProblem = true;';
+	if($requestSolution)
+		echo 'authorProblem = true;';
 	if($firstRanks!=0) echo 'document.cookie = "mode=3";';
 	if($mode==3){
 		echo 'seconds = 0.0;';
@@ -1604,12 +1617,22 @@
 			  current.move.x+"/"+current.move.y+"/"+pX+"/"+pY+"/"+cX+"/"+cY+"/"+current.moveNumber+"/"+current.children.length+"/"+besogoOrientation[0]+"|"+newPcoords
 			);
 		  }
-		}); 
+		});
+		let solutionRequest = true;
 		<?php if(($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2' || $t['Tsumego']['status']=='setW2') || $isSandbox){ ?>
 			displaySettings();
+			solutionRequest = false;
 		<?php } ?>
 		if(authorProblem)
 			displaySettings();
+		<?php if(isset($_SESSION['loggedInUser']['User']['id'])){if($_SESSION['loggedInUser']['User']['isAdmin']>=1){if(!$requestSolution){ ?>
+			if(solutionRequest)
+				displaySolutionRequest(); 
+			$("#showx99").click(function(){
+				window.location.href = "/tsumegos/play/"+<?php echo $t['Tsumego']['id']; ?>+"?requestSolution="+<?php echo $_SESSION['loggedInUser']['User']['id']; ?>;
+			});	
+		<?php }}} ?>		
+			
 		<?php if($t['Tsumego']['set_id']==208 || $t['Tsumego']['set_id']==210){ ?>
 		$("#alertCheckbox").change(function(){
 			$("#multipleChoiceAlerts").fadeOut(500);
@@ -1627,6 +1650,11 @@
 		$("#showx4").click(function(){
 			jsCreateDownloadFile("<?php echo $t['Tsumego']['num']; ?>");
 		});
+		$("#showx7x").click(function(){
+			$('.loader-container').css({"display":"flex"});
+			window.location.href="/tsumegos/duplicatesearch/<?php echo $t['Tsumego']['id']; ?>";
+		});
+		
 		//if(cvn) setTimeout(function () {window.location.href = "/tsumegos/play/"+nextButtonLink}, 50);
 		
 		var mouseX;
@@ -1651,13 +1679,18 @@
 			echo 'createPreviewBoard('.$i.', tooltipSgfs['.$i.'], '.$tooltipInfo[$i][0].', '.$tooltipInfo[$i][1].', '.$tooltipBoardSize[$i].');';
 		?>
 	});
+	
+	function displaySolutionRequest(){
+		if(!authorProblem)
+			$("#showx99").css("display", "inline-block");
+	}
 
 	function displaySettings(){
+		$("#showx99").css("display", "none");
 		enableDownloads = true;
 		$("#showx3").css("display", "inline-block");
+		$("#showx7x").css("display", "inline-block");
 		<?php if($_SESSION['loggedInUser']['User']['isAdmin']==1){ ?>
-		$("#showx7").css("display", "inline-block");
-		$("#showx7").attr("href", "<?php echo '/tsumegos/duplicatesearch/'.$t['Tsumego']['id']; ?>");
 		<?php if($t['Tsumego']['duplicate']==0 || $t['Tsumego']['duplicate']==-1){ ?>
 			$("#showx5").attr("href", "<?php echo '/tsumegos/open/'.$t['Tsumego']['id'].'/'.$sgf['Sgf']['id']; ?>");
 			$("#showx6").attr("href", "<?php echo '/sgfs/view/'.($t['Tsumego']['id']*1337); ?>");
@@ -1845,8 +1878,10 @@
 	}
 	
 	//function xxx(){ cvn = false; }
-
+	
+	
 	function runXPNumber(id, start, end, duration, ulvl){
+	<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
 		userXP = end;
 		userLevel = ulvl;
 		var range = end - start;
@@ -1864,7 +1899,9 @@
 				clearInterval(timer);
 			}
 		}, stepTime);
+	<?php } ?>
 	}
+	
 
 	function updateHealth(){
 		<?php
@@ -2636,8 +2673,10 @@
 	<?php
 		if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72){
 		//if(isset($_SESSION['loggedInUser'])){if(false){
-			echo 'options.reviewEnabled = true;';
+			//echo 'options.reviewEnabled = true;';
 		}}
+		if($requestSolution)
+			echo 'options.reviewEnabled = true;';
 	?>
 	if(authorProblem)
 		options.reviewEnabled = true;

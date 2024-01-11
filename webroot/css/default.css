@@ -200,6 +200,43 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		width:776px;
 	}
 	
+	.loader-container{
+		display:none;
+		position:absolute;
+		top:40%;
+		left:43.7%;
+		align-items:center;
+		justify-content:center;
+		text-align: center;
+	}
+	.loader-content{
+		font-size:25px;
+		padding:20px;
+		background:gray;
+		opacity:.8;
+		-moz-border-radius-bottomleft: 30px;
+		-moz-border-radius-bottomright: 30px;
+		border-radius-bottomleft: 30px;
+		border-radius-bottomright: 30px;
+		-moz-border-radius-bottomright: 30px;
+		-moz-border-radius-bottomleft: 30px;
+		border-bottom-right-radius: 30px;
+		border-bottom-left-radius: 30px;
+		-moz-border-radius-topright: 30px;
+		-moz-border-radius-topleft: 30px;
+		border-top-right-radius: 30px;
+		border-top-left-radius: 30px;
+	}
+	.loader-text{
+		animation:blinker 1.5s linear infinite; 
+	}
+	
+	@keyframes blinker{
+	  50% {
+		opacity: .4;
+	  }
+	}
+	
 	#show, #show3, .selectable-text{
 		font-size:16px;
 		color:#717171;
@@ -209,7 +246,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.sandboxTable2time{vertical-align:top;color:#5e5e5e;}
 	.deleteComment{color:#575757}
 	
-	#showx3,#showx4,#showx5,#show4,#show5,#showx6,#showx7{
+	#showx3,#showx4,#showx5,#show4,#show5,#showx6,#showx7,#showx7x,#showx99{
 		display:none;
 	}
 	
