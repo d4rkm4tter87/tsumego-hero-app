@@ -43,7 +43,11 @@ function displayMultipleChoiceResult(num){
 			}else if(multipleChoiceSemeaiType==2){
 				mText = "Semeai Type 2: No eyes, 2 or more inside liberties.<br>The favorite\'s task is to kill.<br>The favorite counts his outside liberties plus 1 inside liberty.<br>The underdog\'s task is Seki.<br>The underdog counts his outside liberties plus all inside liberties.<br>";
 				let underdog = "Black";
-				if(multipleChoiceLibertiesB<multipleChoiceLibertiesW){
+				if(tsumegoFileLink==29478){
+					mText += "Seki.<br>";
+					$("#besogo-multipleChoice4").css("background-color", "#3ecf78");
+					correct = 4;
+				}else if(multipleChoiceLibertiesB<multipleChoiceLibertiesW){
 					mText += "White is the favorite with more outside liberties.<br>";
 					underdog = "Black";
 					libCalcB = parseInt(multipleChoiceLibertyCount)-parseInt(multipleChoiceLibertiesW)+parseInt(multipleChoiceInsideLiberties);

@@ -351,7 +351,7 @@ besogo.makeToolPanel = function(container, editor)
               reviewBoardHeight = $(".besogo-board").height();
               trueRatio = trueBoardWidth/trueBoardHeight;
               reviewBoardHeight = reviewBoardWidth/trueRatio;
-            }  
+            }
             $(".besogo-board").css("height",reviewBoardHeight);
             toggleBoardLock(false);
             deleteNextMoveGroup = true;

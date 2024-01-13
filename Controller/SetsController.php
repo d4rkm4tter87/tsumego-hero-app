@@ -1349,9 +1349,10 @@ class SetsController extends AppController{
 			else $avgTime2 = $avgTime;
 			$achievementUpdate2 = array();
 			if($set['Set']['solved']>=100){
-				$this->updateAchievementConditions($set['Set']['id'], $avgTime2, $accuracy);
-				$achievementUpdate1 = $this->checkSetAchievements($set['Set']['id']);
-				
+				if($set['Set']['id']!=210){
+					$this->updateAchievementConditions($set['Set']['id'], $avgTime2, $accuracy);
+					$achievementUpdate1 = $this->checkSetAchievements($set['Set']['id']);
+				}
 				if($id==50||$id==52||$id==53||$id==54){
 					$achievementUpdate2 = $this->setAchievementSpecial('cc1');
 				}else if($id==41||$id==49||$id==65||$id==66){

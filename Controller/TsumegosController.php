@@ -1432,6 +1432,7 @@ class TsumegosController extends AppController{
 		$_SESSION['loggedInUser']['User']['premium'] = $u['User']['premium'];
 		$_SESSION['loggedInUser']['User']['completed'] = $u['User']['completed'];
 		$_SESSION['loggedInUser']['User']['level'] = $u['User']['level'];
+		$_SESSION['loggedInUser']['User']['reuse5'] = $u['User']['reuse5'];
 		$_SESSION['loggedInUser']['User']['secretArea1'] = $u['User']['secretArea1'];
 		$_SESSION['loggedInUser']['User']['secretArea2'] = $u['User']['secretArea2'];
 		$_SESSION['loggedInUser']['User']['secretArea3'] = $u['User']['secretArea3'];
@@ -1954,8 +1955,6 @@ class TsumegosController extends AppController{
 		$ui = 2;
 		$file = '6473k339312/easycapture/1.sgf';
 		
-		
-		
 		$scPrev = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $prev, 'set_id' => $t['Tsumego']['set_id'])));
 		if($scPrev!=null)
 			$prev = $prev.'/'.$t['Tsumego']['set_id'];
@@ -1964,6 +1963,8 @@ class TsumegosController extends AppController{
 			$next = $next.'/'.$t['Tsumego']['set_id'];
 		
 		$this->startPageUpdate();
+		
+		$startingPlayer = $this->getStartingPlayer($sgf2);
 		
 		$this->set('tRank', $tRank);
 		$this->set('sgf', $sgf);
@@ -2041,8 +2042,23 @@ class TsumegosController extends AppController{
 		$this->set('tooltipInfo', $tooltipInfo);
 		$this->set('tooltipBoardSize', $tooltipBoardSize);
 		$this->set('requestSolution', $requestSolution);
+		$this->set('startingPlayer', $startingPlayer);
     }
 		
+	private function getStartingPlayer($sgf){
+		$bStart = strpos($sgf, ';B');
+		$wStart = strpos($sgf, ';W');
+		
+		if($wStart==0)
+			return 0;
+		else if($bStart==0 && $wStart!=0)
+			return 1;
+		if($bStart<=$wStart)
+			return 0;
+		else
+			return 1;
+	}
+	
 	private function getLowest($a){
 		$lowestX = 19;
 		$lowestY = 19;

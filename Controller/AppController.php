@@ -794,6 +794,8 @@ class AppController extends Controller{
 		if($dateGem!=null){
 			$gems = explode('-', $dateGem['DayRecord']['gems']);
 			$gemValue = '';
+			$gemValue2 = '';
+			$gemValue3 = '';
 			$condition1 = 500;
 			$condition2 = 200;
 			$condition3 = 50;
@@ -813,25 +815,39 @@ class AppController extends Controller{
 						$found1 = true;
 				}
 			}else if($r=='9k'||$r=='8k'||$r=='7k'||$r=='6k'||$r=='5k'||$r=='4k'||$r=='3k'||$r=='2k'||$r=='1k'){
-				if($gems[1]==0)
+				if($gems[1]==0){
 					$gemValue = '9k';
-				else if($gems[1]==1)
-					$gemValue = '5k';
-				else if($gems[1]==2)
-					$gemValue = '1k';
-				if($r==$gemValue){
+					$gemValue2 = 'x';
+					$gemValue3 = 'y';
+				}else if($gems[1]==1){
+					$gemValue = '6k';
+					$gemValue2 = '5k';
+					$gemValue3 = '4k';
+				}else if($gems[1]==2){
+					$gemValue = 'x';
+					$gemValue2 = '2k';
+					$gemValue3 = '1k';
+				}
+				if($r==$gemValue || $r==$gemValue2 || $r==$gemValue3){
 					$dateGem['DayRecord']['gemCounter2']++;
 					if($dateGem['DayRecord']['gemCounter2']==$condition2)
 						$found2= true;
 				}
 			}else if($r=='1d'||$r=='2d'||$r=='3d'||$r=='4d'||$r=='5d'){
-				if($gems[2]==0)
+				if($gems[2]==0){
 					$gemValue = '1d';
-				else if($gems[2]==1)
-					$gemValue = '3d';
-				else if($gems[2]==2)
+					$gemValue2 = 'x';
+					$gemValue3 = 'y';
+				}else if($gems[2]==1){
+					$gemValue = '2d';
+					$gemValue2 = '3d';
+					$gemValue3 = '4d';
+				}else if($gems[2]==2){
 					$gemValue = '5d';
-				if($r==$gemValue){
+					$gemValue2 = 'x';
+					$gemValue3 = 'y';
+				}
+				if($r==$gemValue || $r==$gemValue2 || $r==$gemValue3){
 					$dateGem['DayRecord']['gemCounter3']++;
 					if($dateGem['DayRecord']['gemCounter3']==$condition3)
 						$found3 = true;

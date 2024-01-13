@@ -135,11 +135,18 @@
 	$ansDisplay = 'ans';
 	$playerColor = array();
 	$pl = 0;
-	if($colorOrientation=='black') $pl = 0;
-	elseif($colorOrientation=='white') $pl = 1;
-	else $pl = rand(0,1);
+	$plRand = false;
+	if($colorOrientation=='black') 
+		$pl = 0;
+	else if($colorOrientation=='white') 
+		$pl = 1;
+	else{
+		$pl = rand(0,1);
+		$plRand = true;
+	}
 	
-	if($checkBSize!=19 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161) $pl=0;
+	if($checkBSize!=19 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161) 
+		$pl=0;
 	if($pl==0){
 		$playerColor[0] = 'BLACK';
 		$playerColor[1] = 'WHITE';
@@ -147,10 +154,19 @@
 		$playerColor[0] = 'WHITE';
 		$playerColor[1] = 'BLACK';
 	}
-	$descriptionColor;
-	if($pl==0)$descriptionColor = 'Black ';
-	else $descriptionColor = 'White ';
-
+	
+	if($pl==0)
+		$descriptionColor = 'Black ';
+	else 
+		$descriptionColor = 'White ';
+		
+	if($startingPlayer==1 && $plRand==true){
+		if($descriptionColor=='Black ')
+			$descriptionColor = 'White ';
+		else if($descriptionColor=='White ')
+			$descriptionColor = 'Black ';
+	}	
+		
 	$t['Tsumego']['description'] = str_replace('b ', $descriptionColor, $t['Tsumego']['description']);
 ?>
 	<table width="100%" border="0">
@@ -1271,6 +1287,7 @@
 			document.getElementById("status").innerHTML = "<h3><b>Your account is temporarily locked.</b></h3>";
 			document.getElementById("status").style.color = "red";
 			document.getElementById("xpDisplay").innerHTML = "&nbsp;";
+			toggleBoardLock(true, true);
 		';
 	}
 
@@ -2142,7 +2159,7 @@
 	$(document).keydown(function(event){
 		var keycode = (event.keyCode ? event.keyCode : event.which);
 		if(mode!=2){
-			if(!msg2selected && !adminCommentOpened){
+			if(!msg2selected && !adminCommentOpened && !besogo.editor.getReviewMode()){
 				if(keycode == '37'){
 					if(prevButtonLink!=0)
 						window.location.href = prevButtonLink;

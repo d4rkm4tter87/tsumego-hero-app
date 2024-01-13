@@ -95,7 +95,7 @@
 		<b>Similar problem search</b><br><br>
 		
 		This update contains a search function that can be used on the problem pages. It searches for problems that are similar to
-		the currently visited problem. A parameter can bet set for the maximum difference in stones that are placed on the board.</a><br><br>
+		the currently visited problem. A parameter can be set for the maximum difference in stones that are placed on the board.</a><br><br>
 		<div align="center">
 		<img src="/img/similar-problems-example1.PNG" title="similar-problems-example1" alt="similar-problems-example1" width="50%">
 		<img src="/img/similar-problems-example2.PNG" title="similar-problems-example2" alt="similar-problems-example2" width="70%">
@@ -696,6 +696,11 @@
 			<table class="newx" border="0">
 				<tr>
 					<td><h1>11.01.2024</h1></td>
+					<td><h1>Dewald Volschenk </h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>11.01.2024</h1></td>
 					<td><h1>Mark Hammes </h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
@@ -713,11 +718,6 @@
 					<td><h1>08.01.2024</h1></td>
 					<td><h1>Scotty Reed</h1></td>
 					<td><h1>2,17 € <font size="2px">subscription</font></h1></td>
-				</tr>
-				<tr>
-					<td><h1>06.01.2024</h1></td>
-					<td><h1>Steve Van Looy</h1></td>
-					<td><h1>10,00 €</h1></td>
 				</tr>
 				<!--
 				<tr>
