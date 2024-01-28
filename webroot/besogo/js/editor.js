@@ -394,47 +394,62 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
   // Handle click with application of selected tool
   function click(i, j, ctrlKey, shiftKey)
   {
-    if (performingAutoPlay)
-      return;
-    switch(tool)
-    {
-      case 'navOnly':
-        navigate(i, j, shiftKey);
-        break;
-      case 'auto':
-        if (!navigate(i, j, shiftKey) && !shiftKey) // Try to navigate to (i, j)
-          playMove(i, j, 0, ctrlKey); // Play auto-color move if navigate fails
-        break;
-      case 'addB':
-        if (ctrlKey)
-          playMove(i, j, -1, true); // Play black
-        else if (shiftKey)
-          placeSetup(i, j, 1); // Set white
-        else
-          placeSetup(i, j, -1); // Set black
-        break;
-      case 'clrMark':
-        setMarkup(i, j, 0);
-        break;
-      case 'circle':
-        setMarkup(i, j, 1);
-        break;
-      case 'square':
-        setMarkup(i, j, 2);
-        break;
-      case 'triangle':
-        setMarkup(i, j, 3);
-        break;
-      case 'cross':
-        setMarkup(i, j, 4);
-        break;
-      case 'block':
-        setMarkup(i, j, 5);
-        break;
-      case 'label':
-        setMarkup(i, j, label);
-        break;
-    }
+	if (!besogo.isEmbedded)
+		boardLockValue = 0;
+	if (boardLockValue==0)
+	{
+      if (performingAutoPlay)
+        return;
+      switch(tool)
+      {
+        case 'navOnly':
+          navigate(i, j, shiftKey);
+          break;
+        case 'auto':
+          if (!navigate(i, j, shiftKey) && !shiftKey) // Try to navigate to (i, j)
+            playMove(i, j, 0, ctrlKey); // Play auto-color move if navigate fails
+          break;
+        case 'addB':
+          if (ctrlKey)
+            playMove(i, j, -1, true); // Play black
+          else if (shiftKey)
+            placeSetup(i, j, 1); // Set white
+          else
+            placeSetup(i, j, -1); // Set black
+          break;
+        case 'clrMark':
+          setMarkup(i, j, 0);
+          break;
+        case 'circle':
+          setMarkup(i, j, 1);
+          break;
+        case 'square':
+          setMarkup(i, j, 2);
+          break;
+        case 'triangle':
+          setMarkup(i, j, 3);
+          break;
+        case 'cross':
+          setMarkup(i, j, 4);
+          break;
+        case 'block':
+          setMarkup(i, j, 5);
+          break;
+        case 'label':
+          setMarkup(i, j, label);
+          break;
+      }
+	}
+	else if (boardLockValue==1)
+	{
+		if(!multipleChoiceEnabled){
+			if(nextButtonLink!=0) 
+				window.location.href = "/tsumegos/play/"+nextButtonLink+inFavorite;
+			else if(mode==1){
+				window.location.href = "/sets/view/"+nextButtonLinkSet;
+			}
+		}
+	}	
   }
 
   function transformTextColors(root, text)

@@ -7,6 +7,7 @@ class RanksController extends AppController {
 		$this->loadModel('RankOverview');
 		$this->loadModel('RankSetting');
 		$this->loadModel('Set');
+		$this->loadModel('SetConnection');
 		$_SESSION['title'] = 'Time Mode - Select';
 		$_SESSION['page'] = 'time mode';
 		
@@ -111,7 +112,8 @@ class RanksController extends AppController {
 					}
 				}
 				if($settingsSingle[0]['RankSetting']['status']==1){
-					$tx = $this->Tsumego->find('all', array('conditions' => array('set_id' => $sets[$i]['Set']['id'])));
+					//$tx = $this->Tsumego->find('all', array('conditions' => array('set_id' => $sets[$i]['Set']['id'])));
+					$tx = $this->findTsumegoSet($sets[$i]['Set']['id']);	
 					for($j=0;$j<count($tx);$j++){
 						array_push($tsumegos, $tx[$j]);
 					}
@@ -298,6 +300,7 @@ class RanksController extends AppController {
 		$this->loadModel('Tsumego');
 		$this->loadModel('Set');
 		$this->loadModel('RankOverview');
+		$this->loadModel('SetConnection');
 		$_SESSION['title'] = 'Time Mode - Result';
 		$_SESSION['page'] = 'time mode';
 		$sess = $_SESSION['loggedInUser']['User']['activeRank'];
@@ -369,6 +372,8 @@ class RanksController extends AppController {
 			}
 			for($i=0;$i<count($ranks);$i++){
 				$t = $this->Tsumego->findById($ranks[$i]['Rank']['tsumego_id']);
+				$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+				$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 				$s = $this->Set->findById($t['Tsumego']['set_id']);
 				
 				$ranks[$i]['Rank']['tsumegoNum'] = $t['Tsumego']['num'];
@@ -527,6 +532,8 @@ class RanksController extends AppController {
 					$allR[$h][$i] = $this->Rank->find('all', array('order' => 'num ASC', 'conditions' => array('session' => $modes[$h][$i]['RankOverview']['session'])));
 					for($j=0;$j<count($allR[$h][$i]);$j++){
 						$tx = $this->Tsumego->findById($allR[$h][$i][$j]['Rank']['tsumego_id']);
+						$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $tx['Tsumego']['id'])));
+						$tx['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 						$sx = $this->Set->findById($tx['Tsumego']['set_id']);
 						$foundSkipped = false;
 						$timeFieldColor = '#e03c4b';

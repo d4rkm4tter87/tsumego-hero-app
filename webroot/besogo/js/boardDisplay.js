@@ -401,11 +401,17 @@ besogo.makeBoardDisplay = function(container, editor, corner)
 
   function updateHoverState()
   {
-	if(!besogo.multipleChoice){
-      if (lastHoverPosition == null)
-        return;
-      if (element = hoverLayer[fromXY(lastHoverPosition.x, lastHoverPosition.y)]) // Make tool action visible on hover over
-        element.setAttribute('visibility', 'visible');
+	let displayHover = false;
+	if (!besogo.isEmbedded)
+		displayHover = true;
+	else if (!besogo.multipleChoice && boardLockValue==0)
+		displayHover = true;
+	if (displayHover)
+	{
+		if (lastHoverPosition == null)
+			return;
+		if (element = hoverLayer[fromXY(lastHoverPosition.x, lastHoverPosition.y)]) // Make tool action visible on hover over
+			element.setAttribute('visibility', 'visible');
 	}
   }
 

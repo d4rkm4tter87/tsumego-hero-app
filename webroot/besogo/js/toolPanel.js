@@ -240,7 +240,7 @@ besogo.makeToolPanel = function(container, editor)
         $("#favButton").attr('src',favImage);
       });
     }
-    if (!besogo.multipleChoice)
+    if (!besogo.multipleChoice && besogo.multipleChoiceCustom===false)
     {
       if (mode==1)
       {
@@ -392,9 +392,9 @@ besogo.makeToolPanel = function(container, editor)
         }
       }, reviewButtonId);
     }
-    else
+    else if (besogo.multipleChoiceCustom==="multiple_choice")
     {
-      toggleBoardLock(true, false, true);
+	  toggleBoardLock(true, true);
       let prevButtonId;
       prevButtonId = 'besogo-back-button';
       if (prevButtonLink!=0)
@@ -404,6 +404,86 @@ besogo.makeToolPanel = function(container, editor)
 
       makeHyperlinkText('Back', 'previous problem', prevButtonLink, prevButtonId);
     
+      makeButtonText(besogo.multipleChoiceCustomSetup[0], '', function()
+      {
+        displayMultipleChoiceCustomResult(1);
+      }, 'besogo-multipleChoice1');
+    
+      makeButtonText(besogo.multipleChoiceCustomSetup[1], '', function()
+      {
+        displayMultipleChoiceCustomResult(2);
+      }, 'besogo-multipleChoice2');
+	  if(besogo.multipleChoiceCustomSetup[2]!=""){
+        makeButtonText(besogo.multipleChoiceCustomSetup[2], '', function()
+        {
+          displayMultipleChoiceCustomResult(3);
+        }, 'besogo-multipleChoice3');
+      }
+	  if(besogo.multipleChoiceCustomSetup[3]!=""){
+        makeButtonText(besogo.multipleChoiceCustomSetup[3], '', function()
+        {
+          displayMultipleChoiceCustomResult(4);
+        }, 'besogo-multipleChoice4');
+	  }
+      let nextButtonId;
+      let nextButtonLink2 = 0;
+      nextButtonId = 'besogo-next-button';
+      if (nextButtonLink!=0)
+        nextButtonLink2 = '/tsumegos/play/'+nextButtonLink;
+      else
+        nextButtonLink2 = '/tsumegos/play/'+nextButtonLinkLv+'?refresh=3';
+      makeHyperlinkText('Next', 'next problem', nextButtonLink2, nextButtonId);
+	}
+	else if (besogo.multipleChoiceCustom==="score_estimating")
+    {
+	  toggleBoardLock(true, true);
+      let prevButtonId;
+      prevButtonId = 'besogo-back-button';
+      if (prevButtonLink!=0)
+        prevButtonLink = '/tsumegos/play/'+prevButtonLink;
+      else
+        prevButtonLink = '/sets/view/'+nextButtonLinkSet;
+
+      makeHyperlinkText('Back', 'previous problem', prevButtonLink, prevButtonId);
+    
+      makeButtonText('Black wins', '', function()
+      {
+        displayScoreEstimatingResult('b');
+      }, 'besogo-se-black');
+    
+      makeButtonText('White wins', '', function()
+      {
+        displayScoreEstimatingResult('w');
+      }, 'besogo-se-white');
+	  makeButtonText('-', '', function()
+      {
+        displayScoreEstimatingResult('-');
+      }, 'besogo-se-less');
+	  makeButtonText('+', '', function()
+      {
+        displayScoreEstimatingResult('+');
+      }, 'besogo-se-more');
+      let nextButtonId;
+      let nextButtonLink2 = 0;
+      nextButtonId = 'besogo-next-button';
+      if (nextButtonLink!=0)
+        nextButtonLink2 = '/tsumegos/play/'+nextButtonLink;
+      else
+        nextButtonLink2 = '/tsumegos/play/'+nextButtonLinkLv+'?refresh=3';
+      makeHyperlinkText('Next', 'next problem', nextButtonLink2, nextButtonId);
+	}
+	else
+	{
+      toggleBoardLock(true, true);
+      let prevButtonId;
+      prevButtonId = 'besogo-back-button';
+      if (prevButtonLink!=0)
+        prevButtonLink = '/tsumegos/play/'+prevButtonLink;
+      else
+        prevButtonLink = '/sets/view/'+nextButtonLinkSet;
+
+      makeHyperlinkText('Back', 'previous problem', prevButtonLink, prevButtonId);
+		
       makeButtonText('Black is dead', '', function()
       {
         displayMultipleChoiceResult(1);
@@ -423,6 +503,8 @@ besogo.makeToolPanel = function(container, editor)
       {
         displayMultipleChoiceResult(4);
       }, 'besogo-multipleChoice4');
+	  
+	  
       let nextButtonId;
       let nextButtonLink2 = 0;
       nextButtonId = 'besogo-next-button';

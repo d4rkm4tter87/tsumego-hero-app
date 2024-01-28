@@ -103,14 +103,6 @@
 		<br>
 		</div>
 		</div>
-		<p class="title4">New Collection: Kano Yoshinori | 31.12.2023</p>
-		<div class="new1">
-			This series written by Kano Yoshinori in 1985 covers a large range of fundamental topics. 
-			Volume 1 contains problems about recognizing atari, ladders, snapbacks and basic life and death problems. Created for Tsumego Hero by Stepan Trubitsin.
-			<div align="center"><img width="95%" src="/img/kano-yoshinori-promo.png" alt="New Collection: Kano Yoshinori" title="New Collection: Kano Yoshinori">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/214">Play</a><br><br></div>
-		</div>
 		<p class="title4">Update 28.12.2023</p>
 		<div class="new1">
 		<b>Board previews and more achievements</b><br><br>
@@ -146,13 +138,6 @@
 			</tr></table>
 			<br>
 		</div>
-		<p class="title4">New Collection: 9x9 Endgame Problems</p>
-		<div class="new1">
-			There's a saying in Go that your overall strength is limited by your endgame strength. Even if you are leading a lot in the opening and middle game, mistakes in endgame can still lose you the game. This collection allows you to practice and level-up your endgame in a small 9x9 board with real-game examples.   
-			<div align="center"><img width="95%" src="/img/9x9-startpage.png">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/207">Play</a><br><br></div>
-		</div>
 		<p class="title4">Update 27.10.2023</p>
 		<div class="new1">
 			<b>Achievements!</b><br><br>
@@ -184,23 +169,8 @@
 			Example: <a href="/tsumegos/play/25881">1000 Weiqi problems - 58</a>
 			
 		</div>
-		<p class="title4">New Collection: Sacrifical Tsumego</p>
-		<div class="new1">
-			Sometimes sacrifices are necessary in order to kill, but how many stones can you sacrifice before killing? 
-			That's the question this collection aims to answer. 
-			<div align="center"><img width="95%" src="/img/sacrifical-tsumego-home.png">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/197">Play</a><br><br></div>
-		</div>
-		<p class="title4">New Collection: Yi Kuo</p>
-		<div class="new1">
-			Yi Kuo is a classical kifu and tsumego book written by Huang Longshi (1651-1700). It was posthumously published in 1710. 
-			Go Seigen once commented that Longshi's fighting skill 
-			was of 13-dan strength. The problems in this collection are focused mainly on endgame tesujis. 
-			<div align="center"><img width="95%" src="/img/yi-kuo-home.png">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/195">Play</a><br><br></div>
-		</div>
+		
+		
 		<p class="title4">Update 20.07.2023</p>
 		<div class="new1">
 			<b>New board viewer: BesoGo</b><br><br>
@@ -215,10 +185,6 @@
 			with a separate editor which was the starting point to make this possible. <a href="https://kovarex.github.io/besogo/testing.html" target="_blank">Editor</a>
 			<br><br>
 		</div>
-		
-		
-		
-		
 			<?php
 			if(isset($_SESSION['loggedInUser'])){
 			
@@ -538,23 +504,7 @@
 		</div>
 		<p class="uotdmargin">&nbsp;</p>
 		</div>
-		<?php 
-			if(isset($loggedInUser)){
-				echo '
-					<p class="title4">Restoration Countdown</p>
-					<div class="new1">
-					
-					<font size="5px">
-						<div id="homeCountdown"></div>
-					
-					</font>
-				</div>';
-				
-				$asdf = '';
-			}else{
-				$asdf = '';
-			}
-		?>
+		
 		
 		<?php if(isset($_SESSION['loggedInUser'])){ ?>
 		<?php if($_SESSION['loggedInUser']['User']['premium']==0 && $user['User']['id']!=1165){ ?>
@@ -575,6 +525,43 @@
 			</div>
 			</div>
 		<?php } ?>
+		<p class="title4">Recent Donations and Upgrades</p>
+		<div class="new1">
+			<table class="newx" border="0">
+				<tr>
+					<td><h1>18.01.2024</h1></td>
+					<td><h1>Benjamin Daniels </h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>15.01.2024</h1></td>
+					<td><h1>Peter Leung </h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>11.01.2024</h1></td>
+					<td><h1>Dewald Volschenk </h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>11.01.2024</h1></td>
+					<td><h1>Mark Hammes </h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>11.01.2024</h1></td>
+					<td><h1>Richard Chalmers </h1></td>
+					<td><h1>25,00 €</h1></td>
+				</tr>
+				<!--
+				<tr>
+					<td><h1>10,00 € <font size="2px">subscription</font></h1></td>
+				</tr>
+				-->
+			</table>	
+		<br>
+		</div>
+		
 		<p class="title4">Problem Database Size </p>
 		<div class="new1">
 		<?php
@@ -691,133 +678,44 @@
 		<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 		<br>
 		</div>
-		<p class="title4">Recent Donations and Upgrades</p>
-		<div class="new1">
-			<table class="newx" border="0">
-				<tr>
-					<td><h1>11.01.2024</h1></td>
-					<td><h1>Dewald Volschenk </h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>11.01.2024</h1></td>
-					<td><h1>Mark Hammes </h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>11.01.2024</h1></td>
-					<td><h1>Richard Chalmers </h1></td>
-					<td><h1>25,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>09.01.2024</h1></td>
-					<td><h1>Daniel Vargas </h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>08.01.2024</h1></td>
-					<td><h1>Scotty Reed</h1></td>
-					<td><h1>2,17 € <font size="2px">subscription</font></h1></td>
-				</tr>
-				<!--
-				<tr>
-					<td><h1>10,00 € <font size="2px">subscription</font></h1></td>
-				</tr>
-				-->
-			</table>	
-		<br>
-		</div>	
-		<p class="title4">Tsumego Hero Videos</p>
+		
+		<p class="title4">New Collection: Kano Yoshinori | 31.12.2023</p>
 		<div class="new1">	
-			<br>
-			<div align="center">
-			<iframe width="560" height="315" src="https://www.youtube.com/embed/OMIfyzXS9Vo" frameborder="0" allow="accelerometer; 
-			autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-			</div>
-			<br>
-			<b>Video by Daniel ML</b><br>
-			Twitch: <a href="https://www.twitch.tv/danielml001" target="_blank">https://www.twitch.tv/danielml001</a><br>
-			Youtube: <a href="https://www.youtube.com/channel/UCc4gkScb1PJAiDDtZ00eAjA" target="_blank">Daniel ML</a><br>
-			<br>
-			<b>All Episodes</b><br>
-			E1: <a href="https://www.youtube.com/watch?v=t4dR3JrP_x8" target="_blank">Tsumego Hero 1 : Hard Mode</a><br>
-			E2: <a href="https://www.youtube.com/watch?v=rZBmLnzSWWI" target="_blank">Tsumego Hero 2 : Extra Life</a><br>
-			E3: <a href="https://www.youtube.com/watch?v=OMIfyzXS9Vo" target="_blank">Tsumego Hero 3 : Hero Rising</a><br>
-			<br>
-		</div>
-		<p class="title4">Contributors</p>
-		<div class="new1">
-		Tsumego Hero is only in constant good shape, because there were users who helped creating the files for the problems.
-		If you want to do some tsumego training and at the same time help the website by creating files, please message me. Help is much appreciated.<br><br>
-		All contributors are listed here: <a href="/users/authors">Authors</a>
-		<br>
-		</div>
+					This series written by Kano Yoshinori in 1985 covers a large range of fundamental topics. 
+			Volume 1 contains problems about recognizing atari, ladders, snapbacks and basic life and death problems. Created for Tsumego Hero by Stepan Trubitsin.
+			<div align="center"><img width="95%" src="/img/kano-yoshinori-promo.png" alt="New Collection: Kano Yoshinori" title="New Collection: Kano Yoshinori">
+			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/214">Play</a><br><br></div>
 		
-		<p class="title4">Admins</p>
+		</div>
+		<p class="title4">New Collection: 9x9 Endgame Problems</p>
 		<div class="new1">
-		We are looking for more admins who can confidently answer comments in the discuss area and create new problems.
-		Ideally, there is a small group of active or semi-active admins that is interested in discussion, uploading problems or creating new collections.
-		Let me know if you would like to be on the productive side of Tsumego Hero. (<a href="mailto:me@joschkazimdars.com">me@joschkazimdars.com</a>)
-		
-		<br>
+			There's a saying in Go that your overall strength is limited by your endgame strength. Even if you are leading a lot in the opening and middle game, mistakes in endgame can still lose you the game. This collection allows you to practice and level-up your endgame in a small 9x9 board with real-game examples.   
+			<div align="center"><img width="95%" src="/img/9x9-startpage.png">
+			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/207">Play</a><br><br></div>
+		</div>
+		<p class="title4">New Collection: Sacrifical Tsumego</p>
+		<div class="new1">
+			Sometimes sacrifices are necessary in order to kill, but how many stones can you sacrifice before killing? 
+			That's the question this collection aims to answer. 
+			<div align="center"><img width="95%" src="/img/sacrifical-tsumego-home.png">
+			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/197">Play</a><br><br></div>
+		</div>
+		<p class="title4">New Collection: Yi Kuo</p>
+		<div class="new1">
+			Yi Kuo is a classical kifu and tsumego book written by Huang Longshi (1651-1700). It was posthumously published in 1710. 
+			Go Seigen once commented that Longshi's fighting skill 
+			was of 13-dan strength. The problems in this collection are focused mainly on endgame tesujis. 
+			<div align="center"><img width="95%" src="/img/yi-kuo-home.png">
+			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/195">Play</a><br><br></div>
 		</div>
 		</div>
 		<br>
 		<div style="clear:both;"></div> 
 		<br>
-		<!--
-		<p class="title4 ">Contributors</p>
-		<br>
-		<font size="5px">
-		Timo (Timo Kreuzer)<br>
-		Silent gentleman (саша черных)<br>
-		Bradford (Bradford Malbon)<br>
-		GoDave89 (David Ulbricht)<br> 
-		okimoyo (Ryan Smith)<br>
-		gobum<br>
-		Andrey<br>
-		<br>
-		
-		</font>
-		
-		<p class="title4 ">Donations in September</p>
-		<br>
-		<font size="5px">
-		<table class="donatorsTable">
-		<tr>
-		<td>Contraband</td><td>21,00 €</td>
-		</tr>
-		<tr>
-		<td>DuskEagle</td><td>20,00 €</td>
-		</tr>
-		<tr>
-		<td>og1L</td><td>20,00 €</td>
-		</tr>
-		<tr>
-		<td>Danglard</td><td>20,00 €</td>
-		</tr>
-		<tr>
-		<td>Tsultruim</td><td>20,00 €</td>
-		</tr>
-		<tr>
-		<td>GoGentleman</td><td>20,00 €</td>
-		</tr>
-		<tr>
-		<td>averell</td><td>20,00 €</td>
-		</tr>
-		<tr>
-		<td>Sosnovsky (Juan Manuel)</td><td>10,00 €</td>
-		</tr>
-		<tr>
-		<td>waste</td><td>10,00 €</td>
-		</tr>
-		<tr>
-		<td>Paytonbigsby</td><td>10,00 €</td>
-		</tr>
-		</table>
-		-->
-		</font>
-		
 	</div>
 	
 	<script>
@@ -907,8 +805,11 @@
 				textBuffer = xmlHttp.responseText;
 				$("#ajaxWallpaper").css("display", "none");
 				setTimeout(nextFadeIn(xmlHttp.responseText), 100);
-				setTimeout($("#ajaxWallpaper").fadeIn(600), 500);
+				setTimeout(nextFadeIn2, 300);
 			}
+		}
+		function nextFadeIn2(){
+			$("#ajaxWallpaper").fadeIn(300);
 		}
 		function nextFadeIn(responseText){
 			var element = document.getElementById("ajaxWallpaper");

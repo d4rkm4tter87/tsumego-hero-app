@@ -580,10 +580,13 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
 
   root.registerInVirtualMoves = function()
   {
-    let myRoot = this.getRoot();
-    let index = this.fromXY(this.move.x, this.move.y);
-    myRoot.relevantMoves[index] = true;
-    besogo.addVirtualChildren(myRoot, this);
+	if (typeof this.move === 'Object')
+	{
+      let myRoot = this.getRoot();
+      let index = this.fromXY(this.move.x, this.move.y);
+      myRoot.relevantMoves[index] = true;
+      besogo.addVirtualChildren(myRoot, this);
+	}
   }
 
   root.setCorrectSource = function(value, editor)

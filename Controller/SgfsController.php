@@ -14,6 +14,7 @@ class SgfsController extends AppController {
 		$this->loadModel('Tsumego');
 		$this->loadModel('Set');
 		$this->loadModel('User');
+		$this->loadModel('SetConnection');
 		$name = '';
 		$ux = '';
 		$type = 'tsumego';
@@ -32,6 +33,8 @@ class SgfsController extends AppController {
 			$newDuplicates = explode('-', $this->params['url']['duplicates']);
 			for($i=0; $i<count($newDuplicates); $i++){
 				$dupl = $this->Tsumego->findById($newDuplicates[$i]);
+				$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $dupl['Tsumego']['id'])));
+				$dupl['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 				$dSet = $this->Set->findById($dupl['Tsumego']['set_id']);
 				array_push($dId, $dupl['Tsumego']['id']);
 				array_push($dTitle, $dSet['Set']['title'].' - '.$dupl['Tsumego']['num']);
@@ -39,6 +42,8 @@ class SgfsController extends AppController {
 		}
 		
 		$t = $this->Tsumego->findById($id);
+		$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+		$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 		$set = $this->Set->findById($t['Tsumego']['set_id']);
 		$name = $set['Set']['title'].' '.$set['Set']['title2'].' '.$t['Tsumego']['num'];
 		$_SESSION['title'] = 'Upload History of '.$name;
@@ -58,6 +63,8 @@ class SgfsController extends AppController {
 			$s[$i]['Sgf']['user'] = $u['User']['name'];
 			$ux = $u['User']['name'];
 			$t = $this->Tsumego->findById($s[$i]['Sgf']['tsumego_id']);
+			$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+			$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 			$set = $this->Set->findById($t['Tsumego']['set_id']);
 			$s[$i]['Sgf']['title'] = $set['Set']['title'].' '.$set['Set']['title2'].' #'.$t['Tsumego']['num'];;
 			$s[$i]['Sgf']['num'] = $t['Tsumego']['num'];

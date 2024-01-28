@@ -4,66 +4,11 @@ class SetsController extends AppController{
     public $helpers = array('Html', 'Form');
 	public $title = 'tsumego-hero.com';
 
-	private function publishSet($from=null, $to=null, $date=null){
-		$this->LoadModel('Tsumego');
-		$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => $from)));
-		$id = $this->Tsumego->find('first', array('limit' => 1, 'order' => 'id DESC'));
-		$id = $id['Tsumego']['id'];
-		$id += 1;
-		for($i=0; $i<count($ts); $i++){
-			if($ts[$i]['Tsumego']['num']>=76 && $ts[$i]['Tsumego']['num']<=80){
-			//if($ts[$i]['Tsumego']['num']<=10){
-				$sid = $ts[$i]['Tsumego']['id'];
-				$ts[$i]['Tsumego']['id'] = $id;
-				$ts[$i]['Tsumego']['set_id'] = $to;
-				$ts[$i]['Tsumego']['created'] = $date;
-				$this->Tsumego->create();
-				$this->Tsumego->save($ts[$i]);
-				$this->Tsumego->delete($sid);
-				$id++;
-			}
-		}
-	}
-
-	private function publishSet2($from=null, $to=null){
-		$this->LoadModel('Tsumego');
-		$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => $from)));
-		$id = $this->Tsumego->find('first', array('limit' => 1, 'order' => 'id DESC'));
-		$id = $id['Tsumego']['id'];
-		$id += 1;
-		for($i=0; $i<count($ts); $i++){
-			if(true){
-				if($ts[$i]['Tsumego']['difficulty']>5){
-					$sid = $ts[$i]['Tsumego']['id'];
-					$ts[$i]['Tsumego']['id'] = $id;
-					$ts[$i]['Tsumego']['set_id'] = $to;
-					//$this->Tsumego->create();
-					$this->Tsumego->save($ts[$i]);
-					//$this->Tsumego->delete($sid);
-					$id++;
-				}
-			}
-		}
-	}
-
-	private function publishSet3(){
-		$this->LoadModel('Tsumego');
-		$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => 126)));
-		$id = $this->Tsumego->find('first', array('limit' => 1, 'order' => 'id DESC'));
-		$id = $id['Tsumego']['id'];
-		$id += 1;
-		for($i=0; $i<count($ts); $i++){
-			if($ts[$i]['Tsumego']['id']>=16703){
-
-				$this->Tsumego->delete($ts[$i]['Tsumego']['id']);
-			}
-		}
-	}
-	
 	public function duplicates($id=null){
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('Sgf');
 		$this->LoadModel('Duplicate');
+		$this->LoadModel('SetConnection');
 		
 		$_SESSION['page'] = 'sandbox';
 		$_SESSION['title'] = 'Tsumego Hero - Duplicates';
@@ -71,7 +16,8 @@ class SetsController extends AppController{
 		$tIds = array();
 		$d2 = array();
 		
-		$ts = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array('set_id' => $id)));
+		//$ts = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array('set_id' => $id)));
+		$ts = $this->findTsumegoSet($id);
 		$set = $this->Set->findById($ts[0]['Tsumego']['set_id']);
 		for($i=0; $i<count($ts); $i++)
 			array_push($tIds, $ts[$i]['Tsumego']['id']);
@@ -117,6 +63,8 @@ class SetsController extends AppController{
 				$d2[$counter] = array();
 			}
 			$td = $this->Tsumego->findById($d[$i]['Duplicate']['tsumego_id']);
+			$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $td['Tsumego']['id'])));$td['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
+
 			$setx = $this->Set->findById($td['Tsumego']['set_id']);
 			$td['Tsumego']['title'] = $setx['Set']['title'].' - '.$td['Tsumego']['num'];
 			
@@ -152,7 +100,8 @@ class SetsController extends AppController{
 			)
 		)));
 		for($i=0; $i<count($s); $i++){
-			$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => $s[$i]['Set']['id'])));
+			//$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => $s[$i]['Set']['id'])));
+			$ts = $this->findTsumegoSet($s[$i]['Set']['id']);		
 			$tsIds = array();
 			for($j=0; $j<count($ts); $j++){
 				array_push($tsIds, $ts[$j]['Tsumego']['id']);
@@ -164,7 +113,6 @@ class SetsController extends AppController{
 		$ds1 = file_get_contents('ds1.txt');
 		$all = $this->Tsumego->find('all', array('order' => 'id ASC'));
 		
-		//$progress = $ds1.'/'.count($all);
 		$this->set('progress', $progress);
 		$this->set('s', $s);
 	}
@@ -177,6 +125,7 @@ class SetsController extends AppController{
 		$this->LoadModel('Favorite');
 		$this->LoadModel('Comment');
 		$this->LoadModel('UserSaMap');
+		$this->LoadModel('SetConnection');
 
 		$_SESSION['page'] = 'sandbox';
 		$_SESSION['title'] = 'Tsumego Hero - Collections';
@@ -188,7 +137,6 @@ class SetsController extends AppController{
 				$this->Set->save($restore);
 			}
 		}
-
 		$sa = $this->UserSaMap->find('all');
 
 		$setsX = $this->Set->find('all', array(
@@ -247,11 +195,6 @@ class SetsController extends AppController{
 		for($i=0; $i<count($setsX); $i++){
 			if(!isset($removeMap[$setsX[$i]['Set']['id']])) array_push($sets, $setsX[$i]);
 		}
-		for($i=0; $i<count($sets); $i++){
-			$t = $this->Tsumego->find('first',
-				array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
-			);
-		}
 		if(isset($_SESSION['loggedInUser'])){
 			$uts = $this->TsumegoStatus->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
 			$utsMap = array();
@@ -261,18 +204,10 @@ class SetsController extends AppController{
 		}
 
 		$globalSolvedCounter = 0;
-		$globalCounter = count($this->Tsumego->find('all'));
-		$invisibleSets = $this->getInvisibleSets();
-		for($i=0; $i<count($invisibleSets); $i++){
-			$invisibleSet[$i] = count($this->Tsumego->find('all', array('conditions' =>  array('set_id' => $invisibleSets[$i]))));
-			$globalCounter-=$invisibleSet[$i];
-		}
-
+		
 		$overallCounter = 0;
 		for($i=0; $i<count($sets); $i++){
-			$ts = $this->Tsumego->find('all',
-				array('conditions' =>  array('set_id' => $sets[$i]['Set']['id']))
-			);
+			$ts = $this->findTsumegoSet($sets[$i]['Set']['id']);
 			$sets[$i]['Set']['anz'] = count($ts);
 			$counter = 0;
 
@@ -325,14 +260,6 @@ class SetsController extends AppController{
 		$sortColor = 'null';
 
 		if(isset($_SESSION['loggedInUser'])){
-			if($globalCounter==$globalSolvedCounter){
-				$u['User']['secretArea10'] = 1;
-				$_SESSION['loggedInUser']['User']['secretArea10'] = 1;
-				$firstGod = $this->User->findById($u['User']['id']);
-				$firstGod['User']['secretArea10'] = 1;
-				$this->User->save($firstGod);
-			}
-
 			if(isset($_COOKIE['sortOrder']) && $_COOKIE['sortOrder']!= 'null'){
 				$u['User']['sortOrder'] = $_COOKIE['sortOrder'];
 				$sortOrder = $_COOKIE['sortOrder'];
@@ -348,13 +275,13 @@ class SetsController extends AppController{
 			$this->User->save($u);
 		}
 
-		$accessList = $this->User->find('all', array('conditions' =>  array('completed' => 1)));
+		$accessList = $this->User->find('all', array('conditions' => array('completed' => 1)));
 		$access = array();
 		for($i=0; $i<count($accessList); $i++){
 			array_push($access, $accessList[$i]['User']['name']);
 		}
 
-		$adminsList = $this->User->find('all', array('order' => 'id ASC', 'conditions' =>  array('isAdmin >' => 0)));
+		$adminsList = $this->User->find('all', array('order' => 'id ASC', 'conditions' => array('isAdmin >' => 0)));
 		$admins = array();
 		for($i=0; $i<count($adminsList); $i++){
 			array_push($admins, $adminsList[$i]['User']['name']);
@@ -368,11 +295,11 @@ class SetsController extends AppController{
         $this->set('overallCounter', $overallCounter);
     }
 
-	public function create($tid){
+	public function create($tid=null){
 		$this->LoadModel('Tsumego');
+		$this->LoadModel('SetConnection');
 		$redirect = false;
-
-
+		$t = array();
 		if(isset($this->data['Set'])){
 			$s = $this->Set->find('all', array('order' => 'id DESC'));
 			$ss = array();
@@ -404,22 +331,27 @@ class SetsController extends AppController{
 
 			$t = array();
 			$t['Tsumego']['id'] = $tMax['Tsumego']['id']+1;
+			$t['Tsumego']['set_id'] = 206;
 			$t['Tsumego']['num'] = 1;
 			$t['Tsumego']['difficulty'] =  4;
-			$t['Tsumego']['set_id'] =  $ss[0]['Set']['id']+1;
 			$t['Tsumego']['variance'] =  100;
 			$t['Tsumego']['description'] =  'b to kill';
 			$t['Tsumego']['author'] =  $_SESSION['loggedInUser']['User']['name'];
 			$this->Tsumego->create();
 			$this->Tsumego->save($t);
+			
+			$sc = array();
+			$sc['SetConnection']['set_id'] = $ss[0]['Set']['id']+1;
+			$sc['SetConnection']['tsumego_id'] = $tMax['Tsumego']['id']+1;
+			$sc['SetConnection']['num'] = 1;
+			$this->SetConnection->create();
+			$this->SetConnection->save($sc);
 
 			mkdir($hashName, 0777);
 			copy('6473k339312/__new/1.sgf', $hashName.'/1.sgf');
 
 			$redirect = true;
 		}
-
-
 		$this->set('t', $t);
 		$this->set('redirect', $redirect);
 	}
@@ -428,7 +360,6 @@ class SetsController extends AppController{
 		$this->LoadModel('Tsumego');
 		$redirect = false;
 
-
 		if(isset($this->data['Set'])){
 			if(strpos(';'.$this->data['Set']['hash'], '6473k339312-')==1){
 				$set = str_replace('6473k339312-', '', $this->data['Set']['hash']);
@@ -436,7 +367,8 @@ class SetsController extends AppController{
 				$s = $this->Set->findById($set);
 				if($s['Set']['public']==0 || $s['Set']['public']==-1) $this->Set->delete($set);
 
-				$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => $set)));
+				//$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => $set)));
+				$ts = $this->findTsumegoSet($set);	
 				if(count($ts)<50){
 					for($i=0;$i<count($ts);$i++){
 						$this->Tsumego->delete($ts[$i]['Tsumego']['id']);
@@ -458,30 +390,21 @@ class SetsController extends AppController{
 			$t = array();
 			$t['Tsumego']['num'] = $this->data['Tsumego']['num'];
 			$t['Tsumego']['difficulty'] =  $this->data['Tsumego']['difficulty'];
-			$t['Tsumego']['set_id'] =  $this->data['Tsumego']['set_id'];
+			//$t['Tsumego']['set_id'] =  $this->data['Tsumego']['set_id'];
 			$t['Tsumego']['variance'] =  $this->data['Tsumego']['variance'];
 			$t['Tsumego']['description'] =  $this->data['Tsumego']['description'];
 			$this->Tsumego->save($t);
 		}
-
-		$ts = $this->Tsumego->find('all', array('order' => 'num DESC', 'conditions' => array('set_id' => $tid)));
+		$ts = $this->findTsumegoSet($tid);	
+		//$ts = $this->Tsumego->find('all', array('order' => 'num DESC', 'conditions' => array('set_id' => $tid)));
 		$this->set('t', $ts[0]);
 	}
 
-	public function i(){
-		$this->LoadModel('Tsumego');
-		$index = $this->Tsumego->find('first', array('limit' => 1, 'order' => 'id DESC'));
-		//$this->publishSet2(51, 129);
-		//$this->publishSet3();
-		$t = $this->Tsumego->find('all', array('conditions' =>  array('set_id' => 126)));
-		$this->set('index', $index);
-		//$this->set('t', $t);
-	}
 
 	private function newDate($date=null){
 		$this->LoadModel('Tsumego');
-		$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => 94)));
-
+		//$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => 94)));
+		$ts = $this->findTsumegoSet(94);	
 		for($i=0; $i<count($ts); $i++){
 			if($ts[$i]['Tsumego']['num']>200 && $ts[$i]['Tsumego']['num']<=300){
 				$ts[$i]['Tsumego']['created'] = $date;
@@ -496,6 +419,7 @@ class SetsController extends AppController{
 		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Favorite');
 		$this->LoadModel('AchievementCondition');
+		$this->LoadModel('SetConnection');
 
 		$_SESSION['page'] = 'set';
 		$_SESSION['title'] = 'Tsumego Hero - Collections';
@@ -580,17 +504,6 @@ class SetsController extends AppController{
 		for($i=0; $i<count($setsX); $i++){
 			if(!isset($removeMap[$setsX[$i]['Set']['id']])) array_push($sets, $setsX[$i]);
 		}
-		for($i=0; $i<count($sets); $i++){
-			if(!isset($_SESSION['loggedInUser'])){
-				$t = $this->Tsumego->find('first',
-					array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
-				);
-			}else{
-				$t = $this->Tsumego->find('first',
-					array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
-				);
-			}
-		}
 		if(isset($_SESSION['loggedInUser'])){
 			$uts = $this->TsumegoStatus->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
 			$idMap = array();
@@ -604,21 +517,17 @@ class SetsController extends AppController{
 				$utsMap[$uts[$l]['TsumegoStatus']['tsumego_id']] = $uts[$l]['TsumegoStatus']['status'];
 			}
 		}
-
+		/*
 		$globalSolvedCounter = 0;
 		$globalCounter = count($this->Tsumego->find('all'));
 		$invisibleSets = $this->getInvisibleSets();
 		for($i=0; $i<count($invisibleSets); $i++){
-			$invisibleSet[$i] = count($this->Tsumego->find('all', array('conditions' =>  array('set_id' => $invisibleSets[$i]))));
+			$invisibleSet[$i] = count($this->Tsumego->find('all', array('conditions' => array('set_id' => $invisibleSets[$i]))));
 			$globalCounter-=$invisibleSet[$i];
 		}
-
-		$ts = $this->Tsumego->find('all', array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'])));
-
+		*/
 		for($i=0; $i<count($sets); $i++){
-			$ts = $this->Tsumego->find('all',
-				array('conditions' =>  array('set_id' => $sets[$i]['Set']['id']))
-			);
+			$ts = $this->findTsumegoSet($sets[$i]['Set']['id']);
 			$sets[$i]['Set']['anz'] = count($ts);
 			$counter = 0;
 
@@ -682,13 +591,6 @@ class SetsController extends AppController{
 				$this->AchievementCondition->save($aCondition);
 			}
 			
-			if($globalCounter==$globalSolvedCounter){
-				$u['User']['secretArea10'] = 1;
-				$_SESSION['loggedInUser']['User']['secretArea10'] = 1;
-				$firstGod = $this->User->findById($u['User']['id']);
-				$firstGod['User']['secretArea10'] = 1;
-				$this->User->save($firstGod);
-			}
 			if(isset($_COOKIE['sortOrder']) && $_COOKIE['sortOrder']!= 'null'){
 				$u['User']['sortOrder'] = $_COOKIE['sortOrder'];
 				$sortOrder = $_COOKIE['sortOrder'];
@@ -849,14 +751,18 @@ class SetsController extends AppController{
 
 		if(isset($this->params['url']['add'])){
 			$overallCount = $this->Tsumego->find('first', array('order' => 'id DESC'));
-			$setCount = $this->Tsumego->find('first', array('order' => 'num DESC', 'conditions' => array('set_id' => $id)));
+			
+			$scTcount = $this->SetConnection->find('first', array('conditions' => array('set_id' => $id, 'num' => 1)));
+			$setCount = $this->Tsumego->findById($scTcount['SetConnection']['tsumego_id']);
 			$setCount['Tsumego']['id'] = $overallCount['Tsumego']['id'] + 1;
+			$setCount['Tsumego']['set_id'] = $scTcount['SetConnection']['set_id'];
 			$setCount['Tsumego']['num'] += 1;
 			$setCount['Tsumego']['variance'] = 100;
 			if($_SESSION['loggedInUser']['User']['id'] == 72) $setCount['Tsumego']['author'] = 'Joschka Zimdars';
 			elseif($_SESSION['loggedInUser']['User']['id'] == 1206) $setCount['Tsumego']['author'] = 'Innokentiy Zabirov';
 			elseif($_SESSION['loggedInUser']['User']['id'] == 3745) $setCount['Tsumego']['author'] = 'Dennis Olevanov';
 			else $setCount['Tsumego']['author'] = $_SESSION['loggedInUser']['User']['name'];
+			$this->Tsumego->create();
 			$this->Tsumego->save($setCount);
 
 			$adminActivity = array();
@@ -874,13 +780,14 @@ class SetsController extends AppController{
 
 		if($id!=1){
 			$set = $this->Set->find('first', array('conditions' =>  array('id' => $id)));
-			$ts = $this->Tsumego->find('all', array('order' => 'num', 'direction' => 'ASC', 'conditions' => array('set_id' => $id)));
+			//$ts = $this->Tsumego->find('all', array('order' => 'num', 'direction' => 'ASC', 'conditions' => array('set_id' => $id)));
+			$ts = $this->findTsumegoSet($id);
 			$scTs = $this->SetConnection->find('all', array('conditions' => array('set_id' => $set['Set']['id'])));
 			for($i=0; $i<count($scTs); $i++){
 				$scT = $this->Tsumego->findById($scTs[$i]['SetConnection']['tsumego_id']);
 				$scT['Tsumego']['set_id'] = $scTs[$i]['SetConnection']['set_id'];
 				$scT['Tsumego']['num'] = $scTs[$i]['SetConnection']['num'];
-				$scT['Tsumego']['duplicateLink'] = '/'.$scT['Tsumego']['set_id'];//§
+				$scT['Tsumego']['duplicateLink'] = '/'.$scT['Tsumego']['set_id'];
 				array_push($ts, $scT);
 			}
 			$tsBuffer = array();
@@ -1105,29 +1012,30 @@ class SetsController extends AppController{
 					$tf = array();
 					$tf['Tsumego']['num'] = $this->data['Tsumego']['num'];
 					$tf['Tsumego']['difficulty'] =  50;
-					$tf['Tsumego']['set_id'] =  $this->data['Tsumego']['set_id'];
+					$tf['Tsumego']['set_id'] =  $id;
 					$tf['Tsumego']['variance'] =  $this->data['Tsumego']['variance'];
 					$tf['Tsumego']['description'] =  $this->data['Tsumego']['description'];
 					$tf['Tsumego']['hint'] =  $this->data['Tsumego']['hint'];
 					$tf['Tsumego']['author'] =  $this->data['Tsumego']['author'];
 					if(is_numeric($this->data['Tsumego']['num'])){
 						if($this->data['Tsumego']['num']>=0){
+							$this->Tsumego->create();
 							$this->Tsumego->save($tf);
+							$tfSetHighestId = $this->Tsumego->find('first',  array('order' => 'id DESC'));
+							$tfSetConnection = array();
+							$tfSetConnection['SetConnection']['set_id'] = $id;
+							$tfSetConnection['SetConnection']['tsumego_id'] = $tfSetHighestId['Tsumego']['id'];
+							$tfSetConnection['SetConnection']['num'] = $this->data['Tsumego']['num'];
+							$this->SetConnection->create();
+							$this->SetConnection->save($tfSetConnection);
 						}
 					}
-					if($id==161){
-						$tx = $this->Tsumego->find('first', array('order' => 'id DESC'));
-						$this->Joseki->create();
-						$js = array();
-						$js['Joseki']['tsumego_id'] = $tx['Tsumego']['id'];
-						$js['Joseki']['type'] = $this->data['Tsumego']['type'];
-						$js['Joseki']['order'] = $this->data['Tsumego']['order'];
-						$js['Joseki']['thumbnail'] = $this->data['Tsumego']['thumb'];
-						$this->Joseki->save($js);
-					}
 					$tsIds = array();
-					$ts = $this->Tsumego->find('all', array('order' => 'num', 'direction' => 'DESC', 'conditions' => array('set_id' => $id)));
-					for($i=0; $i<count($ts); $i++) array_push($tsIds, $ts[$i]['Tsumego']['id']);
+					//$ts = $this->Tsumego->find('all', array('order' => 'num', 'direction' => 'DESC', 'conditions' => array('set_id' => $id)));
+					$ts = $this->findTsumegoSet($id);
+					//echo '<pre>'; print_r($tf); echo '</pre>';
+					for($i=0; $i<count($ts); $i++) 
+						array_push($tsIds, $ts[$i]['Tsumego']['id']);
 				}
 			}
 		}else{
@@ -1278,13 +1186,16 @@ class SetsController extends AppController{
 			$set['Set']['solved'] = round($percent, 1);
 		}
 
-		$t = $this->Tsumego->find('first',
-			array('conditions' =>  array('set_id' => $set['Set']['id'], 'num' => '1'))
-		);
+		$scTt = $this->SetConnection->find('first', array('conditions' => array('set_id' => $set['Set']['id'], 'num' => 1)));
+		if($scTt!=null)
+			$t = $this->Tsumego->findById($scTt['SetConnection']['tsumego_id']);
+		else
+			$t = null;
 		if($t==null) $t = $ts[0];
 		$set['Set']['t'] = $t['Tsumego']['id'];
-
-		$tfs = $this->Tsumego->find('all', array('order' => 'num DESC', 'conditions' => array('set_id' => $id)));
+		
+		//$tfs = $this->Tsumego->find('all', array('order' => 'num DESC', 'conditions' => array('set_id' => $id)));
+		$tfs = $this->findTsumegoSet($id);
 
 		$scoring = true;
 
@@ -1307,8 +1218,8 @@ class SetsController extends AppController{
 			}
 
 			$pd = $this->ProgressDeletion->find('all', array('conditions' => array(
-			'user_id' => $_SESSION['loggedInUser']['User']['id'],
-			'set_id' => $id
+				'user_id' => $_SESSION['loggedInUser']['User']['id'],
+				'set_id' => $id
 			)));
 			$pdCounter = 0;
 			for($i=0; $i<count($pd); $i++){
@@ -1387,7 +1298,7 @@ class SetsController extends AppController{
 			array_push($tooltipBoardSize, $tArr[3]);
 		}
 		
-		$this->set('tfs', $tfs[0]);
+		$this->set('tfs', $tfs[count($tfs)-1]);
 		$this->set('ts', $ts);
 		$this->set('set', $set);
 		$this->set('josekiOrder', $josekiOrder);
@@ -1510,11 +1421,6 @@ class SetsController extends AppController{
 		for($i=0; $i<count($setsX); $i++){
 			if(!isset($removeMap[$setsX[$i]['Set']['id']])) array_push($sets, $setsX[$i]);
 		}
-		for($i=0; $i<count($sets); $i++){
-			$t = $this->Tsumego->find('first',
-				array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'], 'num' => '1'))
-			);
-		}
 		if(isset($_SESSION['loggedInUser'])){
 			$uts = $this->TsumegoStatus->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
 			$utsMap = array();
@@ -1523,18 +1429,8 @@ class SetsController extends AppController{
 			}
 		}
 
-		$globalSolvedCounter = 0;
-		$globalCounter = count($this->Tsumego->find('all'));
-		$invisibleSets = $this->getInvisibleSets();
-		for($i=0; $i<count($invisibleSets); $i++){
-			$invisibleSet[$i] = count($this->Tsumego->find('all', array('conditions' =>  array('set_id' => $invisibleSets[$i]))));
-			$globalCounter-=$invisibleSet[$i];
-		}
-
 		for($i=0; $i<count($sets); $i++){
-			$ts = $this->Tsumego->find('all',
-				array('conditions' =>  array('set_id' => $sets[$i]['Set']['id']))
-			);
+			$ts = $this->findTsumegoSet($sets[$i]['Set']['id']);	
 			$sets[$i]['Set']['anz'] = count($ts);
 			$counter = 0;
 

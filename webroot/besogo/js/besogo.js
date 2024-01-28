@@ -23,6 +23,8 @@
   besogo.alternativeResponse = true;//alternative response mode
   besogo.multipleChoice = null;//multiple choice problems
   besogo.multipleChoiceSetup = [];//multiple choice random stone placement
+  besogo.multipleChoiceCustom = false;
+  besogo.multipleChoiceCustomSetup = null;
   besogo.onSite = null;
   let corner;
 
@@ -305,7 +307,10 @@
       besogo.alternativeResponse = options.alternativeResponse;
     if (typeof options.multipleChoice === 'boolean')
       besogo.multipleChoice = options.multipleChoice;
+	if (typeof options.multipleChoiceCustom === 'string')
+      besogo.multipleChoiceCustom = options.multipleChoiceCustom;
     besogo.multipleChoiceSetup = options.multipleChoiceSetup;
+    besogo.multipleChoiceCustomSetup = options.multipleChoiceCustomSetup;
     if (typeof options.rootPath === 'string')
       besogo.rootPath = options.rootPath;
     else
@@ -556,7 +561,7 @@
   function parseAndLoad(text, editor)
   {
     var sgf;
-	if (!text.includes('+') && !besogo.multipleChoice) //no solution
+	if (!text.includes('+') && !besogo.multipleChoice && besogo.multipleChoiceCustom===false) //no solution
 	  if (!text.includes('G[') && !text.includes('S[')) //not a status based problem
 	    if (besogo.isEmbedded)
 	      besogo.editor.displayError('This problem has no solution.');
@@ -675,8 +680,11 @@
       cookieDiff = cookieDiff.replaceAll('€', "\n");
       cookieDiff = cookieDiff.replaceAll('@', ";");
       cookieDiff = cookieDiff.replaceAll('%2B', "+");
-      cookieDiff = besogo.parseSgf(cookieDiff);
-      besogo.loadSgf(cookieDiff, editor, OPEN_FOR_DIFF);
+	  if(cookieDiff!="")
+	  {
+	    cookieDiff = besogo.parseSgf(cookieDiff);
+        besogo.loadSgf(cookieDiff, editor, OPEN_FOR_DIFF);
+	  }
     }
     return besogo.scaleParameters;
   }

@@ -22,6 +22,7 @@ class TsumegoRatingAttemptsController extends AppController {
 		$this->LoadModel('User');
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('Set');
+		$this->LoadModel('SetConnection');
 		
 		if($type==0){
 			$trs = $this->TsumegoRatingAttempt->find('all', array('limit' => 12000, 'order' => 'created DESC', 'conditions' =>  array(
@@ -34,6 +35,8 @@ class TsumegoRatingAttemptsController extends AppController {
 			for($i=0; $i<count($trs); $i++){
 				$user = $this->User->findById($trs[$i]['TsumegoRatingAttempt']['user_id']);
 				$tsumego = $this->Tsumego->findById($trs[$i]['TsumegoRatingAttempt']['tsumego_id']);
+				$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $tsumego['Tsumego']['id'])));
+				$tsumego['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 				$set = $this->Set->findById($tsumego['Tsumego']['set_id']);
 				$values = array();
 				$hash = substr($user['User']['ip'], 0, 1);
@@ -194,6 +197,7 @@ class TsumegoRatingAttemptsController extends AppController {
 		$_SESSION['title'] = 'History of '.$_SESSION['loggedInUser']['User']['name'];
 		$this->LoadModel('Set');
 		$this->LoadModel('Tsumego');
+		$this->LoadModel('SetConnection');
 		if($_SESSION['loggedInUser']['User']['id']!=$trid && $_SESSION['loggedInUser']['User']['id']!=72) $_SESSION['redirect'] = 'sets';
 		$trs = $this->TsumegoRatingAttempt->find('all', array('limit' => 500, 'order' => 'created DESC', 'conditions' => array(
 			'user_id' => $trid,
@@ -205,6 +209,8 @@ class TsumegoRatingAttemptsController extends AppController {
 		
 		for($i=0; $i<count($trs); $i++){
 			$t = $this->Tsumego->findById($trs[$i]['TsumegoRatingAttempt']['tsumego_id']);
+			$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+			$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 			$s = $this->Set->findById($t['Tsumego']['set_id']);
 			$trs[$i]['TsumegoRatingAttempt']['title'] = '<a target="_blank" href="/tsumegos/play/'.$trs[$i]['TsumegoRatingAttempt']['tsumego_id'].'?mode=1">'.$s['Set']['title'].' '.$s['Set']['title2'].' - '.$t['Tsumego']['num'].'</a>';
 			

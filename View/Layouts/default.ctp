@@ -404,6 +404,9 @@
 	}
 	?>
 	<script type="text/javascript">
+	var PHPSESSID = getCookie("PHPSESSID");
+	setCookie("PHPSESSID", PHPSESSID);
+	
 	<?php
 		for($i=0;$i<count($achievementUpdate);$i++){
 			echo '$("#achievementAlerts'.$i.'").fadeIn(600);';
@@ -431,27 +434,28 @@
       soundsEnabled = value;
     }
 		usedModeSwitch = false;
-		document.cookie = "score=0";
-		document.cookie = "misplay=0";
-		document.cookie = "preId=0";
-		document.cookie = "sprint=0";
-		document.cookie = "intuition=0";
-		document.cookie = "rejuvenation=0";
-		document.cookie = "refinement=0";
-		document.cookie = "favorite=0";
-		document.cookie = "mode=0";
-		document.cookie = "skip=0";
-		document.cookie = "transition=0";
-		document.cookie = "difficulty=0";
-		document.cookie = "seconds=0";
-		document.cookie = "sequence=0";
-		document.cookie = "reputation=0";
-		document.cookie = "rank=0";
-		document.cookie = "lastMode=0";
-		document.cookie = "sound=0";
-		document.cookie = "correctNoPoints=0";
-		document.cookie = "ui=0";
-		document.cookie = "requestProblem=0";
+		document.cookie = "score=0;SameSite=none;Secure=false";
+		document.cookie = "misplay=0;SameSite=none;Secure=false";
+		document.cookie = "preId=0;SameSite=none;Secure=false";
+		document.cookie = "sprint=0;SameSite=none;Secure=false";
+		document.cookie = "intuition=0;SameSite=none;Secure=false";
+		document.cookie = "rejuvenation=0;SameSite=none;Secure=false";
+		//document.cookie = "rejuvenationx=0;SameSite=none;Secure=false";
+		document.cookie = "refinement=0;SameSite=none;Secure=false";
+		document.cookie = "favorite=0;SameSite=none;Secure=false";
+		document.cookie = "mode=0;SameSite=none;Secure=false";
+		document.cookie = "skip=0;SameSite=none;Secure=false";
+		document.cookie = "transition=0;SameSite=none;Secure=false";
+		document.cookie = "difficulty=0;SameSite=none;Secure=false";
+		document.cookie = "seconds=0;SameSite=none;Secure=false";
+		document.cookie = "sequence=0;SameSite=none;Secure=false";
+		document.cookie = "reputation=0;SameSite=none;Secure=false";
+		document.cookie = "rank=0;SameSite=none;Secure=false";
+		document.cookie = "lastMode=0;SameSite=none;Secure=false";
+		document.cookie = "sound=0;SameSite=none;Secure=false";
+		document.cookie = "correctNoPoints=0;SameSite=none;Secure=false";
+		document.cookie = "ui=0;SameSite=none;Secure=false";
+		document.cookie = "requestProblem=0;SameSite=none;Secure=false";
 		setCookie("lightDark", "<?php echo $lightDark; ?>");
 		setCookie("type", "0");
 		<?php
@@ -480,12 +484,12 @@
 			loadBar();
 			if(soundValue=="off"){
 				document.getElementById("soundButtonImage").src="/img/sound-icon2.png";
-				document.cookie = "sound=off";
+				setCookie("sound", "off");
 				updateSoundValue(false);
 			}
 			if(soundValue=="on"){
 				document.getElementById("soundButtonImage").src="/img/sound-icon1.png";
-				document.cookie = "sound=on";
+				setCookie("sound", "on");
 				updateSoundValue(true);
 			}
 
@@ -596,9 +600,11 @@
 		
 		function setCookie(cookie, value=""){
 			let paths = ["/", "/sets", "/sets/view", "/tsumegos/play", "/users", "/users/view"];
-			for(let i=0;i<paths.length;i++){
-				document.cookie = cookie+"="+value+";path="+paths[i];
-			}
+			for(let i=0;i<paths.length;i++)
+				document.cookie = cookie+"="+value+";SameSite=none;Secure=false;path="+paths[i];
+		}
+		function setCookie2(cookie, value=""){
+			document.cookie = cookie+"="+value+";SameSite=none;Secure=false;"
 		}
 
 		function logoHover(img){

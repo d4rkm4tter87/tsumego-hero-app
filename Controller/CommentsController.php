@@ -6,6 +6,7 @@ class CommentsController extends AppController{
 		$this->LoadModel('Set');
 		$this->LoadModel('User');
 		$this->LoadModel('Sgf');
+		$this->LoadModel('SetConnection');
 		$_SESSION['title'] = 'Tsumego Hero - Discuss';
 		$_SESSION['page'] = 'discuss';
 		$c = array();
@@ -115,6 +116,8 @@ class CommentsController extends AppController{
 								else $solved = 0;
 							}					
 							$u = $this->User->findById($comments[$i]['Comment']['user_id']);
+							$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+							$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 							$s = $this->Set->findById($t['Tsumego']['set_id']);
 							$counter++;
 							$comments[$i]['Comment']['counter'] = $counter+$index;
@@ -156,6 +159,8 @@ class CommentsController extends AppController{
 						else $solved = 0;
 					}					
 					$u = $this->User->findById($comments[$i]['Comment']['user_id']);
+					$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+					$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 					$s = $this->Set->findById($t['Tsumego']['set_id']);
 					$counter++;
 					$comments[$i]['Comment']['counter'] = $counter+$index;
@@ -231,6 +236,8 @@ class CommentsController extends AppController{
 				if(!isset($t['Tsumego']['id'])) $t['Tsumego']['id'] = 0;
 				if(in_array($t['Tsumego']['id'], $keyList)){
 					$u = $this->User->findById($yourComments[$i]['Comment']['user_id']);
+					$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+					$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 					$s = $this->Set->findById($t['Tsumego']['set_id']);
 					$yourcounter++;
 					$yourComments[$i]['Comment']['counter'] = $yourcounter+$yourindex;
@@ -272,6 +279,8 @@ class CommentsController extends AppController{
 			if($counter<10){
 				$u = $this->User->findById($yourComments[$i]['Comment']['user_id']);
 				$t = $this->Tsumego->findById($yourComments[$i]['Comment']['tsumego_id']);
+				$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+				$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 				$s = $this->Set->findById($t['Tsumego']['set_id']);
 				$counter++;
 				$yourComments[$i]['Comment']['counter'] = $counter;

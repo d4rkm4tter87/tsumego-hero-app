@@ -26,6 +26,9 @@
 <?php if($t['Tsumego']['set_id']==208 || $t['Tsumego']['set_id']==210){ ?>
 	<script src="/js/multipleChoice.js"></script>
 	<style>.alertBox{height:auto!important;}</style>
+<?php }else if($tv!=null){ ?>
+	<script src="/js/multipleChoiceCustom.js"></script>
+	<script src="/js/scoreEstimatingCustom.js"></script>
 <?php } ?>
 <?php
 	$choice = array();
@@ -140,12 +143,14 @@
 		$pl = 0;
 	else if($colorOrientation=='white') 
 		$pl = 1;
-	else{
+	else if($tv!=null){
+		$pl = 0;
+	}else{
 		$pl = rand(0,1);
 		$plRand = true;
 	}
 	
-	if($checkBSize!=19 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161) 
+	if($checkBSize!=19 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161)
 		$pl=0;
 	if($pl==0){
 		$playerColor[0] = 'BLACK';
@@ -168,7 +173,7 @@
 	}	
 		
 	$t['Tsumego']['description'] = str_replace('b ', $descriptionColor, $t['Tsumego']['description']);
-?>
+	?>
 	<table width="100%" border="0">
 	<tr>
 	<td align="center" width="29%">
@@ -284,12 +289,24 @@
 		<td align="center">
 
 		<?php 
-		if($mode==1) echo '<div id="titleDescription" class="titleDescription1">';
-		elseif($mode==2  || $mode==3) echo '<div id="titleDescription" class="titleDescription2">';
-			if($t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161) echo '<b>'.$t['Tsumego']['description'].'</b> '; 
-			else echo '<a id="descriptionText">'.$t['Tsumego']['description'].'</a> '; 
-			if(isset($t['Tsumego']['hint']) && $t['Tsumego']['hint']!='') echo '<font color="grey" style="font-style:italic;">('.$t['Tsumego']['hint'].')</font>'; 
-		if($_SESSION['loggedInUser']['User']['isAdmin']>0 || $set['Set']['public']==0 && $_SESSION['loggedInUser']['User']['isAdmin']==2){
+		if($mode==1)
+			echo '<div id="titleDescription" class="titleDescription1">';
+		elseif($mode==2  || $mode==3)
+			echo '<div id="titleDescription" class="titleDescription2">';
+		if($t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161)
+			echo '<b>'.$t['Tsumego']['description'].'</b> '; 
+		else
+			echo '<a id="descriptionText">'.$t['Tsumego']['description'].'</a> '; 
+		if(isset($t['Tsumego']['hint']) && $t['Tsumego']['hint']!='')
+			echo '<font color="grey" style="font-style:italic;">('.$t['Tsumego']['hint'].')</font>';
+		if($tv!=null){
+			if($tv['TsumegoVariant']['type']=='score_estimating'){
+				echo '<br>Komi: '.$tv['TsumegoVariant']['answer1'].'; ';
+				echo 'Black captures: '.$tv['TsumegoVariant']['answer2'].'; ';
+				echo 'White captures: '.$tv['TsumegoVariant']['answer3'].'<br>';
+			}
+		}
+		if($_SESSION['loggedInUser']['User']['isAdmin']>0){
 		?>
 		<a class="modify-description" href="#">(Edit)</a>
 		<div class="modify-description-panel">
@@ -444,6 +461,19 @@
 	<?php }else{ ?>
 		<div id="board" align="center"></div>
 	<?php } ?>
+	<?php if($t['Tsumego']['set_id']==208 || $t['Tsumego']['set_id']==210 || ($tv!=null&&$tv['TsumegoVariant']['type']=='multiple_choice')){ ?>
+	<div align="center">
+		<a href="/tsumegos/play/<?php echo $t['Tsumego']['id']; ?>" title="reset problem" id="besogo-next-button">Reset</a>
+		<br><br>
+	</div>
+	<?php }else if($tv!=null&&$tv['TsumegoVariant']['type']=='score_estimating'){ ?>
+	<div align="center">
+		<a href="/tsumegos/play/<?php echo $t['Tsumego']['id']; ?>" title="reset problem" id="besogo-next-button">Reset</a>
+		<input value="0" placeholder="Score" type="text" id="ScoreEstimatingSE">
+		<a id="submitScoreEstimatingSE" href="#">Submit</a>
+		<br><br>
+	</div>
+	<?php } ?>
 	<div id="errorMessageOuter" align="center">
 		<div id="errorMessage"></div>
 	</div>
@@ -524,6 +554,24 @@
 						$duOn = '';
 						$duOff = 'checked="checked"';
 					}
+					if($tv==null){
+						$multipleNo = 'checked="checked"';
+						$multipleYes = '';
+						$scoreEstNo = 'checked="checked"';
+						$scoreEstYes = '';
+					}else{
+						if($tv['TsumegoVariant']['type'] == 'multiple_choice'){
+							$multipleNo = '';
+							$multipleYes = 'checked="checked"';
+							$scoreEstNo = 'checked="checked"';
+							$scoreEstYes = '';
+						}else{
+							$multipleNo = 'checked="checked"';
+							$multipleYes = '';
+							$scoreEstNo = '';
+							$scoreEstYes = 'checked="checked"';
+						}
+					}
 					echo '
 						<div id="msg4">
 							<br>
@@ -566,23 +614,90 @@
 											<td></td>
 											<td></td>';
 										}
-									echo '</tr>
-								</table>
+									echo '</tr>';
+									if($isSandbox){
+										echo '<tr>
+											<td>Multiple choice problem</td>
+											<td><input type="radio" id="r41" name="data[Settings][r41]" value="no" '.$multipleNo.'><label for="r41">no</label></td>
+											<td><input type="radio" id="r41" name="data[Settings][r41]" value="yes" '.$multipleYes.'><label for="r41">yes</label></td>
+										</tr>';
+										echo '<tr>
+											<td>Score estimating problem</td>
+											<td><input type="radio" id="r42" name="data[Settings][r42]" value="no" '.$scoreEstNo.'><label for="r42">no</label></td>
+											<td><input type="radio" id="r42" name="data[Settings][r42]" value="yes" '.$scoreEstYes.'><label for="r42">yes</label></td>
+										</tr>';
+									}
+								echo '</table>
 								<br>
 								<input value="Submit" type="submit"/>
 							</form>
 						</div>
 						<br><br>
 					';
-				if($t['Tsumego']['set_id']==159 && $isSemeai){
-					echo $this->Form->create('Study');
-					echo $this->Form->input('study1', array('value' => 'Black is dead', 'label' => '', 'type' => 'text', 'placeholder' => 'field 1'));
-					echo $this->Form->input('study2', array('value' => 'White is dead', 'label' => '', 'type' => 'text', 'placeholder' => 'field 2'));
-					echo $this->Form->input('study3', array('value' => 'Seki', 'label' => '', 'type' => 'text', 'placeholder' => 'field 3'));
-					echo $this->Form->input('study4', array('value' => 'Ko', 'label' => '', 'type' => 'text', 'placeholder' => 'field 4'));
-					echo $this->Form->input('studyCorrect', array('value' => '4', 'label' => '', 'type' => 'text', 'placeholder' => 'correct field'));
-					echo $this->Form->end('Submit');
-					echo '<br><br>';
+				if($isSandbox && $tv!=null){
+					if($tv['TsumegoVariant']['type']=='multiple_choice'){
+						$studyCorrectOptions = array(
+							'1'=>'1',
+							'2'=>'2',
+							'3'=>'3',
+							'4'=>'4'
+						);
+						$studyCorrectAttributes = array(
+							'legend'=>false,
+							'value'=>$tv['TsumegoVariant']['numAnswer']
+						);
+						echo '<a id="showMC" class="selectable-text" style="display: inline-block;">Edit multiple choice
+						<img id="greyArrowMC" src="/img/greyArrow1.png"></a><br><br>';
+						echo '<div id="showxMC">';
+						echo $this->Form->create('Study');
+						echo $this->Form->input('study1', array('value' => $tv['TsumegoVariant']['answer1'], 'label' => 'Answer 1: ', 'type' => 'text', 'placeholder' => 'Answer 1'));
+						echo $this->Form->input('study2', array('value' => $tv['TsumegoVariant']['answer2'], 'label' => 'Answer 2: ', 'type' => 'text', 'placeholder' => 'Answer 2'));
+						echo $this->Form->input('study3', array('value' => $tv['TsumegoVariant']['answer3'], 'label' => 'Answer 3: ', 'type' => 'text', 'placeholder' => 'Answer 3'));
+						echo $this->Form->input('study4', array('value' => $tv['TsumegoVariant']['answer4'], 'label' => 'Answer 4: ', 'type' => 'text', 'placeholder' => 'Answer 4'));
+						echo $this->Form->input('explanation', array('value' => $tv['TsumegoVariant']['explanation'], 'label' => 'Explanation: ', 'type' => 'textfield', 'placeholder' => 'Explanation'));
+						echo '<br>';
+						echo '<label for="studyCorrect">Correct: </label>';
+						echo $this->Form->radio('studyCorrect', $studyCorrectOptions, $studyCorrectAttributes);
+						echo '<br><br>';
+						echo $this->Form->end('Submit');
+						echo '<br><br>';
+						echo '</div>';
+					}else{
+						echo '<a id="showSE" class="selectable-text" style="display: inline-block;">Edit correct answer
+						<img id="greyArrowSE" src="/img/greyArrow1.png"></a><br><br>';
+						echo '<div id="showxSE">';
+						echo '<input type="button" value="Black wins" id="besogo-se-edit-black">';
+						echo '<input type="button" value="White wins" id="besogo-se-edit-white">';
+						echo '<input type="button" value="-" id="besogo-se-edit-less">';
+						echo '<input type="button" value="+" id="besogo-se-edit-more">';
+						echo '<br><br>';
+						echo $this->Form->create('Study2');
+						echo '<table><tr><td>';
+						//echo $this->Form->input('winner', array('value' => $tv['TsumegoVariant']['winner'], 'label' => 'Correct answer: ', 'type' => 'text', 'placeholder' => 'Score', 'id' => 'scoreEstEditField'));
+						echo '<label for="scoreEstEditField">Correct answer: </label>';
+						echo '</td><td>';
+						echo '<input name="data[Study2][winner]" value="'.$tv['TsumegoVariant']['winner'].'" placeholder="Score" id="scoreEstEditField" type="text">';
+						echo '</td></tr><tr><td>';
+						//echo $this->Form->input('answer1', array('value' => $tv['TsumegoVariant']['answer1'], 'label' => 'Komi: ', 'type' => 'text', 'placeholder' => 'Komi', 'id' => 'scoreEstEditField2'));
+						echo '<label for="scoreEstEditField2">Komi: </label>';
+						echo '</td><td>';
+						echo '<input name="data[Study2][answer1]" value="'.$tv['TsumegoVariant']['answer1'].'" placeholder="Komi" id="scoreEstEditField2" type="text">';
+						echo '</td></tr><tr><td>';
+						//echo $this->Form->input('answer2', array('value' => $tv['TsumegoVariant']['answer2'], 'label' => 'Black captures: ', 'type' => 'text', 'placeholder' => 'Black captures', 'id' => 'scoreEstEditField3'));
+						echo '<label for="scoreEstEditField3">Black captures: </label>';
+						echo '</td><td>';
+						echo '<input name="data[Study2][answer2]" value="'.$tv['TsumegoVariant']['answer2'].'" placeholder="Black captures" id="scoreEstEditField3" type="text">';
+						echo '</td></tr><tr><td>';
+						//echo $this->Form->input('answer3', array('value' => $tv['TsumegoVariant']['answer3'], 'label' => 'White captures: ', 'type' => 'text', 'placeholder' => 'White captures', 'id' => 'scoreEstEditField4'));
+						echo '<label for="scoreEstEditField4">White captures: </label>';
+						echo '</td><td>';
+						echo '<input name="data[Study2][answer3]" value="'.$tv['TsumegoVariant']['answer3'].'" placeholder="White captures" id="scoreEstEditField4" type="text">';
+						echo '</td></tr></table>';
+						echo '<br>';
+						echo '<div class="submit"><input type="submit" value="Submit" id="scoreEstEditSubmit"></div>';
+						echo '<br>';
+						echo '</div>';
+					}
 				}
 			}else echo '<br>';
 			//if($_SESSION['loggedInUser']['User']['premium']>=1){
@@ -880,12 +995,12 @@
 	<?php
 	}
 	?>
-	<?php if($t['Tsumego']['set_id']==208 || $t['Tsumego']['set_id']==210){ ?>
+	<?php if($t['Tsumego']['set_id']==208 || $t['Tsumego']['set_id']==210 || $tv!=null&&$tv['TsumegoVariant']['type']=='multiple_choice'){ ?>
 		<label>
 		<input type="checkbox" class="alertCheckbox1" id="alertCheckbox" autocomplete="off" />
 		<div class="alertBox alertInfo" id="multipleChoiceAlerts">
 		<div class="alertBanner">
-		Capturing race infomation
+		Infomation
 		<span class="alertClose">x</span>
 		</div>
 		<span class="alertText2">
@@ -988,6 +1103,8 @@
 	var msg3selected = false;
 	var msg4selected = false;
 	var msg5selected = false;
+	var msgMCselected = false;
+	var msgSEselected = false;
 	var playedWrong = false;
 	var seconds = 0;
 	var difficulty = <?php echo $difficulty; ?>;
@@ -1056,6 +1173,17 @@
 	let enableDownloads = false;
 	let cvn = true;
 	let adminCommentOpened = false;
+	let customMultipleChoiceAnswer = 0;
+	let boardLockValue = 0;
+	let mText = "";
+	<?php 
+	if($tv!=null){
+	if($tv['TsumegoVariant']['type']=='multiple_choice' && $tv['TsumegoVariant']['explanation']!=""){
+		echo 'mText = "'.$tv['TsumegoVariant']['explanation'].'";';
+	}}
+	
+	?>
+	
 	
 	if(inFavorite!==''){
 		prevButtonLink += inFavorite;
@@ -1116,10 +1244,10 @@
 	$("#reviewButton").hide();
 	$("#reviewButton2").hide();
 	<?php if(($t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161) && $isSemeai){
-			echo 'document.getElementById("multipleChoice1").innerHTML ="'.$partArray[0].'";';
-			echo 'document.getElementById("multipleChoice2").innerHTML ="'.$partArray[1].'";';
-			echo 'document.getElementById("multipleChoice3").innerHTML ="'.$partArray[2].'";';
-			echo 'document.getElementById("multipleChoice4").innerHTML ="'.$partArray[3].'";';
+		echo 'document.getElementById("multipleChoice1").innerHTML ="'.$partArray[0].'";';
+		echo 'document.getElementById("multipleChoice2").innerHTML ="'.$partArray[1].'";';
+		echo 'document.getElementById("multipleChoice3").innerHTML ="'.$partArray[2].'";';
+		echo 'document.getElementById("multipleChoice4").innerHTML ="'.$partArray[3].'";';
 	} ?>
 
 	<?php if($mode==2){ ?>
@@ -1202,11 +1330,110 @@
 		e.preventDefault();
 		$(".modify-description-panel").toggle(250);
 	});
-
+	<?php if($tv!=null&&$tv['TsumegoVariant']['type']=='score_estimating'){ ?>
+		$("#submitScoreEstimatingSE").click(function(e){
+			e.preventDefault();
+			if(!hasChosen){
+				let correctNum = "<?php echo $tv['TsumegoVariant']['winner']; ?>";
+				let guess = $("#ScoreEstimatingSE").val();
+				if(parseFloat(correctNum.slice(2))===0 || parseFloat(correctNum)===0)
+					correctNum = 0;
+				if(parseFloat(guess.slice(2))===0 || parseFloat(guess)===0)
+					guess = 0;
+				let color = "#e0747f";
+				if(guess==correctNum){
+					displayResult("S");
+					color = "#3ecf78";
+				}else{
+					displayResult("F");
+					color = "#e0747f";
+				}
+				hasChosen = true;
+				$("#ScoreEstimatingSE").prop("disabled", true);
+				$("#besogo-se-black").css("background-color", color);
+				$("#besogo-se-white").css("background-color", color);
+				$("#besogo-se-more").css("background-color", color);
+				$("#besogo-se-less").css("background-color", color);
+				$("#submitScoreEstimatingSE").css("background-color", color);
+			}
+		});
+		$("#besogo-se-edit-black").click(function(e){
+			e.preventDefault();
+			let chars = "";
+			let num = 0;
+			let v = "";
+			v = $("#scoreEstEditField").val();
+			if(v.slice(0,2)=="B+" || v.slice(0,2)=="W+"){
+				chars = "B+";
+				num = v.slice(2);
+			}else{
+				chars = "B+";
+				num = v;
+			}
+			$("#scoreEstEditField").val(chars+num);
+		});
+		$("#besogo-se-edit-white").click(function(e){
+			e.preventDefault();
+			let chars = "";
+			let num = 0;
+			let v = "";
+			v = $("#scoreEstEditField").val();
+			if(v.slice(0,2)=="B+" || v.slice(0,2)=="W+"){
+				chars = "W+";
+				num = v.slice(2);
+			}else{
+				chars = "W+";
+				num = v;
+			}
+			$("#scoreEstEditField").val(chars+num);
+		});
+		$("#besogo-se-edit-more").click(function(e){
+			e.preventDefault();
+			let chars = "";
+			let num = 0;
+			let v = "";
+			v = $("#scoreEstEditField").val();
+			if(v.slice(0,2)=="B+" || v.slice(0,2)=="W+"){
+				chars = v.slice(0,2);
+				num = v.slice(2);
+			}else{
+				chars = "";
+				num = v;
+			}
+			if(num=="")
+				num=0;
+			if(is_numeric(num)){
+				num = parseFloat(num);
+				num += .5;
+			}
+			$("#scoreEstEditField").val(chars+num);
+		});
+		$("#besogo-se-edit-less").click(function(e){
+			e.preventDefault();
+			let chars = "";
+			let num = 0;
+			let v = "";
+			v = $("#scoreEstEditField").val();
+			if(v.slice(0,2)=="B+" || v.slice(0,2)=="W+"){
+				chars = v.slice(0,2);
+				num = v.slice(2);
+			}else{
+				chars = "";
+				num = v;
+			}
+			if(num=="")
+				num=0;
+			if(is_numeric(num)){
+				num = parseFloat(num);
+				if(num>0)
+					num -= .5;
+			}
+			$("#scoreEstEditField").val(chars+num);
+		});
+	<?php } ?>
 	<?php
 	if($potionSuccess){
-		$negative1 = $user['User']['damage']*(-1);
-		echo 'document.cookie = "misplay='.$negative1.'";';
+		echo 'setCookie("rejuvenationx", 2);';
 		echo 'window.location = "/tsumegos/play/'.$t['Tsumego']['id'].'?potionAlert=1";';
 	}
 
@@ -1214,11 +1441,6 @@
 	if($mode==2) echo 'mode = 2;';
 	if($mode==3) echo 'mode = 3;';
 	if($mode==1){
-	if(isset($rep['Reputation']['value'])){
-		if($rep['Reputation']['value']==1) echo 'var thumbsUpSelected2 = true;';
-		if($rep['Reputation']['value']==-1) echo 'var thumbsDownSelected2 = true;';
-	}
-
 	}elseif($mode==2){
 		echo '
 			$(".tsumegoNavi1").hide();
@@ -1270,7 +1492,7 @@
 
 	if($t['Tsumego']['status'] == 'setF2' || $t['Tsumego']['status'] == 'setX2'){
 		echo 'var locked=true; tryAgainTomorrow = true;';
-		echo 'toggleBoardLock(true, true);';
+		echo 'toggleBoardLock(true);';
 	}else echo 'var locked=false;';
 
 	if($dailyMaximum){
@@ -1287,7 +1509,7 @@
 			document.getElementById("status").innerHTML = "<h3><b>Your account is temporarily locked.</b></h3>";
 			document.getElementById("status").style.color = "red";
 			document.getElementById("xpDisplay").innerHTML = "&nbsp;";
-			toggleBoardLock(true, true);
+			toggleBoardLock(true);
 		';
 	}
 
@@ -1319,12 +1541,12 @@
 
 	$(document).ready(function(){
 		<?php
-			if($ui==1) echo 'document.cookie = "ui=1";';
-			elseif($ui==2) echo 'document.cookie = "ui=2";';
+			if($ui==1) echo 'document.cookie = "ui=1;SameSite=none;Secure=false";';
+			elseif($ui==2) echo 'document.cookie = "ui=2;SameSite=none;Secure=false";';
 
-			if($mode==1) echo 'document.cookie = "mode=1";';
-			if($mode==2) echo 'document.cookie = "mode=2";';
-			if($mode==3) echo 'document.cookie = "mode=3";';
+			if($mode==1) echo 'document.cookie = "mode=1;SameSite=none;Secure=false";';
+			if($mode==2) echo 'document.cookie = "mode=2;SameSite=none;Secure=false";';
+			if($mode==3) echo 'document.cookie = "mode=3;SameSite=none;Secure=false";';
 
 			if($mode==3){
 				echo 'notMode3 = false;';
@@ -1436,7 +1658,8 @@
 					}else{
 						clearInterval(x);
 						<?php
-						if(isset($sprintActivated)) echo 'document.cookie = "sprint=2";';
+						if(isset($sprintActivated))
+							echo 'document.cookie = "sprint=2";';
 						if($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2'){
 							 echo '
 								document.getElementById("xpDisplay").style.color = "'.$playGreenColor.'";
@@ -1493,7 +1716,7 @@
 						locked = true;
 						tryAgainTomorrow = true;
 						document.cookie = "rank=<?php echo $mode3ScoreArray[2]; ?>";
-						document.cookie = "misplay=1";
+						setCookie("misplay", 1);
 						$("#time-mode-countdown").css("color","#e03c4b");
 						document.getElementById("status").style.color = "#e03c4b";
 						document.getElementById("status").innerHTML = "<h2>Time up</h2>";
@@ -1574,15 +1797,33 @@
 			}
 			msg5selected = !msg5selected;
 		});
-		$('#targetLockOverlay').click(function(){
-			if(!multipleChoiceEnabled){
-				if(nextButtonLink!=0) 
-					window.location.href = "/tsumegos/play/"+nextButtonLink+inFavorite;
-				else if(mode==1){
-					window.location.href = "/sets/view/"+<?php echo $t['Tsumego']['set_id']; ?>;
+		<?php if($tv!=null){ ?>
+		<?php if($tv['TsumegoVariant']['type']=='multiple_choice'){ ?>
+			$("#showxMC").hide();
+			$("#showMC").click(function(){
+				if(!msgMCselected){
+					$("#showxMC").fadeIn(250);
+					document.getElementById("greyArrowMC").src = "/img/greyArrow2.png";
+				}else{
+					$("#showxMC").fadeOut(250);
+					document.getElementById("greyArrowMC").src = "/img/greyArrow1.png";
 				}
-			}
-		});
+				msgMCselected = !msgMCselected;
+			});
+		<?php }else{ ?>
+			$("#showxSE").hide();
+			$("#showSE").click(function(){
+				if(!msgSEselected){
+					$("#showxSE").fadeIn(250);
+					document.getElementById("greyArrowSE").src = "/img/greyArrow2.png";
+				}else{
+					$("#showxSE").fadeOut(250);
+					document.getElementById("greyArrowSE").src = "/img/greyArrow1.png";
+				}
+				msgSEselected = !msgSEselected;
+			});
+		<?php } ?>
+		<?php } ?>
 		$("#commentPosition").click(function(){
 		  let commentContent = $("#CommentMessage").val();
 		  let additionalCoords = "";
@@ -1591,7 +1832,6 @@
 		  if(besogoOrientation[1]=="full-board")
 			besogoOrientation[0] = besogoOrientation[1];
 		  let isInTree = besogo.editor.isMoveInTree(current);
-		  //console.log(isInTree);
 		  current = isInTree[0];
 		  
 		  if(isInTree[1]['x'].length>0){
@@ -1786,41 +2026,11 @@
 		freePlayMode2done = false;
 		if(heartLoss){
 			misplays++;
-			document.cookie = "misplay="+misplays;
+			setCookie("misplay", misplays);
 			updateHealth();
 		}
 		move = 0;
 
-		<?php
-			for($i=0; $i<count($black); $i++){
-				if($i%2 == 0){
-					echo 'jboard.setType(new JGO.Coordinate('.$black[$i].', '.$black[$i+1].'), JGO.'.$playerColor[0].');';
-				}
-			}
-			for($i=0; $i<count($white); $i++){
-				if($i%2 == 0){
-					echo 'jboard.setType(new JGO.Coordinate('.$white[$i].', '.$white[$i+1].'), JGO.'.$playerColor[1].');';
-				}
-			}
-		?>
-
-		if(josekiHero){<?php
-			for($i=0; $i<count($visual); $i++){
-				echo 'jboard.setMark(new JGO.Coordinate('.$visual[$i][0].', '.$visual[$i][1].'), JGO.MARK.CIRCLE);';
-			}
-		?>}
-
-		<?php
-		if($t['Tsumego']['set_id']==156 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161){
-			echo 'jboard.setMark(new JGO.Coordinate('.$additionalInfo['lastPlayed'][0].', '.$additionalInfo['lastPlayed'][1].'), JGO.MARK.CIRCLE);';
-			for($i=0; $i<count($additionalInfo['triangle']); $i++){
-				echo 'jboard.setMark(new JGO.Coordinate('.$additionalInfo['triangle'][$i][0].', '.$additionalInfo['triangle'][$i][1].'), JGO.MARK.TRIANGLE);';
-			}
-			for($i=0; $i<count($additionalInfo['square']); $i++){
-				echo 'jboard.setMark(new JGO.Coordinate('.$additionalInfo['square'][$i][0].', '.$additionalInfo['square'][$i][1].'), JGO.MARK.SQUARE);';
-			}
-		}
-		?>
 		document.getElementById("status").innerHTML = "";
 		document.getElementById("theComment").style.cssText = "display:none;";
 	}
@@ -1937,8 +2147,8 @@
 			doubleXP = true;
 			countDownDate = new Date();
 			countDownDate.setMinutes(countDownDate.getMinutes() + 2);
-			document.cookie = "doublexp="+countDownDate.getTime();
-			document.cookie = "sprint=1";
+			setCookie("doublexp", countDownDate.getTime());
+			setCookie("sprint", 1);
 			document.getElementById("sprint").src = "/img/hp1x.png";
 			document.getElementById("sprint").style = "cursor: context-menu;";
 
@@ -1950,7 +2160,8 @@
 						var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
 						var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 						var timeOutput;
-						if(minutes>2) document.cookie = "extendedSprint="+minutes;
+						if(minutes>2)
+							setCookie("extendedSprint", minutes);
 						if(distance>=0){
 							if(!sprintLockedInSecretArea){
 								if(seconds<10)  timeOutput = minutes + ":0" + seconds;
@@ -1962,14 +2173,14 @@
 								if(!$goldenTsumego) echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4">'.$t['Tsumego']['difficulty'].'×2 XP</font>\';';
 								else echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4">'.$t['Tsumego']['difficulty'].' XP</font>\';';
 								?>
-								document.cookie = "sprint=1";
+								setCookie("sprint", 1);
 							}else{
 								window.location.href = "/sets";
 							}
 						}else{
 							clearInterval(x);
 							<?php
-							if(isset($sprintActivated)) echo 'document.cookie = "sprint=2";';
+							if(isset($sprintActivated)) echo 'setCookie("sprint", 2);';
 							if($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2'){
 								echo '
 									document.getElementById("xpDisplay").style.color = "'.$playGreenColor.'";
@@ -2017,7 +2228,7 @@
 	}
 	
 	function intuition(){
-		document.cookie = "intuition=1";
+		setCookie("intuition", 1);
 		document.getElementById("intuition").src = "/img/hp2x.png";
 		document.getElementById("intuition").style = "cursor: context-menu;";
 		intuitionEnabled = false;
@@ -2027,17 +2238,16 @@
 	function rejuvenation(){
 		if(rejuvenationEnabled){
 			<?php
-				for($i=0; $i<$user['User']['health']; $i++) {
+				for($i=0; $i<$user['User']['health']; $i++){
 					echo 'document.getElementById("heart'.$i.'").src = "/img/'.$fullHeart.'.png";';
 				}
-				$negative = $user['User']['damage']*(-1);
-				echo 'document.cookie = "misplay='.$negative.'";';
+				echo 'setCookie("rejuvenationx", 1);';
 			?>
 			misplays = 0;
-			document.cookie = "rejuvenation=1";
+			setCookie("rejuvenation", 1);
 			document.getElementById("rejuvenation").src = "/img/hp3x.png";
 			document.getElementById("rejuvenation").style = "cursor: context-menu;";
-			<?php if(isset($intuitionEnabled) &&!$intuitionEnabled) echo 'document.cookie = "intuition=2";'; ?>
+			<?php if(isset($intuitionEnabled) &&!$intuitionEnabled) echo 'setCookie(intuition, 2);'; ?>
 			intuitionEnabled = true;
 			rejuvenationEnabled = false;
 			<?php echo 'window.location = "/tsumegos/play/'.$t['Tsumego']['id'].'";'; ?>
@@ -2046,7 +2256,7 @@
 
 	function refinement(){
 		if(refinementEnabled){
-			document.cookie = "refinement=1";
+			setCookie("refinement", 1);
 			document.getElementById("refinement").src = "/img/hp4x.png";
 			document.getElementById("refinement").style = "cursor: context-menu;";
 			<?php echo 'window.location.href = "/tsumegos/play/'.$g['Tsumego']['id'].'";'; ?>
@@ -2059,7 +2269,7 @@
 		checkbox.addEventListener('change', function(){
 			if(this.checked){
 				<?php if(!$favorite){ ?>
-					document.cookie = "favorite=<?php echo $t['Tsumego']['id']; ?>";
+					setCookie("favorite", <?php echo $t['Tsumego']['id']; ?>);
 					document.getElementById("refreshLinkToStart").href = "/tsumegos/play/<?php echo $lv ?>?refresh=1";
 					document.getElementById("refreshLinkToSets").href = "/tsumegos/play/<?php echo $lv ?>?refresh=2";
 					document.getElementById("playTitleA").href = "/tsumegos/play/<?php echo $lv ?>?refresh=3";
@@ -2067,7 +2277,7 @@
 					document.getElementById("refreshLinkToDiscuss").href = "/tsumegos/play/'.$lv.'?refresh=5";
 					document.getElementById("refreshLinkToSandbox").href = "/tsumegos/play/'.$lv.'?refresh=6";
 				<?php }else{ ?>
-					document.cookie = "favorite=0";
+					setCookie("favorite", 0);
 					document.getElementById("refreshLinkToStart").href = "/";
 					document.getElementById("refreshLinkToSets").href = "/sets";
 					document.getElementById("playTitleA").href = "/sets/view/<?php echo $t['Tsumego']['set_id']; ?>";
@@ -2078,7 +2288,7 @@
 				document.getElementById("favCheckbox2").setAttribute("title", "Marked as favorite");
 			}else{
 				<?php if(!$favorite){ ?>
-					document.cookie = "favorite=0";
+					setCookie("favorite", 0);
 					document.getElementById("refreshLinkToStart").href = "/";
 					document.getElementById("refreshLinkToSets").href = "/sets";
 					document.getElementById("playTitleA").href = "/sets/view/<?php echo $t['Tsumego']['set_id']; ?>";
@@ -2086,7 +2296,7 @@
 					document.getElementById("refreshLinkToDiscuss").href = "/comments";
 					document.getElementById("refreshLinkToSandbox").href = "/sets/beta";
 				<?php }else{ ?>
-					document.cookie = "favorite=-<?php echo $t['Tsumego']['id']; ?>";
+					setCookie("favorite", -<?php echo $t['Tsumego']['id']; ?>);
 					document.getElementById("refreshLinkToStart").href = "/tsumegos/play/<?php echo $lv ?>?refresh=1";
 					document.getElementById("refreshLinkToSets").href = "/tsumegos/play/<?php echo $lv ?>?refresh=2";
 					document.getElementById("playTitleA").href = "/tsumegos/play/<?php echo $lv ?>?refresh=3";
@@ -2134,22 +2344,6 @@
 	}
 	function thumbsDownNoHover(){
 		if(!thumbsDownSelected && !thumbsDownSelected2) document.getElementById("thumbs-down").src = '/img/thumbs-down-inactive.png';
-	}
-	function thumbsUp(){
-		<?php echo 'document.cookie = "reputation='.$t['Tsumego']['id'].'";'; ?>
-		document.getElementById("thumbs-up").src = '/img/thumbs-up.png';
-		document.getElementById("thumbs-down").src = '/img/thumbs-down-inactive.png';
-		thumbsUpSelected = true;
-		thumbsDownSelected = false;
-		thumbsDownSelected2 = false;
-	}
-	function thumbsDown(){
-		<?php echo 'document.cookie = "reputation=-'.$t['Tsumego']['id'].'";'; ?>
-		document.getElementById("thumbs-down").src = '/img/thumbs-down.png';
-		document.getElementById("thumbs-up").src = '/img/thumbs-up-inactive.png';
-		thumbsDownSelected = true;
-		thumbsUpSelected = false;
-		thumbsUpSelected2 = false;
 	}
 
 	function selectFav(){
@@ -2452,7 +2646,7 @@
 				if(!noXP){
 					if(!freePlayMode){
 						misplays++;
-						document.cookie = "misplay="+misplays;
+						setCookie("misplay", misplays);
 						if(mode==1 || mode==2) secondsy = seconds;
 						if(mode==3) secondsy = seconds*10*<?php echo $t['Tsumego']['id']; ?>;
 						//document.cookie = "seconds="+secondsy;
@@ -2493,7 +2687,7 @@
 					playedWrong = true;
 					runXPBar(false);
 					$("#skipButton").text("Next");
-					document.cookie = "misplay="+eloScore;
+					setCookie("misplay", eloScore);
 					//document.cookie = "seconds="+seconds;
 					setCookie("seconds", seconds);
 					hoverLocked = false;
@@ -2509,36 +2703,15 @@
 		setCookie("preId", "<?php echo $t['Tsumego']['id']; ?>");
 	}
 	
-	function toggleBoardLock(t, customHeight=false, multipleChoice=false){
+	function toggleBoardLock(t, multipleChoice=false){
 		if(tryAgainTomorrow)
 			t = true;
-		if(t){
-			let besogoBoardHeight = $('.besogo-board').height();
-			let besogoBoardWidth = $('.besogo-board').width();
-			besogoBoardHeight = Math.floor(besogoBoardHeight);
-			besogoBoardWidth = Math.floor(besogoBoardWidth);
-			besogoBoardHeight += "px";
-			besogoBoardWidth += "px";
-			 
-			$("#targetLockOverlay").css("width", "633px");
-			if(!customHeight){
-				$("#targetLockOverlay").css("height", besogoBoardHeight);
-				$("#targetLockOverlay").css("width", besogoBoardWidth);
-				//$("#targetLockOverlay").css("top", $('.besogo-board').offset().top);
-				$("#targetLockOverlay").css("top", $('.besogo-board').offset());
-				//$("#targetLockOverlay").css("left", $('.besogo-board').offset().left);
-				//console.log($('.besogo-board').offset().left);
-			}
-			else $("#targetLockOverlay").css("height", "633px");
-			$("#targetLockOverlay").css("z-index", "101");
-			//$("#targetLockOverlay").css("background", "#3c3cae");
-			//$("#targetLockOverlay").css("opacity", ".3");
-		}else{
-			$("#targetLockOverlay").css("width", "0");
-			$("#targetLockOverlay").css("height", "0");
-			$("#targetLockOverlay").css("z-index", "-1");
-		}
-		if(multipleChoice) multipleChoiceEnabled = true;
+		if(t)
+			boardLockValue = 1;
+		else
+			boardLockValue = 0;
+		if(multipleChoice)
+			multipleChoiceEnabled = true;
 	}
 	
 	function displayMessage(message='text', topic='Message', color='red'){
@@ -2562,7 +2735,7 @@
 		freePlayMode = false;
 		if(heartLoss){
 			misplays++;
-			document.cookie = "misplay="+misplays;
+			setCookie("misplay", misplays);
 			//document.cookie = "preId=<?php echo $t['Tsumego']['id']; ?>";
 			setCookie("preId", "<?php echo $t['Tsumego']['id']; ?>");
 			updateHealth();
@@ -2663,6 +2836,16 @@
 			a5.push(a4);
 			';
 			echo 'options.multipleChoiceSetup = a5;';
+		}else if($tv!=null){
+			echo 'options.multipleChoiceCustom = "'.$tv['TsumegoVariant']['type'].'";';
+			echo 'let a5 = [];
+			a5.push("'.$tv['TsumegoVariant']['answer1'].'");
+			a5.push("'.$tv['TsumegoVariant']['answer2'].'");
+			a5.push("'.$tv['TsumegoVariant']['answer3'].'");
+			a5.push("'.$tv['TsumegoVariant']['answer4'].'");
+			customMultipleChoiceAnswer = '.$tv['TsumegoVariant']['numAnswer'].';
+			options.multipleChoiceCustomSetup = a5;';
+			
 		}
 	  ?>
 	  const cornerArray = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];

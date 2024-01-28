@@ -14,10 +14,8 @@ class SitesController extends AppController{
 		$this->LoadModel('Schedule');
 		$this->LoadModel('RankOverview');
 		$this->LoadModel('Sgf');
-		
-		$ts = $this->Tsumego->find('all', 
-			array('order' => array('Tsumego.created'))
-		);
+		$this->LoadModel('SetConnection');
+		$this->LoadModel('PublishDate');
 		
 		$tdates = array();
 		$tSum = array();
@@ -35,9 +33,9 @@ class SitesController extends AppController{
 		
 		$newTS = array();
 		$setIDs = array();
-		$setNames = array();
-		$setDates = array();
-		
+		//$setNames = array();
+		//$setDates = array();
+		/*
 		for($i=0; $i<count($tSum); $i++){
 			array_push($newTS, $tSum[$i]);
 			if(!in_array($tSum[$i]['Tsumego']['set_id'], $setIDs)){
@@ -50,7 +48,7 @@ class SitesController extends AppController{
 				$tSum[$i]['Tsumego']['created'] = $tday.$month.' '.$tyear;
 				$setDates[$tSum[$i]['Tsumego']['set_id']] = $tSum[$i]['Tsumego']['created'];
 			}
-		}
+		}*/
 		
 		$today = date('Y-m-d');
 		
@@ -119,7 +117,6 @@ class SitesController extends AppController{
 					}
 				}
 				
-				
 				if(isset($totd['Tsumego']['id']))
 					if($uts[$i]['TsumegoStatus']['tsumego_id'] == $totd['Tsumego']['id']) 
 						$totd['Tsumego']['status'] = $uts[$i]['TsumegoStatus']['status'];
@@ -128,10 +125,6 @@ class SitesController extends AppController{
 					if($uts[$i]['TsumegoStatus']['tsumego_id'] == $newT['Tsumego']['id']) 
 						$newT['Tsumego']['status'] = $uts[$i]['TsumegoStatus']['status'];
 			}
-			
-			//echo '<pre>'; print_r($scheduleTsumego); echo '</pre>';
-			//echo '<pre>'; print_r($totd); echo '</pre>';
-			
 		}
 		if(!isset($_SESSION['loggedInUser'])){
 			if(isset($_SESSION['noLogin'])){
@@ -153,16 +146,17 @@ class SitesController extends AppController{
 				}
 			}
 		}
-		//$this->set('ts', $newTS);
+		
 		if(!isset($totd['Tsumego']['status'])) $totd['Tsumego']['status'] = 'N';
 		if(!isset($newT['Tsumego']['status'])) $newT['Tsumego']['status'] = 'N';
 		for($i=0; $i<count($scheduleTsumego); $i++){
-			if(!isset($scheduleTsumego[$i]['Tsumego']['status'])) $scheduleTsumego[$i]['Tsumego']['status'] = 'N';
+			if(!isset($scheduleTsumego[$i]['Tsumego']['status']))
+				$scheduleTsumego[$i]['Tsumego']['status'] = 'N';
 		}
 		
-		for($i=0; $i<count($setIDs); $i++){
+		/*for($i=0; $i<count($setIDs); $i++){
 			$setNames[$setIDs[$i]] = $this->Set->findById($setIDs[$i]);
-		}
+		}*/
 		
 		$d1 = date(' d, Y');
 		$d1day = date('d. ');
@@ -175,13 +169,17 @@ class SitesController extends AppController{
 		$currentQuote = $dateUser['DayRecord']['quote'];
 		$userOfTheDay = $this->User->find('first', array('conditions' =>  array('id' => $dateUser['DayRecord']['user_id'])));
 		
-		$totdS = $this->Set->findById($totd['Tsumego']['set_id']);
-		$newTS = $this->Set->findById($newT['Tsumego']['set_id']);
+		$totdSc = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $totd['Tsumego']['id'])));
+		$totdS = $this->Set->findById($totdSc['SetConnection']['set_id']);
+		$newTSc = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $newT['Tsumego']['id'])));
+		$newTS = $this->Set->findById($newTSc['SetConnection']['set_id']);
 		
 		$totd['Tsumego']['set'] = $totdS['Set']['title'];
-		$newT['Tsumego']['set'] = $newTS['Set']['title'];
 		$totd['Tsumego']['set2'] = $totdS['Set']['title2'];
+		
+		$newT['Tsumego']['set'] = $newTS['Set']['title'];
 		$newT['Tsumego']['set2'] = $newTS['Set']['title2'];
+		$newT['Tsumego']['set_id'] = $newTS['Set']['id'];
 		
 		$this->set('userOfTheDay', $userOfTheDay['User']['name']);
 		$this->set('uotdbg', $dateUser['DayRecord']['userbg']);
@@ -206,20 +204,41 @@ class SitesController extends AppController{
 					$this->set('visit3', $setVisit3);
 				}
 			}
-		}*/
+		}
 		
 		$tsumegoDates = array();
+		$scDates = array();
+		$tsumegos = $this->SetConnection->find('all');
 		
-		$invisibleSets = $this->getInvisibleSets();
-		for($j=0; $j<count($ts); $j++){
-			if(!in_array($ts[$j]['Tsumego']['set_id'], $invisibleSets) && $ts[$j]['Tsumego']['set_id']!=null) array_push($tsumegoDates, $ts[$j]['Tsumego']['created']);
+		$setKeys = array();
+		$setArray = $this->Set->find('all', array('conditions' => array('public' => 1)));
+		for($i=0; $i<count($setArray); $i++)
+			$setKeys[$setArray[$i]['Set']['id']] = $setArray[$i]['Set']['id'];
+		
+		for($j=0; $j<count($tsumegos); $j++)
+			if(isset($setKeys[$tsumegos[$j]['SetConnection']['set_id']]))
+				array_push($scDates, $tsumegos[$j]['SetConnection']['tsumego_id']);
+		
+		$tdates = $this->Tsumego->find('all', array('conditions' => array('id' => $scDates)));
+		for($j=0; $j<count($tdates); $j++){
+			array_push($tsumegoDates, $tdates[$j]['Tsumego']['created']);
 		}
+		*/
+		$tsumegoDates = array();
+		$pd = $this->PublishDate->find('all', array('order' => 'date ASC'));
+		for($j=0; $j<count($pd); $j++){
+			array_push($tsumegoDates, $pd[$j]['PublishDate']['date']);
+		}
+		
+		
+		$deletedS = $this->getDeletedSets();
+		//echo '<pre>'; print_r($deletedS); echo '</pre>';
 		
 		$this->set('tsumegos', $tsumegoDates);
 		$this->set('quote', $currentQuote);
 		$this->set('d1', $d1);
-		$this->set('setNames', $setNames);
-		$this->set('setDates', $setDates);
+		//$this->set('setNames', $setNames);
+		//$this->set('setDates', $setDates);
 		$this->set('totd', $totd);
 		$this->set('newT', $newT);
 		$this->set('scheduleTsumego', $scheduleTsumego);

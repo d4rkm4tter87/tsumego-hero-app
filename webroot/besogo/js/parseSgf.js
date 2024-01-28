@@ -1,5 +1,6 @@
 besogo.parseSgf = function(text)
 {
+	
   'use strict';
   var at = 0, // Current position
       ch = text.charAt(at); // Current character at position
