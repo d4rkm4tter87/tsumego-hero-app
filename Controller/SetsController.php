@@ -799,7 +799,12 @@ class SetsController extends AppController{
 				$scT = $this->Tsumego->findById($scTs[$i]['SetConnection']['tsumego_id']);
 				$scT['Tsumego']['set_id'] = $scTs[$i]['SetConnection']['set_id'];
 				$scT['Tsumego']['num'] = $scTs[$i]['SetConnection']['num'];
-				$scT['Tsumego']['duplicateLink'] = '/'.$scT['Tsumego']['set_id'];
+				$scT['Tsumego']['duplicateLink'] = '';
+				$scTs2 = $this->SetConnection->find('all', array('conditions' => array('tsumego_id' => $scT['Tsumego']['id'])));
+				for($j=0;$j<count($scTs2);$j++)
+					if(count($scTs2)>1 && $scTs2[$j]['SetConnection']['set_id']==$set['Set']['id'])
+						$scT['Tsumego']['duplicateLink'] = '?sid='.$scT['Tsumego']['set_id'];
+				
 				array_push($ts, $scT);
 			}
 			

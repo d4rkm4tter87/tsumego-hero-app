@@ -92,6 +92,12 @@ class SitesController extends AppController{
 			$idArray = array();
 			array_push($idArray, $totd['Tsumego']['id']);
 			for($i=0; $i<count($scheduleTsumego); $i++){
+				/*
+				$scScheduleTsumego = $this->SetConnection->find('all', array('conditions' => array('tsumego_id' => $scheduleTsumego[$i]['Tsumego']['id'])))
+				for($j=0; $j<count($scheduleTsumego); $j++)
+					if(count($scheduleTsumego)>1 && )
+				$newT['Tsumego']['set_id']
+				*/
 				array_push($idArray, $scheduleTsumego[$i]['Tsumego']['id']);
 			}
 			//echo '<pre>'; print_r($idArray); echo '</pre>';

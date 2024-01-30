@@ -1120,7 +1120,7 @@ Joschka Zimdars';
 				$s = $this->Set->findById($duplicates1[$i][$j]['Tsumego']['set_id']);
 				if($s!=null){
 					$duplicates1[$i][$j]['Tsumego']['title'] = $s['Set']['title'].' - '.$duplicates1[$i][$j]['Tsumego']['num'];
-					$duplicates1[$i][$j]['Tsumego']['duplicateLink'] = '/'.$duplicates1[$i][$j]['Tsumego']['set_id'];
+					$duplicates1[$i][$j]['Tsumego']['duplicateLink'] = '?sid='.$duplicates1[$i][$j]['Tsumego']['set_id'];
 					for($k=0; $k<count($uts); $k++)
 						if($uts[$k]['TsumegoStatus']['tsumego_id'] == $duplicates1[$i][$j]['Tsumego']['id'])
 							$duplicates1[$i][$j]['Tsumego']['status'] = $uts[$k]['TsumegoStatus']['status'];
