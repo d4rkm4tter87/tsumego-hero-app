@@ -16,6 +16,12 @@ class SetsController extends AppController{
 		$tIds = array();
 		$d2 = array();
 		
+		if(isset($this->params['url']['unmark'])){
+			$unmark = $this->Duplicate->find('all', array('conditions' => array('dGroup' => $this->params['url']['unmark'])));
+			for($i=0; $i<count($unmark); $i++)
+				$this->Duplicate->delete($unmark[$i]['Duplicate']['id']);
+		}
+		
 		//$ts = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array('set_id' => $id)));
 		$ts = $this->findTsumegoSet($id);
 		$set = $this->Set->findById($ts[0]['Tsumego']['set_id']);
@@ -34,6 +40,8 @@ class SetsController extends AppController{
 				array_push($d, $d01[$j]);
 			}
 		}
+		
+		
 		$dNew = array();
 		for($i=0; $i<count($d); $i++){
 			$dNewMatch = false;
@@ -67,6 +75,7 @@ class SetsController extends AppController{
 
 			$setx = $this->Set->findById($td['Tsumego']['set_id']);
 			$td['Tsumego']['title'] = $setx['Set']['title'].' - '.$td['Tsumego']['num'];
+			$td['Tsumego']['dGroup'] = $d[$i]['Duplicate']['dGroup'];
 			
 			array_push($d2[$counter], $td);
 			$currentGroup = $d[$i]['Duplicate']['dGroup'];
@@ -79,6 +88,7 @@ class SetsController extends AppController{
 			array_push($similarArrBoardSize, $sgfArr[3]);
 		}
 		
+		$this->set('id', $id);
 		$this->set('set', $set);
 		$this->set('ts', $ts);
 		$this->set('d', $d);
@@ -781,7 +791,9 @@ class SetsController extends AppController{
 		if($id!=1){
 			$set = $this->Set->find('first', array('conditions' =>  array('id' => $id)));
 			//$ts = $this->Tsumego->find('all', array('order' => 'num', 'direction' => 'ASC', 'conditions' => array('set_id' => $id)));
-			$ts = $this->findTsumegoSet($id);
+			
+			$ts = array();
+			
 			$scTs = $this->SetConnection->find('all', array('conditions' => array('set_id' => $set['Set']['id'])));
 			for($i=0; $i<count($scTs); $i++){
 				$scT = $this->Tsumego->findById($scTs[$i]['SetConnection']['tsumego_id']);
@@ -790,6 +802,8 @@ class SetsController extends AppController{
 				$scT['Tsumego']['duplicateLink'] = '/'.$scT['Tsumego']['set_id'];
 				array_push($ts, $scT);
 			}
+			
+			
 			$tsBuffer = array();
 			$tsBufferLowest=10000;
 			$tsBufferHighest=0;
@@ -804,7 +818,6 @@ class SetsController extends AppController{
 			for($i=$tsBufferLowest; $i<=$tsBufferHighest; $i++)
 				if(isset($tsBuffer[$i]))
 					array_push($ts, $tsBuffer[$i]);
-			//$ts = $this->findTsumegoSet($id);
 			
 			$allVcActive = true;
 			$allVcInactive = true;

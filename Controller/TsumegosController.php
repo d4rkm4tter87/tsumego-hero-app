@@ -238,7 +238,8 @@ class TsumegosController extends AppController{
 		$requestSolution = false;
 		
 		$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $id)));
-		//echo '<pre>'; print_r($scT); echo '</pre>';
+		echo '<pre>'; print_r(session_get_cookie_params($_COOKIE['sprint'])); echo '</pre>';
+		echo '<pre>'; print_r($_COOKIE['sprint']); echo '</pre>';
 		
 		/*
 		$t = $this->Tsumego->findById($id);//the tsumego
@@ -316,7 +317,8 @@ class TsumegosController extends AppController{
 						$_COOKIE['mode'] = 1;
 					}
 				}
-				$_SESSION['loggedInUser']['User']['mode'] = $_COOKIE['mode'];	
+				$_SESSION['loggedInUser']['User']['mode'] = $_COOKIE['mode'];
+				
 				$mode = $_COOKIE['mode'];
 			}
 			unset($_COOKIE['mode']);
@@ -401,30 +403,42 @@ class TsumegosController extends AppController{
 					}
 					$currentNum = $ranks[0]['Rank']['currentNum'];
 					$tsid = null;
+					$tsid2 = null;
 					for($i=0; $i<count($ranks); $i++){
-						if($ranks[$i]['Rank']['num'] == $currentNum) $tsid = $ranks[$i]['Rank']['tsumego_id'];
+						if($ranks[$i]['Rank']['num'] == $currentNum){
+							$tsid = $ranks[$i]['Rank']['tsumego_id'];
+							if($currentNum<10)
+								$tsid2 = $ranks[$i+1]['Rank']['tsumego_id'];
+							else
+								$tsid2 = $ranks[$i]['Rank']['tsumego_id'];
+						}
 					}
 					$currentRank = $this->Tsumego->findById($tsid);
+					$currentRank2 = $this->Tsumego->findById($tsid2);
 					$firstRanks = 2;
-					
-					if($currentNum==$stopParameter+1) $r10=1;
+					if($currentNum==$stopParameter+1)
+						$r10=1;
 					
 					$currentRankNum = $currentNum;
 				}
 			}
 		}
-		if(isset($this->params['url']['refresh'])) $refresh = $this->params['url']['refresh'];
+		if(isset($this->params['url']['refresh']))
+			$refresh = $this->params['url']['refresh'];
 		
 		if(!is_numeric($id)) $id = 15352;
 		if(!empty($rankTs)){
 			$id = $rankTs[0]['Tsumego']['id'];
+			$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $id)));
 			$mode = 3;
 		}elseif($firstRanks==2){
 			$id = $currentRank['Tsumego']['id'];
+			$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $id)));
 			$mode = 3;
 		}
 		if(isset($_SESSION['loggedInUser'])){
-			if($_SESSION['loggedInUser']['User']['mode']==0) $_SESSION['loggedInUser']['User']['mode'] = 1;
+			if($_SESSION['loggedInUser']['User']['mode']==0)
+				$_SESSION['loggedInUser']['User']['mode'] = 1;
 			if(isset($this->params['url']['mode'])){
 				$_SESSION['loggedInUser']['User']['mode'] = $this->params['url']['mode'];	
 				$mode = $this->params['url']['mode'];
@@ -508,21 +522,20 @@ class TsumegosController extends AppController{
 					$rangeIncrement+=50;
 				}
 				shuffle($range);
-				
 				$rangePublic = false;
 				$rangePublicCounter = 0;
 				
 				while(!$rangePublic){
 					$scRange = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $range[$rangePublicCounter]['Tsumego']['id'])));
 					$setScRange = $this->Set->findById($scRange['SetConnection']['set_id']);
-					if($setScRange['Set']['public']==1)
+					if($setScRange['Set']['public']==1 && $setScRange['Set']['id']!=210){
 						$rangePublic = true;
-					else
+					}else
 						$rangePublicCounter++;
 				}
-				
 				$nextMode = $range[$rangePublicCounter];
 				$id = $nextMode['Tsumego']['id'];
+				$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $id)));
 			}
 		}
 		
@@ -532,7 +545,8 @@ class TsumegosController extends AppController{
 			$t['Tsumego']['set_id'] = $setId;
 			$sc = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $id, 'set_id' => $setId)));
 			$t['Tsumego']['num'] = $sc['SetConnection']['num'];
-			$t['Tsumego']['duplicateLink'] = '/'.$t['Tsumego']['set_id'];
+			//$t['Tsumego']['duplicateLink'] = '/'.$t['Tsumego']['set_id'];
+			$t['Tsumego']['duplicateLink'] = '';
 		}
 		
 		$tRank = $this->getTsumegoRank($t['Tsumego']['userWin']);
@@ -996,17 +1010,6 @@ class TsumegosController extends AppController{
 				$noTr = true;
 			}
 		}elseif($mode==3){
-			$allUts1 = $this->TsumegoStatus->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'tsumego_id' => $t['Tsumego']['id'])));
-			$allUts = array();
-			$allUts2 = array();
-			$allUts2['TsumegoStatus']['id'] = 59;
-			$allUts2['TsumegoStatus']['user_id'] = 72;
-			$allUts2['TsumegoStatus']['tsumego_id'] = 572;
-			$allUts2['TsumegoStatus']['status'] = 'V';
-			$allUts2['TsumegoStatus']['created'] = '2018-02-07 16:35:10';
-			array_push($allUts, $allUts1);
-			array_push($allUts, $allUts2);
-			$ut = $allUts[0];
 		}
 		
 		if(isset($ut['TsumegoStatus']['status']))
@@ -1085,7 +1088,7 @@ class TsumegosController extends AppController{
 			$_COOKIE['rank'] = $drCookie2[1];
 		}
 		
-		if($_SESSION['loggedInUser']['User']['potion']>=15)
+		if(isset($_SESSION['loggedInUser']['User']['id']) && $_SESSION['loggedInUser']['User']['potion']>=15)
 			$this->setPotionCondition();
 		
 		if(isset($_COOKIE['rejuvenationx']) && $_COOKIE['rejuvenationx']!=0){
@@ -1545,7 +1548,7 @@ class TsumegosController extends AppController{
 			$this->User->save($u);
 		}
 		
-		if($mode==1 || $mode==3){
+		if($mode==1){
 			if($ut==null && isset($_SESSION['loggedInUser']['User']['id'])){
 				$this->TsumegoStatus->create();
 				$ut['TsumegoStatus'] = array();
@@ -1563,7 +1566,7 @@ class TsumegosController extends AppController{
 		
 		$set = $this->Set->findById($t['Tsumego']['set_id']);
 		
-		$ts = $this->findTsumegoSet($set['Set']['id']);
+		$ts = array();
 		//$ts = $this->Tsumego->find('all', array('order' => 'num', 'direction' => 'ASC', 'conditions' =>  array('set_id' => $set['Set']['id'])));
 		
 		$scTs = $this->SetConnection->find('all', array('conditions' => array('set_id' => $set['Set']['id'])));
@@ -1571,7 +1574,8 @@ class TsumegosController extends AppController{
 			$scT = $this->Tsumego->findById($scTs[$i]['SetConnection']['tsumego_id']);
 			$scT['Tsumego']['set_id'] = $scTs[$i]['SetConnection']['set_id'];
 			$scT['Tsumego']['num'] = $scTs[$i]['SetConnection']['num'];
-			$scT['Tsumego']['duplicateLink'] = '/'.$scT['Tsumego']['set_id'];
+			//$scT['Tsumego']['duplicateLink'] = '/'.$scT['Tsumego']['set_id'];
+			$scT['Tsumego']['duplicateLink'] = '';
 			array_push($ts, $scT);
 		}
 		$tsBuffer = array();
@@ -1688,8 +1692,6 @@ class TsumegosController extends AppController{
 		$next = 0;
 		$tsBack = array();
 		$tsNext = array();
-		
-		
 		
 		if(!$inFavorite){
 			for($i=0; $i<count($ts); $i++){
@@ -2039,9 +2041,12 @@ class TsumegosController extends AppController{
 			$raName = $ranks[0]['Rank']['rank'];
 		}
 		
-		if($mode==1) $_SESSION['page'] = 'level mode';
-		elseif($mode==2) $_SESSION['page'] = 'rating mode';
-		elseif($mode==3) $_SESSION['page'] = 'time mode';
+		if($mode==1)
+			$_SESSION['page'] = 'level mode';
+		elseif($mode==2)
+			$_SESSION['page'] = 'rating mode';
+		elseif($mode==3)
+			$_SESSION['page'] = 'time mode';
 		
 		if($requestProblem!=''){
 			$requestProblem = '?v='.strlen($requestProblem);
@@ -2056,17 +2061,22 @@ class TsumegosController extends AppController{
 		$scPrev = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $prev, 'set_id' => $t['Tsumego']['set_id'])));
 		if($scPrev!=null)
 			$prev = $prev.'/'.$t['Tsumego']['set_id'];
-		$scNext = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $next, 'set_id' => $t['Tsumego']['set_id'])));
-		if($scNext!=null)
-			$next = $next.'/'.$t['Tsumego']['set_id'];
-		
+		if($mode==1){
+			$scNext = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $next, 'set_id' => $t['Tsumego']['set_id'])));
+			if($scNext!=null)
+				//$next = $next.'/'.$t['Tsumego']['set_id']
+			;
+		}else if($mode==2){
+			$next = $nextMode['Tsumego']['id'].'/'.$t['Tsumego']['set_id'];
+		}else if($mode==3){
+			$scNext = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $currentRank2['Tsumego']['id'])));
+			if($scNext!=null)
+				$next = $currentRank2['Tsumego']['id'].'/'.$scNext['SetConnection']['set_id'];
+		}
 		$this->startPageUpdate();
-		
 		$startingPlayer = $this->getStartingPlayer($sgf2);
 		
 		
-		//echo '<pre>'; print_r(session_get_cookie_params()); echo '</pre>';
-		//echo '<pre>'; print_r($_PHPSESSID); echo '</pre>';
 		$this->set('tRank', $tRank);
 		$this->set('sgf', $sgf);
 		$this->set('sgf2', $sgf2);

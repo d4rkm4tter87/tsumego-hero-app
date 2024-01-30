@@ -619,7 +619,7 @@
 			if($date==date_create('2019-04-25')) $td[$j]['num'] -= 238;
 			if($date==date_create('2019-05-01')) $td[$j]['num'] -= 32;
 			if($date==date_create('2019-05-19')) $td[$j]['num'] -= 40;
-			if($date==date_create('2020-02-22')) $td[$j]['num'] -= 364;
+			if($date==date_create('2020-02-22')) $td[$j]['num'] -= 347;
 			//if($date==date_create('2023-09-01')) $td[$j]['num'] -= 141;
 			if($date==date_create('2023-09-01')) $td[$j]['num'] -= 4;
 			if($date==date_create('2023-10-04')) $td[$j]['num'] -= 10;

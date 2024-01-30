@@ -22,9 +22,9 @@ class UsersController extends AppController{
 		$this->loadModel('Duplicate');
 		$this->loadModel('PublishDate');
 		
+		$scT = $this->PublishDate->find('all');
 		
-		
-		//echo '<pre>'; print_r($scIds2); echo '</pre>';
+		echo '<pre>'; print_r(count($scT)); echo '</pre>';
 		//$this->publishDates();
 		//$this->fillSetConnection();
 		/*
@@ -939,7 +939,8 @@ Joschka Zimdars';
 		$idMap2 = array();
 		$marks = array();
 		$aMessage = null;
-		
+		$errSet = '';
+		$errNotNull = '';
 		//$sc1 = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => 3537, 'set_id' => 71790)));
 		//$sc2 = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => 25984, 'set_id' => 190)));
 		//$sc2['SetConnection']['tsumego_id'] = 25984;
@@ -988,10 +989,10 @@ Joschka Zimdars';
 			$newDuplicates = explode('-', $this->params['url']['duplicates']);
 			$newD = array();
 			$newDmain = array();
-			$checkSc = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $this->params['url']['main'])));
+			$checkSc = $this->SetConnection->find('all', array('conditions' => array('tsumego_id' => $this->params['url']['main'])));
 			$errSet = '';
 			$errNotNull = '';
-			if($checkSc==null){
+			if(count($checkSc)<=1){
 				$validSc = true;
 			}else{
 				$validSc = false;
@@ -1023,11 +1024,12 @@ Joschka Zimdars';
 					}else{
 						$this->Tsumego->delete($newD['Tsumego']['id']);
 					}
-					$this->SetConnection->create();
+					$this->SetConnection->delete($scT['SetConnection']['id']);
 					$setC = array();
 					$setC['SetConnection']['tsumego_id'] = $this->params['url']['main'];
 					$setC['SetConnection']['set_id'] = $newD['Tsumego']['set_id'];
 					$setC['SetConnection']['num'] = $newD['Tsumego']['num'];
+					$this->SetConnection->create();
 					$this->SetConnection->save($setC);
 					$dupDel = $this->Duplicate->find('all', array('conditions' => array('tsumego_id' => $newDuplicates[$i])));
 					for($j=0; $j<count($dupDel); $j++)
@@ -1113,7 +1115,7 @@ Joschka Zimdars';
 			$tooltipInfo[$i] = array();
 			$tooltipBoardSize[$i] = array();
 			for($j=0; $j<count($duplicates1[$i]); $j++){
-				$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $duplicates1[$i][$j]['Tsumego']['id'])));
+				$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $duplicates1[$i][$j]['Tsumego']['id'], 'set_id' => $duplicates1[$i][$j]['Tsumego']['set_id'])));
 				$duplicates1[$i][$j]['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 				$s = $this->Set->findById($duplicates1[$i][$j]['Tsumego']['set_id']);
 				if($s!=null){
@@ -1131,25 +1133,6 @@ Joschka Zimdars';
 			}
 		}
 		
-		
-		/*
-		
-		for($i=0; $i<count($d); $i++){
-			for($j=0; $j<count($d[$i]); $j++){
-				$tooltipSgfs[$i] = array();
-				
-			}
-		}
-		
-		for($i=0; $i<count($navi); $i++){
-			$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $navi[$i]['Tsumego']['id'])));
-			$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
-			array_push($tooltipSgfs, $tArr[0]);
-			array_push($tooltipInfo, $tArr[2]);
-			array_push($tooltipBoardSize, $tArr[3]);
-		}
-		*/
-		//echo '<pre>'; print_r($tooltipInfo); echo '</pre>';
 		
 		
 		$this->set('d', $duplicates1);
