@@ -17,13 +17,13 @@
 			<tr>
 			<td width="50%">
 				<div align="right">
-					<?php echo '<a href="/tsumegos/play/'.$d2[$i][0]['Tsumego']['id'].'/'.$d2[$i][0]['Tsumego']['set_id'].'">'.$d2[$i][0]['Tsumego']['title'].'</a><br>'; ?>
+					<?php echo '<a href="/tsumegos/play/'.$d2[$i][0]['Tsumego']['id'].'?sid='.$d2[$i][0]['Tsumego']['set_id'].'">'.$d2[$i][0]['Tsumego']['title'].'</a><br>'; ?>
 					<div class="tooltipSvg" id="tooltipSvg<?php echo $counter++; ?>"></div>
 				</div>
 			</td>
 			<td width="50%">
 				<?php for($j=1; $j<count($d2[$i]); $j++){ ?>
-					<?php echo '<a href="/tsumegos/play/'.$d2[$i][$j]['Tsumego']['id'].'/'.$d2[$i][$j]['Tsumego']['set_id'].'">'.$d2[$i][$j]['Tsumego']['title'].'</a><br>'; ?>
+					<?php echo '<a href="/tsumegos/play/'.$d2[$i][$j]['Tsumego']['id'].'?sid='.$d2[$i][$j]['Tsumego']['set_id'].'">'.$d2[$i][$j]['Tsumego']['title'].'</a><br>'; ?>
 					<div class="tooltipSvg" id="tooltipSvg<?php echo $counter++; ?>"></div>
 				<?php } ?>
 				<div align="left"><a href="/sets/duplicates/<?php echo $id.'?unmark='.$d2[$i][0]['Tsumego']['dGroup']; ?>">Remove duplicate mark</a></div>

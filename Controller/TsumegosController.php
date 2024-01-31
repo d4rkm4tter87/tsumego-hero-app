@@ -236,7 +236,16 @@ class TsumegosController extends AppController{
 		$preSc = array();
 		$tRank = '15k';
 		$requestSolution = false;
+		$currentRank2 = null;
 		$hasDuplicateGroup = count($this->SetConnection->find('all', array('conditions' => array('tsumego_id' => $id))))>1;
+		
+		if($hasDuplicateGroup){
+			$duplicates = $this->SetConnection->find('all', array('conditions' => array('tsumego_id' => $id)));
+			for($i=0;$i<count($duplicates);$i++){
+				$duplicateSet = $this->Set->findById($duplicates[$i]['SetConnection']['set_id']);
+				$duplicates[$i]['SetConnection']['title'] = $duplicateSet['Set']['title'].' '.$duplicates[$i]['SetConnection']['num'];
+			}
+		}
 		
 		$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $id)));
 		
@@ -430,6 +439,7 @@ class TsumegosController extends AppController{
 			$id = $rankTs[0]['Tsumego']['id'];
 			$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $id)));
 			$mode = 3;
+			$currentRank2 = $rankTs[1]['Tsumego']['id'];
 		}elseif($firstRanks==2){
 			$id = $currentRank['Tsumego']['id'];
 			$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $id)));
@@ -1010,7 +1020,18 @@ class TsumegosController extends AppController{
 				$this->TsumegoRatingAttempt->save($tr);
 				$noTr = true;
 			}
-		}elseif($mode==3){
+		}else if($mode==3){
+			$allUts1 = $this->TsumegoStatus->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'tsumego_id' => $t['Tsumego']['id'])));
+			$allUts = array();
+			$allUts2 = array();
+			$allUts2['TsumegoStatus']['id'] = 59;
+			$allUts2['TsumegoStatus']['user_id'] = 72;
+			$allUts2['TsumegoStatus']['tsumego_id'] = 572;
+			$allUts2['TsumegoStatus']['status'] = 'V';
+			$allUts2['TsumegoStatus']['created'] = '2018-02-07 16:35:10';
+			array_push($allUts, $allUts1);
+			array_push($allUts, $allUts2);
+			$ut = $allUts[0];
 		}
 		
 		if(isset($ut['TsumegoStatus']['status']))
@@ -1193,8 +1214,10 @@ class TsumegosController extends AppController{
 				$utPre['TsumegoStatus']['created'] = date('Y-m-d H:i:s');
 				
 				if(isset($_SESSION['loggedInUser'])){
-					if(!isset($utPre['TsumegoStatus']['status'])) $utPre['TsumegoStatus']['status'] = 'V';
-					$this->TsumegoStatus->save($utPre);
+					if(!isset($utPre['TsumegoStatus']['status']))
+						$utPre['TsumegoStatus']['status'] = 'V';
+					if($mode!=3)
+						$this->TsumegoStatus->save($utPre);
 					$preUt = array_search($utPre['TsumegoStatus']['tsumego_id'], $idMap);
 					$allUts[$preUt]['TsumegoStatus']['status'] = $utPre['TsumegoStatus']['status'];
 					
@@ -1366,7 +1389,8 @@ class TsumegosController extends AppController{
 					$utPre['TsumegoStatus']['created'] = date('Y-m-d H:i:s');
 					if(isset($_SESSION['loggedInUser']) && !isset($_SESSION['noLogin'])){
 						if(!isset($utPre['TsumegoStatus']['status'])) $utPre['TsumegoStatus']['status'] = 'V';
-						if($mode==1) $this->TsumegoStatus->save($utPre);
+						if($mode==1)
+							$this->TsumegoStatus->save($utPre);
 						$preUt = array_search($utPre['TsumegoStatus']['tsumego_id'], $idMap);
 						$allUts[$preUt]['TsumegoStatus']['status'] = $utPre['TsumegoStatus']['status'];
 					}
@@ -1552,14 +1576,15 @@ class TsumegosController extends AppController{
 			$this->User->save($u);
 		}
 		
-		if($mode==1){
+		if($mode==1 || $mode==3){
 			if($ut==null && isset($_SESSION['loggedInUser']['User']['id'])){
 				$this->TsumegoStatus->create();
 				$ut['TsumegoStatus'] = array();
 				$ut['TsumegoStatus']['user_id'] = $u['User']['id'];
 				$ut['TsumegoStatus']['tsumego_id'] = $id;
 				$ut['TsumegoStatus']['status'] = 'V';
-				$this->TsumegoStatus->save($ut);
+				if($mode!=3)
+					$this->TsumegoStatus->save($ut);
 			}
 		}elseif($mode==2){
 			$ut['TsumegoStatus'] = array();
@@ -1905,7 +1930,8 @@ class TsumegosController extends AppController{
 		if($t['Tsumego']['id'] == $tsLast['Tsumego']['id']) $tsLast = null;
 		
 		if(isset($_SESSION['loggedInUser'])){
-			if(!isset($ut['TsumegoStatus']['status'])) $t['Tsumego']['status'] = 'V';
+			if(!isset($ut['TsumegoStatus']['status']))
+				$t['Tsumego']['status'] = 'V';
 			$t['Tsumego']['status'] = 'set'.$ut['TsumegoStatus']['status'].'2';
 			$half='';
 			if($ut['TsumegoStatus']['status']=='W' || $ut['TsumegoStatus']['status']=='X'){
@@ -1934,13 +1960,15 @@ class TsumegosController extends AppController{
 		if(!isset($_SESSION['loggedInUser'])) $u['User'] = $noUser;
 		
 		$navi = array();
-		array_push($navi, $tsFirst);
+		if(!$inFavorite)
+			array_push($navi, $tsFirst);
 		for($i=0; $i<count($tsBack); $i++) 
 			array_push($navi, $tsBack[$i]);
 		array_push($navi, $t);
 		for($i=0; $i<count($tsNext); $i++) 
 			array_push($navi, $tsNext[$i]);
-		array_push($navi, $tsLast);
+		if(!$inFavorite)
+			array_push($navi, $tsLast);
 		
 		$tooltipSgfs = array();
 		$tooltipInfo = array();
@@ -2749,15 +2777,11 @@ class TsumegosController extends AppController{
 		$s = $this->Set->findById($t['Tsumego']['set_id']);
 		
 		
-		echo '<pre>'; print_r($ds1.'/'.count($all)); echo '</pre>';
-		echo '<pre>'; print_r($t['Tsumego']['id']); echo '</pre>';
-		echo '<pre>'; print_r($s['Set']['public']); echo '</pre>';
 		
 		
 		//$sc = $this->SetConnection->find('first', array('conditions' =>  array('tsumego_id' => $id)));
 		//$s = $this->Set->findById($sc['SetConnection']['set_id']);
 		$title = $s['Set']['title'].' - '.$t['Tsumego']['num'];
-		echo '<pre>'; print_r($title); echo '</pre>';
 		//$inSet = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array('set_id' => $t['Tsumego']['set_id'])));
 		//echo '<pre>'; print_r(count($inSet)); echo '</pre>';
 		

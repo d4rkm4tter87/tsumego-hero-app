@@ -111,7 +111,7 @@ class RanksController extends AppController {
 						if($j!=0) $this->RankSetting->delete($settingsSingle[$j]['RankSetting']['id']);
 					}
 				}
-				if($settingsSingle[0]['RankSetting']['status']==1){
+				if(isset($settingsSingle[0]) && $settingsSingle[0]['RankSetting']['status']==1){
 					//$tx = $this->Tsumego->find('all', array('conditions' => array('set_id' => $sets[$i]['Set']['id'])));
 					$tx = $this->findTsumegoSet($sets[$i]['Set']['id']);	
 					for($j=0;$j<count($tx);$j++){

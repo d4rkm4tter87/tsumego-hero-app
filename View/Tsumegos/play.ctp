@@ -105,7 +105,8 @@
 		$heroPower4 = 'hp4xx';
 		$heroPower5 = 'hp5xx';
 	}
-	if($t['Tsumego']['set_id']==11969) echo '<script type="text/javascript" src="/'.$boardSize.'/board23.js"></script>'; //Pretty Area
+	if($goldenTsumego) echo '<script type="text/javascript" src="/'.$boardSize.'/board46.js"></script>'; //Golden
+	else if($t['Tsumego']['set_id']==11969) echo '<script type="text/javascript" src="/'.$boardSize.'/board23.js"></script>'; //Pretty Area
 	else if($t['Tsumego']['set_id']==29156) echo '<script type="text/javascript" src="/'.$boardSize.'/board24.js"></script>'; //Hunting
 	else if($t['Tsumego']['set_id']==31813) echo '<script type="text/javascript" src="/'.$boardSize.'/board25.js"></script>'; //The Ghost
 	else if($t['Tsumego']['set_id']==33007) echo '<script type="text/javascript" src="/'.$boardSize.'/board26.js"></script>'; //Carnage
@@ -113,11 +114,11 @@
 	else if($t['Tsumego']['set_id']==74761) echo '<script type="text/javascript" src="/'.$boardSize.'/board28.js"></script>'; //Giants
 	else if($t['Tsumego']['set_id']==81578) echo '<script type="text/javascript" src="/'.$boardSize.'/board29.js"></script>'; //Moves of Resistance
 	else if($t['Tsumego']['set_id']==88156) echo '<script type="text/javascript" src="/'.$boardSize.'/board30.js"></script>'; //Hand of God
-	else if($goldenTsumego) echo '<script type="text/javascript" src="/'.$boardSize.'/board46.js"></script>'; //Golden
 	else if($t['Tsumego']['set_id']==6473) echo '<script type="text/javascript" src="/'.$boardSize.'/board55.js"></script>'; //Tsumego Grandmaster
 	else echo '<script type="text/javascript" src="/'.$boardSize.'/board'.$choice[0][0].'.js"></script>'; // Regular
 	
-	if($t['Tsumego']['set_id']==11969) $choice[0] = $boardPositions[44]; //Pretty Area
+	if($goldenTsumego) $choice[0] = array(46,'texture46','black34.png','white34.png'); //Golden
+	else if($t['Tsumego']['set_id']==11969) $choice[0] = $boardPositions[44]; //Pretty Area
 	else if($t['Tsumego']['set_id']==29156) $choice[0] = $boardPositions[45]; //Hunting
 	else if($t['Tsumego']['set_id']==31813) $choice[0] = $boardPositions[46]; //The Ghost
 	else if($t['Tsumego']['set_id']==33007) $choice[0] = $boardPositions[47]; //Carnage
@@ -125,7 +126,7 @@
 	else if($t['Tsumego']['set_id']==74761) $choice[0] = $boardPositions[49]; //Giants
 	else if($t['Tsumego']['set_id']==81578) $choice[0] = $boardPositions[50]; //Moves of Resistance
 	else if($t['Tsumego']['set_id']==88156) $choice[0] = $boardPositions[50]; //Hand of God
-	else if($goldenTsumego) $choice[0] = array(46,'texture46','black34.png','white34.png'); //Golden
+	
 	else if($t['Tsumego']['set_id']==6473) $choice[0] = $boardPositions[51]; //Tsumego Grandmaster
 	else echo '<script type="text/javascript" src="/'.$boardSize.'/board'.$choice[0][0].'.js"></script>'; // Regular
 	if(isset($_SESSION['lastVisit'])) $lv = $_SESSION['lastVisit'];
@@ -600,13 +601,9 @@
 											echo '<td><input type="radio" id="r40" name="data[Settings][r40]" value="off" '.$duOff.'><label for="r40">no</label></td>
 											<td><input type="radio" id="r40" name="data[Settings][r40]" value="on" '.$duOn.'><label for="r40">yes</label></td>';
 										}else{
-											if($t['Tsumego']['duplicate']<=9)
-												$mainOrNot = ' (main)';
-											else
-												$mainOrNot = '';
-											echo '<td><div class="duplicateTable">Is duplicate'.$mainOrNot.' with:<br>';
+											echo '<td><div class="duplicateTable">Is duplicate group:<br>';
 											for($i=0; $i<count($duplicates); $i++){
-												echo '<a href="/tsumegos/play/'.$duplicates[$i]['Tsumego']['id'].'">'.$duplicates[$i]['Tsumego']['title'].'</a>';
+												echo '<a href="/tsumegos/play/'.$duplicates[$i]['SetConnection']['tsumego_id'].'?sid='.$duplicates[$i]['SetConnection']['set_id'].'">'.$duplicates[$i]['SetConnection']['title'].'</a>';
 												if($i!=count($duplicates)-1)
 													echo ', ';
 											}
