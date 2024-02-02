@@ -221,7 +221,7 @@
 	Configure::write('Session', array(
 		'cookie' => 'myApp',
 		//'defaults' => 'php', // Comment this line
-		'timeout' => '14400', // Set the timout to 240 hrs
+		'timeout' => '7200000', // Set the timout to 240 hrs
 		'autoRegenerate' => true, // causes the session expiration time to reset on each page load
 		'ini' => array(
 			'session.use_trans_sid' => 0, // use other configuration from php default config

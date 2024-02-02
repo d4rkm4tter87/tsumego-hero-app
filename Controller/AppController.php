@@ -2246,9 +2246,9 @@ class AppController extends Controller{
 		if(isset($_COOKIE['preId']) && $_COOKIE['preId'] != '0'){
 			$preTsumego = $this->Tsumego->findById($_COOKIE['preId']);
 			
-			$preSc = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $_COOKIE['preId'])));
+			$preSc = $this->SetConnection->find('all', array('conditions' => array('tsumego_id' => $_COOKIE['preId'])));
 			
-			$preTsumego['Tsumego']['set_id'] = $preSc['SetConnection']['set_id'];
+			$preTsumego['Tsumego']['set_id'] = $preSc[0]['SetConnection']['set_id'];
 			$utPre = $this->TsumegoStatus->find('first', array('conditions' => array('tsumego_id' => $_COOKIE['preId'], 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
 		}
 		
@@ -2267,20 +2267,19 @@ class AppController extends Controller{
 			$_COOKIE['score'] = $this->decrypt($_COOKIE['score']);
 			$scoreArr = explode('-', $_COOKIE['score']);
 			$isNum = $preTsumego['Tsumego']['num']==$scoreArr[0];
-			$isSet = $preTsumego['Tsumego']['set_id']==$scoreArr[2];
+			//$isSet = $preTsumego['Tsumego']['set_id']==$scoreArr[2];
+			$isSet = true;
 			
-			/*if($preSc!=null){
-				$isNumSc = false;
-				$isSetSc = false;
-				for($i=0;$i<count($preSc);$i++){
-					if($preSc[$i]['SetConnection']['set_id']==$preTsumego['Tsumego']['set_id'])
-						$isSetSc = true;
-					if($preSc[$i]['SetConnection']['num']==$preTsumego['Tsumego']['num'])
-						$isNumSc = true;
-				}
-				$isNum = $isNumSc;
-				$isSet = $isSetSc;
-			}*/
+			$isNumSc = false;
+			$isSetSc = false;
+			for($i=0;$i<count($preSc);$i++){
+				if($preSc[$i]['SetConnection']['set_id']==$preTsumego['Tsumego']['set_id'])
+					$isSetSc = true;
+				if($preSc[$i]['SetConnection']['num']==$preTsumego['Tsumego']['num'])
+					$isNumSc = true;
+			}
+			$isNum = $isNumSc;
+			$isSet = $isSetSc;
 			
 			$_COOKIE['score'] = $scoreArr[1];
 			
@@ -2291,7 +2290,6 @@ class AppController extends Controller{
 					$tPre = $this->Tsumego->findById($_COOKIE['preId']);
 					$resetCookies = true;
 				}
-				
 				
 				if($mode==1){
 					if(isset($_SESSION['loggedInUser']) && !isset($_SESSION['noLogin'])){

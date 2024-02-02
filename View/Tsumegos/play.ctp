@@ -522,6 +522,18 @@
 			echo '<a id="showx7x" style="margin-right:20px;" class="selectable-text">Find similar problems</a>';
 			
 			echo '<br><br>';
+			if(isset($_SESSION['loggedInUser']['User']['id'])){
+				if($t['Tsumego']['duplicate']!=0 && $t['Tsumego']['duplicate']!=-1){
+					echo '<div class="duplicateTable">Is duplicate group:<br>';
+					for($i=0; $i<count($duplicates); $i++){
+						echo '<a href="/tsumegos/play/'.$duplicates[$i]['SetConnection']['tsumego_id'].'?sid='.$duplicates[$i]['SetConnection']['set_id'].'">'
+						.$duplicates[$i]['SetConnection']['title'].'</a>';
+						if($i!=count($duplicates)-1)
+							echo ', ';
+					}
+					echo '</div><br>';
+				}
+			}
 			if($sgf['Sgf']['user_id']!=33)
 				$adHighlight = 'historyLink';
 			else
@@ -601,15 +613,7 @@
 											echo '<td><input type="radio" id="r40" name="data[Settings][r40]" value="off" '.$duOff.'><label for="r40">no</label></td>
 											<td><input type="radio" id="r40" name="data[Settings][r40]" value="on" '.$duOn.'><label for="r40">yes</label></td>';
 										}else{
-											echo '<td><div class="duplicateTable">Is duplicate group:<br>';
-											for($i=0; $i<count($duplicates); $i++){
-												echo '<a href="/tsumegos/play/'.$duplicates[$i]['SetConnection']['tsumego_id'].'?sid='.$duplicates[$i]['SetConnection']['set_id'].'">'.$duplicates[$i]['SetConnection']['title'].'</a>';
-												if($i!=count($duplicates)-1)
-													echo ', ';
-											}
-											echo '</div></td>
-											<td></td>
-											<td></td>';
+											
 										}
 									echo '</tr>';
 									if($isSandbox){
@@ -1181,7 +1185,6 @@
 	}}
 	
 	?>
-	console.log(nextButtonLink);
 	
 	if(inFavorite!==''){
 		prevButtonLink += inFavorite;
@@ -1791,6 +1794,12 @@
 			msg4selected = !msg4selected;
 		});
 		$("#msg5").hide();
+		<?php
+			if(isset($_SESSION['loggedInUser']['User']['id'])){
+				if($_SESSION['loggedInUser']['User']['id']==72)
+					echo '$("#msg5").show();';
+			}
+		?>
 		$("#show5").click(function(){
 			if(!msg5selected){
 				$("#msg5").fadeIn(250);

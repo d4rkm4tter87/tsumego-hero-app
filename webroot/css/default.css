@@ -3700,7 +3700,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		cursor: pointer;
 	}
 	.duplicateTable{
-		max-width:340px;
+		max-width:800px;
 	}
 	
 	.uotd1{background: url(/img/uotd1.png);background-size:99%;background-repeat:no-repeat;}
@@ -3781,6 +3781,8 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.mid38 h2{color:#fc8f93;}
 	.uotd39{background:url(/img/uotd39.png);background-size:99%;background-repeat:no-repeat;}
 	.mid39 h2{color:#fff;}
+	.uotd40{background:url(/img/uotd40.png);background-size:99%;background-repeat:no-repeat;}
+	.mid40 h2{color:#ffcf60;}
 	
 	.box000{background-image:url('/img/ProgressBar000.png'),url('/img/setButton1.png');background-size:100%;}
 	.box000:hover{background-image:url('/img/ProgressBar000.png'),url('/img/setButton2.png');background-size:100%;}

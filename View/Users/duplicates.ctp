@@ -20,7 +20,26 @@
 	echo '</td><td>';
 	echo '<div class="submit"><input value="Submit" type="submit"></div>';
 	echo '</td>';
+	echo '</tr>';
+	echo '</table>';
+	echo '</div>';
+	?>
+	<br>
+	<hr>
+	<h1>Add problem to existing duplicate group</h1>
+	<?php
+	echo '<div>';
+	echo $this->Form->create('Mark2');
+	echo '<table border="0">';
 	echo '<tr>';
+	echo '<td>';
+	echo $this->Form->input('tsumego_id', array('label' => '', 'type' => 'text', 'placeholder' => 'tsumego id'));
+	echo '</td><td>';
+	echo $this->Form->input('group_id', array('label' => '', 'type' => 'text', 'placeholder' => 'add to group id'));
+	echo '</td><td>';
+	echo '<div class="submit"><input value="Submit" type="submit"></div>';
+	echo '</td>';
+	echo '</tr>';
 	echo '</table>';
 	echo '</div>';
 	?>
@@ -154,9 +173,12 @@
 				echo '<p style="color:#cb382c">'.$errSet.'</p>';
 			if($errSet!='')
 				echo '<p style="color:#cb382c">'.$errNotNull.'</p>';
+			
 			echo '<hr>';
 			$cx = 0;
 			for($i=0; $i<count($d); $i++){
+				echo 'Group id: '.$d[$i][0]['Tsumego']['id'];
+				echo '<br>';
 				for($j=0; $j<count($d[$i]); $j++){
 					echo '<a href="/tsumegos/play/'.$d[$i][$j]['Tsumego']['id'].$d[$i][$j]['Tsumego']['duplicateLink'].'">'.$d[$i][$j]['Tsumego']['title'].'</a>';
 					
@@ -176,7 +198,8 @@
 				
 				echo '<br><br><br>';
 			}
-			
+			if(!$showAll)	
+				echo '<a href="/users/duplicates?load=true">Show all</a>';
 			
 		?>
 		<br><br><br><br><br><br><br><br><br><br>

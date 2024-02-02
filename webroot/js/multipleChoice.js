@@ -103,8 +103,22 @@ function displayMultipleChoiceResult(num){
 				correct = 4;
 			}
 		}else if(multipleChoiceSemeaiType==3){
-			//console.log(multipleChoiceLibertiesB);
-			//console.log(multipleChoiceLibertiesW);
+			console.log("b"+multipleChoiceLibertiesB);
+			console.log(multipleChoiceLibertiesW);
+			console.log(tsumegoFileLink);
+			if(tsumegoFileLink==29498 && multipleChoiceLibertiesB==1 && multipleChoiceLibertiesW==2
+			|| tsumegoFileLink==29499 && multipleChoiceLibertiesB==1 && multipleChoiceLibertiesW==2
+			|| tsumegoFileLink==29500 && multipleChoiceLibertiesB==1 && multipleChoiceLibertiesW==2){
+				multipleChoiceLibertiesB = 1;
+				multipleChoiceLibertiesW = 1;
+				multipleChoiceLibertiesB2 = 5;
+				multipleChoiceLibertiesW2 = 5;
+			}else if(tsumegoFileLink==29501 && multipleChoiceLibertiesB==1 && multipleChoiceLibertiesW==2){
+				multipleChoiceLibertiesB = 1;
+				multipleChoiceLibertiesW = 1;
+				multipleChoiceLibertiesB2 = 15;
+				multipleChoiceLibertiesW2 = 15;
+			}
 			if(multipleChoiceLibertiesB<multipleChoiceLibertiesW){
 				correct = 1;
 				$("#besogo-multipleChoice1").css("background-color", "#3ecf78");

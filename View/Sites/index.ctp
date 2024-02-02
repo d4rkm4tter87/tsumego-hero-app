@@ -529,30 +529,31 @@
 		<div class="new1">
 			<table class="newx" border="0">
 				<tr>
+					<td><h1>31.01.2024</h1></td>
+					<td><h1>ellehooq </h1></td>
+					<td><h1>5,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>29.01.2024</h1></td>
+					<td><h1>Olivier Dodinval </h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>28.01.2024</h1></td>
+					<td><h1>Allan Crossman's Coding Services </h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>25.01.2024</h1></td>
+					<td><h1>Edward Feustel </h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
 					<td><h1>18.01.2024</h1></td>
 					<td><h1>Benjamin Daniels </h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
-				<tr>
-					<td><h1>15.01.2024</h1></td>
-					<td><h1>Peter Leung </h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>11.01.2024</h1></td>
-					<td><h1>Dewald Volschenk </h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>11.01.2024</h1></td>
-					<td><h1>Mark Hammes </h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>11.01.2024</h1></td>
-					<td><h1>Richard Chalmers </h1></td>
-					<td><h1>25,00 €</h1></td>
-				</tr>
+				
 				<!--
 				<tr>
 					<td><h1>10,00 € <font size="2px">subscription</font></h1></td>
@@ -571,7 +572,7 @@
 			array_push($tsumegoDates, date_format($date,"Y-m-d"));
 		}
 		$tsumegoDates = array_count_values($tsumegoDates);
-		$tsumegoDates['2018-02-07'] = 161;
+		$tsumegoDates['2018-02-07'] = 160;
 		$tsumegoDates['2018-03-11'] = 151;
 		$tsumegoDates['2018-04-10'] = 205;
 		$tsumegoDates['2018-04-25'] = 204;

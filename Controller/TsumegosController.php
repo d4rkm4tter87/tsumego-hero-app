@@ -1051,7 +1051,8 @@ class TsumegosController extends AppController{
 					$scoreArr = explode('-', $_COOKIE['score']);
 					$isNum = $preTsumego['Tsumego']['num']==$scoreArr[0];
 					$isSet = $preTsumego['Tsumego']['set_id']==$scoreArr[2];
-					if($isNum && $isSet) $ut['TsumegoStatus']['status'] = 'S';
+					if($isNum && $isSet)
+						$ut['TsumegoStatus']['status'] = 'S';
 				}				
 				if($_COOKIE['misplay']!=0){
 					if($u['User']['damage']+$_COOKIE['misplay'] > $u['User']['health']){

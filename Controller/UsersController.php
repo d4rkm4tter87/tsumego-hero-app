@@ -934,6 +934,7 @@ Joschka Zimdars';
 		$this->loadModel('SetConnection');
 		$this->loadModel('Sgf');
 		$this->loadModel('Duplicate');
+		$this->loadModel('Comment');
 		
 		$idMap = array();
 		$idMap2 = array();
@@ -1022,6 +1023,9 @@ Joschka Zimdars';
 						$newD['Tsumego']['duplicate'] = $this->params['url']['main'];
 						$this->Tsumego->save($newD);
 					}else{
+						$comments = $this->Comment->find('all', array('conditions' => array('tsumego_id' => $newD['Tsumego']['id'])));
+						for($j=0; $j<count($comments); $j++)
+							$this->Comment->delete($comments[$j]['Comment']['id']);
 						$this->Tsumego->delete($newD['Tsumego']['id']);
 					}
 					$this->SetConnection->delete($scT['SetConnection']['id']);
@@ -1050,6 +1054,20 @@ Joschka Zimdars';
 			if(!empty($mark) && $mark['Tsumego']['duplicate']==0){
 				$mark['Tsumego']['duplicate'] = -1;
 				$this->Tsumego->save($mark);
+			}
+		}
+		if(!empty($this->data['Mark2'])){
+			$mark = $this->Tsumego->findById($this->data['Mark2']['tsumego_id']);
+			$group = $this->Tsumego->findById($this->data['Mark2']['group_id']);
+			
+			if($mark!=null && $mark['Tsumego']['duplicate']==0 && $group!=null){
+				$scTx = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $mark['Tsumego']['id'])));
+				$scTx['SetConnection']['tsumego_id'] = $this->data['Mark2']['group_id'];
+				$this->SetConnection->save($scTx);
+				$comments = $this->Comment->find('all', array('conditions' => array('tsumego_id' => $mark['Tsumego']['id'])));
+				for($j=0; $j<count($comments); $j++)
+					$this->Comment->delete($comments[$j]['Comment']['id']);
+				$this->Tsumego->delete($mark['Tsumego']['id']);
 			}
 		}
 		
@@ -1086,55 +1104,58 @@ Joschka Zimdars';
 				array_push($scCount2, $key);
 		}
 		
-		
-		
-		
-		
 		$duplicates1 = array();
-		$counter = 0;
-		for($i=0; $i<count($scCount2); $i++){
-			$duplicates1[$i] = array();
-			for($j=0; $j<count($sc); $j++){
-				if($sc[$j]['SetConnection']['tsumego_id']==$scCount2[$i]){
-					$scT1 = $this->Tsumego->findById($sc[$j]['SetConnection']['tsumego_id']);
-					$scT1['Tsumego']['num'] = $sc[$j]['SetConnection']['num'];
-					$scT1['Tsumego']['set_id'] = $sc[$j]['SetConnection']['set_id'];
-					$scT1['Tsumego']['status'] = 'N';
-					array_push($duplicates1[$i], $scT1);
-					array_push($idMap, $scT1['Tsumego']['id']);
+		
+		$showAll = false;
+		
+		if(isset($this->params['url']['load'])){
+			$showAll = true;
+			$counter = 0;
+			for($i=0; $i<count($scCount2); $i++){
+				$duplicates1[$i] = array();
+				for($j=0; $j<count($sc); $j++){
+					if($sc[$j]['SetConnection']['tsumego_id']==$scCount2[$i]){
+						$scT1 = $this->Tsumego->findById($sc[$j]['SetConnection']['tsumego_id']);
+						$scT1['Tsumego']['num'] = $sc[$j]['SetConnection']['num'];
+						$scT1['Tsumego']['set_id'] = $sc[$j]['SetConnection']['set_id'];
+						$scT1['Tsumego']['status'] = 'N';
+						array_push($duplicates1[$i], $scT1);
+						array_push($idMap, $scT1['Tsumego']['id']);
+					}
 				}
 			}
-		}
-		
-		$uts = $this->TsumegoStatus->find('all', array('conditions' => array('tsumego_id'=>$idMap, 'user_id'=>$_SESSION['loggedInUser']['User']['id'])));
-		$tooltipSgfs = array();
-		$tooltipInfo = array();
-		$tooltipBoardSize = array();
-		for($i=0; $i<count($duplicates1); $i++){
-			$tooltipSgfs[$i] = array();
-			$tooltipInfo[$i] = array();
-			$tooltipBoardSize[$i] = array();
-			for($j=0; $j<count($duplicates1[$i]); $j++){
-				$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $duplicates1[$i][$j]['Tsumego']['id'], 'set_id' => $duplicates1[$i][$j]['Tsumego']['set_id'])));
-				$duplicates1[$i][$j]['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
-				$s = $this->Set->findById($duplicates1[$i][$j]['Tsumego']['set_id']);
-				if($s!=null){
-					$duplicates1[$i][$j]['Tsumego']['title'] = $s['Set']['title'].' - '.$duplicates1[$i][$j]['Tsumego']['num'];
-					$duplicates1[$i][$j]['Tsumego']['duplicateLink'] = '?sid='.$duplicates1[$i][$j]['Tsumego']['set_id'];
-					for($k=0; $k<count($uts); $k++)
-						if($uts[$k]['TsumegoStatus']['tsumego_id'] == $duplicates1[$i][$j]['Tsumego']['id'])
-							$duplicates1[$i][$j]['Tsumego']['status'] = $uts[$k]['TsumegoStatus']['status'];
-					$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $duplicates1[$i][$j]['Tsumego']['id'])));
-					$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
-					$tooltipSgfs[$i][$j] = $tArr[0];
-					$tooltipInfo[$i][$j] = $tArr[2];
-					$tooltipBoardSize[$i][$j] = $tArr[3];
+			
+			$uts = $this->TsumegoStatus->find('all', array('conditions' => array('tsumego_id'=>$idMap, 'user_id'=>$_SESSION['loggedInUser']['User']['id'])));
+			$tooltipSgfs = array();
+			$tooltipInfo = array();
+			$tooltipBoardSize = array();
+			for($i=0; $i<count($duplicates1); $i++){
+				$tooltipSgfs[$i] = array();
+				$tooltipInfo[$i] = array();
+				$tooltipBoardSize[$i] = array();
+				for($j=0; $j<count($duplicates1[$i]); $j++){
+					$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $duplicates1[$i][$j]['Tsumego']['id'], 'set_id' => $duplicates1[$i][$j]['Tsumego']['set_id'])));
+					$duplicates1[$i][$j]['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
+					$s = $this->Set->findById($duplicates1[$i][$j]['Tsumego']['set_id']);
+					if($s!=null){
+						$duplicates1[$i][$j]['Tsumego']['title'] = $s['Set']['title'].' - '.$duplicates1[$i][$j]['Tsumego']['num'];
+						$duplicates1[$i][$j]['Tsumego']['duplicateLink'] = '?sid='.$duplicates1[$i][$j]['Tsumego']['set_id'];
+						for($k=0; $k<count($uts); $k++)
+							if($uts[$k]['TsumegoStatus']['tsumego_id'] == $duplicates1[$i][$j]['Tsumego']['id'])
+								$duplicates1[$i][$j]['Tsumego']['status'] = $uts[$k]['TsumegoStatus']['status'];
+						$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $duplicates1[$i][$j]['Tsumego']['id'])));
+						$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
+						$tooltipSgfs[$i][$j] = $tArr[0];
+						$tooltipInfo[$i][$j] = $tArr[2];
+						$tooltipBoardSize[$i][$j] = $tArr[3];
+					}
 				}
 			}
+		
 		}
 		
-		
-		
+		$this->set('showAll', $showAll);
+		$this->set('d', $duplicates1);
 		$this->set('d', $duplicates1);
 		$this->set('marks', $marks);
 		$this->set('aMessage', $aMessage);
