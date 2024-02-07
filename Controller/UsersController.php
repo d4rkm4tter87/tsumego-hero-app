@@ -1809,7 +1809,7 @@ Joschka Zimdars';
 		$this->set('dayRecord', $userYesterday['User']['name']);
 	}
 	
-	public function view($id = null){
+	public function view($id=null){
 		$_SESSION['page'] = 'user';
 		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Tsumego');
@@ -2607,10 +2607,6 @@ Joschka Zimdars';
 		
 		$this->set('ts', $ts2);
 		$this->set('ts3', $ts3);
-	}
-	
-	public function set_collection_scores(){
-		
 	}
 	
 	//all in one

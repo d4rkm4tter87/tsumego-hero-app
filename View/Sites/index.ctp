@@ -90,6 +90,19 @@
 			</li>
 			<br><br>
 		</div>
+		<p class="title4">Update 01.02.2024</p>
+		<div class="new1">
+		<b>Explanation for the duplicate update on 01.02.2024</b><br><br>
+		
+		We decided to merge the duplicate problems on the website. This means, that when you solve a problem and it has duplicates,
+		it is also solved in other collections. When you had a collection complete and there were unsolved problems again on 
+		1. February, it means that duplicates were merged and you need to solve it again for all occurences of that board position.</a><br><br>
+		<div align="center">
+		<img src="/img/duplicate-explanation.JPG" title="duplicate-explanation" alt="duplicate-explanation" width="70%">
+		
+		<br>
+		</div>
+		</div>
 		<p class="title4">Update 11.01.2024</p>
 		<div class="new1">
 		<b>Similar problem search</b><br><br>
@@ -529,6 +542,16 @@
 		<div class="new1">
 			<table class="newx" border="0">
 				<tr>
+					<td><h1>04.02.2024</h1></td>
+					<td><h1>yorifumi</h1></td>
+					<td><h1>40,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>02.02.2024</h1></td>
+					<td><h1>Tom Sokec </h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
 					<td><h1>31.01.2024</h1></td>
 					<td><h1>ellehooq </h1></td>
 					<td><h1>5,00 €</h1></td>
@@ -543,17 +566,6 @@
 					<td><h1>Allan Crossman's Coding Services </h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
-				<tr>
-					<td><h1>25.01.2024</h1></td>
-					<td><h1>Edward Feustel </h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>18.01.2024</h1></td>
-					<td><h1>Benjamin Daniels </h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				
 				<!--
 				<tr>
 					<td><h1>10,00 € <font size="2px">subscription</font></h1></td>

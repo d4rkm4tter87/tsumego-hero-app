@@ -740,19 +740,11 @@ class SetsController extends AppController{
 		$formChange = false;
 		$achievementUpdate = array();
 
-		if($id==161){
-			$x = 1;
-			$jo = $this->Joseki->find('all');
-			$maxId = $this->Tsumego->find('first', array('order' => 'id DESC'));
-			for($i=0; $i<count($jo); $i++){
-				$t = $this->Tsumego->findById($jo[$i]['Joseki']['tsumego_id']);
-				$jo[$i]['Joseki']['num'] = $t['Tsumego']['num'];
-			}
-		}
-
 		if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['isAdmin']>0){
 			$aad = $this->AdminActivity->find('first', array('order' => 'id DESC'));
 			if($aad['AdminActivity']['file'] == '/delete'){
+				$scDelete = $this->SetConnection->find('first', array('order' => 'created DESC','conditions' => array('tsumego_id' => $aad['AdminActivity']['tsumego_id'])));
+				$this->SetConnection->delete($scDelete['SetConnection']['id']);
 				$this->Tsumego->delete($aad['AdminActivity']['tsumego_id']);
 				$aad['AdminActivity']['file'] = 'description';
 				$this->AdminActivity->save($aad);
@@ -793,8 +785,8 @@ class SetsController extends AppController{
 			//$ts = $this->Tsumego->find('all', array('order' => 'num', 'direction' => 'ASC', 'conditions' => array('set_id' => $id)));
 			
 			$ts = array();
-			
 			$scTs = $this->SetConnection->find('all', array('conditions' => array('set_id' => $set['Set']['id'])));
+			
 			for($i=0; $i<count($scTs); $i++){
 				$scT = $this->Tsumego->findById($scTs[$i]['SetConnection']['tsumego_id']);
 				$scT['Tsumego']['set_id'] = $scTs[$i]['SetConnection']['set_id'];
@@ -807,7 +799,6 @@ class SetsController extends AppController{
 				
 				array_push($ts, $scT);
 			}
-			
 			
 			$tsBuffer = array();
 			$tsBufferLowest=10000;
@@ -845,15 +836,6 @@ class SetsController extends AppController{
 			if($set['Set']['public']==0) $_SESSION['page'] = 'sandbox';
 			$this->set('isFav', false);
 
-			if($id==161){
-				for($i=0; $i<count($ts); $i++){
-					$j = $this->Joseki->find('first', array('conditions' =>  array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
-					$ts[$i]['Tsumego']['type'] = $j['Joseki']['type'];
-					$ts[$i]['Tsumego']['thumbnail'] = $j['Joseki']['thumbnail'];
-					$ts[$i]['Tsumego']['order'] = $j['Joseki']['order'];
-					$ts[$i]['Tsumego']['hint'] = $j['Joseki']['hint'];
-				}
-			}
 			if(isset($this->params['url']['sort'])){
 				if($this->params['url']['sort']==1){
 					$tsId = array();
@@ -1143,7 +1125,6 @@ class SetsController extends AppController{
 					}
 				}
 			}
-			
 			for($i=0; $i<count($ts); $i++){
 				$urTemp = array();
 				$urSum = '';
@@ -1171,7 +1152,6 @@ class SetsController extends AppController{
 				}
 				$ts[$i]['Tsumego']['performance'] = $urSum;
 			}
-
 			$counter = 0;
 			for($j=0; $j<count($uts); $j++){
 				for($k=0; $k<count($ts); $k++){
@@ -1336,6 +1316,98 @@ class SetsController extends AppController{
 		$this->set('tooltipInfo', $tooltipInfo);
 		$this->set('tooltipBoardSize', $tooltipBoardSize);
     }
+	
+	public function download_archive(){
+		
+		$s = $this->Set->find('all', array('order' => 'id ASC', 'conditions' => array(
+			'OR' => array(
+				array('public' => 1),
+				array('public' => 0)
+			)
+		)));
+		
+		
+		$text = file_get_contents('download_archive.txt');
+		
+		
+		
+		echo '<pre>'; print_r($text); echo '</pre>';
+		echo '<pre>'; print_r($s[$text]['Set']['id']); echo '</pre>';
+		echo '<pre>'; print_r(count($s)); echo '</pre>';
+		
+		$text2 = $text+1;
+		file_put_contents('download_archive.txt', $text2);
+		
+		$this->set('text', $text);
+		$this->set('s', $s);
+	}
+	
+	public function download_archive2($id=null){
+		$this->loadModel('Tsumego');
+		$this->loadModel('SetConnection');
+		$this->loadModel('Sgf');
+		
+		$title='';
+		$t=array();
+		
+		if($_SESSION['loggedInUser']['User']['id']==72){
+			$s = $this->Set->findById($id);
+			$title = $s['Set']['title'].' '.$s['Set']['title2'];
+			
+			$title = str_replace(':', '', $title);
+			
+			if($s['Set']['public']!=1)
+				$title .= ' (sandbox)';
+			
+			mkdir('download_archive/'.$title);
+			
+			$ts = array();
+			$scTs = $this->SetConnection->find('all', array('conditions' => array('set_id' => $id)));
+			
+			for($i=0; $i<count($scTs); $i++){
+				$scT = $this->Tsumego->findById($scTs[$i]['SetConnection']['tsumego_id']);
+				$scT['Tsumego']['set_id'] = $scTs[$i]['SetConnection']['set_id'];
+				$scT['Tsumego']['num'] = $scTs[$i]['SetConnection']['num'];
+				$scT['Tsumego']['duplicateLink'] = '';
+				$scTs2 = $this->SetConnection->find('all', array('conditions' => array('tsumego_id' => $scT['Tsumego']['id'])));
+				for($j=0;$j<count($scTs2);$j++)
+					if(count($scTs2)>1 && $scTs2[$j]['SetConnection']['set_id']==$set['Set']['id'])
+						$scT['Tsumego']['duplicateLink'] = '?sid='.$scT['Tsumego']['set_id'];
+				
+				array_push($ts, $scT);
+			}
+			
+			$tsBuffer = array();
+			$tsBufferLowest=10000;
+			$tsBufferHighest=0;
+			for($i=0; $i<count($ts); $i++){
+				$tsBuffer[$ts[$i]['Tsumego']['num']] = $ts[$i];
+				if($ts[$i]['Tsumego']['num']<$tsBufferLowest)
+					$tsBufferLowest = $ts[$i]['Tsumego']['num'];
+				if($ts[$i]['Tsumego']['num']>$tsBufferHighest)
+					$tsBufferHighest = $ts[$i]['Tsumego']['num'];
+			}
+			
+			
+			$t = array();
+			for($i=$tsBufferLowest; $i<=$tsBufferHighest; $i++)
+				if(isset($tsBuffer[$i]))
+					array_push($t, $tsBuffer[$i]);
+			
+			for($i=0; $i<count($t); $i++){
+				$t[$i]['Tsumego']['title'] = $s['Set']['title'].' '.$t[$i]['Tsumego']['num'];
+				$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $t[$i]['Tsumego']['id'])));
+				$sgf['Sgf']['sgf'] = str_replace("\r", '', $sgf['Sgf']['sgf']);
+				//$sgf['Sgf']['sgf'] = str_replace("\n", '"+"\n"+"', $sgf['Sgf']['sgf']);
+				$t[$i]['Tsumego']['sgf'] = $sgf['Sgf']['sgf'];
+				
+				file_put_contents('download_archive/'.$title.'/'.$t[$i]['Tsumego']['title'].'.sgf', $t[$i]['Tsumego']['sgf']);
+			}
+		}
+		
+		$this->set('title', $title);
+		$this->set('t', $t);
+	}
 	
 	public function updateAchievementConditions($sid, $avgTime, $accuracy){
 		$uid = $_SESSION['loggedInUser']['User']['id'];
