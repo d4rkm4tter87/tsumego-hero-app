@@ -237,6 +237,11 @@ class TsumegosController extends AppController{
 		$tRank = '15k';
 		$requestSolution = false;
 		$currentRank2 = null;
+		
+		if(isset($this->params['url']['sid']))
+			if(strpos($this->params['url']['sid'], '?')>0)
+				$id = 15352;
+		
 		$hasDuplicateGroup = count($this->SetConnection->find('all', array('conditions' => array('tsumego_id' => $id))))>1;
 		
 		if($hasDuplicateGroup){
@@ -246,25 +251,12 @@ class TsumegosController extends AppController{
 				$duplicates[$i]['SetConnection']['title'] = $duplicateSet['Set']['title'].' '.$duplicates[$i]['SetConnection']['num'];
 			}
 		}
-		
 		$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $id)));
+		if($scT==null){
+			$id = 15352;
+			$hasDuplicateGroup = count($this->SetConnection->find('all', array('conditions' => array('tsumego_id' => $id))))>1;
+		}
 		
-		/*
-		$t = $this->Tsumego->findById($id);//the tsumego
-		$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
-		echo '<pre>'; print_r($scT); echo '</pre>';
-		$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
-		*/
-		/*
-		$scT = $this->SetConnection->findById($id);
-		$t = $this->Tsumego->find('first', array('conditions' => array('id' => $scT['SetConnection']['tsumego_id'])));
-		$id = $t['Tsumego']['id'];
-		
-		
-		echo '<pre>'; print_r($_COOKIE['rejuvenation']); echo '</pre>';
-		echo '<pre>'; print_r($_COOKIE['sprint']); echo '</pre>';
-		echo '<pre>'; print_r($_COOKIE['rejuvenationx']); echo '</pre>';
-		*/
 		$tv = $this->TsumegoVariant->find('first', array('conditions' => array('tsumego_id' => $id)));
 		
 		if(isset($this->params['url']['requestSolution'])){
@@ -551,13 +543,15 @@ class TsumegosController extends AppController{
 		$t = $this->Tsumego->findById($id);//the tsumego
 		$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 		if(isset($this->params['url']['sid'])){
-			$t['Tsumego']['set_id'] = $this->params['url']['sid'];
 			$sc = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $id, 'set_id' => $this->params['url']['sid'])));
-			$t['Tsumego']['num'] = $sc['SetConnection']['num'];
-			if(!$hasDuplicateGroup)
-				$t['Tsumego']['duplicateLink'] = '';
-			else
-				$t['Tsumego']['duplicateLink'] = '?sid='.$t['Tsumego']['set_id'];
+			if($sc!=null){
+				$t['Tsumego']['set_id'] = $this->params['url']['sid'];
+				$t['Tsumego']['num'] = $sc['SetConnection']['num'];
+				if(!$hasDuplicateGroup)
+					$t['Tsumego']['duplicateLink'] = '';
+				else
+					$t['Tsumego']['duplicateLink'] = '?sid='.$t['Tsumego']['set_id'];
+			}
 		}
 		
 		$tRank = $this->getTsumegoRank($t['Tsumego']['userWin']);
@@ -581,7 +575,6 @@ class TsumegosController extends AppController{
 		
 		if($mode==1 || $mode==3)
 			$nextMode = $t;
-		
 		
 		if(isset($this->params['url']['rcheat'])) if($this->params['url']['rcheat']==1) $reviewCheat = true;
 		
@@ -2158,7 +2151,6 @@ class TsumegosController extends AppController{
 		}
 		$this->startPageUpdate();
 		$startingPlayer = $this->getStartingPlayer($sgf2);
-		
 		
 		$this->set('tRank', $tRank);
 		$this->set('sgf', $sgf);

@@ -58,7 +58,7 @@
 			//$tsumegoNum -= 1530;
 			if($solved > $tsumegoNum) $solved=$tsumegoNum;
 			echo '<td>Solved:</td>';
-			echo '<td>'.$solved.' of '.$tsumegoNum.'</td>';
+			echo '<td>'.$solvedUts2.' of '.$tsumegoNum.'</td>';
 			echo ' </tr>';
 			echo '<tr>';
 			echo '<td>Level:</td><td>'.$user['User']['level'].'</td>';
@@ -78,12 +78,6 @@
 			echo '<td>Overall:</td>';
 			echo '<td>'.$p.'%</td>';
 			echo '</tr>';
-			
-			echo '<tr>';
-			if($rank==0) $rank = '-';
-			echo '<td>Rank:</td><td>'.$rank.'</td>';
-			echo '</tr>';
-			
 			echo '<tr>';
 			$heroPowers = 0;
 			if($user['User']['level']>=20) $heroPowers++;

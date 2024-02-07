@@ -116,7 +116,10 @@ class CommentsController extends AppController{
 								else $solved = 0;
 							}					
 							$u = $this->User->findById($comments[$i]['Comment']['user_id']);
-							$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+							if($comments[$i]['Comment']['set_id']==null)
+								$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+							else
+								$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'], 'set_id' => $comments[$i]['Comment']['set_id'])));
 							$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 							$s = $this->Set->findById($t['Tsumego']['set_id']);
 							$counter++;
@@ -124,7 +127,7 @@ class CommentsController extends AppController{
 							$comments[$i]['Comment']['user_name'] = $u['User']['name'];
 							$comments[$i]['Comment']['set'] = $s['Set']['title'];
 							$comments[$i]['Comment']['set2'] = $s['Set']['title2'];
-							$comments[$i]['Comment']['num'] = $t['Tsumego']['num'];
+							$comments[$i]['Comment']['num'] = $scT['SetConnection']['num'];
 							if(!in_array($t['Tsumego']['id'], $keyList)) $comments[$i]['Comment']['user_tsumego'] = 'N';
 							else $comments[$i]['Comment']['user_tsumego'] = $keyListStatus[array_search($t['Tsumego']['id'], $keyList)];
 							$comments[$i]['Comment']['solved'] = $solved;
@@ -159,7 +162,10 @@ class CommentsController extends AppController{
 						else $solved = 0;
 					}					
 					$u = $this->User->findById($comments[$i]['Comment']['user_id']);
-					$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+					if($comments[$i]['Comment']['set_id']==null)
+						$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+					else
+						$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'], 'set_id' => $comments[$i]['Comment']['set_id'])));
 					$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 					$s = $this->Set->findById($t['Tsumego']['set_id']);
 					$counter++;
@@ -167,7 +173,7 @@ class CommentsController extends AppController{
 					$comments[$i]['Comment']['user_name'] = $u['User']['name'];
 					$comments[$i]['Comment']['set'] = $s['Set']['title'];
 					$comments[$i]['Comment']['set2'] = $s['Set']['title2'];
-					$comments[$i]['Comment']['num'] = $t['Tsumego']['num'];
+					$comments[$i]['Comment']['num'] = $scT['SetConnection']['num'];
 					if(!in_array($t['Tsumego']['id'], $keyList)) $comments[$i]['Comment']['user_tsumego'] = 'N';
 					else $comments[$i]['Comment']['user_tsumego'] = $keyListStatus[array_search($t['Tsumego']['id'], $keyList)];
 					$comments[$i]['Comment']['solved'] = $solved;
@@ -236,7 +242,10 @@ class CommentsController extends AppController{
 				if(!isset($t['Tsumego']['id'])) $t['Tsumego']['id'] = 0;
 				if(in_array($t['Tsumego']['id'], $keyList)){
 					$u = $this->User->findById($yourComments[$i]['Comment']['user_id']);
-					$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+					if($yourComments[$i]['Comment']['set_id']==null)
+						$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+					else
+						$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'], 'set_id' => $yourComments[$i]['Comment']['set_id'])));
 					$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 					$s = $this->Set->findById($t['Tsumego']['set_id']);
 					$yourcounter++;
@@ -244,7 +253,7 @@ class CommentsController extends AppController{
 					$yourComments[$i]['Comment']['user_name'] = $u['User']['name'];
 					$yourComments[$i]['Comment']['set'] = $s['Set']['title'];
 					$yourComments[$i]['Comment']['set2'] = $s['Set']['title2'];
-					$yourComments[$i]['Comment']['num'] = $t['Tsumego']['num'];
+					$yourComments[$i]['Comment']['num'] = $scT['SetConnection']['num'];
 					$yourComments[$i]['Comment']['user_tsumego'] = $keyListStatus[array_search($t['Tsumego']['id'], $keyList)];
 					if($yourComments[$i]['Comment']['admin_id']!=null){
 						$au = $this->User->findById($yourComments[$i]['Comment']['admin_id']);
@@ -279,7 +288,10 @@ class CommentsController extends AppController{
 			if($counter<10){
 				$u = $this->User->findById($yourComments[$i]['Comment']['user_id']);
 				$t = $this->Tsumego->findById($yourComments[$i]['Comment']['tsumego_id']);
-				$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+				if($yourComments[$i]['Comment']['set_id']==null)
+					$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+				else
+					$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'], 'set_id' => $yourComments[$i]['Comment']['set_id'])));
 				$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 				$s = $this->Set->findById($t['Tsumego']['set_id']);
 				$counter++;
@@ -287,7 +299,7 @@ class CommentsController extends AppController{
 				$yourComments[$i]['Comment']['user_name'] = $u['User']['name'];
 				$yourComments[$i]['Comment']['set'] = $s['Set']['title'];
 				$yourComments[$i]['Comment']['set2'] = $s['Set']['title2'];
-				$yourComments[$i]['Comment']['num'] = $t['Tsumego']['num'];
+				$yourComments[$i]['Comment']['num'] = $scT['SetConnection']['num'];
 				if($s!=null){
 					array_push($yourComments2, $yourComments[$i]);
 				}
@@ -299,9 +311,9 @@ class CommentsController extends AppController{
 		if($unresolvedSet == 'true'){
 			$this->set('unresolved', $unresolved);
 			$this->set('comments3', count($this->Comment->find('all', array('order' => 'created DESC', 'conditions' =>  array('status' => 0,
-						array(
-							'NOT' => array('user_id' => 0)
-						))))));
+			array(
+				'NOT' => array('user_id' => 0)
+			))))));
 		}
 		
 		$currentPositionPlaceholder = '<img src="/img/positionIcon1.png" class="positionIcon1" style="cursor:context-menu;">';
@@ -337,7 +349,7 @@ class CommentsController extends AppController{
 		$admins = $this->User->find('all', array('conditions' => array('isAdmin' => 1))); 
 		
 		
-		//echo '<pre>'; print_r($c); echo '</pre>';
+		//echo '<pre>'; print_r($yourc); echo '</pre>';
 		
 		$this->set('admins', $admins);
 		$this->set('paramindex', $paramindex);
@@ -360,11 +372,7 @@ class CommentsController extends AppController{
 		$this->set('tooltipBoardSize', $tooltipBoardSize);
 		$this->set('tooltipBoardSize2', $tooltipBoardSize2);
     }
-
 }
-
-
-
 
 ?>
 

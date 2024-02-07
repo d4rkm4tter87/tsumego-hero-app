@@ -1831,7 +1831,6 @@ Joschka Zimdars';
 			$hideEmail = true;
 		}
 		if(!empty($this->data)){
-			$this->User->create();
 			$changeUser = $user;
 			$changeUser['User']['email'] = $this->data['User']['email'];
 			$this->set('data', $changeUser['User']['email']);
@@ -1840,6 +1839,7 @@ Joschka Zimdars';
 		}
 		
 		$tsumegos = $this->SetConnection->find('all');
+		$uts = $this->TsumegoStatus->find('all', array('order' => 'created DESC', 'conditions' =>  array('user_id' => $id)));
 		$tsumegoDates = array();
 		
 		$setKeys = array();
@@ -1847,16 +1847,19 @@ Joschka Zimdars';
 		for($i=0; $i<count($setArray); $i++)
 			$setKeys[$setArray[$i]['Set']['id']] = $setArray[$i]['Set']['id'];
 		
-		for($j=0; $j<count($tsumegos); $j++)
-			if(isset($setKeys[$tsumegos[$j]['SetConnection']['set_id']]))
+		$scs = array();
+		for($j=0; $j<count($tsumegos); $j++){
+			if(isset($setKeys[$tsumegos[$j]['SetConnection']['set_id']])){
 				array_push($tsumegoDates, $tsumegos[$j]);
-		
+			}
+			if(!isset($scs[$tsumegos[$j]['SetConnection']['tsumego_id']]))
+				$scs[$tsumegos[$j]['SetConnection']['tsumego_id']] = 1;
+			else
+				$scs[$tsumegos[$j]['SetConnection']['tsumego_id']]++;
+		}
 		$tsumegoNum = count($tsumegoDates);
-		
-		$uts = $this->TsumegoStatus->find('all', array('order' => 'created DESC', 'conditions' =>  array('user_id' => $id)));
-				
 		$solvedUts = array();
-		$solvedUts2 = array();
+		$solvedUts2 = 0;
 		$lastYear = date('Y-m-d', strtotime('-1 year'));
 		$dNum = 0;
 		
@@ -1864,15 +1867,15 @@ Joschka Zimdars';
 			$date = new DateTime($uts[$j]['TsumegoStatus']['created']);
 			$uts[$j]['TsumegoStatus']['created'] = $date->format('Y-m-d');
 			if($uts[$j]['TsumegoStatus']['status']=='S' || $uts[$j]['TsumegoStatus']['status']=='W' || $uts[$j]['TsumegoStatus']['status']=='C'){
-				array_push($solvedUts2, $uts[$j]);
 				$oldest = new DateTime(date('Y-m-d', strtotime('-30 days')));
-				if($uts[$j]['TsumegoStatus']['created']>$oldest->format('Y-m-d')){
+				if($uts[$j]['TsumegoStatus']['created']>$oldest->format('Y-m-d'))
 					array_push($solvedUts, $uts[$j]);
-				}
+				if(isset($scs[$uts[$j]['TsumegoStatus']['tsumego_id']]))
+					$solvedUts2 += $scs[$uts[$j]['TsumegoStatus']['tsumego_id']];
 			}	
-			if($uts[$j]['TsumegoStatus']['created']<$lastYear) $dNum++;
+			if($uts[$j]['TsumegoStatus']['created']<$lastYear)
+				$dNum++;
 		}
-		
 		$lvl = 1;
 		$toplvl = $user['User']['level'];
 		$startxp = 50;
@@ -1892,66 +1895,6 @@ Joschka Zimdars';
 		}
 		$sumx += $user['User']['xp'];
 		
-		$ranks = $this->User->find('all', array('limit' => 1000, 'order' => 'level DESC'));
-		$rank = 0;
-		
-		for($i=0;$i<count($ranks);$i++){
-				$lvl = 1;
-				$toplvl = $ranks[$i]['User']['level'];
-				$startxp = 50;
-				$SUM = 0;
-				$xpJump = 10;
-				
-				for($j=1; $j<$toplvl; $j++){
-					if($j>=11) $xpJump = 25;
-					if($j>=19) $xpJump = 50;
-					if($j>=39) $xpJump = 100;
-					if($j>=69) $xpJump = 150;
-					if($j==99) $xpJump = 50000;
-					if($j==100) $xpJump = 1150;
-					if($j>=101) $xpJump = 0;
-					$SUM+=$startxp;
-					$startxp+=$xpJump;
-					
-				}
-				$SUM += $ranks[$i]['User']['xp'];
-				$ranks[$i]['User']['xpSum'] = $SUM;
-		}
-		
-		$UxpSum = array(); 
-		$Uname = array();
-		$Ulevel = array();
-		$Uid = array();
-		$Utype = array();
-		$Usolved = array();
-		
-		for($i=0;$i<count($ranks);$i++){
-			array_push($UxpSum, $ranks[$i]['User']['xpSum']);
-			array_push($Uname, $ranks[$i]['User']['name']);
-			array_push($Ulevel, $ranks[$i]['User']['level']);
-			array_push($Uid, $ranks[$i]['User']['id']);
-			array_push($Utype, $ranks[$i]['User']['premium']);
-			array_push($Usolved, $ranks[$i]['User']['solved']);
-		}
-		
-		array_multisort($UxpSum, $Uname, $Ulevel, $Uid, $Utype, $Usolved);
-		
-		$userPosition = 1000;
-		
-		$users2 = array();
-		for($i=0; $i<count($UxpSum); $i++){
-			$a = array();
-			$a['xpSum'] = $UxpSum[$i];
-			$a['name'] = $Uname[$i];
-			$a['level'] = $Ulevel[$i];
-			$a['id'] = $Uid[$i];
-			$a['type'] = $Utype[$i];
-			$a['solved'] = $Usolved[$i];
-			array_push($users2, $a);
-			if($Uid[$i]==$id) break;
-			$userPosition--;
-		}
-		
 		$tDates = array();
 		for($j=0; $j<count($solvedUts); $j++){
 			$date = new DateTime($solvedUts[$j]['TsumegoStatus']['created']);
@@ -1963,33 +1906,34 @@ Joschka Zimdars';
 		$graph = array();
 		$nextDay = '';
 		$c = 0;
-		
 		$dt = new DateTime();
 		$dt = $dt->format('Y-m-d');
-		if(!isset($graphData1[$dt])){
+		if(!isset($graphData1[$dt]))
 			$graphData1[$dt] = 0.1;
-		}
 		
 		$oldest = new DateTime(date('Y-m-d', strtotime('-30 days')));
 		$oldest = $oldest->format('Y-m-d');
-		
 		$graphData2 = array();
 		$counter = 0;
 		while($oldest!=$dt){
 			$graphData2[$counter]['date'] = $oldest;
 			if(isset($graphData1[$oldest])) $graphData2[$counter]['num'] = $graphData1[$oldest];
 			else $graphData2[$counter]['num'] = 0;
-			
 			$oldest = new DateTime($oldest);
 			$oldest = $oldest->modify('+1 day');
 			$oldest = $oldest->format('Y-m-d');
 			$counter++;
 		}
 		
+		$user['User']['solved'] = $solvedUts2;
+		$this->User->save($user);
+		
 		$p = $user['User']['solved']/$tsumegoNum*100;
 		$p = round($p);
-		if($p==100 && $user['User']['solved']<$tsumegoNum) $p = 99;
-		if($p>100) $p = 100;
+		if($p==100 && $user['User']['solved']<$tsumegoNum)
+			$p = 99;
+		if($p>100)
+			$p = 100;
 		
 		$deletedProblems = 1;
 		if(isset($this->params['url']['delete-uts'])){
@@ -2017,20 +1961,12 @@ Joschka Zimdars';
 			}
 		}
 		
-		if($_SESSION['loggedInUser']['User']['id']!=$id) $deletedProblems = 3;
+		if($_SESSION['loggedInUser']['User']['id']!=$id)
+			$deletedProblems = 3;
 		
-		$ux = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
-		$solvedUts = $this->TsumegoStatus->find('all', array('conditions' =>  array(
-			'user_id' => $_SESSION['loggedInUser']['User']['id'],
-			'OR' => array(
-				array('status' => 'S'),
-				array('status' => 'W'),
-				array('status' => 'C')
-			)
-		)));
-		$ux['User']['lastHighscore'] = 1;
-		$ux['User']['solved'] = count($solvedUts);
-		$this->User->save($ux);
+		
+		
+		
 		
 		for($i=0; $i<count($as); $i++){
 			$as[$i]['AchievementStatus']['a_title'] = $ach[$as[$i]['AchievementStatus']['achievement_id']-1]['Achievement']['name'];
@@ -2049,8 +1985,6 @@ Joschka Zimdars';
 		if(count($achievementUpdate)>0) $this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
 		
 		$this->set('xpSum', $sumx);
-		$this->set('rank', $userPosition);
-		$this->set('uts', $solvedUts2);
 		$this->set('graph', $graphData2);
 		$this->set('user', $user);
 		$this->set('tsumegoNum', $tsumegoNum);
@@ -2062,6 +1996,7 @@ Joschka Zimdars';
 		$this->set('hideEmail', $hideEmail);
 		$this->set('as', $as);
 		$this->set('achievementUpdate', $achievementUpdate);
+		$this->set('solvedUts2', $solvedUts2);
 	}
 	
 	public function donate($id = null){

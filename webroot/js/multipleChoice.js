@@ -106,9 +106,9 @@ function displayMultipleChoiceResult(num){
 			console.log("b"+multipleChoiceLibertiesB);
 			console.log(multipleChoiceLibertiesW);
 			console.log(tsumegoFileLink);
-			if(tsumegoFileLink==29498 && multipleChoiceLibertiesB==1 && multipleChoiceLibertiesW==2
-			|| tsumegoFileLink==29499 && multipleChoiceLibertiesB==1 && multipleChoiceLibertiesW==2
-			|| tsumegoFileLink==29500 && multipleChoiceLibertiesB==1 && multipleChoiceLibertiesW==2){
+			if(tsumegoFileLink==29824 && multipleChoiceLibertiesB==1 && multipleChoiceLibertiesW==2
+			|| tsumegoFileLink==29825 && multipleChoiceLibertiesB==1 && multipleChoiceLibertiesW==2
+			|| tsumegoFileLink==29826 && multipleChoiceLibertiesB==1 && multipleChoiceLibertiesW==2){
 				multipleChoiceLibertiesB = 1;
 				multipleChoiceLibertiesW = 1;
 				multipleChoiceLibertiesB2 = 5;

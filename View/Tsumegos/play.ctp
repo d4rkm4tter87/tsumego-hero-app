@@ -495,9 +495,11 @@
 				else $additionalId = '';
 				if(!isset($navi[$i]['Tsumego']['duplicateLink']))
 					$duplicateLink = '';
-				else{
+				else
 					$duplicateLink = $navi[$i]['Tsumego']['duplicateLink'];
-				}
+				if($inFavorite=='?favorite=1')
+					$duplicateLink = '';
+				
 				echo '<li '.$additionalId.' id="naviElement'.$i.'" class="'.$navi[$i]['Tsumego']['status'].'">
 					<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$navi[$i]['Tsumego']['id'].$duplicateLink.$inFavorite.'">
 					'.$navi[$i]['Tsumego']['num'].'<span><div id="tooltipSvg'.$i.'"></div></span></a>
@@ -585,8 +587,8 @@
 							$scoreEstYes = 'checked="checked"';
 						}
 					}
-					echo '
-						<div id="msg4">
+					if($_SESSION['loggedInUser']['User']['isAdmin']>=1){
+					echo '<div id="msg4">
 							<br>
 							<form action="" method="POST" enctype="multipart/form-data">
 								<input type="file" name="adminUpload" />
@@ -633,8 +635,8 @@
 								<input value="Submit" type="submit"/>
 							</form>
 						</div>
-						<br><br>
-					';
+						<br><br>';
+				}
 				if($isSandbox && $tv!=null){
 					if($tv['TsumegoVariant']['type']=='multiple_choice'){
 						$studyCorrectOptions = array(
@@ -710,6 +712,8 @@
 			echo '<div id="commentPosition">Link current position</div>';
 			echo $this->Form->create('Comment');
 			echo $this->Form->input('tsumego_id', array('type' => 'hidden', 'value' => $t['Tsumego']['id']));
+			if(isset($t['Tsumego']['duplicateLink']))
+				echo $this->Form->input('set_id', array('type' => 'hidden', 'value' => str_replace('?sid=', '', $t['Tsumego']['duplicateLink'])));
 			echo $this->Form->input('user_id', array('type' => 'hidden', 'value' => $user['User']['id']));
 			echo $this->Form->input('message', array('label' => '', 'type' => 'textarea', 'placeholder' => 'Message'));
 			echo $this->Form->input('position', array('label' => '', 'type' => 'hidden'));
@@ -1064,16 +1068,12 @@
 	echo '<audio><source src="/sounds/newStone.ogg"></audio>';
 	echo '';
 	
-	
 	/* 
 	TESTING AREA
 	TESTING AREA
 	TESTING AREA§
 	echo '<pre>'; print_r($u); echo '</pre>';
 	*/ 
-	
-	if($inFavorite!=null) echo $inFavorite;
-	else echo '<x>'
 	?>
 
 	<script type="text/javascript">
