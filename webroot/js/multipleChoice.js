@@ -113,7 +113,7 @@ function displayMultipleChoiceResult(num){
 				multipleChoiceLibertiesW = 1;
 				multipleChoiceLibertiesB2 = 5;
 				multipleChoiceLibertiesW2 = 5;
-			}else if(tsumegoFileLink==29501 && multipleChoiceLibertiesB==1 && multipleChoiceLibertiesW==2){
+			}else if(tsumegoFileLink==29827 && multipleChoiceLibertiesB==1 && multipleChoiceLibertiesW==2){
 				multipleChoiceLibertiesB = 1;
 				multipleChoiceLibertiesW = 1;
 				multipleChoiceLibertiesB2 = 15;

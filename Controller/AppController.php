@@ -340,6 +340,44 @@ class AppController extends Controller{
 		return $ts;
 	}
 	
+	public function saveSolvedNumber($uid){
+		$this->loadModel('User');
+		$this->loadModel('TsumegoStatus');
+		$this->loadModel('Set');
+		$this->loadModel('SetConnection');
+		
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			$solvedUts2 = 0;
+			$tsumegos = $this->SetConnection->find('all');
+			$uts = $this->TsumegoStatus->find('all', array('order' => 'created DESC', 'conditions' =>  array('user_id' => $uid)));
+			$setKeys = array();
+			$setArray = $this->Set->find('all', array('conditions' => array('public' => 1)));
+			
+			for($i=0; $i<count($setArray); $i++)
+				$setKeys[$setArray[$i]['Set']['id']] = $setArray[$i]['Set']['id'];
+			
+			$scs = array();
+			for($j=0; $j<count($tsumegos); $j++){
+				if(!isset($scs[$tsumegos[$j]['SetConnection']['tsumego_id']]))
+					$scs[$tsumegos[$j]['SetConnection']['tsumego_id']] = 1;
+				else
+					$scs[$tsumegos[$j]['SetConnection']['tsumego_id']]++;
+			}
+			
+			for($j=0; $j<count($uts); $j++){
+				if($uts[$j]['TsumegoStatus']['status']=='S' || $uts[$j]['TsumegoStatus']['status']=='W' || $uts[$j]['TsumegoStatus']['status']=='C'){
+					if(isset($scs[$uts[$j]['TsumegoStatus']['tsumego_id']]))
+						$solvedUts2 += $scs[$uts[$j]['TsumegoStatus']['tsumego_id']];
+				}
+			}
+			$_SESSION['loggedInUser']['User']['solved'] = $solvedUts2;
+			$u = $this->User->findById($uid);
+			$u['User']['solved'] = $_SESSION['loggedInUser']['User']['solved'];
+			$this->User->save($u);
+		}
+		return $solvedUts2;
+	}
+	
 	public function userRefresh($range = null){
 		$this->LoadModel('User');
 		$this->LoadModel('TsumegoStatus');

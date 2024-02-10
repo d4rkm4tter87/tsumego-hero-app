@@ -705,8 +705,13 @@
 			}else echo '<br>';
 			//if($_SESSION['loggedInUser']['User']['premium']>=1){
 			//if($t['Tsumego']['set_id']!=122 && $t['Tsumego']['set_id']!=124 && $t['Tsumego']['set_id']!=127 && $t['Tsumego']['set_id']!=139){
+			$allowed = true;
 			if(isset($_SESSION['loggedInUser']['User']['id'])){
-				echo '<div id="msg1">Leave a <a id="show">message<img id="greyArrow1" src="/img/greyArrow1.png"></a></div>';
+				if($_SESSION['loggedInUser']['User']['id']!=5080){
+					echo '<div id="msg1">Leave a <a id="show">message<img id="greyArrow1" src="/img/greyArrow1.png"></a></div>';
+				}else{
+					$allowed = false;
+				}
 			}
 			echo '<div id="msg2">';
 			echo '<div id="commentPosition">Link current position</div>';
@@ -715,7 +720,8 @@
 			if(isset($t['Tsumego']['duplicateLink']))
 				echo $this->Form->input('set_id', array('type' => 'hidden', 'value' => str_replace('?sid=', '', $t['Tsumego']['duplicateLink'])));
 			echo $this->Form->input('user_id', array('type' => 'hidden', 'value' => $user['User']['id']));
-			echo $this->Form->input('message', array('label' => '', 'type' => 'textarea', 'placeholder' => 'Message'));
+			if($allowed)
+				echo $this->Form->input('message', array('label' => '', 'type' => 'textarea', 'placeholder' => 'Message'));
 			echo $this->Form->input('position', array('label' => '', 'type' => 'hidden'));
 			echo $this->Form->end('Submit');
 		?>

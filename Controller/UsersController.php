@@ -1395,22 +1395,7 @@ Joschka Zimdars';
 		$tsumegos = $this->Tsumego->find('all');
 		$tsumegoNum = count($tsumegos);
 		
-		if(isset($_SESSION['loggedInUser'])){
-			$ux = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
-			$solvedUts = $this->TsumegoStatus->find('all', array('conditions' =>  array(
-				'user_id' => $_SESSION['loggedInUser']['User']['id'],
-				'OR' => array(
-					array('status' => 'S'),
-					array('status' => 'W'),
-					array('status' => 'C')
-				)
-			)));
-			$ux['User']['lastHighscore'] = 1;
-			$ux['User']['solved'] = count($solvedUts);
-			$this->User->save($ux);
-		}
-		
-		
+		$this->saveSolvedNumber($_SESSION['loggedInUser']['User']['id']);
 		$users = $this->User->find('all', array('limit' => 1000, 'order' => 'level DESC'));
 	
 		$userP = array();
@@ -1819,6 +1804,8 @@ Joschka Zimdars';
 		$this->LoadModel('SetConnection');
 		$hideEmail = false;
 		
+		$solvedUts2 = $this->saveSolvedNumber($_SESSION['loggedInUser']['User']['id']);
+		
 		$as = $this->AchievementStatus->find('all', array('limit' => 12, 'order' => 'created DESC', 'conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
 		$ach = $this->Achievement->find('all');		
 		
@@ -1852,14 +1839,9 @@ Joschka Zimdars';
 			if(isset($setKeys[$tsumegos[$j]['SetConnection']['set_id']])){
 				array_push($tsumegoDates, $tsumegos[$j]);
 			}
-			if(!isset($scs[$tsumegos[$j]['SetConnection']['tsumego_id']]))
-				$scs[$tsumegos[$j]['SetConnection']['tsumego_id']] = 1;
-			else
-				$scs[$tsumegos[$j]['SetConnection']['tsumego_id']]++;
 		}
 		$tsumegoNum = count($tsumegoDates);
 		$solvedUts = array();
-		$solvedUts2 = 0;
 		$lastYear = date('Y-m-d', strtotime('-1 year'));
 		$dNum = 0;
 		
@@ -1870,8 +1852,6 @@ Joschka Zimdars';
 				$oldest = new DateTime(date('Y-m-d', strtotime('-30 days')));
 				if($uts[$j]['TsumegoStatus']['created']>$oldest->format('Y-m-d'))
 					array_push($solvedUts, $uts[$j]);
-				if(isset($scs[$uts[$j]['TsumegoStatus']['tsumego_id']]))
-					$solvedUts2 += $scs[$uts[$j]['TsumegoStatus']['tsumego_id']];
 			}	
 			if($uts[$j]['TsumegoStatus']['created']<$lastYear)
 				$dNum++;
@@ -1925,9 +1905,6 @@ Joschka Zimdars';
 			$counter++;
 		}
 		
-		$user['User']['solved'] = $solvedUts2;
-		$this->User->save($user);
-		
 		$p = $user['User']['solved']/$tsumegoNum*100;
 		$p = round($p);
 		if($p==100 && $user['User']['solved']<$tsumegoNum)
@@ -1963,10 +1940,6 @@ Joschka Zimdars';
 		
 		if($_SESSION['loggedInUser']['User']['id']!=$id)
 			$deletedProblems = 3;
-		
-		
-		
-		
 		
 		for($i=0; $i<count($as); $i++){
 			$as[$i]['AchievementStatus']['a_title'] = $ach[$as[$i]['AchievementStatus']['achievement_id']-1]['Achievement']['name'];
