@@ -1,5 +1,4 @@
 function darkAndLight(){
-	
 	if(light){//make dark
 		document.cookie = "lightDark=dark;path=/";
 		document.cookie = "lightDark=dark;path=/sets/view";
@@ -76,6 +75,11 @@ function darkAndLight(){
 		$("#uotdStartPage").css("background-color","none");
 		$("#uotdStartPage").css("background-color","transparent");
 		$(".new1 a, .new1 b, .scheduleTsumego").css("color","#f0f0f0");
+		$("#levelBarDisplay1").css("accent-color","#56bb2c");
+		$("#levelBarDisplay1text").css("color","#56bb2c");
+		$("#levelBarDisplay2").css("accent-color","#c240f7");
+		$("#levelBarDisplay2text").css("color","#c240f7");
+		$(".h1profile h1, .profileTable2 a").css("color","#fff");
 	}else{//make light
 		document.cookie = "lightDark=light;path=/";
 		document.cookie = "lightDark=light;path=/sets/view";
@@ -85,7 +89,6 @@ function darkAndLight(){
 		$("#darkButtonImage").attr("src","/img/light-icon1.png");
 		$("#darkButtonImage2").attr("src","/img/light-icon1.png");
 		$("#darkButtonImage3").attr("src","/img/light-icon1.png");
-		
 		
 		$(".new1, .title4, .new1, #playTitleA").css("color","black");
 		$(".modify-description").css("color","black");
@@ -154,6 +157,43 @@ function darkAndLight(){
 		$("#uotdStartPage").css("background-color","transparent");
 		$(".new1 a, .new1 b, .scheduleTsumego").css("color","black");
 		$(".setN1 a, .setV1 a, .setS1 a, .setC1 a, .setF1 a, .setX1 a, .setW1 a, .setG1 a, .setA1 a").css("color","white");
+		$("#levelBarDisplay1").css("accent-color","#4d8536");
+		$("#levelBarDisplay1text").css("color","#4d8536");
+		$("#levelBarDisplay2").css("accent-color","#8130a2");
+		$("#levelBarDisplay2text").css("color","#8130a2");
+		$(".h1profile h1, .profileTable2 a").css("color","black");
 	}
 	light = !light;
+}
+
+function levelBarChange(num){
+	if(num==1){
+		$('.account-bar-user-class').removeAttr('id');
+		$('.account-bar-user-class').attr('id', 'account-bar-user');
+		$("#xp-bar-fill").css("width",barPercent1+"%");
+		$('#xp-bar-fill').removeAttr('class');
+		$('#xp-bar-fill').attr('class', 'xp-bar-fill-c1');
+		$('#account-bar-xp').text(barLevelNum);
+		levelToRatingHover = num;
+		document.cookie = "levelBar=1;path=/;SameSite=none;Secure=false";
+		document.cookie = "levelBar=1;path=/sets;SameSite=none;Secure=false";
+		document.cookie = "levelBar=1;path=/sets/view;SameSite=none;Secure=false";
+		document.cookie = "levelBar=1;path=/tsumegos/play;SameSite=none;Secure=false";
+		document.cookie = "levelBar=1;path=/users;SameSite=none;Secure=false";
+		document.cookie = "levelBar=1;path=/users/view;SameSite=none;Secure=false";
+	}else{
+		$('.account-bar-user-class').removeAttr('id');
+		$('.account-bar-user-class').attr('id', 'account-bar-user2');
+		$("#xp-bar-fill").css("width",barPercent2+"%");
+		$('#xp-bar-fill').removeAttr('class');
+		$('#xp-bar-fill').attr('class', 'xp-bar-fill-c2');
+		$('#account-bar-xp').text(barRatingNum);
+		levelToRatingHover = num;
+		document.cookie = "levelBar=2;path=/;SameSite=none;Secure=false";
+		document.cookie = "levelBar=2;path=/sets;SameSite=none;Secure=false";
+		document.cookie = "levelBar=2;path=/sets/view;SameSite=none;Secure=false";
+		document.cookie = "levelBar=2;path=/tsumegos/play;SameSite=none;Secure=false";
+		document.cookie = "levelBar=2;path=/users;SameSite=none;Secure=false";
+		document.cookie = "levelBar=2;path=/users/view;SameSite=none;Secure=false";
+	}
 }

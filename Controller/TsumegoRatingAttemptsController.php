@@ -198,32 +198,37 @@ class TsumegoRatingAttemptsController extends AppController {
 		$this->LoadModel('Set');
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('SetConnection');
+		$this->LoadModel('TsumegoAttempt');
 		if($_SESSION['loggedInUser']['User']['id']!=$trid && $_SESSION['loggedInUser']['User']['id']!=72) $_SESSION['redirect'] = 'sets';
-		$trs = $this->TsumegoRatingAttempt->find('all', array('limit' => 500, 'order' => 'created DESC', 'conditions' => array(
-			'user_id' => $trid,
-			'OR' => array(
-				array('status' => 'S'),
-				array('status' => 'F')
-			)
+		
+		$trs = $this->TsumegoAttempt->find('all', array('limit' => 200, 'order' => 'created DESC', 'conditions' => array(
+			'user_id' => $_SESSION['loggedInUser']['User']['id'],
+			'mode' => 2
 		)));
 		
 		for($i=0; $i<count($trs); $i++){
-			$t = $this->Tsumego->findById($trs[$i]['TsumegoRatingAttempt']['tsumego_id']);
+			if($trs[$i]['TsumegoAttempt']['solved']==1)
+				$trs[$i]['TsumegoAttempt']['status'] = '<b style="color:#0cbb0c;">Solved</b>';
+			else
+				$trs[$i]['TsumegoAttempt']['status'] = '<b style="color:#e03c4b;">Failed</b>';
+			$t = $this->Tsumego->findById($trs[$i]['TsumegoAttempt']['tsumego_id']);
+			$trs[$i]['TsumegoAttempt']['tsumego_elo'] = $t['Tsumego']['elo_rating_mode'];
 			$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
 			$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 			$s = $this->Set->findById($t['Tsumego']['set_id']);
-			$trs[$i]['TsumegoRatingAttempt']['title'] = '<a target="_blank" href="/tsumegos/play/'.$trs[$i]['TsumegoRatingAttempt']['tsumego_id'].'?mode=1">'.$s['Set']['title'].' '.$s['Set']['title2'].' - '.$t['Tsumego']['num'].'</a>';
+			$trs[$i]['TsumegoAttempt']['title'] = '<a target="_blank" href="/tsumegos/play/'.$trs[$i]['TsumegoAttempt']['tsumego_id'].'?mode=1">'.$s['Set']['title'].' '
+			.$s['Set']['title2'].' - '.$t['Tsumego']['num'].'</a>';
 			
-			$date = new DateTime($trs[$i]['TsumegoRatingAttempt']['created']);
-			$month = date("F", strtotime($trs[$i]['TsumegoRatingAttempt']['created']));
+			$date = new DateTime($trs[$i]['TsumegoAttempt']['created']);
+			$month = date("F", strtotime($trs[$i]['TsumegoAttempt']['created']));
 			$tday = $date->format('d. ');
 			$tyear = $date->format('Y');
 			$tClock = $date->format('H:i');
 			if($tday[0]==0) $tday = substr($tday, -3);
-			$trs[$i]['TsumegoRatingAttempt']['created'] = $tClock.' | '.$tday.$month.' '.$tyear;
-			$seconds = $trs[$i]['TsumegoRatingAttempt']['seconds']%60;
-			$minutes = floor($trs[$i]['TsumegoRatingAttempt']['seconds']/60);
-			$hours = floor($trs[$i]['TsumegoRatingAttempt']['seconds']/3600);
+			$trs[$i]['TsumegoAttempt']['created'] = $tClock.' | '.$tday.$month.' '.$tyear;
+			$seconds = $trs[$i]['TsumegoAttempt']['seconds']%60;
+			$minutes = floor($trs[$i]['TsumegoAttempt']['seconds']/60);
+			$hours = floor($trs[$i]['TsumegoAttempt']['seconds']/3600);
 			$hours2 = $hours;
 			while($hours2>0){
 				$minutes-=60;
@@ -234,7 +239,7 @@ class TsumegoRatingAttemptsController extends AppController {
 			else $minutes .= 'm ';
 			if($hours==0) $hours = '';
 			else $hours .= 'h ';
-			$trs[$i]['TsumegoRatingAttempt']['seconds'] = $hours.$minutes.$seconds.'s';
+			$trs[$i]['TsumegoAttempt']['seconds'] = $hours.$minutes.$seconds.'s';
 			
 		}
 		

@@ -46,7 +46,9 @@
 	$heroPower3 = 'hp3x';
 	$heroPower4 = 'hp4x';
 	$heroPower5 = 'hp5x';
-
+	$eloScore2d = $eloScore2;
+	if($eloScore2==0)
+		$eloScore2d = '-0';
 	if($lightDark=='dark'){
 		$playGreenColor = '#0cbb0c';
 		$playBlueColor = '#72a7f2';
@@ -174,7 +176,10 @@
 	}	
 		
 	$t['Tsumego']['description'] = str_replace('b ', $descriptionColor, $t['Tsumego']['description']);
+	if($nothingInRange!=false)
+		echo '<div align="center" style="color:red;font-weight:800;">'.$nothingInRange.'</div>';
 	?>
+	
 	<table width="100%" border="0">
 	<tr>
 	<td align="center" width="29%">
@@ -319,8 +324,12 @@
 				echo $this->Form->input('admin_id', array('type' => 'hidden', 'value' => $_SESSION['loggedInUser']['User']['id']));
 				echo $this->Form->input('modifyDescription', array('value' => $placeholder, 'label' => '', 'type' => 'text', 'placeholder' => 'description'));
 				echo $this->Form->input('modifyHint', array('value' => $t['Tsumego']['hint'], 'label' => '', 'type' => 'text', 'placeholder' => 'hint'));
-				echo $this->Form->input('modifyAuthor', array('value' => $t['Tsumego']['author'], 'label' => '', 'type' => 'text', 'placeholder' => 'author'));
-				if($isSandbox) echo $this->Form->input('deleteProblem', array('value' => '', 'label' => '', 'type' => 'text', 'placeholder' => 'delete'));
+				if($isSandbox)
+					echo $this->Form->input('modifyElo', array('value' => $t['Tsumego']['elo_rating_mode'], 'label' => '', 'type' => 'text', 'placeholder' => 'rating'));
+				if($isSandbox)
+					echo $this->Form->input('modifyAuthor', array('value' => $t['Tsumego']['author'], 'label' => '', 'type' => 'text', 'placeholder' => 'author'));
+				if($isSandbox)
+					echo $this->Form->input('deleteProblem', array('value' => '', 'label' => '', 'type' => 'text', 'placeholder' => 'delete'));
 				echo $this->Form->end('Submit');
 			?>
 		</div>
@@ -436,8 +445,7 @@
 				<div id="status2" align="center" style="color:black;">
 				<font size="4">
 				<?php
-				if($t['Tsumego']['userWin']!=0)
-					echo  $tRank.' <font color="grey">('.$t['Tsumego']['userWin'].'%)</font>';
+				echo  $tRank.' <font color="grey">('.$t['Tsumego']['elo_rating_mode'].')</font>';
 				?>
 				</font>
 				</div>
@@ -547,6 +555,7 @@
 					echo '<a id="show4" style="margin-right:20px;" class="selectable-text">Admin-Upload<img id="greyArrow4" src="/img/greyArrow1.png"></a>';
 					echo '<a id="showx5" style="margin-right:20px;" class="selectable-text">Open</a>';
 					echo '<a id="showx6" style="margin-right:20px;" class="selectable-text '.$adHighlight.'">History</a>';
+					echo '<a id="showx8" style="margin-right:20px;" class="selectable-text">Rating</a>';
 					echo '<a id="show5" class="selectable-text">Settings<img id="greyArrow5" src="/img/greyArrow1.png"></a>';
 					if($virtual_children==1){
 						$vcOn = 'checked="checked"';
@@ -1075,11 +1084,11 @@
 	echo '';
 	
 	/* 
-	TESTING AREA
-	TESTING AREA
 	TESTING AREA§
-	echo '<pre>'; print_r($u); echo '</pre>';
-	*/ 
+	echo '<pre>'; print_r($levelBar); echo '</pre>';
+	echo '<pre>'; print_r($eloScore); echo '</pre>';
+	echo '<pre>'; print_r($eloScore2); echo '</pre>';
+	*/
 	?>
 
 	<script type="text/javascript">
@@ -1210,21 +1219,23 @@
 	//if($_SESSION['loggedInUser']['User']['id']==72) echo 'authorProblem = true;';
 	if($requestSolution)
 		echo 'authorProblem = true;';
-	if($firstRanks!=0) echo 'document.cookie = "mode=3";';
+	if($firstRanks!=0) echo 'document.cookie = "mode=3;path=/tsumegos/play;SameSite=none;Secure=false";';
 	if($mode==3){
 		echo 'seconds = 0.0;';
 		echo 'var besogoMode3Next = '.$next.';';
-	}
-		echo '
-		';
-		if($t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161) echo 'set159 = true;';
-		if($t['Tsumego']['set_id']==161) echo 'josekiHero = true;';
-		echo 'josekiLevel = '.$josekiLevel.';';
+	}else if($mode==2)
+		echo 'document.cookie = "ratingModePreId='.$t['Tsumego']['id'].';path=/tsumegos/play;SameSite=none;Secure=false";';
+	echo '
+	';
+	if($t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161)
+		echo 'set159 = true;';
+	if($t['Tsumego']['set_id']==161)
+		echo 'josekiHero = true;';
+	echo 'josekiLevel = '.$josekiLevel.';';
 	?>
 
-	<?php if($mode==2){ ?>
-		var eloScore = <?php echo $eloScore; ?>;
-	<?php } ?>
+	var eloScore = <?php echo $eloScore; ?>;
+	var eloScore2 = <?php echo $eloScore2; ?>;
 
 	<?php
 		if($corner=='t' || $corner=='b' || $corner=='full board'){
@@ -1661,8 +1672,14 @@
 							document.getElementById("xpDisplay").style.color = "<?php echo $playBlueColor; ?>";
 							document.getElementById("status2").innerHTML = "<h3>Double XP "+timeOutput+"</h3>";
 							<?php
-							if(!$goldenTsumego) echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4">'.$t['Tsumego']['difficulty'].'×2 XP</font>\';';
-							else echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4">'.$t['Tsumego']['difficulty'].' XP</font>\';';
+							if($levelBar==1){
+								if(!$goldenTsumego)
+									echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4">'.$t['Tsumego']['difficulty'].'×2 XP</font>\';';
+								else
+									echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4">'.$t['Tsumego']['difficulty'].' XP</font>\';';
+							}else{
+								echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4">+'.$eloScore.'/'.$eloScore2d.''.$avActiveText.'</font>\';';
+							}
 							?>
 							document.cookie = "sprint=1;path=/tsumegos/play;SameSite=none;Secure=false";
 						}else{
@@ -1673,27 +1690,35 @@
 						<?php
 						if(isset($sprintActivated))
 							echo 'document.cookie = "sprint=2;path=/tsumegos/play;SameSite=none;Secure=false";';
-						if($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2'){
-							 echo '
-								document.getElementById("xpDisplay").style.color = "'.$playGreenColor.'";
-								document.getElementById("xpDisplay").innerHTML = \'<font size="4"><b>Solved</b> ('.$t['Tsumego']['difficulty'].' XP) '.$sandboxComment.'</font>\';
-							';
-						}else if($t['Tsumego']['status']=='setW2' || $t['Tsumego']['status']=='setX2'){
-							echo '
-								document.getElementById("xpDisplay").style.color = "'.$xpDisplayColor.'";
-								document.getElementById("xpDisplay").innerHTML = \'<font size="4">  '.$t['Tsumego']['difficulty'].' XP (1/2) '.$sandboxComment.'</font>\';
-							';
+						if($levelBar==1){
+							if($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2'){
+								 echo '
+									document.getElementById("xpDisplay").style.color = "'.$playGreenColor.'";
+									document.getElementById("xpDisplay").innerHTML = \'<font size="4"><b>Solved</b> ('.$t['Tsumego']['difficulty'].' XP) '.$sandboxComment.'</font>\';
+								';
+							}else if($t['Tsumego']['status']=='setW2' || $t['Tsumego']['status']=='setX2'){
+								echo '
+									document.getElementById("xpDisplay").style.color = "'.$xpDisplayColor.'";
+									document.getElementById("xpDisplay").innerHTML = \'<font size="4">  '.$t['Tsumego']['difficulty'].' XP (1/2) '.$sandboxComment.'</font>\';
+								';
+							}else{
+								echo '
+									document.getElementById("xpDisplay").style.color = "'.$xpDisplayColor.'";
+									document.getElementById("xpDisplay").innerHTML = \'<font size="4">  '.$t['Tsumego']['difficulty'].' XP '.$sandboxComment.'</font>\';
+								';
+							}
 						}else{
 							echo '
-								document.getElementById("xpDisplay").style.color = "'.$xpDisplayColor.'";
-								document.getElementById("xpDisplay").innerHTML = \'<font size="4">  '.$t['Tsumego']['difficulty'].' XP '.$sandboxComment.'</font>\';
-							';
+									document.getElementById("xpDisplay").style.color = "'.$xpDisplayColor.'";
+									document.getElementById("xpDisplay").innerHTML = \'<font size="4">+'.$eloScore.'/'.$eloScore2d.' '.$sandboxComment.''.$avActiveText.'</font>\';
+								';
 						}
 						?>
 						doubleXP = false;
 					}
 				}else{
 					<?php
+					if($levelBar==1){
 						if($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2'){
 							 echo '
 								document.getElementById("xpDisplay").style.color = "'.$playGreenColor.'";
@@ -1710,6 +1735,12 @@
 								document.getElementById("xpDisplay").innerHTML = \'<font size="4">  '.$t['Tsumego']['difficulty'].' XP '.$sandboxComment.'</font>\';
 							';
 						}
+					}else{
+						echo '
+							document.getElementById("xpDisplay").style.color = "'.$xpDisplayColor.'";
+							document.getElementById("xpDisplay").innerHTML = \'<font size="4">+'.$eloScore.'/'.$eloScore2d.' '.$sandboxComment.''.$avActiveText.'</font>\';
+						';
+					}
 					?>
 				}
 			}else if(mode==3){
@@ -1740,8 +1771,10 @@
 					clearInterval(x);
 				}
 			}else{
-				//if(eloScore!=0) document.getElementById("xpDisplay").innerHTML = '<font size="4">'+<?php echo $t['Tsumego']['userWin']; ?>+'%</font>';
-				//else document.getElementById("xpDisplay").innerHTML = '<font size="4">Recently visited</font>';
+				<?php
+				echo 'document.getElementById("xpDisplay").style.color = "'.$xpDisplayColor.'";
+				document.getElementById("xpDisplay").innerHTML = \'<font size="4">+'.$eloScore.'/'.$eloScore2d.' '.$sandboxComment.'</font>\';';
+				?>
 			}
 		}, tcounter);
 
@@ -1802,8 +1835,7 @@
 		$("#msg5").hide();
 		<?php
 			if(isset($_SESSION['loggedInUser']['User']['id'])){
-				if($_SESSION['loggedInUser']['User']['id']==72)
-					echo '$("#msg5").show();';
+				//if($_SESSION['loggedInUser']['User']['id']==72) echo '$("#msg5").show();';
 			}
 		?>
 		$("#show5").click(function(){
@@ -1989,14 +2021,16 @@
 					$duplicateParamsUrl .= '-';
 			}
 			?>
-			$("#showx5").attr("href", "<?php echo '/tsumegos/open/'.$duplicateMain.'/'.$sgf['Sgf']['id']; ?>");
-			$("#showx6").attr("href", "<?php echo '/sgfs/view/'.($duplicateMain*1337).$duplicateParamsUrl; ?>");
+			$("#showx5").attr("href", "<?php echo '/tsumegos/open/'.$t['Tsumego']['id'].'/'.$sgf['Sgf']['id']; ?>");
+			$("#showx6").attr("href", "<?php echo '/sgfs/view/'.($t['Tsumego']['id']*1337); ?>");
 		<?php } ?>
+		$("#showx8").attr("href", "<?php echo '/tsumegos/rating/'.$t['Tsumego']['id']; ?>");
 		$("#showx4").css("display", "inline-block");		
 		$("#showx5").css("display", "inline-block");		
 		$("#show4").css("display", "inline-block");
 		$("#show5").css("display", "inline-block");
 		$("#showx6").css("display", "inline-block");
+		$("#showx8").css("display", "inline-block");
 		<?php } ?>
 	}
 	
@@ -2059,39 +2093,54 @@
 	function runXPBar(increase){
 		<?php
 			if($mode==1){
-				$newXP = ($user['User']['xp'] + $t['Tsumego']['difficulty'])/$user['User']['nextlvl']*100;
-				echo '
-				if(!doubleXP) x2 = 1;
-				else x2 = 2;
-				userXP = '.$user['User']['xp'].';
-				userDifficulty = '.$t['Tsumego']['difficulty'].'*x2;
-				userNextlvl = '.$user['User']['nextlvl'].';
-				newXP2 = (userXP+userDifficulty)/userNextlvl*100;
-				newXP = '.$newXP.';
-				if(newXP2>=100){
-					newXP2=100;
-					//if(soundsEnabled){setTimeout(function(){document.getElementsByTagName("audio")[1].play();},800);}
-				}
-				$("#xp-bar-fill").css({"width":newXP2+"%"});';
-				?>
-				$("#xp-bar-fill").css("-webkit-transition","all 1s ease");
-				$("#xp-increase-fx").fadeIn(0);$("#xp-bar-fill").css({"-webkit-transition":"all 1s ease","box-shadow":""});
-				setTimeout(function(){
-					$("#xp-increase-fx").fadeOut(500);$("#xp-bar-fill").css({"-webkit-transition":"all 1s ease","box-shadow":""});
-				},1000);
-			<?php
-			}elseif($mode==2){
+				if($levelBar==1){
+					$newXP = ($user['User']['xp'] + $t['Tsumego']['difficulty'])/$user['User']['nextlvl']*100;
+					echo '
+					if(!doubleXP) x2 = 1;
+					else x2 = 2;
+					userXP = '.$user['User']['xp'].';
+					userDifficulty = '.$t['Tsumego']['difficulty'].'*x2;
+					userNextlvl = '.$user['User']['nextlvl'].';
+					newXP2 = (userXP+userDifficulty)/userNextlvl*100;
+					newXP = '.$newXP.';
+					if(newXP2>=100)
+						newXP2=100;
+					$("#xp-bar-fill").css({"width":newXP2+"%"});';
+					?>
+					$("#xp-bar-fill").css("-webkit-transition","all 1s ease");
+					$("#xp-increase-fx").fadeIn(0);$("#xp-bar-fill").css({"-webkit-transition":"all 1s ease","box-shadow":""});
+					setTimeout(function(){
+						$("#xp-increase-fx").fadeOut(500);$("#xp-bar-fill").css({"-webkit-transition":"all 1s ease","box-shadow":""});
+					},1000);
+				<?php
+				}else{
+					echo '
+					if(!doubleXP) x2 = 1;
+					else x2 = 2;
+					userDifficulty = '.$t['Tsumego']['difficulty'].'*x2;
+					userNextlvl = '.$user['User']['nextlvl'].';
+					if(increase) newXP2 = '.substr($user['User']['elo_rating_mode'], -2).'+ '.$eloScore.';
+					else newXP2 = '.substr($user['User']['elo_rating_mode'], -2).'+ '.$eloScore2.';
+					if(newXP2>=100)
+						newXP2=100;
+					$("#xp-bar-fill").css({"width":newXP2+"%"});';
+					?>
+					$("#xp-bar-fill").css("-webkit-transition","all 1s ease");
+					$("#xp-increase-fx").fadeIn(0);$("#xp-bar-fill").css({"-webkit-transition":"all 1s ease","box-shadow":""});
+					setTimeout(function(){
+						$("#xp-increase-fx").fadeOut(500);$("#xp-bar-fill").css({"-webkit-transition":"all 1s ease","box-shadow":""});
+					},1000);
+				<?php } 
+			}else if($mode==2){
 				echo '
 				if(!doubleXP) x2 = 1;
 				else x2 = 2;
 				userDifficulty = '.$t['Tsumego']['difficulty'].'*x2;
 				userNextlvl = '.$user['User']['nextlvl'].';
 				if(increase) newXP2 = '.substr($user['User']['elo_rating_mode'], -2).'+ '.$eloScore.';
-				else newXP2 = '.substr($user['User']['elo_rating_mode'], -2).'- '.$eloScore.';
-				if(newXP2>=100){
+				else newXP2 = '.substr($user['User']['elo_rating_mode'], -2).'+ '.$eloScore2.';
+				if(newXP2>=100)
 					newXP2=100;
-					//if(soundsEnabled){setTimeout(function(){document.getElementsByTagName("audio")[1].play();},800);}
-				}
 				$("#xp-bar-fill").css({"width":newXP2+"%"});';
 				?>
 				$("#xp-bar-fill").css("-webkit-transition","all 1s ease");
@@ -2116,32 +2165,35 @@
 		?>
 	}
 	
-	//function xxx(){ cvn = false; }
-	
-	
 	function runXPNumber(id, start, end, duration, ulvl){
 	<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
-		userXP = end;
-		userLevel = ulvl;
-		var range = end - start;
-		var current = start;
-		var increment = end > start? 1 : -1;
-		var stepTime = Math.abs(Math.floor(duration / range));
-		var obj = document.getElementById(id);
-		var timer = setInterval(function(){
-			current += increment;
-			<?php
-			if($mode==1 || $mode==3) echo 'obj.innerHTML = current+"/'.$user['User']['nextlvl'].'";';
-			elseif($mode==2) echo 'obj.innerHTML = current;';
-			?>
-			if(current == end){
-				clearInterval(timer);
-			}
-		}, stepTime);
+		if(start!==end){
+			userXP = end;
+			userLevel = ulvl;
+			var range = end - start;
+			var current = start;
+			var increment = end > start? 1 : -1;
+			var stepTime = Math.abs(Math.floor(duration / range));
+			var obj = document.getElementById(id);
+			userElo = end;
+			var timer = setInterval(function(){
+				current += increment;
+				<?php
+				if($mode==1&&$levelBar==1 || $mode==3) 
+					echo 'obj.innerHTML = current+"/'.$user['User']['nextlvl'].'";';
+				else if($mode==1 && $levelBar==2) 
+					echo 'obj.innerHTML = current;';
+				else if($mode==2) 
+					echo 'obj.innerHTML = current;';
+				?>
+				if(current == end){
+					clearInterval(timer);
+				}
+			}, stepTime);
+		}
 	<?php } ?>
 	}
 	
-
 	function updateHealth(){
 		<?php
 			$m = 1;
@@ -2218,8 +2270,8 @@
 						}
 					}
 				}else{
-					if(eloScore!=0) document.getElementById("xpDisplay").innerHTML = '<font size="4">'+<?php echo $t['Tsumego']['userWin']; ?>+'%</font>';
-					else document.getElementById("xpDisplay").innerHTML = '<font size="4">Recently visited</font>';
+					//if(eloScore!=0) document.getElementById("xpDisplay").innerHTML = '<font size="4">'+<?php echo $t['Tsumego']['userWin']; ?>+'%</font>';
+					//else document.getElementById("xpDisplay").innerHTML = '<font size="4">Recently visited</font>';
 				}
 			}, 250);
 
@@ -2524,13 +2576,16 @@
 	?>
 
 	function displayResult(result){
+		setCookie("av", <?php echo $activityValue[0]; ?>);
 		if(result=='S'){
+			elo2 = <?php echo $user['User']['elo_rating_mode']; ?>+eloScore;
+			let ulvl;
 			if(mode!=2){//mode 1 and 3 correct
 				<?php echo $sandboxCheck; ?>
 				document.getElementById("status").style.color = "<?php echo $playGreenColor; ?>";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
 				document.getElementById("xpDisplay").style.color = "white";
-				if(light==true) 
+				if(light==true)
 					$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(67, 255, 40, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
 				else
 					$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(67, 255, 40, 0.7), 0 6px 20px 0 rgba(80, 255, 0, 0.2)");
@@ -2585,19 +2640,29 @@
 						xpReward = userNextlvl;
 						ulvl = ulvl + 1;
 					}
-					if(mode==1) runXPBar(true);
-					if(mode==1) runXPNumber("account-bar-xp", userXP, xpReward, 1000, ulvl);
+					<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
+					if(mode==1 && levelToRatingHover==1){
+						runXPBar(true);
+						runXPNumber("account-bar-xp", userXP, xpReward, 1000, ulvl);
+					}
+					if(mode==1 && levelToRatingHover==2){
+						runXPBar(true);
+						runXPNumber("account-bar-xp", <?php echo $user['User']['elo_rating_mode']; ?>, elo2, 1000, ulvl);
+					}
+					<?php } ?>
 					noXP = true;
 				}else{
 					if(mode==1){
 						secondsy = seconds;
 						document.cookie = "correctNoPoints=1";
 						document.cookie = "seconds="+secondsy+";path=/tsumegos/play;SameSite=none;Secure=false";
+						if(levelToRatingHover==2){
+							runXPBar(true);
+							runXPNumber("account-bar-xp", <?php echo $user['User']['elo_rating_mode']; ?>, elo2, 1000, ulvl);
+						}
 					}
 				}
 			}else if(eloScore!=0){//mode 2 correct
-				if(eloScore>100) eloScore = 100;
-				elo2 = <?php echo $user['User']['elo_rating_mode']; ?>+eloScore;
 				document.getElementById("status").style.color = "<?php echo $playGreenColor; ?>";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
 				document.getElementById("xpDisplay").style.color = "white";
@@ -2614,7 +2679,6 @@
 				$("#besogo-next-button-inactive").attr("id","besogo-next-button");
 				if(!noXP){
 					sequence += "correct|";
-					//updateCookie("score=","<?php echo $score3; ?>");
 					setCookie("score", "<?php echo $score3; ?>");
 					setCookie("mode", mode);
 					if(goldenTsumego)
@@ -2655,6 +2719,11 @@
 					toggleBoardLock(true);
 				}
 				noLastMark = true;
+				if(mode==1 && levelToRatingHover==2 && misplays==0){
+					elo2 = <?php echo $user['User']['elo_rating_mode']; ?>+eloScore2;
+					runXPBar(false);
+					runXPNumber("account-bar-xp", <?php echo $user['User']['elo_rating_mode']; ?>, elo2, 1000, <?php echo $user['User']['level']; ?>);
+				}
 				if(!noXP){
 					if(!freePlayMode){
 						misplays++;
@@ -2681,7 +2750,7 @@
 					}
 				}
 			}else{//mode 2 incorrect
-				elo2 = <?php echo $user['User']['elo_rating_mode']; ?>-eloScore;
+				elo2 = <?php echo $user['User']['elo_rating_mode']; ?>+eloScore2;
 				branch = "no";
 				document.getElementById("status").style.color = "#e03c4b";
 				document.getElementById("status").innerHTML = "<h2>Incorrect</h2>";
@@ -2703,8 +2772,7 @@
 					hoverLocked = false;
 					tryAgainTomorrow = true;
 					freePlayMode = true;
-					ulvl = <?php echo $user['User']['level']; ?>;
-					runXPNumber("account-bar-xp", <?php echo $user['User']['elo_rating_mode']; ?>, elo2, 1000, ulvl);
+					runXPNumber("account-bar-xp", <?php echo $user['User']['elo_rating_mode']; ?>, elo2, 1000, <?php echo $user['User']['level']; ?>);
 				}
 				toggleBoardLock(true);
 			}
@@ -2881,10 +2949,10 @@
     options.reviewMode = false;
     options.reviewEnabled = <?php echo $reviewEnabled ? 'true' : 'false'; ?>;
 	<?php
-		if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72){
-		//if(isset($_SESSION['loggedInUser'])){if(false){
+		//if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72){
+		if(false){
 			echo 'options.reviewEnabled = true;';
-		}}
+		}
 		if($requestSolution)
 			echo 'options.reviewEnabled = true;';
 	?>

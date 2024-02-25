@@ -156,4 +156,35 @@
 	.scheduleTsumego{
 		color:#f0f0f0!important;
 	}
-	
+	#levelBarDisplay1{
+		accent-color: #74d14c;
+	}
+	#levelBarDisplay1text{
+		color: #74d14c;
+	}
+	#levelBarDisplay2{
+		accent-color: #c240f7;
+	}
+	#levelBarDisplay2text{
+		color: #c240f7;
+	}
+	.title6{
+		background-color:#2a2a2a;
+		color:#fff;
+	}
+	.homeCenter2{
+		background-color:#2a2a2a;
+		color:#fff;
+	}
+	#chart1, .chart-box, #chart2, #chart3, #chart11, #chart22, #chart33{
+		background: #2a2a2a;
+	}
+	.apexcharts-menu-item{
+		color:black;
+	}
+	.apexcharts-title-text{
+		 color:#fff;
+	}
+	.h1profile h1, .profileTable2 a{
+		color:#fff;
+	}

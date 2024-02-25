@@ -38,7 +38,7 @@
 		<th width="220px" colspan="2" align="left">&nbsp;Name</th>
 		<th width="150px">Rank</th>
 		<th width="150px">Rating</th>
-		<th width="150px">Solved</th>
+		<th width="150px">Solved in rating mode</th>
 	</tr>
 	<?php
 		$place = 1;

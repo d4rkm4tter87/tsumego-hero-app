@@ -1,6 +1,7 @@
 <script src ="/js/previewBoard.js"></script>
 <?php 
-	if(!isset($_SESSION['loggedInUser'])) echo '<script type="text/javascript">window.location.href = "/";</script>';
+	if(!isset($_SESSION['loggedInUser']))
+		echo '<script type="text/javascript">window.location.href = "/";</script>';
 
 	$empty = false;
 	$num1 = 0;
@@ -421,8 +422,15 @@
 					}
 				}
 			}
-			for($i=0; $i<10; $i++)
+			for($i=0; $i<10; $i++){
+				if(!isset($tooltipInfo[$i][0]))
+					$tooltipInfo[$i][0] = 0;
+				if(!isset($tooltipInfo[$i][1]))
+					$tooltipInfo[$i][1] = 0;	
+				if(!isset($tooltipBoardSize[$i]))
+					$tooltipBoardSize[$i] = 19;	
 				echo 'createPreviewBoard('.$i.', tooltipSgfs['.$i.'], '.$tooltipInfo[$i][0].', '.$tooltipInfo[$i][1].', '.$tooltipBoardSize[$i].');';
+			}
 			?>
 			let tooltipSgfs2 = [];
 			<?php
@@ -435,8 +443,15 @@
 					}
 				}
 			}
-			for($i=0; $i<10; $i++)
+			for($i=0; $i<10; $i++){
+				if(!isset($tooltipInfo2[$i][0]))
+					$tooltipInfo2[$i][0] = 0;
+				if(!isset($tooltipInfo2[$i][1]))
+					$tooltipInfo2[$i][1] = 0;	
+				if(!isset($tooltipBoardSize2[$i]))
+					$tooltipBoardSize2[$i] = 19;		
 				echo 'createPreviewBoard('.(99+$i).', tooltipSgfs2['.$i.'], '.$tooltipInfo2[$i][0].', '.$tooltipInfo2[$i][1].', '.$tooltipBoardSize2[$i].');';
+			}
 			?>
 		</script>
 		<style>

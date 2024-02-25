@@ -255,10 +255,10 @@
 			The problem numbers are displayed.
 		</div>
 		<div id="ratioInfo">
-			The solved and failed (s/f) attempts are displayed.
+			The solved and failed (s/f) attempts are displayed.<br><font style="color:gray;">Outdated entries (-) are counted as fail.</font>
 		</div>
 		<div id="timeInfo">
-			The time (in seconds) for solving is displayed.
+			The time (in seconds) for solving is displayed.<br><font style="color:gray;">Outdated entries (-) are counted as 60 seconds.</font>
 		</div>
 		</div>
 		<br>
@@ -389,7 +389,6 @@
 					</div>';
 				}else if($set['Set']['public']==-1){
 					echo '<a href="#" onclick="restore()">Restore Collection</a>';
-					
 				}
 				echo '</td>
 				</tr>
@@ -402,14 +401,10 @@
 		?>
 		</table>
 		</div>
-		
-		<?php if(!$isFav) echo '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>'; ?>
+		<?php if(!$isFav) echo '<br><br><br><br><br>'; ?>
 		<br><br>
 	</div>
 
-
-	
-	
 	<?php if($_SESSION['loggedInUser']['User']['isAdmin']>=1){?>
 	<script>
 	var t1 = false;

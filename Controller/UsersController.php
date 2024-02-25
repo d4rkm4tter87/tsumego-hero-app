@@ -5,6 +5,71 @@ class UsersController extends AppController{
 	public $pageTitle = "Users";
 	public $helpers = array('Html', 'Form');
 	
+	public function rank_list(){
+		$this->loadModel('Tsumego');
+		
+		$ts = $this->Tsumego->find('all', array('conditions' => array(
+			'id >=' => 20000,
+			'id <=' => 30000
+		)));
+		for($i=0; $i<count($ts); $i++){
+			$this->set_elo($ts[$i]['Tsumego']['id']);
+		}
+	}
+	
+	private function set_elo($tid){
+		$this->loadModel('Tsumego');
+		$t = $this->Tsumego->findById($tid);
+		$rank = $this->getTsumegoRankx($t['Tsumego']['userWin']);
+		$tMax = $this->getTsumegoRankMax($t['Tsumego']['userWin']);
+		$tVal = $this->getTsumegoRankVal($t['Tsumego']['userWin'], $tMax);
+		$p = $tVal/$tMax;
+		$newElo = $this->getTsumegoElo($rank, $p);
+		$adjustElo = $this->adjustElo($newElo);
+		$t['Tsumego']['elo_rating_mode'] = $adjustElo;
+		$t['Tsumego']['difficulty'] = $this->convertEloToXp($t['Tsumego']['elo_rating_mode']);
+		$this->Tsumego->save($t);
+	}
+	
+	public function rank_single(){
+		$this->loadModel('Tsumego');
+		$a = array();
+		$a['c'] = array();
+		$a['rank'] = array();
+		$a['rank2'] = array();
+		$a['rank3'] = array();
+		$a['elo'] = array();
+		$a['elo2'] = array();
+		$counter = 0;
+		while($counter<=100){
+			array_push($a['c'], $counter);
+			$rank = $this->getTsumegoRankx($counter);
+			array_push($a['rank'], $rank);
+			
+			$tMax = $this->getTsumegoRankMax($counter);
+			array_push($a['rank2'], $tMax);
+			
+			$tVal = $this->getTsumegoRankVal($counter, $tMax);
+			$p = $tVal/$tMax;
+			array_push($a['rank3'], $p);
+			
+			$newElo = $this->getTsumegoElo($rank, $p);
+			array_push($a['elo'], $newElo);
+			
+			$adjustElo = $this->adjustElo($newElo);
+			array_push($a['elo2'], $adjustElo);
+			
+			$counter+=.5;
+		}
+		echo '<table>';
+		for($i=0; $i<count($a['c']); $i++){
+			echo '<tr>';
+			echo '<td>'.$a['c'][$i].'</td><td>'.$a['rank'][$i].'</td><td>'.$a['rank3'][$i].'</td><td>'.$a['elo'][$i].'</td><td>'.$a['elo2'][$i].'</td>';
+			echo '</tr>';
+		}
+		echo '</table>';
+	}
+	
 	public function playerdb5(){
 		$this->loadModel('TsumegoStatus');
 		$this->loadModel('Tsumego');
@@ -22,12 +87,26 @@ class UsersController extends AppController{
 		$this->loadModel('Duplicate');
 		$this->loadModel('PublishDate');
 		
-		$scT = $this->PublishDate->find('all');
-		
-		echo '<pre>'; print_r(count($scT)); echo '</pre>';
-		//$this->publishDates();
-		//$this->fillSetConnection();
+		$this->resetUserElos();
 		/*
+		for($i=0; $i<count($ts); $i++){
+			//$this->setTsumegoElo($ts[$i]['Tsumego']['id']);
+			$this->setTsumegoElo($ts[$i]);
+		}
+		
+		$u = $this->User->find('all', array('conditions' => array(
+			'id >=' => 10000,
+			'id <=' => 20000
+		)));
+		
+		for($i=0; $i<count($u); $i++){
+			if($u[$i]['User']['elo_rating_mode']!=100){
+				$u[$i]['User']['elo_rating_mode'] = 100;
+				$u[$i]['User']['rd'] = 200;
+				$u[$i]['User']['solved2'] = 0;
+				$this->User->save($u[$i]);
+			}
+		}
 		
 		$ts = $this->Tsumego->find('all', array('conditions' => array(
 			'id >=' => 29634,
@@ -132,107 +211,8 @@ class UsersController extends AppController{
 			$s['Schedule']['tsumego_id'] = $ts[$i]['Tsumego']['id'];
 			$this->Schedule->create();
 			$this->Schedule->save($s);
-		}
+		}*/
 		
-		$ut = $this->TsumegoStatus->find('all', array('limit' => 10000, 'order' => 'created ASC', 'conditions' => array(
-			'created <' => '2022-05-09 19:19:09'
-		)));
-		echo '<pre>'; print_r(count($ut)); echo '</pre>';
-		echo '<pre>'; print_r($ut[0]); echo '</pre>';
-		echo '<pre>'; print_r($ut[count($ut)-1]); echo '</pre>';
-		
-		for($i=0; $i<count($ut); $i++){
-			$this->TsumegoStatus->delete($ut[$i]['TsumegoStatus']['id']);
-		}
-		
-		/*
-		$c = $this->Comment->find('all');
-		$x = array();
-		for($i=0; $i<count($c); $i++){
-			if(strpos($c[$i]['Comment']['message'], 'Super')===0){
-				array_push($x, $c[$i]);
-			}
-		}
-		echo '<pre>'; print_r(count($x)); echo '</pre>';
-		echo '<pre>'; print_r($vs); echo '</pre>'; 
-		$num = 601;
-		while($num<=792){
-			$t = array();
-			$t['Tsumego']['num'] = $num;
-			$t['Tsumego']['set_id'] = 180;
-			$t['Tsumego']['difficulty'] = 70;
-			$t['Tsumego']['description'] = 'b to kill';
-			$t['Tsumego']['author'] = 'Farkas';
-			$t['Tsumego']['elo_rating_mode'] = '1500';
-			$this->Tsumego->create();
-			$this->Tsumego->save($t);
-			$num++;
-		}	
-		$u = $this->User->find('all');
-			for($i=0; $i<count($u); $i++){
-				if($u[$i]['User']['elo_rating_mode']!=100){
-					$u[$i]['User']['elo_rating_mode'] = 100;
-					$u[$i]['User']['rd'] = 200;
-					$u[$i]['User']['solved2'] = 0;
-					$this->User->save($u[$i]);
-				}
-		}
-		$r = $this->Rank->find('all');
-		for($i=0; $i<count($r); $i++){
-			$this->Rank->delete($r[$i]['Rank']['id']);
-		}
-		$ur2 = $this->TsumegoAttempt->find('all', array('limit' => 10000, 'order' => 'created ASC', 'conditions' => array(
-			'created <' => '2022-05-09 19:19:09'
-		)));
-		echo '<pre>'; print_r(count($ur2)); echo '</pre>'; 
-		for($i=0; $i<count($ur2); $i++){
-			$this->TsumegoAttempt->delete($ur2[$i]['TsumegoAttempt']['id']);
-		}
-		
-		$t = $this->TsumegoAttempt->find('all', array('limit' => 10000, 'conditions' =>  array('user_id' => '33')));
-		for($i=0; $i<count($t); $i++){
-			$this->TsumegoAttempt->delete($t[$i]['TsumegoAttempt']['id']);
-		}
-		$t = $this->TsumegoAttempt->find('all', array('limit' => 10000, 'conditions' =>  array('status' => '')));
-		for($i=0; $i<count($t); $i++){
-			$this->TsumegoAttempt->delete($t[$i]['TsumegoAttempt']['id']);
-		}
-		
-		$ut = $this->TsumegoStatus->find('all', array('limit' => 10000, 'conditions' =>  array('user_id' => 33)));
-		for($i=0; $i<count($ut); $i++){
-			$this->TsumegoStatus->delete($ut[$i]['TsumegoStatus']['id']);
-		}
-		
-		$tr = $this->TsumegoRatingAttempt->find('all');
-		for($i=0; $i<count($tr); $i++){
-			if($tr[$i]['TsumegoRatingAttempt']['recent'] != 2){
-				$tr[$i]['TsumegoRatingAttempt']['recent'] = 2;
-				$this->TsumegoRatingAttempt->save($tr[$i]);
-			}
-		}
-		
-		$tr = $this->TsumegoRatingAttempt->find('all');
-		for($i=0; $i<count($tr); $i++){
-			if($tr[$i]['TsumegoRatingAttempt']['recent'] != 2){
-				$tr[$i]['TsumegoRatingAttempt']['recent'] = 2;
-				$this->TsumegoRatingAttempt->save($tr[$i]);
-			}
-		}
-		
-		$t = $this->Tsumego->find('all', array('conditions' =>  array('set_id' => null)));
-		for($i=0; $i<count($t); $i++){
-			$this->Tsumego->delete($t[$i]['Tsumego']['id']);
-		}
-		
-		$tr = $this->TsumegoRatingAttempt->find('all');
-		for($i=0; $i<count($tr); $i++){
-			$this->TsumegoRatingAttempt->delete($tr[$i]['TsumegoRatingAttempt']['id']);
-		}
-		
-		//$t1['Tsumego']['elo_rating_mode'] = $this->ratingMatch2($t1['Tsumego']['difficulty']);
-		//$this->Tsumego->save($t1);
-				
-		*/
 		$this->set('t', $t);
 		$this->set('u', $u);
 		$this->set('ou', $ou);
@@ -241,6 +221,53 @@ class UsersController extends AppController{
 		$this->set('ut', $ut);
 		$this->set('out', $out);
 		$this->set('ux', $ux);
+	}
+	
+	public function deleteoldattempts(){
+		$this->loadModel('TsumegoAttempt');
+		$ta = $this->TsumegoAttempt->find('all', array('limit' => 5000, 'order' => 'created ASC'));
+		echo '<pre>'; print_r($ta[0]['TsumegoAttempt']['created']); echo '</pre>';
+		
+		for($i=0; $i<count($ta); $i++)
+			$this->TsumegoAttempt->delete($ta[$i]['TsumegoAttempt']['id']);
+		
+		$this->set('date', $ta[0]['TsumegoAttempt']['created']);
+	}
+	
+	public function adjusttsumego(){
+		$this->loadModel('Tsumego');
+		$ts = $this->Tsumego->find('all', array('order' => 'elo_rating_mode ASC'));
+		echo '<pre>'; print_r(count($ts)); echo '</pre>';
+		echo '<table>';
+		for($i=0; $i<count($ts); $i++)
+			echo '<tr><td>'.$ts[$i]['Tsumego']['id'].'</td><td>'.$ts[$i]['Tsumego']['difficulty']
+			.'</td><td>'.$ts[$i]['Tsumego']['userWin'].'</td><td>'.$ts[$i]['Tsumego']['elo_rating_mode'].'</td></tr>';
+		echo '</table>';
+	}
+	
+	public function adjusttsumego2(){
+		$ts = array();
+		$min = 600;
+		$max = 2600;
+		
+		$scale = $max-$min;
+		$step = $scale/100;
+		$x = array();
+		for($i=0; $i<=100; $i++){
+			$x[$i] = $min+$step*$i;
+		}
+		
+		for($i=0; $i<=100; $i++){
+			$a = array();
+			$a['elo'] = $x[$i];
+			$a['xp'] = round(pow($a['elo']/100, 1.55)-6);
+			array_push($ts, $a);
+		}
+			
+		echo '<table>';
+		for($i=0; $i<count($ts); $i++)
+			echo '<tr><td>'.$ts[$i]['elo'].'</td><td>'.$ts[$i]['xp'].'</td></tr>';
+		echo '</table>';
 	}
 	
 	private function publishDates(){
@@ -1797,11 +1824,13 @@ Joschka Zimdars';
 	public function view($id=null){
 		$_SESSION['page'] = 'user';
 		$this->LoadModel('TsumegoStatus');
+		$this->LoadModel('TsumegoAttempt');
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('Set');
 		$this->LoadModel('Achievement');
 		$this->LoadModel('AchievementStatus');
 		$this->LoadModel('SetConnection');
+		$this->LoadModel('RankOverview');
 		$hideEmail = false;
 		
 		$solvedUts2 = $this->saveSolvedNumber($_SESSION['loggedInUser']['User']['id']);
@@ -1875,35 +1904,69 @@ Joschka Zimdars';
 		}
 		$sumx += $user['User']['xp'];
 		
-		$tDates = array();
-		for($j=0; $j<count($solvedUts); $j++){
-			$date = new DateTime($solvedUts[$j]['TsumegoStatus']['created']);
-			$solvedUts[$j]['TsumegoStatus']['created'] = $date->format('Y-m-d');
-			array_push($tDates, $solvedUts[$j]['TsumegoStatus']['created']);
-		}
-
-		$graphData1 = array_count_values($tDates);
-		$graph = array();
-		$nextDay = '';
-		$c = 0;
-		$dt = new DateTime();
-		$dt = $dt->format('Y-m-d');
-		if(!isset($graphData1[$dt]))
-			$graphData1[$dt] = 0.1;
-		
 		$oldest = new DateTime(date('Y-m-d', strtotime('-30 days')));
 		$oldest = $oldest->format('Y-m-d');
-		$graphData2 = array();
-		$counter = 0;
-		while($oldest!=$dt){
-			$graphData2[$counter]['date'] = $oldest;
-			if(isset($graphData1[$oldest])) $graphData2[$counter]['num'] = $graphData1[$oldest];
-			else $graphData2[$counter]['num'] = 0;
-			$oldest = new DateTime($oldest);
-			$oldest = $oldest->modify('+1 day');
-			$oldest = $oldest->format('Y-m-d');
-			$counter++;
+		$ta = $this->TsumegoAttempt->find('all', array('limit' => 400, 'order' => 'created DESC', 'conditions' => array(
+			'user_id' => $_SESSION['loggedInUser']['User']['id']
+		)));
+		
+		$taBefore = '';
+		$graph = array();
+		$highestElo = 0;
+		$ta2['date'] = array();
+		$ta2['elo'] = array();
+		
+		for($i=0;$i<count($ta);$i++){
+			if($ta[$i]['TsumegoAttempt']['elo']!=null){
+				if($ta[$i]['TsumegoAttempt']['elo']>$highestElo)
+					$highestElo = $taBefore=$ta[$i]['TsumegoAttempt']['elo'];
+				array_push($ta2['date'], $ta[$i]['TsumegoAttempt']['created']);
+				array_push($ta2['elo'], $ta[$i]['TsumegoAttempt']['elo']);
+			}
+			if($ta[$i]['TsumegoAttempt']['mode']==1 || $ta[$i]['TsumegoAttempt']['mode']==0){
+				$ta[$i]['TsumegoAttempt']['created'] = new DateTime(date($ta[$i]['TsumegoAttempt']['created']));
+				$ta[$i]['TsumegoAttempt']['created'] = $ta[$i]['TsumegoAttempt']['created']->format('Y-m-d');
+				if($ta[$i]['TsumegoAttempt']['created']>=$oldest){
+					if($taBefore==$ta[$i]['TsumegoAttempt']['created']){
+						if($ta[$i]['TsumegoAttempt']['solved']==1)
+							$graph[$ta[$i]['TsumegoAttempt']['created']]['s']++;
+						else
+							$graph[$ta[$i]['TsumegoAttempt']['created']]['f']++;
+						$testCounter++;
+					}else{
+						$graph[$ta[$i]['TsumegoAttempt']['created']] = array();
+						if($ta[$i]['TsumegoAttempt']['solved']==1){
+							$graph[$ta[$i]['TsumegoAttempt']['created']]['s'] = 1;
+							$graph[$ta[$i]['TsumegoAttempt']['created']]['f'] = 0;
+						}else{
+							$graph[$ta[$i]['TsumegoAttempt']['created']]['s'] = 0;
+							$graph[$ta[$i]['TsumegoAttempt']['created']]['f'] = 1;
+						}
+						$taBefore=$ta[$i]['TsumegoAttempt']['created'];
+					}
+				}
+			}
 		}
+		
+		$eloRank = $this->getTsumegoRank($_SESSION['loggedInUser']['User']['elo_rating_mode']);
+		$highestEloRank = $this->getTsumegoRank($highestElo);
+		
+		if($highestElo<$user['User']['elo_rating_mode'])
+			$highestElo = $user['User']['elo_rating_mode'];
+		
+		$timeGraph = array();
+		$ro = $this->RankOverview->find('all', array('order' => 'rank ASC', 'conditions' => array(
+			'user_id' => $_SESSION['loggedInUser']['User']['id']
+		)));
+		$highestRo = '15k';
+		for($i=0;$i<count($ro);$i++){
+			$highestRo = $this->getHighestRo($ro[$i]['RankOverview']['rank'], $highestRo);
+			if(isset($timeGraph[$ro[$i]['RankOverview']['rank']][$ro[$i]['RankOverview']['status']]))
+				$timeGraph[$ro[$i]['RankOverview']['rank']][$ro[$i]['RankOverview']['status']]++;
+			else
+				$timeGraph[$ro[$i]['RankOverview']['rank']][$ro[$i]['RankOverview']['status']] = 1;
+		}
+		$timeGraph = $this->formatTimegraph($timeGraph);
 		
 		$p = $user['User']['solved']/$tsumegoNum*100;
 		$p = round($p);
@@ -1956,9 +2019,18 @@ Joschka Zimdars';
 		$achievementUpdate = array_merge($achievementUpdate1, $achievementUpdate2);
 		
 		if(count($achievementUpdate)>0) $this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
+		$aNum = $this->AchievementStatus->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
 		
+		$countGraph = 160+count($graph)*25;
+		$countTimeGraph = 160+count($timeGraph)*25;
+		
+		$this->set('ta2', $ta2);
 		$this->set('xpSum', $sumx);
-		$this->set('graph', $graphData2);
+		$this->set('graph', $graph);
+		$this->set('countGraph', $countGraph);
+		$this->set('timeGraph', $timeGraph);
+		$this->set('countTimeGraph', $countTimeGraph);
+		$this->set('timeModeRuns', count($ro));
 		$this->set('user', $user);
 		$this->set('tsumegoNum', $tsumegoNum);
 		$this->set('solved', $user['User']['solved']);
@@ -1970,6 +2042,81 @@ Joschka Zimdars';
 		$this->set('as', $as);
 		$this->set('achievementUpdate', $achievementUpdate);
 		$this->set('solvedUts2', $solvedUts2);
+		$this->set('highestElo', $highestElo);
+		$this->set('highestEloRank', $highestEloRank);
+		$this->set('eloRank', $eloRank);
+		$this->set('highestRo', $highestRo);
+		$this->set('aNum', count($aNum));
+	}
+	
+	private function formatTimegraph($graph){
+		$g = array();
+		$g['15k'] = 0;
+		$g['14k'] = 0;
+		$g['13k'] = 0;
+		$g['12k'] = 0;
+		$g['11k'] = 0;
+		$g['10k'] = 0;
+		$g['9k'] = 0;
+		$g['8k'] = 0;
+		$g['7k'] = 0;
+		$g['6k'] = 0;
+		$g['5k'] = 0;
+		$g['4k'] = 0;
+		$g['3k'] = 0;
+		$g['2k'] = 0;
+		$g['1k'] = 0;
+		$g['1d'] = 0;
+		$g['2d'] = 0;
+		$g['3d'] = 0;
+		$g['4d'] = 0;
+		$g['5d'] = 0;
+		foreach ($graph as $key => $value)
+			$g[$key] = $value;
+		$g2 = array();
+		foreach ($g as $key => $value)	
+			if($g[$key]!=0)
+				$g2[$key] = $value;
+		return $g2;
+	}
+	
+	private function getHighestRo($new, $old){
+		$newNum = 23;
+		$oldNum = 23;
+		$a = array();
+		$a[0] = '9d';
+		$a[1] = '8d';
+		$a[2] = '7d';
+		$a[3] = '6d';
+		$a[4] = '5d';
+		$a[5] = '4d';
+		$a[6] = '3d';
+		$a[7] = '2d';
+		$a[8] = '1d';
+		$a[9] = '1k';
+		$a[10] = '2k';
+		$a[11] = '3k';
+		$a[12] = '4k';
+		$a[13] = '5k';
+		$a[14] = '6k';
+		$a[15] = '7k';
+		$a[16] = '8k';
+		$a[17] = '9k';
+		$a[18] = '10k';
+		$a[19] = '11k';
+		$a[20] = '12k';
+		$a[21] = '13k';
+		$a[22] = '14k';
+		$a[23] = '15k';
+		for($i=0;$i<count($a);$i++){
+			if($a[$i]==$new)
+				$newNum = $i;
+			if($a[$i]==$old)
+				$oldNum = $i;
+		}
+		if($newNum<$oldNum)
+			return $new;
+		return $old;
 	}
 	
 	public function donate($id = null){

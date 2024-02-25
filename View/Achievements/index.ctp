@@ -17,7 +17,6 @@
 		<div align="center" id="achievementWrapper">
 		<?php
 		$unlockedCounter = 0;
-		//echo '<pre>'; print_r($a); echo '</pre>'; 
 				for($i=0; $i<count($a); $i++){
 					$isActive = 'ac000i';
 					//$a[$i]['Achievement']['unlocked'] = true;

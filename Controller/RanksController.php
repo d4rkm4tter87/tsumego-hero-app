@@ -74,19 +74,6 @@ class RanksController extends AppController {
 				}
 			}
 		}
-		
-		
-		/*
-		if($_SESSION['loggedInUser']['User']['secretArea1']==0 && $t['Tsumego']['set_id']==11969) echo '<script type="text/javascript">window.location.href = "/";</script>';
-		if($_SESSION['loggedInUser']['User']['secretArea2']==0 && $t['Tsumego']['set_id']==29156) echo '<script type="text/javascript">window.location.href = "/";</script>';
-		if($_SESSION['loggedInUser']['User']['secretArea3']==0 && $t['Tsumego']['set_id']==31813) echo '<script type="text/javascript">window.location.href = "/";</script>';
-		if($_SESSION['loggedInUser']['User']['secretArea4']==0 && $t['Tsumego']['set_id']==33007) echo '<script type="text/javascript">window.location.href = "/";</script>';
-		if($_SESSION['loggedInUser']['User']['secretArea5']==0 && $t['Tsumego']['set_id']==71790) echo '<script type="text/javascript">window.location.href = "/";</script>';
-		if($_SESSION['loggedInUser']['User']['secretArea6']==0 && $t['Tsumego']['set_id']==74761) echo '<script type="text/javascript">window.location.href = "/";</script>';
-		if($_SESSION['loggedInUser']['User']['secretArea7']==0 && $t['Tsumego']['set_id']==81578) echo '<script type="text/javascript">window.location.href = "/";</script>';
-		if($_SESSION['loggedInUser']['User']['secretArea9']==0 && $t['Tsumego']['set_id']==6473) echo '<script type="text/javascript">window.location.href = "/";</script>';
-		if($_SESSION['loggedInUser']['User']['secretArea10']==0 && $t['Tsumego']['set_id']==88156) echo '<script type="text/javascript">window.location.href = "/";</script>';
-		*/
 		for($i=0;$i<count($sets);$i++){
 			$unlocked = true;
 			if($sets[$i]['Set']['id']==11969 && $_SESSION['loggedInUser']['User']['secretArea1']==0) $unlocked = false;
@@ -112,7 +99,6 @@ class RanksController extends AppController {
 					}
 				}
 				if(isset($settingsSingle[0]) && $settingsSingle[0]['RankSetting']['status']==1){
-					//$tx = $this->Tsumego->find('all', array('conditions' => array('set_id' => $sets[$i]['Set']['id'])));
 					$tx = $this->findTsumegoSet($sets[$i]['Set']['id']);	
 					for($j=0;$j<count($tx);$j++){
 						array_push($tsumegos, $tx[$j]);
@@ -144,7 +130,6 @@ class RanksController extends AppController {
 				$j++;
 			}
 		}
-		
 		$locks = array();
 		$locks[0] = array();
 		$locks[1] = array();
@@ -155,7 +140,6 @@ class RanksController extends AppController {
 				$locks[$h][$i] = '';
 			}
 		}
-		
 		$locks[0][0] = 'x';
 		$locks[1][0] = 'x';
 		$locks[2][0] = 'x';
@@ -169,7 +153,6 @@ class RanksController extends AppController {
 				}
 			}
 		}
-		
 		$points = array();
 		$points[0] = array();
 		$points[1] = array();
@@ -197,7 +180,6 @@ class RanksController extends AppController {
 				}
 			}
 		}
-		
 		$rx = array();
 		array_push($rx, '15k');
 		array_push($rx, '14k');
@@ -220,33 +202,30 @@ class RanksController extends AppController {
 		array_push($rx, '4d');
 		array_push($rx, '5d');
 		$rxx = array();
-		for($i=0;$i<count($rx);$i++){
+		for($i=0;$i<count($rx);$i++)
 			$rxx[$rx[$i]] = array();
-		}
 		
 		for($i=0;$i<count($tsumegos);$i++){
-			if($tsumegos[$i]['Tsumego']['userWin']!=0){
-				if($tsumegos[$i]['Tsumego']['userWin']>=0 && $tsumegos[$i]['Tsumego']['userWin']<=22) array_push($rxx['5d'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=26.5) array_push($rxx['4d'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=30) array_push($rxx['3d'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=34) array_push($rxx['2d'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=38) array_push($rxx['1d'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=42) array_push($rxx['1k'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=46) array_push($rxx['2k'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=50) array_push($rxx['3k'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=54.5) array_push($rxx['4k'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=58.5) array_push($rxx['5k'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=63) array_push($rxx['6k'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=67) array_push($rxx['7k'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=70.8) array_push($rxx['8k'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=74.8) array_push($rxx['9k'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=79) array_push($rxx['10k'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=83.5) array_push($rxx['11k'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=88) array_push($rxx['12k'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=92) array_push($rxx['13k'], $tsumegos[$i]);
-				elseif($tsumegos[$i]['Tsumego']['userWin']<=96) array_push($rxx['14k'], $tsumegos[$i]);
-				else array_push($rxx['15k'], $tsumegos[$i]);
-			}
+			if($tsumegos[$i]['Tsumego']['elo_rating_mode']>=2500) array_push($rxx['5d'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=2400) array_push($rxx['4d'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=2300) array_push($rxx['3d'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=2200) array_push($rxx['2d'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=2100) array_push($rxx['1d'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=2000) array_push($rxx['1k'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1900) array_push($rxx['2k'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1800) array_push($rxx['3k'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1700) array_push($rxx['4k'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1600) array_push($rxx['5k'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1500) array_push($rxx['6k'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1400) array_push($rxx['7k'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1300) array_push($rxx['8k'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1200) array_push($rxx['9k'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1100) array_push($rxx['10k'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1000) array_push($rxx['11k'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=900) array_push($rxx['12k'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=800) array_push($rxx['13k'], $tsumegos[$i]);
+			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=700) array_push($rxx['14k'], $tsumegos[$i]);
+			else array_push($rxx['15k'], $tsumegos[$i]);
 		}
 		
 		$rxxCount = array();
@@ -271,7 +250,6 @@ class RanksController extends AppController {
 		array_push($rxxCount, count($rxx['4d']));
 		array_push($rxxCount, count($rxx['5d']));
 		
-		//echo '<pre>'; print_r($rxxCount); echo '</pre>'; 
 		$lowestMode = array();
 		for($i=0;$i<count($locks);$i++){
 			for($j=0;$j<count($locks[$i]);$j++){

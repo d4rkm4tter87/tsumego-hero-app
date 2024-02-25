@@ -43,7 +43,7 @@ function displayMultipleChoiceResult(num){
 		}else if(multipleChoiceSemeaiType==2){
 			mText = "Semeai Type 2: No eyes, 2 or more inside liberties.<br>The favorite\'s task is to kill.<br>The favorite counts his outside liberties plus 1 inside liberty.<br>The underdog\'s task is Seki.<br>The underdog counts his outside liberties plus all inside liberties.<br>";
 			let underdog = "Black";
-			if(tsumegoFileLink==29478){
+			if(tsumegoFileLink==29813){
 				mText += "Seki.<br>";
 				$("#besogo-multipleChoice4").css("background-color", "#3ecf78");
 				correct = 4;
@@ -106,6 +106,9 @@ function displayMultipleChoiceResult(num){
 			console.log("b"+multipleChoiceLibertiesB);
 			console.log(multipleChoiceLibertiesW);
 			console.log(tsumegoFileLink);
+			let moreText = '';
+			if(tsumegoFileLink==29824)
+				moreText = 'White can play 2 under the stones tesujis to gain 2 more liberties.<br>';
 			if(tsumegoFileLink==29824 && multipleChoiceLibertiesB==1 && multipleChoiceLibertiesW==2
 			|| tsumegoFileLink==29825 && multipleChoiceLibertiesB==1 && multipleChoiceLibertiesW==2
 			|| tsumegoFileLink==29826 && multipleChoiceLibertiesB==1 && multipleChoiceLibertiesW==2){
@@ -113,6 +116,10 @@ function displayMultipleChoiceResult(num){
 				multipleChoiceLibertiesW = 1;
 				multipleChoiceLibertiesB2 = 5;
 				multipleChoiceLibertiesW2 = 5;
+				if(tsumegoFileLink==29824){
+					multipleChoiceLibertiesB2 = 7;
+					multipleChoiceLibertiesW2 = 7;
+				}
 			}else if(tsumegoFileLink==29827 && multipleChoiceLibertiesB==1 && multipleChoiceLibertiesW==2){
 				multipleChoiceLibertiesB = 1;
 				multipleChoiceLibertiesW = 1;
@@ -139,7 +146,7 @@ function displayMultipleChoiceResult(num){
 			if(multipleChoiceLibertiesW2==1) libPlural1 = "liberty";
 			if(multipleChoiceLibertiesB2==1) libPlural2 = "liberty";
 			mText = "Semeai Type 3: Eye vs no eye.<br>No Seki possible.<br> All inside liberties count for the group with the eye.<br>Black has "+multipleChoiceLibertiesW2
-			+" "+libPlural1+".<br> White has "+multipleChoiceLibertiesB2+" "+libPlural2+".<br>"+mText2;
+			+" "+libPlural1+".<br> White has "+multipleChoiceLibertiesB2+" "+libPlural2+".<br>"+moreText+mText2;
 		}else if(multipleChoiceSemeaiType==4){
 			let x3='';
 			let bx1 = '';

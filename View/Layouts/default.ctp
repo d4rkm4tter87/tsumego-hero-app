@@ -33,10 +33,10 @@
 	<meta name="keywords" content="tsumego, problems, puzzles, baduk, weiqi, tesuji, life and death, solve, solving, hero, go, in-seong, level" >
 	<meta name="Author" content="Joschka Zimdars">
 	<meta property="og:title" content="Tsumego Hero">
-	<link rel="stylesheet" type="text/css" href="/css/default.css?v=3.0">
+	<link rel="stylesheet" type="text/css" href="/css/default.css?v=3.1">
 	<?php
 		if($lightDark=='dark')
-			echo '<link rel="stylesheet" type="text/css" href="/css/dark.css">';
+			echo '<link rel="stylesheet" type="text/css" href="/css/dark.css?v=1.1">';
 		
 		echo $this->Html->meta('icon');
 		echo $this->fetch('meta');
@@ -47,42 +47,48 @@
 	<script type="text/javascript" src="/dist/jgoboard-latest.js"></script>
 	<script src="/js/dark.js"></script>
 	<?php
+		if($user['User']['elo_rating_mode']>=2900) $td = '9d';
+		elseif($user['User']['elo_rating_mode']>=2800) $td = '8d';
+		elseif($user['User']['elo_rating_mode']>=2700) $td = '7d';
+		elseif($user['User']['elo_rating_mode']>=2600) $td = '6d';
+		elseif($user['User']['elo_rating_mode']>=2500) $td = '5d';
+		elseif($user['User']['elo_rating_mode']>=2400) $td = '4d';
+		elseif($user['User']['elo_rating_mode']>=2300) $td = '3d';
+		elseif($user['User']['elo_rating_mode']>=2200) $td = '2d';
+		elseif($user['User']['elo_rating_mode']>=2100) $td = '1d';
+		elseif($user['User']['elo_rating_mode']>=2000) $td = '1k';
+		elseif($user['User']['elo_rating_mode']>=1900) $td = '2k';
+		elseif($user['User']['elo_rating_mode']>=1800) $td = '3k';
+		elseif($user['User']['elo_rating_mode']>=1700) $td = '4k';
+		elseif($user['User']['elo_rating_mode']>=1600) $td = '5k';
+		elseif($user['User']['elo_rating_mode']>=1500) $td = '6k';
+		elseif($user['User']['elo_rating_mode']>=1400) $td = '7k';
+		elseif($user['User']['elo_rating_mode']>=1300) $td = '8k';
+		elseif($user['User']['elo_rating_mode']>=1200) $td = '9k';
+		elseif($user['User']['elo_rating_mode']>=1100) $td = '10k';
+		elseif($user['User']['elo_rating_mode']>=1000) $td = '11k';
+		elseif($user['User']['elo_rating_mode']>=900) $td = '12k';
+		elseif($user['User']['elo_rating_mode']>=800) $td = '13k';
+		elseif($user['User']['elo_rating_mode']>=700) $td = '14k';
+		elseif($user['User']['elo_rating_mode']>=600) $td = '15k';
+		elseif($user['User']['elo_rating_mode']>=500) $td = '16k';
+		elseif($user['User']['elo_rating_mode']>=400) $td = '17k';
+		elseif($user['User']['elo_rating_mode']>=300) $td = '18k';
+		elseif($user['User']['elo_rating_mode']>=200) $td = '19k';
+		elseif($user['User']['elo_rating_mode']>=100) $td = '20k';
+		else $td = '20k';
+		
 		if($mode==1){
-			if(isset($user['User']['level'])) $levelNum = 'Level '.$user['User']['level'];
-			else $levelNum = 1;
-			$xpBarFill = 'xp-bar-fill-c1';
+			if($levelBar==1){
+				if(isset($user['User']['level'])) $levelNum = 'Level '.$user['User']['level'];
+				else $levelNum = 1;
+				$xpBarFill = 'xp-bar-fill-c1';
+			}else{
+				$xpBarFill = 'xp-bar-fill-c2';
+				$levelNum = $td;
+			}
 		}elseif($mode==2){
 			$xpBarFill = 'xp-bar-fill-c2';
-			if($user['User']['elo_rating_mode']>=2900) $td = '9d';
-			elseif($user['User']['elo_rating_mode']>=2800) $td = '8d';
-			elseif($user['User']['elo_rating_mode']>=2700) $td = '7d';
-			elseif($user['User']['elo_rating_mode']>=2600) $td = '6d';
-			elseif($user['User']['elo_rating_mode']>=2500) $td = '5d';
-			elseif($user['User']['elo_rating_mode']>=2400) $td = '4d';
-			elseif($user['User']['elo_rating_mode']>=2300) $td = '3d';
-			elseif($user['User']['elo_rating_mode']>=2200) $td = '2d';
-			elseif($user['User']['elo_rating_mode']>=2100) $td = '1d';
-			elseif($user['User']['elo_rating_mode']>=2000) $td = '1k';
-			elseif($user['User']['elo_rating_mode']>=1900) $td = '2k';
-			elseif($user['User']['elo_rating_mode']>=1800) $td = '3k';
-			elseif($user['User']['elo_rating_mode']>=1700) $td = '4k';
-			elseif($user['User']['elo_rating_mode']>=1600) $td = '5k';
-			elseif($user['User']['elo_rating_mode']>=1500) $td = '6k';
-			elseif($user['User']['elo_rating_mode']>=1400) $td = '7k';
-			elseif($user['User']['elo_rating_mode']>=1300) $td = '8k';
-			elseif($user['User']['elo_rating_mode']>=1200) $td = '9k';
-			elseif($user['User']['elo_rating_mode']>=1100) $td = '10k';
-			elseif($user['User']['elo_rating_mode']>=1000) $td = '11k';
-			elseif($user['User']['elo_rating_mode']>=900) $td = '12k';
-			elseif($user['User']['elo_rating_mode']>=800) $td = '13k';
-			elseif($user['User']['elo_rating_mode']>=700) $td = '14k';
-			elseif($user['User']['elo_rating_mode']>=600) $td = '15k';
-			elseif($user['User']['elo_rating_mode']>=500) $td = '16k';
-			elseif($user['User']['elo_rating_mode']>=400) $td = '17k';
-			elseif($user['User']['elo_rating_mode']>=300) $td = '18k';
-			elseif($user['User']['elo_rating_mode']>=200) $td = '19k';
-			elseif($user['User']['elo_rating_mode']>=100) $td = '20k';
-			else $td = '20k';
 			$levelNum = $td;
 		}elseif($mode==3){
 			$levelNum = '15k';
@@ -312,10 +318,12 @@
 	</div>
 	<?php
 		if(isset($_SESSION['loggedInUser']) && isset($_SESSION['loggedInUser']['User']['id'])){
-			echo '
-				<div id="account-bar-wrapper" onmouseover="xpHover()" onmouseout="xpNoHover()">
+			$accountBarLevelToRating = 'account-bar-user';
+			if($mode==1 && $levelBar==2)
+				$accountBarLevelToRating = 'account-bar-user2';
+			echo '<div id="account-bar-wrapper" onmouseover="xpHover()" onmouseout="xpNoHover()">
 					  <div id="account-bar">
-							<div id="account-bar-user">
+							<div id="'.$accountBarLevelToRating.'" class="account-bar-user-class">
 								<a href="/users/view/'.$_SESSION['loggedInUser']['User']['id'].'">
 									'.$user['User']['name'].'
 								</a>
@@ -409,6 +417,13 @@
 	var PHPSESSID = getCookie("PHPSESSID");
 	setCookie("PHPSESSID", PHPSESSID);
 	
+	<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
+	var barPercent1 = <?php echo $user['User']['xp']/$user['User']['nextlvl']*100; ?>;
+	var barPercent2 = <?php echo substr($user['User']['elo_rating_mode'], -2); ?>;
+	var barLevelNum = "<?php echo 'Level '.$user['User']['level']; ?>";
+	var barRatingNum = "<?php echo $td; ?>";
+	var levelToRatingHover = <?php echo $levelBar; ?>;
+	<?php } ?>
 	<?php
 	if($_SESSION['page']!='level mode'&&$_SESSION['page']!='rating mode'&&$_SESSION['page']!='time mode')
 		echo 'setCookie("mode", 1);';
@@ -462,6 +477,9 @@
 		document.cookie = "ui=0;SameSite=none;Secure=false";
 		document.cookie = "requestProblem=0;SameSite=none;Secure=false";
 		setCookie("lightDark", "<?php echo $lightDark; ?>");
+		setCookie("levelBar", "<?php echo $levelBar; ?>");
+		setCookie("lastProfileLeft", "<?php echo $lastProfileLeft; ?>");
+		setCookie("lastProfileRight", "<?php echo $lastProfileRight; ?>");
 		setCookie("type", "0");
 		<?php
 			if(isset($textureCookies)){
@@ -500,7 +518,13 @@
 
 			<?php
 				if($_SESSION['loggedInUser']['User']['mode']==1){
-					echo '$("#account-bar-user > a").css({color:"#74d14c"});';
+					if($levelBar==1)
+						echo '$(".account-bar-user-class").removeAttr("id");
+						$(".account-bar-user-class").attr("id", "account-bar-user");';
+					else
+						echo '$(".account-bar-user-class").removeAttr("id");
+						$(".account-bar-user-class").attr("id", "account-bar-user2");';
+					
 				}elseif($_SESSION['loggedInUser']['User']['mode']==2){
 					echo '$("#account-bar-user > a").css({color:"#d19fe4"});';
 				}
@@ -747,17 +771,25 @@
 
 		function loadBar(){
 			if(notMode3){
-			<?php if($mode==1){ ?>
-				<?php $barPercent = $user['User']['xp']/$user['User']['nextlvl']*100; ?>
-				$("#xp-increase-fx").css("display","inline-block");
-				$("#xp-bar-fill").css("box-shadow", "-5px 0px 10px #fff inset");
-				<?php echo '$("#xp-bar-fill").css("width","'.$barPercent.'%");'; ?>
-				$("#xp-increase-fx").fadeOut(0);$("#xp-bar-fill").css({"-webkit-transition":"all 0.5s ease","box-shadow":""});
+			
+			<?php $barPercent1 = $user['User']['xp']/$user['User']['nextlvl']*100;
+			$barPercent2 = substr($user['User']['elo_rating_mode'], -2);
+			if($mode==1){ ?>
+				<?php if($levelBar==1){ ?>
+					$("#xp-increase-fx").css("display","inline-block");
+					$("#xp-bar-fill").css("box-shadow", "-5px 0px 10px #fff inset");
+					<?php echo '$("#xp-bar-fill").css("width","'.$barPercent1.'%");'; ?>
+					$("#xp-increase-fx").fadeOut(0);$("#xp-bar-fill").css({"-webkit-transition":"all 0.5s ease","box-shadow":""});
+				<?php }else{ ?>
+					$("#xp-increase-fx").css("display","inline-block");
+					$("#xp-bar-fill").css("box-shadow", "-5px 0px 10px #fff inset");
+					<?php echo '$("#xp-bar-fill").css("width","'.$barPercent2.'%");'; ?>
+					$("#xp-increase-fx").fadeOut(0);$("#xp-bar-fill").css({"-webkit-transition":"all 0.5s ease","box-shadow":""});
+				<?php } ?>
 			<?php }elseif($mode==2){ ?>
-				<?php $barPercent = substr($user['User']['elo_rating_mode'], -2); ?>
 				$("#xp-increase-fx").css("display","inline-block");
 				$("#xp-bar-fill").css("box-shadow", "-5px 0px 10px #fff inset");
-				<?php echo '$("#xp-bar-fill").css("width","'.$barPercent.'%");'; ?>
+				<?php echo '$("#xp-bar-fill").css("width","'.$barPercent2.'%");'; ?>
 				$("#xp-increase-fx").fadeOut(0);$("#xp-bar-fill").css({"-webkit-transition":"all 0.5s ease","box-shadow":""});
 			<?php }elseif($mode==3){ ?>
 				<?php $barPercent = 100; ?>
@@ -775,9 +807,17 @@
 			if(notMode3){
 				<?php
 				if(isset($_SESSION['loggedInUser'])){
-					if($_SESSION['loggedInUser']['User']['mode']==1) echo 'document.getElementById("account-bar-xp").innerHTML = userXP+"/"+userNextLvl;';
-					elseif($_SESSION['loggedInUser']['User']['mode']==2) echo 'if(!usedModeSwitch) document.getElementById("account-bar-xp").innerHTML = userElo;
-					else document.getElementById("account-bar-xp").innerHTML = userXP+"/"+userNextLvl;';
+					if($_SESSION['loggedInUser']['User']['mode']==1){
+						echo '
+						if(levelToRatingHover==1)
+							document.getElementById("account-bar-xp").innerHTML = userXP+"/"+userNextLvl;
+						else
+							if(!usedModeSwitch) document.getElementById("account-bar-xp").innerHTML = userElo;';
+					}elseif($_SESSION['loggedInUser']['User']['mode']==2){
+						echo 'if(!usedModeSwitch) document.getElementById("account-bar-xp").innerHTML = userElo;';
+					}else{
+						echo 'document.getElementById("account-bar-xp").innerHTML = userXP+"/"+userNextLvl;';
+					}
 				}else{
 					echo 'document.getElementById("account-bar-xp").innerHTML = "Level"+userXP+"/"+userNextLvl;';
 				}
@@ -790,10 +830,15 @@
 		function xpNoHover(){
 			if(notMode3){
 				<?php if($mode==1){ ?>
-				document.getElementById("account-bar-xp").innerHTML = "Level"+<?php echo '"'.$level.' "' ?> + userLevel + <?php echo '"'.$td.'"' ?>;
+					if(levelToRatingHover==1)
+						document.getElementById("account-bar-xp").innerHTML = barLevelNum;
+					else{
+						if(!usedModeSwitch) document.getElementById("account-bar-xp").innerHTML = barRatingNum;
+						else document.getElementById("account-bar-xp").innerHTML = barLevelNum;
+					}
 				<?php }elseif($mode==2){ ?>
-					if(!usedModeSwitch) document.getElementById("account-bar-xp").innerHTML = '<?php echo $levelNum; ?>' ;
-					else document.getElementById("account-bar-xp").innerHTML = "Level"+<?php echo '"'.$level.' "' ?> + userLevel;
+					if(!usedModeSwitch) document.getElementById("account-bar-xp").innerHTML = barRatingNum;
+					else document.getElementById("account-bar-xp").innerHTML = barLevelNum;
 				<?php } ?>
 			}
 			document.getElementById("heroProfile").style.display = "none";

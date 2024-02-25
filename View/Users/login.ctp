@@ -1,6 +1,6 @@
 <?php
-	if(isset($_SESSION['loggedInUser'])){
-		echo '<script type="text/javascript">window.location.href = "/sets";</script>';
+	if(isset($_SESSION['loggedInUser']['User']['id'])){
+		echo '<script type="text/javascript">window.location.href = "/";</script>';
 	}
 ?>
 

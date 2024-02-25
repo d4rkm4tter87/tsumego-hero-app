@@ -1,8 +1,11 @@
 	<script src ="/js/previewBoard.js"></script>
 	<div class="homeRight">
-		<p class="title4">Modes</p>
+		<p class="title4 title4right"><?php echo $d1; ?></p>
 		<?php
-			echo '<img id="title-image" src="/img/new-modeselect.png" width="100%" alt="Tsumego Hero Modes" title="Tsumego Hero Modes">';
+			if(isset($_SESSION['loggedInUser']['User']['id']))
+				echo '<img id="title-image" src="/img/modeSelect24.png" width="100%" alt="Tsumego Hero Modes" title="Tsumego Hero Modes">';
+			else
+				echo '<img id="title-image" src="/img/modeSelect24x.png" width="100%" alt="Tsumego Hero Modes" title="Tsumego Hero Modes">';
 		?>
 		<br>
 			<?php
@@ -90,16 +93,64 @@
 			</li>
 			<br><br>
 		</div>
+		
+		<p class="title4">Update 25.02.2024</p>
+		<div class="new1">
+		<b>Overall rating</b><br><br>
+		<div id="progressBarInLevelMode">
+		Progress bar in level mode:<br>
+		<?php
+			$levelBarDisplayChecked1 = '';
+			$levelBarDisplayChecked2 = '';
+			if($levelBar==1)
+				$levelBarDisplayChecked1 = 'checked="checked"';
+			else
+				$levelBarDisplayChecked2 = 'checked="checked"';
+		?>
+		<input type="radio" id="levelBarDisplay1" name="levelBarDisplay" value="1" onclick="levelBarChange(1);" <?php echo $levelBarDisplayChecked1; ?>> <b id="levelBarDisplay1text">Show level</b><br>
+		<input type="radio" id="levelBarDisplay2" name="levelBarDisplay" value="2" onclick="levelBarChange(2);" <?php echo $levelBarDisplayChecked2; ?>> <b id="levelBarDisplay2text">Show rating (new)</b><br>
+		<br>
+		</div>
+		With this update, Tsumego attempts in any mode affect the user rating.<br>
+		<?php
+		$link1 = '';
+		$link2 = '';
+		$link3 = '';
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			$link1 = '/tsumegos/play/'.$_SESSION['lastVisit'].'?mode=1';
+			$link2 = '/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2';
+			$link3 = '/ranks/overview';
+		}
+		?>
+		• <a href="<?php echo $link1; ?>" style="color:#74d14c">Level mode</a> problems affect level and user rating.<br>
+		• <a href="<?php echo $link2; ?>" style="color:#c240f7">Rating mode</a> is the same as before, but all formulas for user and tsumego rating calculation have been improved.<br>
+		• <a href="<?php echo $link3; ?>" style="color:#ca6658">Time mode</a> also affects the user rating.<br><br>
+		
+		<b>Rewards:</b> Every Sunday, the 3 highest rated users that have no premium account get a premium upgrade. Next prize giving: 03.03.24. To give everyone a fresh start, all user ratings have been reset.<br><br>
+		
+		<b>Profile page</b><br><br>
+		<?php
+		if(isset($_SESSION['loggedInUser']['User']['id']))
+			echo 'The <a href="/users/view/'.$_SESSION['loggedInUser']['User']['id'].'">profile page</a> contains more data and is organized in line and bar charts.';
+		else
+			echo 'The profile page contains more data and is organized in line and bar charts.';
+		?>
+		<br>
+		<br>
+		<div align="center">
+		<img src="/img/profile-display-example.PNG" title="profile-display-example" alt="profile-display-example" width="65%">
+		<br>
+		</div>
+		</div>
 		<p class="title4">Update 01.02.2024</p>
 		<div class="new1">
 		<b>Explanation for the duplicate update on 01.02.2024</b><br><br>
 		
 		We decided to merge the duplicate problems on the website. This means, that when you solve a problem and it has duplicates,
 		it is also solved in other collections. When you had a collection complete and there were unsolved problems again on 
-		1. February, it means that duplicates were merged and you need to solve it again for all occurences of that board position.</a><br><br>
+		1. February, it means that duplicates were merged and you need to solve it again for all occurences of that board position.<br><br>
 		<div align="center">
 		<img src="/img/duplicate-explanation.JPG" title="duplicate-explanation" alt="duplicate-explanation" width="70%">
-		
 		<br>
 		</div>
 		</div>
@@ -332,7 +383,7 @@
 	</div>
 	
 	<div class="homeLeft">
-		<p class="title4">Most Recent Achievements | <?php echo $d1; ?></p>
+		<p class="title4">Most Recent Achievements</p>
 		<?php
 			$quotePick = ceil(substr($quote, 1)/3);
 			
@@ -340,7 +391,7 @@
 			if(!isset($_SESSION['lastVisit'])) $_SESSION['lastVisit'] = 15352;
 			$modeActions = '';
 			$modeActions2 = 'class="modeboxes"';
-			if(isset($_SESSION['loggedInUser']) && $ac) $modeActions = 'class="modeboxes" onmouseover="mode2hover()" onmouseout="modeNoHover()" onclick="goMode2()"';
+			if(isset($_SESSION['loggedInUser']) && $ac) $modeActions = 'class="modeboxes" onmouseover="mode2hover()" onmouseout="modeNoHover()"';
 			if($ac) $modeActions2 = 'class="modeboxes"';
 			else $modeActions2 = 'class="modeboxes"';
 		
@@ -378,45 +429,34 @@
 			}
 			*/
 		?>
-		
-		<div class="modeBox1" onmouseover="mode1hover()" onmouseout="modeNoHover()" onclick="goMode1()">
-			<div class="modeboxes">
-				<a class="new-button main-page" style="font-size:14px;" href="<?php echo '/tsumegos/play/'.$_SESSION['lastVisit'].'?mode=1'; ?>">Play</a>
-			</div>
-		</div>
-		<div class="modeBox2" style="<?php if($ac) echo 'cursor:pointer;';?>" <?php echo $modeActions ?>>
-			<div <?php echo $modeActions2 ?>>
-				<?php 
-				if(isset($_SESSION['loggedInUser']) && $ac){
-					if(isset($nextMode['Tsumego']['id'])){
-						if($nextMode['Tsumego']['id']==null) $nextMode['Tsumego']['id'] = 15352;
-					}else{
-						$nextMode['Tsumego']['id'] = 15352;
-					}
-					
-					echo '<a class="new-button main-page" style="font-size:14px;" href="/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2'.'">play</a>'; 
-				}else echo '<a id="modeboxes2" class="new-button-inactive main-page" style="font-size:14px;">sign in</a>'; 
-				?>
-			</div>
-		</div>
-		<?php 
-		if(isset($_SESSION['loggedInUser'])) $modeActions3 = 'onmouseover="mode3hover()" onmouseout="modeNoHover()" onclick="goMode3()" style="cursor:pointer;"';
-		else $modeActions3 = '';
-		?>
-		<div class="modeBox3" <?php echo $modeActions3; ?> >
-			<div class="modeboxes">
-				<?php if(isset($_SESSION['loggedInUser'])){ ?>
-					<a class="new-button main-page" style="font-size:14px;" href="<?php echo '/ranks/overview'; ?>">Play</a>
-				<?php }else{ ?>
-					<a id="modeboxes2" class="new-button-inactive main-page" style="font-size:14px;">sign in</a>
-				<?php } ?>
-			</div>
-		</div>
+		<a href="/tsumegos/play/<?php echo $_SESSION['lastVisit']; ?>?mode=1">
+			<div class="modeBox1" onmouseover="mode1hover()" onmouseout="modeNoHover()"></div>
+		</a>
+		<a href="/tsumegos/play/<?php echo $_SESSION['lastVisit']; ?>?mode=1">
+			<div class="modeBox11" onmouseover="mode1hover()" onmouseout="modeNoHover()"></div>
+		</a>
+		<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
+		<a href="/tsumegos/play/<?php echo $nextMode['Tsumego']['id']; ?>?mode=2">
+			<div class="modeBox2" onmouseover="mode2hover()" onmouseout="modeNoHover()"></div>
+		</a>
+		<a href="/tsumegos/play/<?php echo $nextMode['Tsumego']['id']; ?>?mode=2">
+			<div class="modeBox22" onmouseover="mode2hover()" onmouseout="modeNoHover()"></div>
+		</a>
+		<a href="/ranks/overview">
+			<div class="modeBox3" onmouseover="mode3hover()" onmouseout="modeNoHover()"></div>
+		</a>
+		<a href="/ranks/overview">
+			<div class="modeBox33" onmouseover="mode3hover()" onmouseout="modeNoHover()"></div>
+		</a>
+		<a href="/achievements">
+			<div class="modeBox4" onmouseover="mode4hover()" onmouseout="modeNoHover()"></div>
+		</a>
+		<a href="/achievements">
+			<div class="modeBox44" onmouseover="mode4hover()" onmouseout="modeNoHover()"></div>
+		</a>
 		<?php
-		
-		
+		}
 		echo '<img src="/img/new_startpage/'.$quotePick.'.PNG" width="100%" alt="Tsumego Hero Message of the Day" title="Tsumego Hero Message of the Day">';
-		
 		/*
 		<div class="danielml-bg">
 		<br>
@@ -542,28 +582,28 @@
 		<div class="new1">
 			<table class="newx" border="0">
 				<tr>
-					<td><h1>04.02.2024</h1></td>
-					<td><h1>yorifumi</h1></td>
-					<td><h1>40,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>02.02.2024</h1></td>
-					<td><h1>Tom Sokec </h1></td>
+					<td><h1>24.02.2024</h1></td>
+					<td><h1>Younes Driouiche</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<tr>
-					<td><h1>31.01.2024</h1></td>
-					<td><h1>ellehooq </h1></td>
-					<td><h1>5,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>29.01.2024</h1></td>
-					<td><h1>Olivier Dodinval </h1></td>
+					<td><h1>22.02.2024</h1></td>
+					<td><h1>Trianguli</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<tr>
-					<td><h1>28.01.2024</h1></td>
-					<td><h1>Allan Crossman's Coding Services </h1></td>
+					<td><h1>21.02.2024</h1></td>
+					<td><h1>Enrico Alvares</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>19.02.2024</h1></td>
+					<td><h1>Tigran</h1></td>
+					<td><h1>15,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>18.02.2024</h1></td>
+					<td><h1>Josechu</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<!--
@@ -788,25 +828,27 @@
 			document.getElementById("sandboxVolunteers").style = "display:none;";
 		}
 		function mode1hover(){
-			 $("#title-image").attr("src", "/img/new-modeselect1.png");
+			<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
+				$("#title-image").attr("src", "/img/modeSelect24-1.png");
+			<?php }else{ ?>
+				$("#title-image").attr("src", "/img/modeSelect24x-1.png");
+			<?php } ?>
 		}
 		function mode2hover(){
-			 $("#title-image").attr("src", "/img/new-modeselect2.png");
+			$("#title-image").attr("src", "/img/modeSelect24-2.png");
 		}
 		function mode3hover(){
-			 $("#title-image").attr("src", "/img/new-modeselect3.png");
+			$("#title-image").attr("src", "/img/modeSelect24-3.png");
+		}
+		function mode4hover(){
+			$("#title-image").attr("src", "/img/modeSelect24-4.png");
 		}
 		function modeNoHover(){
-			 $("#title-image").attr("src", "/img/new-modeselect.png");
-		}
-		function goMode1(){
-			<?php echo 'window.location.href = "/tsumegos/play/'.$_SESSION['lastVisit'].'?mode=1";'; ?>
-		}
-		function goMode2(){
-			<?php echo 'window.location.href = "/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2";'; ?>
-		}
-		function goMode3(){
-			<?php echo 'window.location.href = "/ranks/overview";'; ?>
+			<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
+				$("#title-image").attr("src", "/img/modeSelect24.png");
+			<?php }else{ ?>
+				$("#title-image").attr("src", "/img/modeSelect24x.png");
+			<?php } ?>
 		}
 		let textBuffer = "";
 		function getContent(){
@@ -868,8 +910,14 @@
 		
 		?>
 	</script>
-	
-	
-	
+	<?php
+	if(!isset($_SESSION['loggedInUser']['User']['id'])){
+		echo '<style>
+		#progressBarInLevelMode{
+			display:none;
+		}
+		</style>';
+	}
+	?>
 	
 		

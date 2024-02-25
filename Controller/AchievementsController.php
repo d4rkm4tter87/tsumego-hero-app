@@ -34,6 +34,7 @@ class AchievementsController extends AppController {
 	public function view($id=null){
 		$_SESSION['page'] = 'user';
 		$_SESSION['title'] = 'Tsumego Hero - Achievements';
+		$this->LoadModel('AchievementCondition');
 		$this->LoadModel('AchievementStatus');
 		$this->LoadModel('User');
 		$a = $this->Achievement->findById($id);
@@ -41,7 +42,7 @@ class AchievementsController extends AppController {
 		$as = array();
 		$asAll = $this->AchievementStatus->find('all', array('order' => 'created DESC','conditions' => array('achievement_id' => $id)));
 		$aCount = count($asAll);
-		if(isset($_SESSION['loggedInUser'])){
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			$as = $this->AchievementStatus->find('first', array('conditions' => array('achievement_id' => $id, 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
 		}
 		if(!empty($as)){
@@ -59,6 +60,18 @@ class AchievementsController extends AppController {
 			array_push($asAll2, $asAll[$i]);
 		}
 		$asAll = $asAll2;
+		
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			$acGolden = $this->AchievementCondition->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 'golden')));
+			if(count($acGolden)==0)
+				$acGoldenCount = 0;
+			else
+				$acGoldenCount = $acGolden[0]['AchievementCondition']['value'];
+			if(!empty($as))
+				$acGoldenCount = 10;
+			if($a['Achievement']['id']==97)
+				$a['Achievement']['additionalDescription'] = 'Progress: '.$acGoldenCount.'/10';
+		}
 		
 		$this->set('a', $a);
 		$this->set('as', $as);

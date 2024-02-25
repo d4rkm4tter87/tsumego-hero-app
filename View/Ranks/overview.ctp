@@ -225,6 +225,7 @@
 		} 
 	}	
 	?>
+	$("#account-bar-user2 a").css("color", "rgb(202, 102, 88)");
 	$("#xp-bar-fill").attr("class", "xp-bar-fill-c3");
 	$("#xp-bar-fill").removeClass("xp-bar-fill-c2");
 	$("#xp-bar-fill").removeClass("xp-bar-fill-c1");

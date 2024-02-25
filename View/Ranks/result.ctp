@@ -162,16 +162,16 @@
 	elseif($ro['RankOverview']['rank']=='4d') $alertRank = '5d';
 	?>
 		<label>
-		  <input type="checkbox" class="alertCheckbox1" autocomplete="off" />
-		  <div class="alertBox alertInfo">
+		  <input type="checkbox" class="alertCheckbox1" id="alertCheckbox" autocomplete="off" />
+		  <div class="alertBox alertInfo" id="alertInfo">
 			<div class="alertBanner" align="center">
 			Unlocked
 			<span class="alertClose">x</span>
 			</div>
 			<span class="alertText">
 			<?php
-			echo '<img id="hpIcon1" src="/img/rankButton'.$alertRank.'.png">
-			You unlocked the '.$alertRank.' '.$alertCategory.' rank. <a href="/ranks/overview">Play</a><br>'
+			echo '<a style="color:black;text-decoration:none;" href="/ranks/overview"><img id="hpIcon1" src="/img/rankButton'.$alertRank.'.png">
+			You unlocked the '.$alertRank.' '.$alertCategory.' rank.</a><br>'
 			?>
 			<br class="clear1"/></span>
 		  </div>
@@ -201,7 +201,7 @@
 			}
 		?>
 		$(document).ready(function(){
-		
+			$("#account-bar-user2 a").css("color", "rgb(202, 102, 88)");
 			$("#xp-bar-fill").attr("class", "xp-bar-fill-c3");
 			$("#xp-bar-fill").removeClass("xp-bar-fill-c2");
 			$("#xp-bar-fill").removeClass("xp-bar-fill-c1");
@@ -230,7 +230,9 @@
 		});
 		
 		
-		
+		$("#alertCheckbox").change(function(){
+			$("#alertInfo").fadeOut(500);
+		});
 		
 		
 		

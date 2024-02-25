@@ -20,7 +20,7 @@ CSV Files:<br>
 ?> 
 
 
-<table width="85%" border="0" class="userstatsstbale">
+<table width="85%" border="1" class="userstatsstbale">
 	<tr>
 		<td colspan="7">
 		<?php

@@ -1490,7 +1490,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		margin:0;
 		font-family:Arial;
 	}
-	#account-bar-user{
+	#account-bar-user, #account-bar-user2{
 		font-family: "Arial Black",verdana,helvetica,arial,sans-serif;
 		letter-spacing: 1px;
 		position:absolute;
@@ -1504,8 +1504,13 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		color: rgb(209, 159, 228);
 	}
 	#account-bar-user a{
-		text-decoration:none;
 		color:#74d14c;
+		text-decoration:none;
+		white-space:nowrap;
+	}
+	#account-bar-user2 a{
+		color:#d19fe4;
+		text-decoration:none;
 		white-space:nowrap;
 	}
 	#xp-bar{
@@ -1601,42 +1606,100 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		border-radius:0px;
 		-webkit-filter:blur(2px);
 	}
-	.modeboxes{
-		padding: 210px 29.2% 2px 29.2%;
-		width: 100%;
+	#profileRankImage{
+		position:relative;
+		top:-7px;
 	}
 	.modeBox1{
 		cursor:pointer;
 		float:left;
 		position:absolute;
-		top: 79px;
-		left: 674px;
-		width: 171px;
-		height: 246px;
-		border-radius: 26px 26px 26px 26px;
-		-moz-border-radius: 26px 26px 26px 26px;
-		-webkit-border-radius: 26px 26px 26px 26px;
+		top: 156px;
+	  left: 661px;
+	  width: 134px;
+	  height: 36px;
+		border-radius: 18px;
+		-moz-border-radius: 18px;
+		-webkit-border-radius: 18px;
+	}
+	.modeBox11{
+		cursor:pointer;
+		float:left;
+		position:absolute;
+		top: 74px;
+	  left: 701px;
+	  width: 55px;
+	  height: 79px;
+		border-radius: 42px;
+		-moz-border-radius: 42px;
+		-webkit-border-radius: 42px;
 	}
 	.modeBox2{
 		float:left;
 		position:absolute;
-		top: 79px;
-		left: 869px;
-		width: 171px;
-		height: 246px;
-		border-radius: 26px 26px 26px 26px;
-		-moz-border-radius: 26px 26px 26px 26px;
-		-webkit-border-radius: 26px 26px 26px 26px;
+		top: 156px;
+	  left: 812px;
+	  width: 134px;
+	  height: 36px;
+		border-radius: 18px;
+		-moz-border-radius: 18px;
+		-webkit-border-radius: 18px;
+	}
+	.modeBox22{
+		cursor:pointer;
+		float:left;
+		position:absolute;
+		top: 70px;
+	  left: 855px;
+	  width: 47px;
+	  height: 83px;
+		border-radius: 42px;
+		-moz-border-radius: 42px;
+		-webkit-border-radius: 42px;
 	}
 	.modeBox3{
 		position:absolute;
-		top: 80px;
-		left: 1065px;
-		width: 167px;
-		height: 244px;
-		border-radius: 26px 26px 26px 26px;
-		-moz-border-radius: 26px 26px 26px 26px;
-		-webkit-border-radius: 26px 26px 26px 26px;
+		top: 156px;
+	  left: 962px;
+	  width: 134px;
+	  height: 36px;
+		border-radius: 18px;
+		-moz-border-radius: 18px;
+		-webkit-border-radius: 18px;
+	}
+	.modeBox33{
+		cursor:pointer;
+		float:left;
+		position:absolute;
+		top: 67px;
+	  left: 1007px;
+	  width: 44px;
+	  height: 87px;
+		border-radius: 42px;
+		-moz-border-radius: 42px;
+		-webkit-border-radius: 42px;
+	}
+	.modeBox4{
+		position:absolute;
+		top: 156px;
+	  left: 1111px;
+	  width: 134px;
+	  height: 36px;
+		border-radius: 18px;
+		-moz-border-radius: 18px;
+		-webkit-border-radius: 18px;
+	}
+	.modeBox44{
+		cursor:pointer;
+		float:left;
+		position:absolute;
+		top: 88px;
+	  left: 1159px;
+	  width: 42px;
+	  height: 42px;
+		border-radius: 42px;
+		-moz-border-radius: 42px;
+		-webkit-border-radius: 42px;
 	}
 	.time-mode-play{
 		position:absolute;
@@ -2032,8 +2095,6 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.homeCenter2{
 		width:100%;
 		text-align:justify;
-		background-color:#2a2a2a;
-		color:#fff;
 	}
 	.homeCenter3{
 		width:50%;
@@ -2128,8 +2189,6 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		font-weight: 400;
 		line-height: 20px;
 		text-decoration:none;
-		background-color:#2a2a2a;
-		color:#fff;
 	}
 	.title4date{
 		float:right;
@@ -2486,6 +2545,9 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		position:absolute;
 		right:0;
 		top:0;
+	}
+	.title4right{
+		text-align:right;
 	}
 	.new1{
 		background: linear-gradient(#fff, #f2f2f2);
@@ -3728,6 +3790,93 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	}
 	.duplicateTable{
 		max-width:800px;
+	}
+	#levelBarDisplay1{
+		width: 15px;
+		height: 15px;
+		accent-color: #74d14c;
+	}
+	#levelBarDisplay1text{
+		color: #74d14c;
+	}
+	#levelBarDisplay2{
+		width: 15px;
+		height: 15px;
+		accent-color: #8130a2;
+	}
+	#levelBarDisplay2text{
+		color: #8130a2;
+	}
+	#chart1, #chart11{
+	  max-width: 650px;
+	  margin: 12px auto;
+	}
+	#chart1, #chart11, .chart-box {
+		padding-top: 20px;
+		padding-left: 10px;
+		background: #fff;
+		border: 1px solid #ddd;
+		box-shadow: 0 22px 35px -16px rgba(0,0,0, 0.1);
+	}
+	#chart2, #chart22{
+	  max-width: 650px;
+	  margin: 12px auto;
+	}
+	#chart2, #chart22, .chart-box {
+		padding-top: 20px;
+		padding-left: 10px;
+		background: #fff;
+		border: 1px solid #ddd;
+		box-shadow: 0 22px 35px -16px rgba(0,0,0, 0.1);
+	}
+	#chart3, #chart33{
+	  max-width: 650px;
+	  margin: 12px auto;
+	}
+	#chart3, #chart33, .chart-box {
+		padding-top: 20px;
+		padding-left: 10px;
+		background: #fff;
+		border: 1px solid #ddd;
+		box-shadow: 0 22px 35px -16px rgba(0,0,0, 0.1);
+	}
+	.h1profile h1, .profileTable2 a{
+		color:black;
+	}
+	select.flat-select {
+		-moz-appearance: none;
+		-webkit-appearance: none;
+		appearance: none;
+		border: 0 none;
+		border-radius: 3px;
+		color: #fff;
+		font-family: arial,tahoma;
+		font-size: 16px;
+		font-weight: bold;
+		outline: 0 none;
+		height: 33px;
+		padding: 5px 20px 5px 10px;
+		text-align: center;
+		text-indent: 0.01px;
+		text-overflow: "";
+		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+		transition: all 0.3s ease 0s;
+		width: auto;
+		-webkit-transition: 0.3s ease all;
+		-moz-transition: 0.3s ease all;
+		-ms-transition: 0.3s ease all;
+		-o-transition: 0.3s ease all;
+		transition: 0.3s ease all;
+	}
+	select.flat-select:focus, select.flat-select:hover {
+		border: 0;
+		outline: 0;
+	}
+	.apexcharts-canvas {
+		margin: 0 auto;
+	}
+	.apexcharts-active{
+		color:black;
 	}
 	
 	.uotd1{background: url(/img/uotd1.png);background-size:99%;background-repeat:no-repeat;}

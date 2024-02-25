@@ -740,7 +740,7 @@ class SetsController extends AppController{
 		$formChange = false;
 		$achievementUpdate = array();
 
-		if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['isAdmin']>0){
+		if(isset($_SESSION['loggedInUser']['User']['id'])){if($_SESSION['loggedInUser']['User']['isAdmin']>0){
 			$aad = $this->AdminActivity->find('first', array('order' => 'id DESC'));
 			if($aad['AdminActivity']['file'] == '/delete'){
 				$scDelete = $this->SetConnection->find('first', array('order' => 'created DESC','conditions' => array('tsumego_id' => $aad['AdminActivity']['tsumego_id'])));
@@ -753,7 +753,6 @@ class SetsController extends AppController{
 
 		if(isset($this->params['url']['add'])){
 			$overallCount = $this->Tsumego->find('first', array('order' => 'id DESC'));
-			
 			$scTcount = $this->SetConnection->find('first', array('conditions' => array('set_id' => $id, 'num' => 1)));
 			$setCount = $this->Tsumego->findById($scTcount['SetConnection']['tsumego_id']);
 			$setCount['Tsumego']['id'] = $overallCount['Tsumego']['id'] + 1;
@@ -782,8 +781,6 @@ class SetsController extends AppController{
 
 		if($id!=1){
 			$set = $this->Set->find('first', array('conditions' =>  array('id' => $id)));
-			//$ts = $this->Tsumego->find('all', array('order' => 'num', 'direction' => 'ASC', 'conditions' => array('set_id' => $id)));
-			
 			$ts = array();
 			$scTs = $this->SetConnection->find('all', array('conditions' => array('set_id' => $set['Set']['id'])));
 			
@@ -796,10 +793,8 @@ class SetsController extends AppController{
 				for($j=0;$j<count($scTs2);$j++)
 					if(count($scTs2)>1 && $scTs2[$j]['SetConnection']['set_id']==$set['Set']['id'])
 						$scT['Tsumego']['duplicateLink'] = '?sid='.$scT['Tsumego']['set_id'];
-				
 				array_push($ts, $scT);
 			}
-			
 			$tsBuffer = array();
 			$tsBufferLowest=10000;
 			$tsBufferHighest=0;
@@ -1009,19 +1004,22 @@ class SetsController extends AppController{
 			}
 			if(isset($this->data['Tsumego'])){
 				if(!$formChange){
+					$scFormChange = $this->SetConnection->find('first', array('order' => 'num DESC', 'conditions' => array('set_id' => $id)));
+					$tFormChange = $this->Tsumego->findById($scFormChange['SetConnection']['tsumego_id']);
 					$tf = array();
 					$tf['Tsumego']['num'] = $this->data['Tsumego']['num'];
-					$tf['Tsumego']['difficulty'] =  50;
+					$tf['Tsumego']['difficulty'] = 40;
 					$tf['Tsumego']['set_id'] =  $id;
 					$tf['Tsumego']['variance'] =  $this->data['Tsumego']['variance'];
 					$tf['Tsumego']['description'] =  $this->data['Tsumego']['description'];
 					$tf['Tsumego']['hint'] =  $this->data['Tsumego']['hint'];
 					$tf['Tsumego']['author'] =  $this->data['Tsumego']['author'];
+					$tf['Tsumego']['elo_rating_mode'] = $tFormChange['Tsumego']['elo_rating_mode'];
 					if(is_numeric($this->data['Tsumego']['num'])){
 						if($this->data['Tsumego']['num']>=0){
 							$this->Tsumego->create();
 							$this->Tsumego->save($tf);
-							$tfSetHighestId = $this->Tsumego->find('first',  array('order' => 'id DESC'));
+							$tfSetHighestId = $this->Tsumego->find('first', array('order' => 'id DESC'));
 							$tfSetConnection = array();
 							$tfSetConnection['SetConnection']['set_id'] = $id;
 							$tfSetConnection['SetConnection']['tsumego_id'] = $tfSetHighestId['Tsumego']['id'];
@@ -1033,7 +1031,6 @@ class SetsController extends AppController{
 					$tsIds = array();
 					//$ts = $this->Tsumego->find('all', array('order' => 'num', 'direction' => 'DESC', 'conditions' => array('set_id' => $id)));
 					$ts = $this->findTsumegoSet($id);
-					//echo '<pre>'; print_r($tf); echo '</pre>';
 					for($i=0; $i<count($ts); $i++) 
 						array_push($tsIds, $ts[$i]['Tsumego']['id']);
 				}
@@ -1108,7 +1105,7 @@ class SetsController extends AppController{
 		$_SESSION['title'] = $set['Set']['title'].' on Tsumego Hero';
 		$set['Set']['anz'] = count($ts);
 
-		if(isset($_SESSION['loggedInUser'])){
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			$uts = $this->TsumegoStatus->find('all', array('conditions' =>  array(
 				'user_id' => $_SESSION['loggedInUser']['User']['id'],
 				'tsumego_id' => $tsIds
@@ -1117,7 +1114,6 @@ class SetsController extends AppController{
 				'user_id' => $_SESSION['loggedInUser']['User']['id'],
 				'tsumego_id' => $tsIds
 			)));
-			
 			for($i=0; $i<count($uts); $i++){
 				for($j=0; $j<count($ts); $j++){
 					if($uts[$i]['TsumegoStatus']['tsumego_id'] == $ts[$j]['Tsumego']['id']){
@@ -1192,11 +1188,8 @@ class SetsController extends AppController{
 		if($t==null) $t = $ts[0];
 		$set['Set']['t'] = $t['Tsumego']['id'];
 		
-		//$tfs = $this->Tsumego->find('all', array('order' => 'num DESC', 'conditions' => array('set_id' => $id)));
 		$tfs = $this->findTsumegoSet($id);
-
 		$scoring = true;
-
 		if(isset($_SESSION['loggedInUser'])){
 			if(isset($this->data['Comment']['reset'])){
 				if($this->data['Comment']['reset']=='reset'){
@@ -1214,7 +1207,6 @@ class SetsController extends AppController{
 					$refreshView = true;
 				}
 			}
-
 			$pd = $this->ProgressDeletion->find('all', array('conditions' => array(
 				'user_id' => $_SESSION['loggedInUser']['User']['id'],
 				'set_id' => $id
@@ -1232,15 +1224,20 @@ class SetsController extends AppController{
 			$pFsum = 0;
 			for($i=0; $i<count($ts); $i++){
 				$tss = 0;
-				if($ts[$i]['Tsumego']['seconds']!=''){
-					if($ts[$i]['Tsumego']['seconds']==0) $ts[$i]['Tsumego']['seconds'] = 60;
+				if($ts[$i]['Tsumego']['seconds']=='' || $ts[$i]['Tsumego']['seconds']==0)
+					$tss = 60;
+				else
 					$tss = $ts[$i]['Tsumego']['seconds'];
-					$urSecAvg += $ts[$i]['Tsumego']['seconds'];
-					$urSecCounter++;
-				}
-
-				$pS = substr_count($ts[$i]['Tsumego']['performance'], '1');
-				$pF = substr_count($ts[$i]['Tsumego']['performance'], 'F');
+				$urSecAvg += $tss;
+				$urSecCounter++;
+				
+				$tss2 = 'F';
+				if($ts[$i]['Tsumego']['performance']=='')
+					$tss2 = 'F';
+				else
+					$tss2 = $ts[$i]['Tsumego']['performance'];
+				$pS = substr_count($tss2, '1');
+				$pF = substr_count($tss2, 'F');
 				$pSsum += $pS;
 				$pFsum += $pF;
 			}
@@ -1254,8 +1251,8 @@ class SetsController extends AppController{
 			else
 				$accuracy = round($pSsum/($pSsum+$pFsum)*100, 2);
 			
-			if($urSecCounter<100) $avgTime2 = 60;
-			else $avgTime2 = $avgTime;
+			$avgTime2 = $avgTime; 
+			
 			$achievementUpdate2 = array();
 			if($set['Set']['solved']>=100){
 				if($set['Set']['id']!=210){
@@ -1270,6 +1267,8 @@ class SetsController extends AppController{
 					$achievementUpdate2 = $this->setAchievementSpecial('cc3');
 				}else if($id==190||$id==193||$id==198){
 					$achievementUpdate2 = $this->setAchievementSpecial('1000w1');
+				}else if($id==216){
+					$achievementUpdate2 = $this->setAchievementSpecial('1000w2');
 				}
 				$achievementUpdate = array_merge($achievementUpdate1, $achievementUpdate2);
 			}
