@@ -233,6 +233,7 @@ class TsumegosController extends AppController{
 		$currentRank2 = null;
 		$nothingInRange = false;
 		$avActive = true;
+		$avActive2 = true;
 		
 		if(isset($this->params['url']['sid']))
 			if(strpos($this->params['url']['sid'], '?')>0)
@@ -505,14 +506,17 @@ class TsumegosController extends AppController{
 		
 		$activityValue = $this->getActivityValue($_SESSION['loggedInUser']['User']['id'], $t['Tsumego']['id']);
 		$eloDifference = abs($_SESSION['loggedInUser']['User']['elo_rating_mode'] - $t['Tsumego']['elo_rating_mode']);
-		if($_SESSION['loggedInUser']['User']['elo_rating_mode'] > $t['Tsumego']['elo_rating_mode'])
+		
+		if($_SESSION['loggedInUser']['User']['elo_rating_mode'] > $t['Tsumego']['elo_rating_mode']){
 			$eloBigger = 'u';
-		else
+			if($eloDifference > 700)
+				$avActive2 = false;
+		}else
 			$eloBigger = 't';
 		$newUserEloW = $this->getNewElo($eloDifference, $eloBigger, $activityValue[0], 'w');
 		$newUserEloL = $this->getNewElo($eloDifference, $eloBigger, $activityValue[0], 'l');
 		
-		if($activityValue[1]==0){
+		if($activityValue[1]==0 && $avActive2){
 			$eloScore = $newUserEloW['user'];
 			$eloScore2 = $newUserEloL['user'];
 			$avActive = true;
@@ -2168,16 +2172,22 @@ class TsumegosController extends AppController{
 			echo '</tr>';
 		}
 		echo '</table>';
+		
+		echo '<pre>'; print_r($newUserEloW); echo '</pre>';
+		echo '<pre>'; print_r($newUserEloL); echo '</pre>';
+		echo '<pre>'; print_r($eloScore); echo '</pre>';
+		echo '<pre>'; print_r($eloScore2); echo '</pre>';
+		echo '<pre>'; print_r($activityValue); echo '</pre>';
 		*/
-		//echo '<pre>'; print_r($newUserEloW); echo '</pre>';
-		//echo '<pre>'; print_r($newUserEloL); echo '</pre>';
-		//echo '<pre>'; print_r($t['Tsumego']['elo_rating_mode']); echo '</pre>';
 		
 		if($avActive==true)
 			$avActiveText = '';
 		else
 			$avActiveText = '<font style="color:gray;"> (recently played)</font>';
 		
+		if($avActive2==false)
+			$avActiveText = '<font style="color:gray;"> (out of range)</font>';
+			
 		$this->set('activityValue', $activityValue);
 		$this->set('avActiveText', $avActiveText);
 		$this->set('nothingInRange', $nothingInRange);
@@ -2261,25 +2271,6 @@ class TsumegosController extends AppController{
 		$this->set('tv', $tv);
     }
 	
-	public function rating($id=null){
-		$this->loadModel('TsumegoAttempt');
-		
-		$t = $this->Tsumego->findById($id);
-		$sc = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $id)));
-		$s = $this->Set->findById($sc['SetConnection']['set_id']);
-		$name = $s['Set']['title'].' - '.$t['Tsumego']['num'];
-		$ta = $this->TsumegoAttempt->find('all', array('order' => 'created ASC', 'conditions' => array(
-			'tsumego_id' => $id,
-			'NOT' => array(
-				'tsumego_elo' => 0
-			)
-		)));
-		$this->set('rating', $t['Tsumego']['elo_rating_mode']);
-		$this->set('name', $name);
-		$this->set('ta', $ta);
-		$this->set('id', $id);
-	}
-	
 	public function valuetable(){
 		$win = array();
 		$loss = array();
@@ -2298,7 +2289,7 @@ class TsumegosController extends AppController{
 		$add = 50;
 		$activityValue = 29;
 		
-		while($activityValue<=70){
+		while($activityValue<=90){
 			$u = 500;
 			$t = 1600;
 			$add = 50;
@@ -2332,15 +2323,15 @@ class TsumegosController extends AppController{
 				//echo '<pre>'; print_r('user elo:'.$u.', diff:'.$diff.', ('.$varianceLoss.'), loss:'.$userEloLoss); echo '</pre>';
 				if($t>$u)
 					$diff *= -1;
-				if($activityValue==10){
+				if($activityValue==29){
 					$win[$diff] = round($varianceWin, 2);
 					$loss[$diff] = round($varianceLoss, 2);
 					$twin[$diff] = round($varianceTsumegoWin);
 					$tloss[$diff] = round($varianceTsumegoLoss);
-				}else if($activityValue==40){
+				}else if($activityValue==49){
 					$win2[$diff] = round($varianceWin, 2);
 					$loss2[$diff] = round($varianceLoss, 2);
-				}else if($activityValue==70){
+				}else if($activityValue==69){
 					$win3[$diff] = round($varianceWin, 2);
 					$loss3[$diff] = round($varianceLoss, 2);
 				}else{

@@ -383,6 +383,23 @@ class AppController extends Controller{
 	}
 	
 	public function getNewElo($diff, $eloBigger, $activityValue, $outcome){
+		$kFactor1 = 1;
+		$kFactor2 = 1;
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			if($_SESSION['loggedInUser']['User']['elo_rating_mode']>=1500){
+				$kFactor1 = 1.5;
+				$kFactor2 = 0.9;
+			}else if($_SESSION['loggedInUser']['User']['elo_rating_mode']>=1800){
+				$kFactor1 = 2;
+				$kFactor2 = 0.8;
+			}else if($_SESSION['loggedInUser']['User']['elo_rating_mode']>=2100){
+				$kFactor1 = 2.5;
+				$kFactor2 = 0.7;
+			}else if($_SESSION['loggedInUser']['User']['elo_rating_mode']>=2400){
+				$kFactor1 = 3;
+				$kFactor2 = 0.6;
+			}
+		}
 		if($diff==0) $diff = .1;
 		if($eloBigger=='u'){
 			$tWin = $diff/200;
@@ -391,45 +408,57 @@ class AppController extends Controller{
 			//$uWin = 5.5-$diff/100;
 			$uWin = log($diff, 2)-$diff/70;
 			if($diff<100) $uWin = 5;
+			$uWin *= $kFactor2;
 			if($uWin<1) $uWin = 1;
 			else if($uWin>5) $uWin = 5;
 			
 			$uLoss = log($diff, 2)*2.2-12;
 			//$uLoss = $diff/100+4;
+			$uLoss *= $kFactor2;
 			if($uLoss<5) $uLoss = 5;
 			$uLoss *= -1;
+			
+			if($diff>700){
+				$uWin = 0;
+				$uLoss = 0;
+			}
 		}else if($eloBigger=='t'){
 			$tWin = 0;
 			$tLoss = $diff/200*(-1);
 			
 			//$uWin = $diff/100+5;
 			$uWin = log($diff, 2)*2.2-11;
+			$uWin *= $kFactor2;
 			if($uWin<5) $uWin = 5;
 			
 			//$uLoss = 4.4-$diff/100;
 			$uLoss = log($diff, 2)-$diff/70-1;
 			if($diff<100) $uLoss = 4;
+			$uLoss *= $kFactor2;
 			if($uLoss<1) $uLoss = 1;
 			$uLoss *= -1;
 		}
 		
+		$activityValueBase = 1;
 		if($activityValue<30)
-			$activityValue = 1;
+			$activityValueAdd = 0;
 		else if($activityValue<50)
-			$activityValue = 1.6;
+			$activityValueAdd = 0.6;
 		else if($activityValue<70)
-			$activityValue = 2.2;
+			$activityValueAdd = 1.2;
 		else
-			$activityValue = 2.8;
+			$activityValueAdd = 1.8;
+		
+		$activityValueSum = $activityValueBase + ($activityValueAdd/$kFactor1);
 		
 		if($outcome=='w'){
-			$return['user'] = round($uWin*$activityValue);
-			$return['user2'] = $uWin*$activityValue;
+			$return['user'] = round($uWin*$activityValueSum);
+			$return['user2'] = $uWin*$activityValueSum;
 			$return['tsumego'] = round($tLoss);
 			$return['tsumego2'] = $tLoss;
 		}else{
-			$return['user'] = round($uLoss*$activityValue);
-			$return['user2'] = $uLoss*$activityValue;
+			$return['user'] = round($uLoss*$activityValueSum);
+			$return['user2'] = $uLoss*$activityValueSum;
 			$return['tsumego'] = round($tWin);
 			$return['tsumego2'] = $tWin;
 		}

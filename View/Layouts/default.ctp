@@ -33,7 +33,7 @@
 	<meta name="keywords" content="tsumego, problems, puzzles, baduk, weiqi, tesuji, life and death, solve, solving, hero, go, in-seong, level" >
 	<meta name="Author" content="Joschka Zimdars">
 	<meta property="og:title" content="Tsumego Hero">
-	<link rel="stylesheet" type="text/css" href="/css/default.css?v=3.1">
+	<link rel="stylesheet" type="text/css" href="/css/default.css?v=3.2">
 	<?php
 		if($lightDark=='dark')
 			echo '<link rel="stylesheet" type="text/css" href="/css/dark.css?v=1.1">';
@@ -477,7 +477,9 @@
 		document.cookie = "ui=0;SameSite=none;Secure=false";
 		document.cookie = "requestProblem=0;SameSite=none;Secure=false";
 		setCookie("lightDark", "<?php echo $lightDark; ?>");
-		setCookie("levelBar", "<?php echo $levelBar; ?>");
+		<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
+			setCookie("levelBar", "<?php echo $levelBar; ?>");
+		<?php } ?>
 		setCookie("lastProfileLeft", "<?php echo $lastProfileLeft; ?>");
 		setCookie("lastProfileRight", "<?php echo $lastProfileRight; ?>");
 		setCookie("type", "0");

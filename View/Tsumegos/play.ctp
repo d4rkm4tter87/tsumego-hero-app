@@ -1192,6 +1192,7 @@
 	let customMultipleChoiceAnswer = 0;
 	let boardLockValue = 0;
 	let mText = "";
+	let ratingBarLock = false;
 	
 	<?php 
 	if($tv!=null){
@@ -1236,7 +1237,7 @@
 
 	var eloScore = <?php echo $eloScore; ?>;
 	var eloScore2 = <?php echo $eloScore2; ?>;
-
+	
 	<?php
 		if($corner=='t' || $corner=='b' || $corner=='full board'){
 			echo '$("#plus2").css("left", "340px");';
@@ -2024,7 +2025,7 @@
 			$("#showx5").attr("href", "<?php echo '/tsumegos/open/'.$t['Tsumego']['id'].'/'.$sgf['Sgf']['id']; ?>");
 			$("#showx6").attr("href", "<?php echo '/sgfs/view/'.($t['Tsumego']['id']*1337); ?>");
 		<?php } ?>
-		$("#showx8").attr("href", "<?php echo '/tsumegos/rating/'.$t['Tsumego']['id']; ?>");
+		$("#showx8").attr("href", "<?php echo '/users/tsumego_rating/'.$t['Tsumego']['id']; ?>");
 		$("#showx4").css("display", "inline-block");		
 		$("#showx5").css("display", "inline-block");		
 		$("#show4").css("display", "inline-block");
@@ -2114,6 +2115,9 @@
 					},1000);
 				<?php
 				}else{
+				?>
+				if(!ratingBarLock){
+				<?php
 					echo '
 					if(!doubleXP) x2 = 1;
 					else x2 = 2;
@@ -2130,6 +2134,7 @@
 					setTimeout(function(){
 						$("#xp-increase-fx").fadeOut(500);$("#xp-bar-fill").css({"-webkit-transition":"all 1s ease","box-shadow":""});
 					},1000);
+				}
 				<?php } 
 			}else if($mode==2){
 				echo '
@@ -2167,7 +2172,7 @@
 	
 	function runXPNumber(id, start, end, duration, ulvl){
 	<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
-		if(start!==end){
+		if(start!==end && !ratingBarLock){
 			userXP = end;
 			userLevel = ulvl;
 			var range = end - start;
@@ -2190,6 +2195,7 @@
 					clearInterval(timer);
 				}
 			}, stepTime);
+			ratingBarLock = true;
 		}
 	<?php } ?>
 	}
@@ -2662,7 +2668,7 @@
 						}
 					}
 				}
-			}else if(eloScore!=0){//mode 2 correct
+			}else{//mode 2 correct
 				document.getElementById("status").style.color = "<?php echo $playGreenColor; ?>";
 				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
 				document.getElementById("xpDisplay").style.color = "white";
@@ -2949,10 +2955,9 @@
     options.reviewMode = false;
     options.reviewEnabled = <?php echo $reviewEnabled ? 'true' : 'false'; ?>;
 	<?php
-		//if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72){
-		if(false){
+		if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72){
 			echo 'options.reviewEnabled = true;';
-		}
+		}}
 		if($requestSolution)
 			echo 'options.reviewEnabled = true;';
 	?>

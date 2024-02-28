@@ -1,44 +1,47 @@
 
 	<?php
-		/*echo '<pre>'; print_r($win2); echo '</pre>';
+		/*
+		echo '<pre>'; print_r($win); echo '</pre>';
+		echo '<pre>'; print_r($loss); echo '</pre>';
+		echo '<pre>'; print_r($win2); echo '</pre>';
 		echo '<pre>'; print_r($loss2); echo '</pre>';
 		echo '<pre>'; print_r($win3); echo '</pre>';
 		echo '<pre>'; print_r($loss3); echo '</pre>';
 		echo '<pre>'; print_r($win4); echo '</pre>';
-		echo '<pre>'; print_r($loss4); echo '</pre>';*/
+		echo '<pre>'; print_r($loss4); echo '</pre>';
+		*/
 	?>
 	<div align="left">
 		<div align="center"><h2>Calculations for the Tsumego Hero rating system</h2></div><br>
-		<h1>This page lists the rating changes for all user vs. Tsumego cases. The increase of the desired outcome should become weaker with higher
+		<h1>This page lists the rating changes for all user vs. Tsumego plays. The increase should become weaker with higher
 		values. For this behavior, logarithmic functions are implemented.</h1>
-		<h1>X-axis: Rating difference to the problem; Example: User rating is 600, Tsumego rating is 1600, difference is -1000 (+11/-1)</h1>
+		<h1>X-axis: Rating difference to the problem; Example: User rating is 600 (15k), Tsumego rating is 1600 (5k), the difference is -1000 (+11/-1)</h1>
 		<table>
 			<tr>
 				<td>Formula for user wins, user has lower rating:</td><td><img src="/img/uWins-tBigger.PNG"></td>
 				<td>Formula for user wins, user has higher rating:</td><td><img src="/img/uWins-uBigger.PNG"></td>
 			</tr>
-		<table>
+		</table>
 		<div id="chartA"></div>
 	</div>
 	<div align="left">
 		<h1>You can see here a small bias that is implemented in favor of the user. A 50/50 solved/fail ratio is still rewarded with a small gain.</h1>
 		<table>
 			<tr>
-				<td>Formula for user loses, user has lower rating:</td><td><img src="/img/uloss-tBigger.PNG"></td>
+				<td>Formula for user loses, user has lower rating:</td><td><img src="/img/asdfasdf.PNG"></td>
 				<td>Formula for user loses, user has higher rating:</td><td><img src="/img/uloss-uBigger.PNG"></td>
 			</tr>
-		<table>
+		</table>
 		<div id="chartB"></div>
 	</div>
 	<div align="left">
-		<h1>Tsumego rating variance. Example: Tsumego rating is 1600, user rating is 600, difference is 1000 (+5/-0)</h1>
-		<h1>Only unexpected outcomes are interesting and have a value above 0. (Tsumego has higer rating but loses, Tsumego has lower rating but wins)</h1>
-		
+		<h1>Tsumego rating variance. Example: Tsumego rating is 600 (15k), user rating is 1600 (5k), the difference is 1000 (+5/-0)</h1>
+		<h1>Only unexpected outcomes are interesting and have a value above zero. (Tsumego has higer rating but loses, Tsumego has lower rating but wins)</h1>
 		<table>
 			<tr>
 				<td>Formula for Tsumego wins, Tsumego has lower rating:</td><td><img src="/img/tWinLoss.PNG"></td>
 			</tr>
-		<table>
+		</table>
 		<div id="chartT2"></div>
 	</div>
 	<div align="left">
@@ -46,13 +49,56 @@
 			<tr>
 				<td>Formula for Tsumego loses, Tsumego has higher rating:</td><td><img src="/img/tWinLoss.PNG"></td>
 			</tr>
-		<table>
+		</table>
 		<div id="chartT1"></div>
 	</div>
 	<div align="left">
+		<h1>For the user rating, another parameter has to be considered, which is the activity value. This value determines how active the user is
+		and also changes the rating variance to zero if the problem has been recently solved. The activity value takes the 90 last played probelms
+		in any mode, takes the hours for each problem that have passed since the attempt and calculates the average value.</h1>
+		<table border="1" class="avgTimePassed">
+			<tr>
+				<th>Avg. time passed of the last 90 problems</th>
+				<th>User type</th>
+				<th>Activity value multiplyer</th>
+			</tr>
+			<tr>
+				<td style="text-align:right;"><30 hrs</td>
+				<td>high activity</td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;"><50 hrs</td>
+				<td>average activity</td>
+				<td>1.6</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;"><70 hrs</td>
+				<td>low activity</td>
+				<td>2.2</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">>=70 hrs</td>
+				<td>very low activity</td>
+				<td>2.8</td>
+			</tr>
+		</table>
+		<table>
+			<tr>
+				<td>Formula for user wins, user has lower rating:</td><td><img src="/img/uWins-tBigger2.PNG"></td>
+				<td>Formula for user wins, user has higher rating:</td><td><img src="/img/uWins-uBigger2.PNG"></td>
+			</tr>
+		</table>
+		<h1>The x-axis is again the rating difference from user to tsumego.</h1>
 		<div id="chartA2"></div>
 	</div>
 	<div align="left">
+		<table>
+			<tr>
+				<td>Formula for user loses, user has lower rating:</td><td><img src="/img/uloss-tBigger2.PNG"></td>
+				<td>Formula for user loses, user has higher rating:</td><td><img src="/img/uloss-uBigger2.PNG"></td>
+			</tr>
+		</table>
 		<div id="chartB2"></div>
 	</div>
 	<div align="left">
@@ -67,6 +113,24 @@
 	<div align="left">
 		<div id="chartB4"></div>
 	</div>
+	<div align="left">
+		<h2>Improved conversion of rating to expierience points (xp)</h2>
+		<h1>
+			When looking at the xp that a user can generate while
+			solving easy problems in comparision to solving difficult problems, it was more rewarding to solve easy problems. However, it makes more sense 
+			to reward solving difficult problems. The solution is to use an exponential function instead of a linear function, which means, higher values 
+			have a higher increment.</h1>
+		<table>
+			<tr>
+				<td>The old xp to rating calculation was approximately rating/29 = xp.</td><td><img src="/img/ratingToXp1.PNG"></td>
+				<td>New formula for rating to xp calculation:</td><td><img src="/img/ratingToXp2.PNG"></td>
+			</tr>
+		</table>
+		<img src="/img/ratingToXpGraph.PNG" width="100%">
+		<h1>Example 1: A problem with a rating of 2100 (1d) gives 106 xp while it was giving 72 xp before.</h1>
+		<h1>Example 2: A problem with a rating of 800 (13k) gives 19 xp while it was giving 27 xp before.</h1>
+	</div>
+	<br><br><br><br>
 	<script>
       window.Promise ||
         document.write(
@@ -240,7 +304,7 @@
 		  colors: ['#74d14c']
         },
         title: {
-          text: 'Tsumego wins, user loses',
+          text: 'Tsumego wins',
           align: 'left'
         },
         grid: {
@@ -297,7 +361,7 @@
 		  colors: ['#74d14c']
         },
         title: {
-          text: 'Tsumego loses, user wins',
+          text: 'Tsumego loses',
           align: 'left'
         },
         grid: {
@@ -310,7 +374,7 @@
           categories: elo3
         },
 		yaxis: {
-		   min: -12,
+		   min: -5,
 		  max: 0
         },
 		fill: {

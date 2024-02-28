@@ -5,6 +5,18 @@ class UsersController extends AppController{
 	public $pageTitle = "Users";
 	public $helpers = array('Html', 'Form');
 	
+	public function deleteoldattempts(){
+		$this->loadModel('TsumegoAttempt');
+		$ta = $this->TsumegoAttempt->find('all', array('limit' => 5000, 'order' => 'created ASC'));
+		echo '<pre>'; print_r($ta[0]['TsumegoAttempt']['created']); echo '</pre>';
+		
+		for($i=0; $i<count($ta); $i++)
+			$this->TsumegoAttempt->delete($ta[$i]['TsumegoAttempt']['id']);
+		
+		$this->set('x', '2023-08-01 00:00:00');
+		$this->set('date', $ta[0]['TsumegoAttempt']['created']);
+	}
+	
 	public function rank_list(){
 		$this->loadModel('Tsumego');
 		
@@ -223,17 +235,6 @@ class UsersController extends AppController{
 		$this->set('ux', $ux);
 	}
 	
-	public function deleteoldattempts(){
-		$this->loadModel('TsumegoAttempt');
-		$ta = $this->TsumegoAttempt->find('all', array('limit' => 5000, 'order' => 'created ASC'));
-		echo '<pre>'; print_r($ta[0]['TsumegoAttempt']['created']); echo '</pre>';
-		
-		for($i=0; $i<count($ta); $i++)
-			$this->TsumegoAttempt->delete($ta[$i]['TsumegoAttempt']['id']);
-		
-		$this->set('date', $ta[0]['TsumegoAttempt']['created']);
-	}
-	
 	public function adjusttsumego(){
 		$this->loadModel('Tsumego');
 		$ts = $this->Tsumego->find('all', array('order' => 'elo_rating_mode ASC'));
@@ -243,6 +244,26 @@ class UsersController extends AppController{
 			echo '<tr><td>'.$ts[$i]['Tsumego']['id'].'</td><td>'.$ts[$i]['Tsumego']['difficulty']
 			.'</td><td>'.$ts[$i]['Tsumego']['userWin'].'</td><td>'.$ts[$i]['Tsumego']['elo_rating_mode'].'</td></tr>';
 		echo '</table>';
+	}
+	
+	public function tsumego_rating($id=null){
+		$this->loadModel('Tsumego');
+		$this->loadModel('TsumegoAttempt');
+		
+		$t = $this->Tsumego->findById($id);
+		$sc = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $id)));
+		$s = $this->Set->findById($sc['SetConnection']['set_id']);
+		$name = $s['Set']['title'].' - '.$t['Tsumego']['num'];
+		$ta = $this->TsumegoAttempt->find('all', array('order' => 'created ASC', 'conditions' => array(
+			'tsumego_id' => $id,
+			'NOT' => array(
+				'tsumego_elo' => 0
+			)
+		)));
+		$this->set('rating', $t['Tsumego']['elo_rating_mode']);
+		$this->set('name', $name);
+		$this->set('ta', $ta);
+		$this->set('id', $id);
 	}
 	
 	public function adjusttsumego2(){
