@@ -99,8 +99,23 @@ class UsersController extends AppController{
 		$this->loadModel('Duplicate');
 		$this->loadModel('PublishDate');
 		
-		$this->resetUserElos();
 		/*
+		$sc = $this->SetConnection->find('all', array('order' => 'num ASC', 'conditions' => array(
+			'set_id' => 213,
+			'num >=' => 201,
+			'num <=' => 210
+		)));
+		
+		for($i=0; $i<count($sc); $i++){
+			$s = array();
+			$s['Schedule']['published'] = '0';
+			$s['Schedule']['date'] = '2024-03-21';
+			$s['Schedule']['set_id'] = '227';
+			$s['Schedule']['tsumego_id'] = $sc[$i]['SetConnection']['tsumego_id'];
+			$this->Schedule->create();
+			$this->Schedule->save($s);
+		}
+		
 		for($i=0; $i<count($ts); $i++){
 			//$this->setTsumegoElo($ts[$i]['Tsumego']['id']);
 			$this->setTsumegoElo($ts[$i]);

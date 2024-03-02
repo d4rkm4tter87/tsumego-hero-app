@@ -46,9 +46,16 @@
 	$heroPower3 = 'hp3x';
 	$heroPower4 = 'hp4x';
 	$heroPower5 = 'hp5x';
-	$eloScore2d = $eloScore2;
+	
 	if($eloScore2==0)
 		$eloScore2d = '-0';
+	else
+		$eloScore2d = $eloScore2;
+	if($eloScore2Rounded==0)
+		$eloScore2dRounded = '-0';
+	else
+		$eloScore2dRounded = $eloScore2Rounded;
+	
 	if($lightDark=='dark'){
 		$playGreenColor = '#0cbb0c';
 		$playBlueColor = '#72a7f2';
@@ -1679,7 +1686,7 @@
 								else
 									echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4">'.$t['Tsumego']['difficulty'].' XP</font>\';';
 							}else{
-								echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4">+'.$eloScore.'/'.$eloScore2d.''.$avActiveText.'</font>\';';
+								echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4"><div class="eloTooltip">+'.$eloScoreRounded.'<span class="eloTooltiptext">+'.$eloScore.'</span></div>/<div class="eloTooltip">'.$eloScore2dRounded.' <span class="eloTooltiptext">'.$eloScore2d.'</span></div> '.$avActiveText.'</font>\';';
 							}
 							?>
 							document.cookie = "sprint=1;path=/tsumegos/play;SameSite=none;Secure=false";
@@ -1711,7 +1718,7 @@
 						}else{
 							echo '
 									document.getElementById("xpDisplay").style.color = "'.$xpDisplayColor.'";
-									document.getElementById("xpDisplay").innerHTML = \'<font size="4">+'.$eloScore.'/'.$eloScore2d.' '.$sandboxComment.''.$avActiveText.'</font>\';
+									document.getElementById("xpDisplay").innerHTML = \'<font size="4"><div class="eloTooltip">+'.$eloScoreRounded.'<span class="eloTooltiptext">+'.$eloScore.'</span></div>/<div class="eloTooltip">'.$eloScore2dRounded.' <span class="eloTooltiptext">'.$eloScore2d.'</span></div> '.$avActiveText.'</font>\';
 								';
 						}
 						?>
@@ -1739,8 +1746,7 @@
 					}else{
 						echo '
 							document.getElementById("xpDisplay").style.color = "'.$xpDisplayColor.'";
-							document.getElementById("xpDisplay").innerHTML = \'<font size="4">+'.$eloScore.'/'.$eloScore2d.' '.$sandboxComment.''.$avActiveText.'</font>\';
-						';
+							document.getElementById("xpDisplay").innerHTML = \'<font size="4"><div class="eloTooltip">+'.$eloScoreRounded.'<span class="eloTooltiptext">+'.$eloScore.'</span></div>/<div class="eloTooltip">'.$eloScore2dRounded.' <span class="eloTooltiptext">'.$eloScore2d.'</span></div> '.$sandboxComment.''.$avActiveText.'</font>\';';
 					}
 					?>
 				}
@@ -1774,7 +1780,7 @@
 			}else{
 				<?php
 				echo 'document.getElementById("xpDisplay").style.color = "'.$xpDisplayColor.'";
-				document.getElementById("xpDisplay").innerHTML = \'<font size="4">+'.$eloScore.'/'.$eloScore2d.' '.$sandboxComment.'</font>\';';
+				document.getElementById("xpDisplay").innerHTML = \'<font size="4"><div class="eloTooltip">+'.$eloScoreRounded.'<span class="eloTooltiptext">+'.$eloScore.'</span></div>/<div class="eloTooltip">'.$eloScore2dRounded.' <span class="eloTooltiptext">'.$eloScore2d.'</span></div> '.$sandboxComment.''.$avActiveText.'</font>\';';
 				?>
 			}
 		}, tcounter);
@@ -2123,8 +2129,8 @@
 					else x2 = 2;
 					userDifficulty = '.$t['Tsumego']['difficulty'].'*x2;
 					userNextlvl = '.$user['User']['nextlvl'].';
-					if(increase) newXP2 = '.substr($user['User']['elo_rating_mode'], -2).'+ '.$eloScore.';
-					else newXP2 = '.substr($user['User']['elo_rating_mode'], -2).'+ '.$eloScore2.';
+					if(increase) newXP2 = '.substr(round($user['User']['elo_rating_mode']), -2).'+ '.$eloScoreRounded.';
+					else newXP2 = '.substr(round($user['User']['elo_rating_mode']), -2).'+ '.$eloScore2Rounded.';
 					if(newXP2>=100)
 						newXP2=100;
 					$("#xp-bar-fill").css({"width":newXP2+"%"});';
@@ -2142,8 +2148,8 @@
 				else x2 = 2;
 				userDifficulty = '.$t['Tsumego']['difficulty'].'*x2;
 				userNextlvl = '.$user['User']['nextlvl'].';
-				if(increase) newXP2 = '.substr($user['User']['elo_rating_mode'], -2).'+ '.$eloScore.';
-				else newXP2 = '.substr($user['User']['elo_rating_mode'], -2).'+ '.$eloScore2.';
+				if(increase) newXP2 = '.substr($user['User']['elo_rating_mode'], -2).'+ '.$eloScoreRounded.';
+				else newXP2 = '.substr($user['User']['elo_rating_mode'], -2).'+ '.$eloScore2Rounded.';
 				if(newXP2>=100)
 					newXP2=100;
 				$("#xp-bar-fill").css({"width":newXP2+"%"});';
@@ -2171,6 +2177,8 @@
 	}
 	
 	function runXPNumber(id, start, end, duration, ulvl){
+	start = Math.round(start);
+	end = Math.round(end);
 	<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
 		if(start!==end && !ratingBarLock){
 			userXP = end;
@@ -2184,9 +2192,9 @@
 			var timer = setInterval(function(){
 				current += increment;
 				<?php
-				if($mode==1&&$levelBar==1 || $mode==3) 
+				if($mode==1&&$levelBar==1 || $mode==3)
 					echo 'obj.innerHTML = current+"/'.$user['User']['nextlvl'].'";';
-				else if($mode==1 && $levelBar==2) 
+				else if($mode==1 && $levelBar==2)
 					echo 'obj.innerHTML = current;';
 				else if($mode==2) 
 					echo 'obj.innerHTML = current;';
@@ -2633,7 +2641,7 @@
 					setCookie("score", x2);
 					setCookie("mode", mode);
 					if(goldenTsumego)
-						document.cookie = "type=g";
+						setCookie("type", "g");
 					$("#skipButton").text("Next");
 					xpReward = (<?php echo $t['Tsumego']['difficulty']; ?>*x3) + <?php echo $user['User']['xp']; ?>;
 					userNextlvl = <?php echo $user['User']['nextlvl']; ?>;
@@ -2688,7 +2696,7 @@
 					setCookie("score", "<?php echo $score3; ?>");
 					setCookie("mode", mode);
 					if(goldenTsumego)
-						document.cookie = "type=g";
+						setCookie("type", "g");
 					secondsy = seconds;
 					document.cookie = "seconds="+secondsy+";path=/tsumegos/play;SameSite=none;Secure=false";
 					document.cookie = "sequence="+sequence;
@@ -2751,7 +2759,7 @@
 					}
 					if(goldenTsumego){
 						document.cookie = "refinement=-1";
-						document.cookie = "type=g";
+						setCookie("type", "g");
 						window.location.href = "/tsumegos/play/<?php echo $t['Tsumego']['id']; ?>";
 					}
 				}

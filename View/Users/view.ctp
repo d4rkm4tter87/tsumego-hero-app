@@ -92,8 +92,7 @@
 			if($deletedProblems==1){
 				echo '<font style="font-weight:800;color:#74d14c" >You have completed '.$p.'%. </font>'; 
 				if($p>=75){
-					echo 'You can delete progress on '.$dNum.' problems.<br><br>';
-					echo '<a class="new-button" href="#" onclick="delUts(); return false;">Reset ('.$dNum.')</a><br><br>';
+					echo '<br><br><a class="new-button" href="#" onclick="delUts(); return false;">Reset ('.$dNum.')</a><br><br>';
 				}else{
 					echo '<br><br><a class="new-button-inactive" href="#" >Reset ('.$dNum.')</a><br><br>';
 				}
@@ -956,7 +955,7 @@
 	}
 	.userMain2{
 		width:100%;
-		height:217px;
+		height:254px;
 		margin: 0 4px;
 	}
 	.userTop1{
@@ -964,14 +963,14 @@
 		border: 3px solid #caa8d8;
 		margin:2px;
 		width:310px;
-		height:182px;
+		height:205px;
 	}
 	.userTop2{
 		float:left;
 		border: 3px solid #74d14c;
 		margin:2px;
 		width:310px;
-		height:135px;
+		height:148px;
 	}
 	.userTopTable1 td{
 		vertical-align:top;padding:7px;

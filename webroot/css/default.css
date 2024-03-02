@@ -2794,6 +2794,29 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		top:34px;
 		left:-1px;
 	}
+	.eloTooltip {
+	  position: relative;
+	  display: inline-block;
+	  border-bottom: 1px dotted black;
+	  cursor:pointer;
+	}
+
+	.eloTooltip .eloTooltiptext {
+	  visibility: hidden;
+	  width: 120px;
+	  background-color: #444444;
+	  color: #fff;
+	  text-align: center;
+	  border-radius: 6px;
+	  padding: 5px 0;
+	  position: absolute;
+	  z-index: 1;
+	}
+
+	.eloTooltip:hover .eloTooltiptext {
+	  visibility: visible;
+	}
+	
 	.highscore{
 		font-size: 20px;
 		font-weight: 600;

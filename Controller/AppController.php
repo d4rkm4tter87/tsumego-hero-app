@@ -407,10 +407,10 @@ class AppController extends Controller{
 			
 			//$uWin = 5.5-$diff/100;
 			$uWin = log($diff, 2)-$diff/70;
-			if($diff<100) $uWin = 5;
+			if($diff<=100) $uWin = 5;
 			$uWin *= $kFactor2;
-			if($uWin<1) $uWin = 1;
-			else if($uWin>5) $uWin = 5;
+			if($uWin<1) $uWin = 1-$diff/1400;
+			if($uWin>5) $uWin = 5;
 			
 			$uLoss = log($diff, 2)*2.2-12;
 			//$uLoss = $diff/100+4;
@@ -418,7 +418,7 @@ class AppController extends Controller{
 			if($uLoss<5) $uLoss = 5;
 			$uLoss *= -1;
 			
-			if($diff>700){
+			if($diff>1000){
 				$uWin = 0;
 				$uLoss = 0;
 			}
@@ -435,7 +435,7 @@ class AppController extends Controller{
 			$uLoss = log($diff, 2)-$diff/70-1;
 			if($diff<100) $uLoss = 4;
 			$uLoss *= $kFactor2;
-			if($uLoss<1) $uLoss = 1;
+			if($uLoss<1) $uLoss = 1-$diff/1400;
 			$uLoss *= -1;
 		}
 		
@@ -452,17 +452,18 @@ class AppController extends Controller{
 		$activityValueSum = $activityValueBase + ($activityValueAdd/$kFactor1);
 		
 		if($outcome=='w'){
-			$return['user'] = round($uWin*$activityValueSum);
+			$return['user'] = round($uWin*$activityValueSum, 2);
 			$return['user2'] = $uWin*$activityValueSum;
 			$return['tsumego'] = round($tLoss);
 			$return['tsumego2'] = $tLoss;
 		}else{
-			$return['user'] = round($uLoss*$activityValueSum);
+			$return['user'] = round($uLoss*$activityValueSum, 2);
 			$return['user2'] = $uLoss*$activityValueSum;
 			$return['tsumego'] = round($tWin);
 			$return['tsumego2'] = $tWin;
 		}
-		
+		//echo '<pre>'; print_r($return); echo '</pre>';
+		//echo '<pre>'; print_r($activityValue); echo '</pre>';
 		return $return;
 	}
 	
@@ -2722,14 +2723,13 @@ class AppController extends Controller{
 				}
 				
 				if($mode==1){
-					if(isset($_SESSION['loggedInUser']) && !isset($_SESSION['noLogin'])){
+					if(isset($_SESSION['loggedInUser']['User']['id']) && !isset($_SESSION['noLogin'])){
 						//$exploit = $this->UserBoard->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'b1' => $_COOKIE['preId'])));
 						$ub = array();
 						$ub['UserBoard']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
 						$ub['UserBoard']['b1'] = $_COOKIE['preId'];
 						$this->UserBoard->create();
 						$this->UserBoard->save($ub);
-						
 						if($_COOKIE['score']<3000) ;
 						else $_COOKIE['score'] = 0;
 						

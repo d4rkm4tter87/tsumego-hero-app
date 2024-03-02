@@ -33,7 +33,7 @@
 	<meta name="keywords" content="tsumego, problems, puzzles, baduk, weiqi, tesuji, life and death, solve, solving, hero, go, in-seong, level" >
 	<meta name="Author" content="Joschka Zimdars">
 	<meta property="og:title" content="Tsumego Hero">
-	<link rel="stylesheet" type="text/css" href="/css/default.css?v=3.2">
+	<link rel="stylesheet" type="text/css" href="/css/default.css?v=3.3">
 	<?php
 		if($lightDark=='dark')
 			echo '<link rel="stylesheet" type="text/css" href="/css/dark.css?v=1.1">';
@@ -497,7 +497,7 @@
 		var userXP = <?php echo $user['User']['xp']; ?> ;
 		var userLevel = <?php echo $user['User']['level']; ?> ;
 		var userNextLvl = <?php echo $user['User']['nextlvl']; ?> ;
-		var userElo = <?php echo $user['User']['elo_rating_mode']; ?> ;
+		var userElo = <?php echo round($user['User']['elo_rating_mode']); ?> ;
 		var soundValue = 0;
 		<?php
 		echo 'soundValue = "'.$_SESSION['loggedInUser']['User']['sound'].'";';
@@ -775,7 +775,7 @@
 			if(notMode3){
 			
 			<?php $barPercent1 = $user['User']['xp']/$user['User']['nextlvl']*100;
-			$barPercent2 = substr($user['User']['elo_rating_mode'], -2);
+			$barPercent2 = substr(round($user['User']['elo_rating_mode']), -2);
 			if($mode==1){ ?>
 				<?php if($levelBar==1){ ?>
 					$("#xp-increase-fx").css("display","inline-block");

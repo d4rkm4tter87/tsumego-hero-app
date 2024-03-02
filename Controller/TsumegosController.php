@@ -509,7 +509,7 @@ class TsumegosController extends AppController{
 		
 		if($_SESSION['loggedInUser']['User']['elo_rating_mode'] > $t['Tsumego']['elo_rating_mode']){
 			$eloBigger = 'u';
-			if($eloDifference > 700)
+			if($eloDifference > 1000)
 				$avActive2 = false;
 		}else
 			$eloBigger = 't';
@@ -2187,6 +2187,9 @@ class TsumegosController extends AppController{
 		
 		if($avActive2==false)
 			$avActiveText = '<font style="color:gray;"> (out of range)</font>';
+		
+		$eloScoreRounded = round($eloScore);
+		$eloScore2Rounded = round($eloScore2);
 			
 		$this->set('activityValue', $activityValue);
 		$this->set('avActiveText', $avActiveText);
@@ -2233,6 +2236,8 @@ class TsumegosController extends AppController{
 		$this->set('rating', $u['User']['elo_rating_mode']);
 		$this->set('eloScore', $eloScore);
 		$this->set('eloScore2', $eloScore2);
+		$this->set('eloScoreRounded', $eloScoreRounded);
+		$this->set('eloScore2Rounded', $eloScore2Rounded);
 		$this->set('activate', $activate);
 		$this->set('tsumegoElo', $t['Tsumego']['elo_rating_mode']);
 		$this->set('trs', $trs);

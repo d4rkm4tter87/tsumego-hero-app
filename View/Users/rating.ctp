@@ -139,7 +139,7 @@
 						'.$td.'
 					</td>
 					<td align="center">
-						'.$users[$i]['User']['elo_rating_mode'].'
+						'.round($users[$i]['User']['elo_rating_mode']).'
 					</td>
 					<td align="center">
 						'.$users[$i]['User']['solved2'].'

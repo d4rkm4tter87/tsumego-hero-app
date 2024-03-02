@@ -223,21 +223,24 @@
 		
 		<td>
 		<?php 
-		if($pdCounter>0){
-			$plural = 's';
-			if($pdCounter==1){ $pdCounterValue = 50; $plural = '';
-			}else if($pdCounter==2) $pdCounterValue = 80;
-			else if($pdCounter==3) $pdCounterValue = 90;
-			else $pdCounterValue = 99;
-			
-			echo '<font color="gray">XP reduced by '.$pdCounterValue.'%. ('.$pdCounter.' reset'.$plural.' this month.)</font>';
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			if($pdCounter>0){
+				$plural = 's';
+				if($pdCounter==1){ $pdCounterValue = 50; $plural = '';
+				}else if($pdCounter==2) $pdCounterValue = 80;
+				else if($pdCounter==3) $pdCounterValue = 90;
+				else $pdCounterValue = 99;
+				
+				echo '<font color="gray">XP reduced by '.$pdCounterValue.'%. ('.$pdCounter.' reset'.$plural.' this month.)</font>';
+			}
+			if($set['Set']['solved']>=50){ ?>
+			<div id="msg1x"><a id="showx">Reset<img id="greyArrow1" src="/img/greyArrow1.png"></a></div>
+			<br>
+			<?php }else{
+				echo '<br><font color="gray">You need to complete 50% to reset.</font>';
+			}
 		}
-		if($set['Set']['solved']>=50){ ?>
-		<div id="msg1x"><a id="showx">Reset<img id="greyArrow1" src="/img/greyArrow1.png"></a></div>
-		<br>
-		<?php }else{
-			echo '<br><font color="gray">You need to complete 50% to reset.</font>';
-		}?>
+		?>
 		</td>
 		</tr>
 		<tr>
@@ -255,10 +258,10 @@
 			The problem numbers are displayed.
 		</div>
 		<div id="ratioInfo">
-			The solved and failed (s/f) attempts are displayed.<br><font style="color:gray;">Outdated entries (-) are counted as fail.</font>
+			The solved and failed (s/f) attempts are displayed.<br><font style="color:gray;">Outdated and missing entries (-) are counted as fail.</font>
 		</div>
 		<div id="timeInfo">
-			The time (in seconds) for solving is displayed.<br><font style="color:gray;">Outdated entries (-) are counted as 60 seconds.</font>
+			The time (in seconds) for solving is displayed.<br><font style="color:gray;">Outdated and missing entries (-) are counted as 60 seconds.</font>
 		</div>
 		</div>
 		<br>
@@ -404,7 +407,8 @@
 		<?php if(!$isFav) echo '<br><br><br><br><br>'; ?>
 		<br><br>
 	</div>
-
+	
+	<div style="clear:both;"></div>
 	<?php if($_SESSION['loggedInUser']['User']['isAdmin']>=1){?>
 	<script>
 	var t1 = false;
