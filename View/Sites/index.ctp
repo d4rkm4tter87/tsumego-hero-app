@@ -93,7 +93,13 @@
 			</li>
 			<br><br>
 		</div>
+		<p class="title4">03.03.2024</p>
+		<div class="new1">
+		<b>Prizes</b><br><br>
 		
+		<b>Rippa</b>, <b>au61413080900</b> and <b>franp9am</b> win a premium account as they have the highest non-premium ratings. On
+		10.03.2024 we give away 3 more.<br><br>
+		</div>
 		<p class="title4">Update 25.02.2024</p>
 		<div class="new1">
 		<b>Overall rating</b><br><br>
@@ -582,6 +588,11 @@
 		<div class="new1">
 			<table class="newx" border="0">
 				<tr>
+					<td><h1>02.03.2024</h1></td>
+					<td><h1>Tom Sokec</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
 					<td><h1>28.02.2024</h1></td>
 					<td><h1>hrh</h1></td>
 					<td><h1>10,00 €</h1></td>
@@ -599,11 +610,6 @@
 				<tr>
 					<td><h1>22.02.2024</h1></td>
 					<td><h1>Trianguli</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>21.02.2024</h1></td>
-					<td><h1>Enrico Alvares</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<!--

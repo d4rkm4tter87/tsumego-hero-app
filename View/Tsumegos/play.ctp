@@ -2148,8 +2148,8 @@
 				else x2 = 2;
 				userDifficulty = '.$t['Tsumego']['difficulty'].'*x2;
 				userNextlvl = '.$user['User']['nextlvl'].';
-				if(increase) newXP2 = '.substr($user['User']['elo_rating_mode'], -2).'+ '.$eloScoreRounded.';
-				else newXP2 = '.substr($user['User']['elo_rating_mode'], -2).'+ '.$eloScore2Rounded.';
+				if(increase) newXP2 = '.substr(round($user['User']['elo_rating_mode']), -2).'+ '.$eloScoreRounded.';
+				else newXP2 = '.substr(round($user['User']['elo_rating_mode']), -2).'+ '.$eloScore2Rounded.';
 				if(newXP2>=100)
 					newXP2=100;
 				$("#xp-bar-fill").css({"width":newXP2+"%"});';

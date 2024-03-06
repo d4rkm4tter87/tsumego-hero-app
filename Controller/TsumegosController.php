@@ -1061,10 +1061,11 @@ class TsumegosController extends AppController{
 		if(isset($_COOKIE['rejuvenationx']) && $_COOKIE['rejuvenationx']!=0){
 			if($u['User']['usedRejuvenation']==0 && $_COOKIE['rejuvenationx']==1){
 				$u['User']['damage'] = 0;
+				$u['User']['intuition'] = 1;
+				$u['User']['damage'] = 0;
 				$rejuvenation = true;
 			}else if($_COOKIE['rejuvenationx']==2){
 				$u['User']['damage'] = 0;
-				
 			}
 			$_COOKIE['misplay'] = 0;
 			unset($_COOKIE['rejuvenationx']);
@@ -2179,7 +2180,6 @@ class TsumegosController extends AppController{
 		echo '<pre>'; print_r($eloScore2); echo '</pre>';
 		echo '<pre>'; print_r($activityValue); echo '</pre>';
 		*/
-		
 		if($avActive==true)
 			$avActiveText = '';
 		else

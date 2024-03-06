@@ -460,7 +460,7 @@
 		document.cookie = "sprint=0;SameSite=none;Secure=false";
 		document.cookie = "intuition=0;SameSite=none;Secure=false";
 		document.cookie = "rejuvenation=0;SameSite=none;Secure=false";
-		//document.cookie = "rejuvenationx=0;SameSite=none;Secure=false";
+		document.cookie = "rejuvenationx=0;SameSite=none;Secure=false";
 		document.cookie = "refinement=0;SameSite=none;Secure=false";
 		document.cookie = "favorite=0;SameSite=none;Secure=false";
 		document.cookie = "mode=0;SameSite=none;Secure=false";
