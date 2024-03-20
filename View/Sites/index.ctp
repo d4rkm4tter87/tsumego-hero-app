@@ -2,10 +2,10 @@
 	<div class="homeRight">
 		<p class="title4 title4right"><?php echo $d1; ?></p>
 		<?php
-			if(isset($_SESSION['loggedInUser']['User']['id']))
-				echo '<img id="title-image" src="/img/modeSelect24.png" width="100%" alt="Tsumego Hero Modes" title="Tsumego Hero Modes">';
-			else
-				echo '<img id="title-image" src="/img/modeSelect24x.png" width="100%" alt="Tsumego Hero Modes" title="Tsumego Hero Modes">';
+		if(isset($_SESSION['loggedInUser']['User']['id']))
+			echo '<img id="title-image" src="/img/modeSelect24.png" width="100%" alt="Tsumego Hero Modes" title="Tsumego Hero Modes">';
+		else
+			echo '<img id="title-image" src="/img/modeSelect24x.png" width="100%" alt="Tsumego Hero Modes" title="Tsumego Hero Modes">';
 		?>
 		<br>
 			<?php
@@ -22,7 +22,6 @@
 			//print_r($newT);
 		?>
 		<p class="title4">Problems of the Day</p>
-		
 		<div class="new1">
 		<?php
 		if(count($scheduleTsumego)!=0){
@@ -92,6 +91,18 @@
 				<?php echo $totd['Tsumego']['num']; ?><span><div id="tooltipSvg99"></div></span></a>
 			</li>
 			<br><br>
+		</div>
+		<p class="title4">17.03.2024</p>
+		<div class="new1">
+		<b>Prizes</b><br><br>
+		
+		<b>Madec</b>, <b>Kimok</b> and <b>YuriyStepanovich</b> win a premium account as they have the highest non-premium ratings.<br><br>
+		</div>
+		<p class="title4">10.03.2024</p>
+		<div class="new1">
+		<b>Prizes</b><br><br>
+		
+		<b>GoTalk</b>, <b>Futsal</b> and <b>Imaim</b> win a premium account. One more time we upgrade 3 accounts on 17.03.2024.<br><br>
 		</div>
 		<p class="title4">03.03.2024</p>
 		<div class="new1">
@@ -588,6 +599,21 @@
 		<div class="new1">
 			<table class="newx" border="0">
 				<tr>
+					<td><h1>16.03.2024</h1></td>
+					<td><h1>Jorge González </h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>14.03.2024</h1></td>
+					<td><h1>bavalance </h1></td>
+					<td><h1>15,00 €</h1></td>
+				</tr>
+				<tr>
+					<td><h1>08.03.2024</h1></td>
+					<td><h1>aathn </h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
 					<td><h1>02.03.2024</h1></td>
 					<td><h1>Tom Sokec</h1></td>
 					<td><h1>10,00 €</h1></td>
@@ -595,21 +621,6 @@
 				<tr>
 					<td><h1>28.02.2024</h1></td>
 					<td><h1>hrh</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>26.02.2024</h1></td>
-					<td><h1>Salzur </h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>24.02.2024</h1></td>
-					<td><h1>Younes Driouiche</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>22.02.2024</h1></td>
-					<td><h1>Trianguli</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<!--
