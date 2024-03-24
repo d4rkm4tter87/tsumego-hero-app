@@ -1256,18 +1256,26 @@ class SetsController extends AppController{
 			$pFsum = 0;
 			for($i=0; $i<count($ts); $i++){
 				$tss = 0;
-				if($ts[$i]['Tsumego']['seconds']=='' || $ts[$i]['Tsumego']['seconds']==0)
-					$tss = 60;
-				else
+				if($ts[$i]['Tsumego']['seconds']=='' || $ts[$i]['Tsumego']['seconds']==0){
+					if($ts[$i]['Tsumego']['status']=='S' || $ts[$i]['Tsumego']['status']=='C' || $ts[$i]['Tsumego']['status']=='W')
+						$tss = 60;
+					else
+						$tss = 0;
+				}else{
 					$tss = $ts[$i]['Tsumego']['seconds'];
+				}
 				$urSecAvg += $tss;
 				$urSecCounter++;
 				
 				$tss2 = 'F';
-				if($ts[$i]['Tsumego']['performance']=='')
-					$tss2 = 'F';
-				else
+				if($ts[$i]['Tsumego']['performance']==''){
+					if($ts[$i]['Tsumego']['status']=='S' || $ts[$i]['Tsumego']['status']=='C' || $ts[$i]['Tsumego']['status']=='W')
+						$tss2 = 'F';
+					else
+						$tss2 = '';
+				}else{
 					$tss2 = $ts[$i]['Tsumego']['performance'];
+				}
 				$pS = substr_count($tss2, '1');
 				$pF = substr_count($tss2, 'F');
 				$pSsum += $pS;
@@ -1326,6 +1334,7 @@ class SetsController extends AppController{
 			array_push($tooltipInfo, $tArr[2]);
 			array_push($tooltipBoardSize, $tArr[3]);
 		}
+		
 		
 		$this->set('tfs', $tfs[count($tfs)-1]);
 		$this->set('ts', $ts);

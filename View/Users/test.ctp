@@ -1,12 +1,6 @@
-<?php
 
-	echo count($u);
-	echo '<pre>';
-	print_r($u);
-	echo '</pre>';
-	$c = 0;
-	for($i=0; $i<count($u); $i++){
-		$c+=$u[$i][1];
-	}
-	echo $c;
-?>
+	<script type="text/JavaScript">
+	<?php if($next<$finish){ ?>
+		setTimeout(function () {window.location.href = "/users/test/<?php echo $next ?>";}, 10);
+	<?php } ?>
+	</script>

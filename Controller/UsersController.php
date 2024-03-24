@@ -101,6 +101,22 @@ class UsersController extends AppController{
 		
 		/*
 		$sc = $this->SetConnection->find('all', array('order' => 'num ASC', 'conditions' => array(
+			'set_id' => 194,
+			'num >=' => 1,
+			'num <=' => 10
+		)));
+		
+		for($i=0; $i<count($sc); $i++){
+			$s = array();
+			$s['Schedule']['published'] = '0';
+			$s['Schedule']['date'] = '2024-03-25';
+			$s['Schedule']['set_id'] = '228';
+			$s['Schedule']['tsumego_id'] = $sc[$i]['SetConnection']['tsumego_id'];
+			$this->Schedule->create();
+			$this->Schedule->save($s);
+		}
+		
+		$sc = $this->SetConnection->find('all', array('order' => 'num ASC', 'conditions' => array(
 			'set_id' => 213,
 			'num >=' => 201,
 			'num <=' => 210
@@ -279,6 +295,49 @@ class UsersController extends AppController{
 		$this->set('name', $name);
 		$this->set('ta', $ta);
 		$this->set('id', $id);
+	}
+	
+	public function test($x=null){
+		$this->loadModel('Tsumego');
+		$this->loadModel('TsumegoAttempt');
+		
+		$ts = $this->Tsumego->find('all', array('order' => 'id ASC'));
+		$id = $ts[$x]['Tsumego']['id'];
+		
+		$ta = $this->TsumegoAttempt->find('all', array('order' => 'created ASC', 'conditions' => array(
+			'tsumego_id' => $id,
+			'NOT' => array(
+				'tsumego_elo' => 0
+			)
+		)));
+		
+		$change = $ta[count($ta)-1]['TsumegoAttempt']['tsumego_elo'] - $ta[0]['TsumegoAttempt']['tsumego_elo'];
+		
+		$t = $this->Tsumego->findById($id);
+		$t['Tsumego']['rd'] = $change;
+		$this->Tsumego->save($t);
+		
+		$p = $x.'/'.count($ts);
+		
+		echo '<pre>'; print_r($p); echo '</pre>';
+		echo '<pre>'; print_r($id); echo '</pre>';
+		echo '<pre>'; print_r($change); echo '</pre>';
+		
+		$this->set('next', $x+1);
+		$this->set('finish', count($ts)-1);
+	}
+	
+	
+	public function test2(){
+		$this->loadModel('Tsumego');
+		
+		$ts = $this->Tsumego->find('all', array('order' => 'rd ASC'));
+		$c['+'] = array();
+		$c['-'] = array();
+		for($i=0; $i<count($ts); $i++){
+		}
+		
+		$this->set('ts', $ts);
 	}
 	
 	public function adjusttsumego2(){
@@ -2384,16 +2443,6 @@ Joschka Zimdars';
 		$this->set('u', $u);
 	}
 	
-	public function test2(){
-		$this->loadModel('Tsumego');
-		$this->loadModel('Set');
-		
-		$ts2 = array();
-		$ts = $this->Tsumego->find('all');
-	
-		
-		$this->set('ts', $ts2);
-	}
 	
 	//visualization
 	public function tsumego_score(){

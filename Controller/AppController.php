@@ -402,7 +402,7 @@ class AppController extends Controller{
 		}
 		if($diff==0) $diff = .1;
 		if($eloBigger=='u'){
-			$tWin = $diff/200;
+			$tWin = $diff/100;
 			$tLoss = 0;
 			
 			//$uWin = 5.5-$diff/100;
@@ -424,7 +424,7 @@ class AppController extends Controller{
 			}
 		}else if($eloBigger=='t'){
 			$tWin = 0;
-			$tLoss = $diff/200*(-1);
+			$tLoss = $diff/100*(-1);
 			
 			//$uWin = $diff/100+5;
 			$uWin = log($diff, 2)*2.2-11;
@@ -450,6 +450,10 @@ class AppController extends Controller{
 			$activityValueAdd = 1.8;
 		
 		$activityValueSum = $activityValueBase + ($activityValueAdd/$kFactor1);
+		
+		if($tWin>15) $tWin = 15;
+		if($tLoss<-15) $tLoss = -15;
+		
 		
 		if($outcome=='w'){
 			$return['user'] = round($uWin*$activityValueSum, 2);
@@ -2665,7 +2669,8 @@ class AppController extends Controller{
 			$_SESSION['loggedInUser']['User']['elo_rating_mode'] += $newUserEloL['user'];
 			$u['User']['elo_rating_mode'] = $_SESSION['loggedInUser']['User']['elo_rating_mode'];
 			$this->User->save($u);
-			$preTsumego['Tsumego']['elo_rating_mode'] += $newUserEloL['tsumego'];
+			if($newUserEloL['tsumego']>-15 && $newUserEloL['tsumego']<15)
+				$preTsumego['Tsumego']['elo_rating_mode'] += $newUserEloL['tsumego'];
 			$preTsumego['Tsumego']['difficulty'] = $this->convertEloToXp($preTsumego['Tsumego']['elo_rating_mode']);
 			$this->Tsumego->save($preTsumego);
 		}
@@ -2685,7 +2690,8 @@ class AppController extends Controller{
 			$_SESSION['loggedInUser']['User']['elo_rating_mode'] += $newUserEloW['user'];
 			$u['User']['elo_rating_mode'] = $_SESSION['loggedInUser']['User']['elo_rating_mode'];
 			$this->User->save($u);
-			$preTsumego['Tsumego']['elo_rating_mode'] += $newUserEloW['tsumego'];
+			if($newUserEloL['tsumego']>-15 && $newUserEloL['tsumego']<15)
+				$preTsumego['Tsumego']['elo_rating_mode'] += $newUserEloW['tsumego'];
 			$preTsumego['Tsumego']['difficulty'] = $this->convertEloToXp($preTsumego['Tsumego']['elo_rating_mode']);
 			$this->Tsumego->save($preTsumego);
 		}

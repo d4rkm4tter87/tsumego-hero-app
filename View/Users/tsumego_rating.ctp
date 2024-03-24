@@ -10,7 +10,9 @@
 
 	<div id="chartContainer">
 	<br>
-		<div><a href="/tsumegos/play/<?php echo $id; ?>">back</a></div>
+		<div><a href="/tsumegos/play/<?php echo $id; ?>">back</a><?php echo '<pre>'; print_r($ta[0]['TsumegoAttempt']['tsumego_elo']); echo '</pre>'; ?> 
+		<?php echo '<pre>'; print_r($ta[count($ta)-1]['TsumegoAttempt']['tsumego_elo']); echo '</pre>'; ?>
+		</div>
 		<div id="chart2"></div>
 	</div>
 	<div align="center">
