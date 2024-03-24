@@ -88,9 +88,8 @@ besogo.makeCommentPanel = function(container, editor)
 	  parentDiv.appendChild(statusLabel);
 	  parentDiv.appendChild(statusTable);
 	  parentDiv.appendChild(jumpToBranchWithoutStatusButton);
-  }
 	  container.appendChild(makeCommentButton());
-
+  }
   //container.appendChild(gameInfoTable);
   //container.appendChild(gameInfoEdit);
   infoTexts.C = document.createTextNode('');

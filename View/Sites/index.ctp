@@ -599,6 +599,11 @@
 		<div class="new1">
 			<table class="newx" border="0">
 				<tr>
+					<td><h1>24.03.2024</h1></td>
+					<td><h1>heron  </h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
 					<td><h1>16.03.2024</h1></td>
 					<td><h1>Jorge González </h1></td>
 					<td><h1>10,00 €</h1></td>
@@ -616,11 +621,6 @@
 				<tr>
 					<td><h1>02.03.2024</h1></td>
 					<td><h1>Tom Sokec</h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>28.02.2024</h1></td>
-					<td><h1>hrh</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<!--

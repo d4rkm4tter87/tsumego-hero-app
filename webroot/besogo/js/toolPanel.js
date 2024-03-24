@@ -315,7 +315,15 @@ besogo.makeToolPanel = function(container, editor)
 		   function() { window.location.href = "/tsumegos/play/"+besogoMode3Next; },
 		   'besogo-next-button');
       }
-    
+	  if(passEnabled==1){
+		  makeButtonText('Pass', 'Pass move', function(){
+			var tool = editor.getTool();
+			if (tool !== 'navOnly' && tool !== 'auto' && tool !== 'playB' && tool !== 'playW') {
+				editor.setTool('auto'); // Ensures that a move tool is selected
+			}
+			editor.click(0, 0, false); // Clicking off the board signals a pass
+		  }, 'besogo-pass-button');
+	  }
       let reviewButtonId;
       if (editor.getReviewEnabled())
         reviewButtonId = 'besogo-review-button';
@@ -566,7 +574,13 @@ besogo.makeToolPanel = function(container, editor)
       evt.stopPropagation(); // Stop keydown propagation when in focus
     });
     container.appendChild(labelText);
-  
+	makeButtonText('Pass', 'Pass move', function(){
+	  var tool = editor.getTool();
+	  if (tool !== 'navOnly' && tool !== 'auto' && tool !== 'playB' && tool !== 'playW') {
+		  editor.setTool('auto'); // Ensures that a move tool is selected
+	  }
+	  editor.click(0, 0, false); // Clicking off the board signals a pass
+	});
     makeButtonText('Cut', 'Remove branch', function() { editor.cutCurrent(); });
     makeButtonText('Raise', 'Raise variation', function() { editor.promote(); });
     makeButtonText('Lower', 'Lower variation', function() { editor.demote(); });
@@ -609,57 +623,7 @@ besogo.makeToolPanel = function(container, editor)
 
   function makeEditorToolButtons2(container, editor)
   {
-    svg = makeButtonSVG('auto', 'Auto-play/navigate\n' +
-        'crtl+click to force ko, suicide, overwrite\n' +
-        'shift+click to jump to move'); // Auto-play/nav tool button
-    svg.appendChild(makeYinYang(0, 0));
-
-    svg = makeButtonSVG('addB', 'Set black\nshift+click addWhite\nctrl+click to play'); // Add black button
-    element = besogo.svgEl('g');
-    element.appendChild(besogo.svgStone(-15, -15, -1, 15)); // Black stone
-    element.appendChild(besogo.svgStone(15, -15, 1, 15)); // White stone
-    element.appendChild(besogo.svgStone(-15, 15, 1, 15)); // White stone
-    element.appendChild(besogo.svgStone(15, 15, -1, 15)); // Black stone
-    svg.appendChild(element);
-
-    svg = makeButtonSVG('circle', 'Circle'); // Circle markup button
-    svg.appendChild(besogo.svgCircle(0, 0, 'black'));
-
-    svg = makeButtonSVG('square', 'Square'); // Square markup button
-    svg.appendChild(besogo.svgSquare(0, 0, 'black'));
-
-    svg = makeButtonSVG('triangle', 'Triangle'); // Triangle markup button
-    svg.appendChild(besogo.svgTriangle(0, 0, 'black'));
-  
-    svg = makeButtonSVG('cross', 'Cross'); // Cross markup button
-    svg.appendChild(besogo.svgCross(0, 0, 'black'));
-
-    svg = makeButtonSVG('block', 'Block'); // Block markup button
-    svg.appendChild(besogo.svgBlock(0, 0, 'black'));
-
-    svg = makeButtonSVG('clrMark', 'Clear mark'); // Clear markup button
-    element = besogo.svgEl('g');
-    element.appendChild(besogo.svgTriangle(0, 0, besogo.GREY));
-    element.appendChild(besogo.svgCross(0, 0, besogo.RED));
-    svg.appendChild(element);
-
-    svg = makeButtonSVG('label', 'Label'); // Label markup button
-    svg.appendChild(besogo.svgLabel(0, 0, 'black', 'A1'));
-
-    labelText = document.createElement("input"); // Label entry text field
-    labelText.type = "text";
-    labelText.title = 'Next label';
-    labelText.onblur = function() { editor.setLabel(labelText.value); };
-    labelText.addEventListener('keydown', function(evt)
-    {
-      evt = evt || window.event;
-      evt.stopPropagation(); // Stop keydown propagation when in focus
-    });
-    container.appendChild(labelText);
-  
-    makeButtonText('Cut', 'Remove branch', function() { editor.cutCurrent(); });
-    makeButtonText('Raise', 'Raise variation', function() { editor.promote(); });
-    makeButtonText('Lower', 'Lower variation', function() { editor.demote(); });
+	//removed buttons - the other editor should be used
   }
 
   // Creates a button holding an SVG image

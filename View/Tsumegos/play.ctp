@@ -578,6 +578,13 @@
 						$arOn = '';
 						$arOff = 'checked="checked"';
 					}
+					if($passEnabled==1){
+						$passOn = 'checked="checked"';
+						$passOff = '';
+					}else{
+						$passOn = '';
+						$passOff = 'checked="checked"';
+					}
 					if($set_duplicate==-1){
 						$duOn = 'checked="checked"';
 						$duOff = '';
@@ -634,6 +641,11 @@
 											
 										}
 									echo '</tr>';
+									echo '<tr>
+										<td>Enable passing</td>
+										<td><input type="radio" id="r43" name="data[Settings][r43]" value="no" '.$passOff.'><label for="r43">no</label></td>
+										<td><input type="radio" id="r43" name="data[Settings][r43]" value="yes" '.$passOn.'><label for="r43">yes</label></td>
+									</tr>';
 									if($isSandbox){
 										echo '<tr>
 											<td>Multiple choice problem</td>
@@ -1200,6 +1212,7 @@
 	let boardLockValue = 0;
 	let mText = "";
 	let ratingBarLock = false;
+	let passEnabled = <?php echo $t['Tsumego']['pass']; ?>+"";
 	
 	<?php 
 	if($tv!=null){

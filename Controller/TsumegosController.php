@@ -637,6 +637,24 @@ class TsumegosController extends AppController{
 					$this->AdminActivity->create();
 					$this->AdminActivity->save($adminActivity2);
 				}
+				if($this->data['Settings']['r43']=='no' && $t['Tsumego']['pass']!=0){
+					$adminActivity = array();
+					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$adminActivity['AdminActivity']['tsumego_id'] = $t['Tsumego']['id'];
+					$adminActivity['AdminActivity']['file'] = 'settings';
+					$adminActivity['AdminActivity']['answer'] = 'Disabled passing';
+					$this->AdminActivity->create();
+					$this->AdminActivity->save($adminActivity);
+				}
+				if($this->data['Settings']['r43']=='yes' && $t['Tsumego']['pass']!=1){
+					$adminActivity = array();
+					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$adminActivity['AdminActivity']['tsumego_id'] = $t['Tsumego']['id'];
+					$adminActivity['AdminActivity']['file'] = 'settings';
+					$adminActivity['AdminActivity']['answer'] = 'Enabled passing';
+					$this->AdminActivity->create();
+					$this->AdminActivity->save($adminActivity);
+				}
 				if($this->data['Settings']['r41']=='yes' && $tv==null){
 					$adminActivity2 = array();
 					$adminActivity2['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
@@ -697,6 +715,8 @@ class TsumegosController extends AppController{
 				else $t['Tsumego']['virtual_children'] = 0;
 				if($this->data['Settings']['r39'] == 'on') $t['Tsumego']['alternative_response'] = 1;
 				else $t['Tsumego']['alternative_response'] = 0;
+				if($this->data['Settings']['r43'] == 'yes') $t['Tsumego']['pass'] = 1;
+				else $t['Tsumego']['pass'] = 0;
 				if($this->data['Settings']['r40'] == 'on') $t['Tsumego']['duplicate'] = -1;
 				else $t['Tsumego']['duplicate'] = 0;
 				$this->Tsumego->save($t, true);
@@ -2264,6 +2284,7 @@ class TsumegosController extends AppController{
 		$this->set('ui', $ui);
 		$this->set('requestProblem', $requestProblem);
 		$this->set('alternative_response', $t['Tsumego']['alternative_response']);
+		$this->set('passEnabled', $t['Tsumego']['pass']);
 		$this->set('virtual_children', $t['Tsumego']['virtual_children']);
 		$this->set('set_duplicate', $t['Tsumego']['duplicate']);
 		$this->set('achievementUpdate', $achievementUpdate);

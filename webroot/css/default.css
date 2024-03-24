@@ -3662,6 +3662,23 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		border-top-right-radius: 9px;
 		border-top-left-radius: 9px;
 	}
+	#besogo-pass-button{
+		background-color: #29a058!important;
+		cursor:context-menu;
+		font-family: Times New Roman,verdana,helvetica,arial,sans-serif;
+		font-size: 16px;
+		font-style: normal;
+		font-variant: normal;
+		font-weight: 800;
+		text-decoration: none;
+		color: #fff;
+		padding: 10px 13px;
+		margin: 5px;
+		cursor:pointer;
+	}
+	#besogo-pass-button:hover{
+		background-color:#6cae86!important
+	}
 	#besogo-review-button{
 		background-color: #c63c3c!important;
 	}
