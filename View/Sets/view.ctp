@@ -328,8 +328,11 @@
 					$vcOff = '';
 					$arOn = '';
 					$arOff = '';
+					$passingNo = '';
+					$passingYes = '';
 					$vcMessage = '';
 					$arMessage = '';
+					$passingMessage = '';
 					if($allVcActive){
 						$vcMessage = '<font color="#717171">[Merge recurring positions activated on all problems]</font><br>';
 						$vcOn = 'checked="checked"';
@@ -344,11 +347,19 @@
 						$arMessage = '<font color="#717171">[Alternative Respone Mode deactivated on all problems]</font><br>';
 						$arOff = 'checked="checked"';
 					}
+					if($allPassActive){
+						$passingMessage = '<font color="#717171">[Passing enabled on all problems]</font><br>';
+						$passingYes = 'checked="checked"';
+					}elseif($allPassInactive){
+						$passingMessage = '<font color="#717171">[Passing disabled on all problems]</font><br>';
+						$passingNo = 'checked="checked"';
+					}
 					echo '
 						<div id="msg5">
 							<br>
 							'.$vcMessage.'
 							'.$arMessage.'
+							'.$passingMessage.'
 							<form action="" method="POST" enctype="multipart/form-data">
 								<table>
 									<tr>
@@ -360,6 +371,11 @@
 										<td>Alternative Response Mode</td>
 										<td><input type="radio" id="r39" name="data[Settings][r39]" value="on" ><label for="r39">on</label></td>
 										<td><input type="radio" id="r39" name="data[Settings][r39]" value="off" ><label for="r39">off</label></td>
+									</tr>
+									<tr>
+										<td>Enable passing</td>
+										<td><input type="radio" id="r43" name="data[Settings][r43]" value="no" ><label for="r43">no</label></td>
+										<td><input type="radio" id="r43" name="data[Settings][r43]" value="yes" ><label for="r43">yes</label></td>
 									</tr>
 								</table>
 								<br>

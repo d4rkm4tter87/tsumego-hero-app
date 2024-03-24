@@ -814,6 +814,8 @@ class SetsController extends AppController{
 			$allVcInactive = true;
 			$allArActive = true;
 			$allArInactive = true;
+			$allPassActive = true;
+			$allPassInactive = true;
 			
 			for($i=0; $i<count($ts); $i++){
 				if($ts[$i]['Tsumego']['virtual_children']==0)
@@ -824,6 +826,10 @@ class SetsController extends AppController{
 					$allArActive = false;
 				if($ts[$i]['Tsumego']['alternative_response']==1)
 					$allArInactive = false;
+				if($ts[$i]['Tsumego']['pass']==0)
+					$allPassActive = false;
+				if($ts[$i]['Tsumego']['pass']==1)
+					$allPassInactive = false;
 			}
 			
 			for($i=0; $i<count($ts); $i++) array_push($tsIds, $ts[$i]['Tsumego']['id']);
@@ -998,6 +1004,32 @@ class SetsController extends AppController{
 					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
 					$adminActivity['AdminActivity']['file'] = 'settings';
 					$adminActivity['AdminActivity']['answer'] = 'Turned off alternative response mode for set '.$set['Set']['title'];
+					$this->AdminActivity->save($adminActivity);
+				}
+				if($this->data['Settings']['r43'] == 'yes'){
+					for($i=0; $i<count($ts); $i++){
+						$ts[$i]['Tsumego']['pass'] = 1;
+						$this->Tsumego->save($ts[$i]);
+					}
+					$allPassActive = true;
+					$adminActivity = array();
+					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+					$adminActivity['AdminActivity']['file'] = 'settings';
+					$adminActivity['AdminActivity']['answer'] = 'Enabled passing for set '.$set['Set']['title'];
+					$this->AdminActivity->save($adminActivity);
+				}
+				if($this->data['Settings']['r43'] == 'no'){
+					for($i=0; $i<count($ts); $i++){
+						$ts[$i]['Tsumego']['pass'] = 0;
+						$this->Tsumego->save($ts[$i]);
+					}
+					$allPassInactive = true;
+					$adminActivity = array();
+					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+					$adminActivity['AdminActivity']['file'] = 'settings';
+					$adminActivity['AdminActivity']['answer'] = 'Disabled passing for set '.$set['Set']['title'];
 					$this->AdminActivity->save($adminActivity);
 				}
 				$this->set('formRedirect', true);
@@ -1307,6 +1339,8 @@ class SetsController extends AppController{
         $this->set('allVcInactive', $allVcInactive);
         $this->set('allArActive', $allArActive);
         $this->set('allArInactive', $allArInactive);
+		$this->set('allPassActive', $allPassActive);
+        $this->set('allPassInactive', $allPassInactive);
         $this->set('pdCounter', $pdCounter);
 		$this->set('acS', $acS);
 		$this->set('acA', $acA);
