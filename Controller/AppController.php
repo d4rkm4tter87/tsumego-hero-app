@@ -2577,7 +2577,6 @@ class AppController extends Controller{
 				unset($_COOKIE['sound']);
 			}
 			$this->set('ac', true);
-			$this->set('user', $u);
 		}
 		
 		if(isset($_COOKIE['lightDark']) && $_COOKIE['lightDark'] != '0'){
@@ -3048,6 +3047,7 @@ class AppController extends Controller{
 		
 		$nextDay = new DateTime('tomorrow');
 		
+		$this->set('user', $u);
 		$this->set('mode', $mode);
 		$this->set('nextDay', $nextDay->format('m/d/Y'));
 		$this->set('boardNames', $boardNames);

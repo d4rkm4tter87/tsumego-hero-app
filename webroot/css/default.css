@@ -3663,7 +3663,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		border-top-left-radius: 9px;
 	}
 	#besogo-pass-button{
-		background-color: #29a058!important;
+		background-color: #4b2bc4!important;
 		cursor:context-menu;
 		font-family: Times New Roman,verdana,helvetica,arial,sans-serif;
 		font-size: 16px;
@@ -3677,7 +3677,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		cursor:pointer;
 	}
 	#besogo-pass-button:hover{
-		background-color:#6cae86!important
+		background-color:#6239ff!important
 	}
 	#besogo-review-button{
 		background-color: #c63c3c!important;

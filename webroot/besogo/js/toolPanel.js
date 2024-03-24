@@ -242,6 +242,15 @@ besogo.makeToolPanel = function(container, editor)
     }
     if (!besogo.multipleChoice && besogo.multipleChoiceCustom===false)
     {
+	  if(passEnabled==1){
+		  makeButtonText('Pass', 'Pass move', function(){
+			var tool = editor.getTool();
+			if (tool !== 'navOnly' && tool !== 'auto' && tool !== 'playB' && tool !== 'playW') {
+				editor.setTool('auto'); // Ensures that a move tool is selected
+			}
+			editor.click(0, 0, false); // Clicking off the board signals a pass
+		  }, 'besogo-pass-button');
+	  }
       if (mode==1)
       {
         let prevButtonId;
@@ -315,15 +324,7 @@ besogo.makeToolPanel = function(container, editor)
 		   function() { window.location.href = "/tsumegos/play/"+besogoMode3Next; },
 		   'besogo-next-button');
       }
-	  if(passEnabled==1){
-		  makeButtonText('Pass', 'Pass move', function(){
-			var tool = editor.getTool();
-			if (tool !== 'navOnly' && tool !== 'auto' && tool !== 'playB' && tool !== 'playW') {
-				editor.setTool('auto'); // Ensures that a move tool is selected
-			}
-			editor.click(0, 0, false); // Clicking off the board signals a pass
-		  }, 'besogo-pass-button');
-	  }
+	  
       let reviewButtonId;
       if (editor.getReviewEnabled())
         reviewButtonId = 'besogo-review-button';
