@@ -297,7 +297,13 @@ class UsersController extends AppController{
 		$this->set('id', $id);
 	}
 	
+	public function tsumego_rating2($id=null){
+		
+	}
+	/*
+	//scan for glitches
 	public function test($x=null){
+		
 		$this->loadModel('Tsumego');
 		$this->loadModel('TsumegoAttempt');
 		
@@ -325,6 +331,35 @@ class UsersController extends AppController{
 		
 		$this->set('next', $x+1);
 		$this->set('finish', count($ts)-1);
+		
+		
+	}
+	*/
+	//fix glitched problems
+	public function test($id=null){
+		/*
+		$this->loadModel('Tsumego');
+		$this->loadModel('TsumegoAttempt');
+		
+		$t = $this->Tsumego->find('all', array('conditions' => array(
+			'rd <' => -300
+		)));
+		
+		for($i=0; $i<count($t); $i++){
+			$ta = $this->TsumegoAttempt->find('all', array('limit' => 2, 'order' => 'created ASC', 'conditions' => array(
+				'tsumego_id' => $t[$i]['Tsumego']['id'],
+				'NOT' => array(
+					'tsumego_elo' => 0
+				)
+			)));
+			$t[$i]['Tsumego']['rd'] = 0;
+			$t[$i]['Tsumego']['elo_rating_mode'] = $ta[0]['TsumegoAttempt']['tsumego_elo'];
+			$this->Tsumego->save($t[$i]);
+			echo '<pre>'; print_r('saved '.$t[$i]['Tsumego']['id']); echo '</pre>';
+		}
+		echo '<pre>'; print_r(count($t)); echo '</pre>';
+		echo '<pre>'; print_r($ta[0]['TsumegoAttempt']['tsumego_elo']); echo '</pre>';
+		*/
 	}
 	
 	
@@ -332,10 +367,17 @@ class UsersController extends AppController{
 		$this->loadModel('Tsumego');
 		
 		$ts = $this->Tsumego->find('all', array('order' => 'rd ASC'));
-		$c['+'] = array();
-		$c['-'] = array();
+		$more = array();
+		$less = array();
+		
 		for($i=0; $i<count($ts); $i++){
+			if($ts[$i]['Tsumego']['rd']>0)
+				array_push($more, $ts[$i]['Tsumego']['rd']);
+			if($ts[$i]['Tsumego']['rd']<0)
+				array_push($less, $ts[$i]['Tsumego']['rd']);
 		}
+		echo '<pre>'; print_r(count($less)); echo '</pre>';
+		echo '<pre>'; print_r(count($more)); echo '</pre>';
 		
 		$this->set('ts', $ts);
 	}

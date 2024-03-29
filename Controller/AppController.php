@@ -466,8 +466,6 @@ class AppController extends Controller{
 			$return['tsumego'] = round($tWin);
 			$return['tsumego2'] = $tWin;
 		}
-		//echo '<pre>'; print_r($return); echo '</pre>';
-		//echo '<pre>'; print_r($activityValue); echo '</pre>';
 		return $return;
 	}
 	

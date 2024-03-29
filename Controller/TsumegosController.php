@@ -1132,6 +1132,7 @@ class TsumegosController extends AppController{
 					if(isset($_COOKIE['av']))
 						$activityValueTime = $_COOKIE['av'];
 					$activityValueTime = $this->getNewElo($eloDifference, $eloBigger, $activityValueTime, 'l');
+					
 					$preTsumego['Tsumego']['elo_rating_mode'] += $activityValueTime['tsumego'];
 					$this->Tsumego->save($preTsumego);
 							
@@ -1371,6 +1372,7 @@ class TsumegosController extends AppController{
 							if(isset($_COOKIE['av']))
 								$activityValueTime = $_COOKIE['av'];
 							$activityValueTime = $this->getNewElo($eloDifference, $eloBigger, $activityValueTime, 'w');
+							if($activityValueTime['tsumego']<-15) $activityValueTime['tsumego'] = -15;
 							$preTsumego['Tsumego']['elo_rating_mode'] += $activityValueTime['tsumego'];
 							$this->Tsumego->save($preTsumego);
 							
@@ -1445,6 +1447,7 @@ class TsumegosController extends AppController{
 					if(isset($_COOKIE['av']))
 						$activityValueRating = $_COOKIE['av'];
 					$newUserEloWRating = $this->getNewElo($eloDifference, $eloBigger, $activityValueRating, 'w');
+					if($newUserEloWRating['tsumego']<-15) $newUserEloWRating['tsumego'] = -15;
 					$preTsumego['Tsumego']['elo_rating_mode'] += $newUserEloWRating['tsumego'];
 					$this->Tsumego->save($preTsumego);
 					
