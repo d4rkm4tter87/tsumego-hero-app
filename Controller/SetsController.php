@@ -581,6 +581,7 @@ class SetsController extends AppController{
 			$sets[$i]['Set']['solvedColor'] = $this->getSolvedColor($sets[$i]['Set']['solved']);
 			$sets[$i]['Set']['topicColor'] = $sets[$i]['Set']['color'];
 			$sets[$i]['Set']['difficultyColor'] = $this->getDifficultyColor($sets[$i]['Set']['difficulty']);
+			$sets[$i]['Set']['difficultyRank'] = $this->getTsumegoRank($sets[$i]['Set']['difficulty']);
 			$sets[$i]['Set']['sizeColor'] = $this->getSizeColor($sets[$i]['Set']['anz']);
 			$sets[$i]['Set']['dateColor'] = $this->getDateColor($sets[$i]['Set']['created']);
 			
@@ -655,7 +656,7 @@ class SetsController extends AppController{
 			$fav[0]['Set']['author'] = $_SESSION['loggedInUser']['User']['name'];
 			$fav[0]['Set']['description'] = '';
 			$fav[0]['Set']['folder'] = '';
-			$fav[0]['Set']['difficulty'] = $difficultyCount;
+			$fav[0]['Set']['difficulty'] = '';
 			$fav[0]['Set']['image'] = 'fav';
 			$fav[0]['Set']['order'] = 0;
 			$fav[0]['Set']['public'] = 1;

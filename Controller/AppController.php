@@ -888,7 +888,13 @@ class AppController extends Controller{
 	}
 	
 	public function getTsumegoRank($t){
-		if($t<700) return '15k';
+		if($t<100) return '21k';
+		else if($t<200) return '20k';
+		else if($t<300) return '19k';
+		else if($t<400) return '18k';
+		else if($t<500) return '17k';
+		else if($t<600) return '16k';
+		else if($t<700) return '15k';
 		else if($t<800) return '14k';
 		else if($t<900) return '13k';
 		else if($t<1000) return '12k';
@@ -1005,7 +1011,7 @@ class AppController extends Controller{
 			$elo = round(800+$p);
 		}else if($rank=='14k'){
 			$elo = round(700+$p);
-		}else if($rank=='15k'){
+		}else if($rank=='15k' || $rank=='16k' || $rank=='17k' || $rank=='18k' || $rank=='19k' || $rank=='20k' || $rank=='21k'){
 			$elo = round(600+$p);
 		}
 		return $elo;

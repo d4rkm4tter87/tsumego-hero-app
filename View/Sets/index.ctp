@@ -204,7 +204,7 @@
 											<td>
 												<div class="display1" align="center">
 												<b>Difficulty:<br>
-												'.$sets[$i]['Set']['difficulty'].'
+												'.$sets[$i]['Set']['difficultyRank'].'
 												</div>
 												</b>
 											</td>
@@ -225,8 +225,6 @@
 	  <p class="title">Problem Count
 	  <br><br></p>
 	  <?php 
-		//echo '<pre>';print_r($sets);echo '</pre>';
-		
 		echo '<table width="35%" border="0">';
 		$summe = 0;
 		for($i=0; $i<count($sets); $i++){

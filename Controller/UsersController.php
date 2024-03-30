@@ -2499,19 +2499,15 @@ Joschka Zimdars';
 		$this->PurgeList->save($pl);
 		
 		$sets = $this->Set->find('all', array('conditions' => array('public' => 1)));
-		//$sets = $this->Set->find('all', array('conditions' => array('id' => 74761)));
-		$ts = array();
 		$xxx = array();
 		for($i=0; $i<count($sets); $i++){
 			$xxx[$i] = array();
-			//$tsx = $this->Tsumego->find('all', array('conditions' =>  array('set_id' => $sets[$i]['Set']['id'])));
 			$tsx = $this->findTsumegoSet($sets[$i]['Set']['id']);
 			
 			for($j=0; $j<count($tsx); $j++){
 				$tsx[$j]['Tsumego']['set'] = $sets[$i]['Set']['title'];
 				$tsx[$j]['Tsumego']['setid'] = $sets[$i]['Set']['id'];
 				$tsx[$j]['Tsumego']['multiplier'] = $sets[$i]['Set']['multiplier'];
-				array_push($ts, $tsx[$j]);
 				array_push($xxx[$i], $tsx[$j]);
 			}
 		}
@@ -2540,7 +2536,7 @@ Joschka Zimdars';
 			for($k=0; $k<count($xxx[$i]); $k++){
 				$distance = array();
 				
-				$sp += $xxx[$i][$k]['Tsumego']['userWin'];
+				$sp += $xxx[$i][$k]['Tsumego']['elo_rating_mode'];
 				$sc ++;
 				
 				for($l=0; $l<9; $l++){
@@ -2580,6 +2576,7 @@ Joschka Zimdars';
 			}
 			$setCount[$i] = $sc;
 			$setPercent[$i] = round($sp/$sc,2);
+			//echo '<pre>'; print_r($setPercent); echo '</pre>';
 			$distance = array();
 			for($l=0; $l<9; $l++){
 				$xp = ($l+1)*10;
@@ -2594,12 +2591,9 @@ Joschka Zimdars';
 					$lowest = $distance[$j];
 				}
 			}
-			$setDifficulty[$i] = $pos+1;
-			/*
-			$s = $this->Set->findById($newTs3['setid'][$i][0]);
-			$s['Set']['difficulty'] = $setDifficulty[$i];
-			$this->Set->save($s);
-			*/
+			
+			$setDifficulty[$i] = round($setPercent[$i]);
+			//$setDifficulty[$i] = $pos+1;
 		}
 		
 		for($i=0; $i<count($newTs3['id']); $i++){
@@ -2607,14 +2601,13 @@ Joschka Zimdars';
 		}
 		
 		for($i=0; $i<count($setDifficulty); $i++){
-			//echo $newTs3['setid'][$i][0].':'.$setDifficulty[$i].'<br>';
+			echo $newTs3['setid'][$i][0].':'.$setDifficulty[$i].'<br>';
 			$s = $this->Set->findById($newTs3['setid'][$i][0]);
 			$s['Set']['difficulty'] = $setDifficulty[$i];
 			$this->Set->save($s);
 		}
 		
 		$this->set('t', $t);
-		//$this->set('ts', $newTs2);
 		$this->set('newTs3', $newTs3);
 		$this->set('setPercent', $setPercent);
 		$this->set('setCount', $setCount);

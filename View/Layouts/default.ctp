@@ -76,7 +76,7 @@
 		elseif($user['User']['elo_rating_mode']>=300) $td = '18k';
 		elseif($user['User']['elo_rating_mode']>=200) $td = '19k';
 		elseif($user['User']['elo_rating_mode']>=100) $td = '20k';
-		else $td = '20k';
+		else $td = '21k';
 		
 		if($mode==1){
 			if($levelBar==1){

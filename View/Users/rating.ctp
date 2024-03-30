@@ -81,7 +81,7 @@
 			elseif($users[$i]['User']['elo_rating_mode']>=300) $td = '18k';
 			elseif($users[$i]['User']['elo_rating_mode']>=200) $td = '19k';
 			elseif($users[$i]['User']['elo_rating_mode']>=100) $td = '20k';
-			else $td = '20k';
+			else $td = '21k';
 			
 			if($td=='9d') $tableRowColor = 'color9d';
 			elseif($td=='8d') $tableRowColor = 'color8d';
@@ -112,7 +112,7 @@
 			elseif($td=='18k') $tableRowColor = 'color18k';
 			elseif($td=='19k') $tableRowColor = 'color19k';
 			elseif($td=='20k') $tableRowColor = 'color20k';
-			
+			else $tableRowColor = 'color20k';
 			echo '
 				<tr class="'.$tableRowColor.'">
 					<!--<td align="center"></td>-->
