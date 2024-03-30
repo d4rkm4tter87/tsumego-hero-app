@@ -2601,7 +2601,7 @@ Joschka Zimdars';
 		}
 		
 		for($i=0; $i<count($setDifficulty); $i++){
-			echo $newTs3['setid'][$i][0].':'.$setDifficulty[$i].'<br>';
+			//echo $newTs3['setid'][$i][0].':'.$setDifficulty[$i].'<br>';
 			$s = $this->Set->findById($newTs3['setid'][$i][0]);
 			$s['Set']['difficulty'] = $setDifficulty[$i];
 			$this->Set->save($s);

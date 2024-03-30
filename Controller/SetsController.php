@@ -785,6 +785,8 @@ class SetsController extends AppController{
 			$ts = array();
 			$scTs = $this->SetConnection->find('all', array('conditions' => array('set_id' => $set['Set']['id'])));
 			
+			$set['Set']['difficultyRank'] = $this->getTsumegoRank($set['Set']['difficulty']);
+			
 			for($i=0; $i<count($scTs); $i++){
 				$scT = $this->Tsumego->findById($scTs[$i]['SetConnection']['tsumego_id']);
 				$scT['Tsumego']['set_id'] = $scTs[$i]['SetConnection']['set_id'];

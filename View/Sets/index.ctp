@@ -203,7 +203,7 @@
 											</td>
 											<td>
 												<div class="display1" align="center">
-												<b>Difficulty:<br>
+												<b>Avg. difficulty:<br>
 												'.$sets[$i]['Set']['difficultyRank'].'
 												</div>
 												</b>

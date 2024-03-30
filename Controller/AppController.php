@@ -2231,7 +2231,7 @@ class AppController extends Controller{
 			array_push($updated, $achievementId);
 		}
 		if($tNum>=100){
-			if($s['Set']['difficulty']<=2){
+			if($s['Set']['difficulty']<1300){
 				$achievementId = 12;
 				if($acA['AchievementCondition']['value']>=75 && !isset($existingAs[$achievementId])){
 					$as['AchievementStatus']['achievement_id'] = $achievementId;
@@ -2274,7 +2274,7 @@ class AppController extends Controller{
 					$this->AchievementStatus->save($as);
 					array_push($updated, $achievementId);
 				}
-			}else if($s['Set']['difficulty']==3){
+			}else if($s['Set']['difficulty']>=1300 && $s['Set']['difficulty']<1500){
 				$achievementId = 15;
 				if($acA['AchievementCondition']['value']>=75 && !isset($existingAs[$achievementId])){
 					$as['AchievementStatus']['achievement_id'] = $achievementId;
@@ -2317,7 +2317,7 @@ class AppController extends Controller{
 					$this->AchievementStatus->save($as);
 					array_push($updated, $achievementId);
 				}
-			}else if($s['Set']['difficulty']==4){
+			}else if($s['Set']['difficulty']>=1500 && $s['Set']['difficulty']<1700){
 				$achievementId = 18;
 				if($acA['AchievementCondition']['value']>=75 && !isset($existingAs[$achievementId])){
 					$as['AchievementStatus']['achievement_id'] = $achievementId;

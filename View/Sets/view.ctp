@@ -179,9 +179,9 @@
 						<td style="vertical-align:bottom;" width="50%">
 						<div align="center">
 							<br>
-							Difficulty: 
+							Avg. difficulty: 
 							<?php 
-							echo '<b>'.$set['Set']['difficulty'].'</b>';
+							echo '<b>'.$set['Set']['difficultyRank'].'</b>';
 							//echo '<img src="/img/stars'. $set['Set']['difficulty'].'.png" alt="Tsumego difficulty: '. $set['Set']['difficulty'].'" title="Tsumego difficulty: '. $set['Set']['difficulty'].'">'; 
 							
 							?>
