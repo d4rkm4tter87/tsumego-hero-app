@@ -1501,7 +1501,6 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		font-weight: 700;
 		font-style: normal;
 		font-variant: normal;
-		color: rgb(209, 159, 228);
 	}
 	#account-bar-user a{
 		color:#74d14c;
@@ -3917,6 +3916,22 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	}
 	.apexcharts-active{
 		color:black;
+	}
+	#modeSelector{
+		width: 9px;
+		height: 13px;
+		position: absolute;
+		top: 41px;
+		left: 1145px;
+		border-bottom-left-radius: 4px;
+		border-top-right-radius: 2px;
+		cursor:pointer;
+	}
+	.modeSelector1{
+		background-image:linear-gradient(#82c95b, #4f8534);
+	}
+	.modeSelector2{
+		background-image: linear-gradient(#d19fe4, #b055d2);
 	}
 	
 	.uotd1{background: url(/img/uotd1.png);background-size:99%;background-repeat:no-repeat;}

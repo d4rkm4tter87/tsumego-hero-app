@@ -1,3 +1,4 @@
+<?php ?>
 	<script src ="/js/previewBoard.js"></script>
 	<div class="homeRight">
 		<p class="title4 title4right"><?php echo $d1; ?></p>

@@ -174,6 +174,10 @@ function levelBarChange(num){
 		$('#xp-bar-fill').removeAttr('class');
 		$('#xp-bar-fill').attr('class', 'xp-bar-fill-c1');
 		$('#account-bar-xp').text(barLevelNum);
+		$('#modeSelector').removeAttr('class');
+		$('#modeSelector').attr('class', 'modeSelector2');
+		modeSelector = 2;
+		levelBar = 1;
 		levelToRatingHover = num;
 		document.cookie = "levelBar=1;path=/;SameSite=none;Secure=false";
 		document.cookie = "levelBar=1;path=/sets;SameSite=none;Secure=false";
@@ -188,6 +192,10 @@ function levelBarChange(num){
 		$('#xp-bar-fill').removeAttr('class');
 		$('#xp-bar-fill').attr('class', 'xp-bar-fill-c2');
 		$('#account-bar-xp').text(barRatingNum);
+		$('#modeSelector').removeAttr('class');
+		$('#modeSelector').attr('class', 'modeSelector1');
+		modeSelector = 1;
+		levelBar = 2;
 		levelToRatingHover = num;
 		document.cookie = "levelBar=2;path=/;SameSite=none;Secure=false";
 		document.cookie = "levelBar=2;path=/sets;SameSite=none;Secure=false";

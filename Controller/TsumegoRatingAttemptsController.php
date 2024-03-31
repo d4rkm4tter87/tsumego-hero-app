@@ -205,7 +205,12 @@ class TsumegoRatingAttemptsController extends AppController {
 			'user_id' => $_SESSION['loggedInUser']['User']['id'],
 			'mode' => 2
 		)));
-		
+		/*
+		$trsx = $this->TsumegoAttempt->find('all', array('limit' => 10, 'order' => 'created DESC', 'conditions' => array(
+			'user_id' => $_SESSION['loggedInUser']['User']['id']
+		)));
+		echo '<pre>'; print_r($trsx); echo '</pre>';
+		*/
 		for($i=0; $i<count($trs); $i++){
 			if($trs[$i]['TsumegoAttempt']['solved']==1)
 				$trs[$i]['TsumegoAttempt']['status'] = '<b style="color:#0cbb0c;">Solved</b>';

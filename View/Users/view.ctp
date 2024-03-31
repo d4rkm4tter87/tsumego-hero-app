@@ -1,4 +1,4 @@
-
+<?php ?>
 	<div class="homeCenter2">
 		<?php
 			echo '<p class="title6">Profile</p>';
