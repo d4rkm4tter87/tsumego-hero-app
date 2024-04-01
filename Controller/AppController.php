@@ -450,10 +450,6 @@ class AppController extends Controller{
 		
 		$activityValueSum = $activityValueBase + ($activityValueAdd/$kFactor1);
 		
-		if($tWin>15) $tWin = 15;
-		if($tLoss<-15) $tLoss = -15;
-		
-		
 		if($outcome=='w'){
 			$return['user'] = round($uWin*$activityValueSum, 2);
 			$return['user2'] = $uWin*$activityValueSum;
@@ -2672,8 +2668,7 @@ class AppController extends Controller{
 			$_SESSION['loggedInUser']['User']['elo_rating_mode'] += $newUserEloL['user'];
 			$u['User']['elo_rating_mode'] = $_SESSION['loggedInUser']['User']['elo_rating_mode'];
 			$this->User->save($u);
-			if($newUserEloL['tsumego']>-15 && $newUserEloL['tsumego']<15)
-				$preTsumego['Tsumego']['elo_rating_mode'] += $newUserEloL['tsumego'];
+			$preTsumego['Tsumego']['elo_rating_mode'] += $newUserEloL['tsumego'];
 			$preTsumego['Tsumego']['difficulty'] = $this->convertEloToXp($preTsumego['Tsumego']['elo_rating_mode']);
 			$this->Tsumego->save($preTsumego);
 		}
@@ -2693,8 +2688,7 @@ class AppController extends Controller{
 			$_SESSION['loggedInUser']['User']['elo_rating_mode'] += $newUserEloW['user'];
 			$u['User']['elo_rating_mode'] = $_SESSION['loggedInUser']['User']['elo_rating_mode'];
 			$this->User->save($u);
-			if($newUserEloL['tsumego']>-15 && $newUserEloL['tsumego']<15)
-				$preTsumego['Tsumego']['elo_rating_mode'] += $newUserEloW['tsumego'];
+			$preTsumego['Tsumego']['elo_rating_mode'] += $newUserEloW['tsumego'];
 			$preTsumego['Tsumego']['difficulty'] = $this->convertEloToXp($preTsumego['Tsumego']['elo_rating_mode']);
 			$this->Tsumego->save($preTsumego);
 		}
@@ -2825,20 +2819,7 @@ class AppController extends Controller{
 						}
 					}
 					if(true){
-						if($utPre==null){
-							$utPre['TsumegoStatus'] = array();
-							$utPre['TsumegoStatus']['user_id'] = $u['User']['id'];
-							$utPre['TsumegoStatus']['tsumego_id'] = $_COOKIE['preId'];
-							$utPre['TsumegoStatus']['status'] = 'V';
-						}
-						if($utPre['TsumegoStatus']['status'] == 'W') $utPre['TsumegoStatus']['status'] = 'C';
-						else $utPre['TsumegoStatus']['status'] = 'S';
-					
-						$utPre['TsumegoStatus']['created'] = date('Y-m-d H:i:s');
-						if(isset($_SESSION['loggedInUser']) && !isset($_SESSION['noLogin'])){
-							if(!isset($utPre['TsumegoStatus']['status'])) $utPre['TsumegoStatus']['status'] = 'V';
-							$this->TsumegoStatus->save($utPre);
-						}
+						
 					}
 				}
 			}else{
@@ -2851,6 +2832,23 @@ class AppController extends Controller{
 			unset($_COOKIE['sequence']);
 			unset($_COOKIE['type']);
 		}
+		if($_COOKIE['score'] != '0' && $_COOKIE['preId'] != '0'){
+			if($utPre==null){
+				$utPre['TsumegoStatus'] = array();
+				$utPre['TsumegoStatus']['user_id'] = $u['User']['id'];
+				$utPre['TsumegoStatus']['tsumego_id'] = $_COOKIE['preId'];
+				$utPre['TsumegoStatus']['status'] = 'V';
+			}
+			if($utPre['TsumegoStatus']['status'] == 'W') $utPre['TsumegoStatus']['status'] = 'C';
+			else $utPre['TsumegoStatus']['status'] = 'S';
+		
+			$utPre['TsumegoStatus']['created'] = date('Y-m-d H:i:s');
+			if(isset($_SESSION['loggedInUser']) && !isset($_SESSION['noLogin'])){
+				if(!isset($utPre['TsumegoStatus']['status'])) $utPre['TsumegoStatus']['status'] = 'V';
+				$this->TsumegoStatus->save($utPre);
+			}
+		}
+		
 		}
 		}
 		$boardNames = array();

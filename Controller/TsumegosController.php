@@ -340,7 +340,6 @@ class TsumegosController extends AppController{
 				$ranks = $this->Rank->find('all', array('conditions' =>  array('session' => $_SESSION['loggedInUser']['User']['activeRank'])));
 				if(count($ranks)==0){
 					$r = $this->params['url']['rank'];
-					
 					if($r=='5d'){ $r1=2500; $r2=10000; }
 					elseif($r=='4d'){ $r1=2400; $r2=2500; }
 					elseif($r=='3d'){ $r1=2300; $r2=2400; }
@@ -1358,6 +1357,28 @@ class TsumegosController extends AppController{
 								}
 							}
 							
+							$ratingModeUt = $this->TsumegoStatus->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'tsumego_id' => $preTsumego['Tsumego']['id'])));
+							if(!isset($ratingModeUt['TsumegoStatus']['status']))
+								$ratingModeUt['TsumegoStatus']['status'] = 'V';
+							
+							if($ratingModeUt['TsumegoStatus']['status']=='W'){
+								$ratingModeXp = $preTsumego['Tsumego']['difficulty']/2;
+							}else if($ratingModeUt['TsumegoStatus']['status']=='S' || $ratingModeUt['TsumegoStatus']['status']=='C'){
+								$ratingModeXp = 0;
+							}else{
+								$ratingModeXp = $preTsumego['Tsumego']['difficulty'];
+							}
+							$xpOld = $u['User']['xp'] + $ratingModeXp;
+							if($xpOld >= $u['User']['nextlvl']){
+								$xpOnNewLvl = -1 * ($u['User']['nextlvl'] - $xpOld);
+								$u['User']['xp'] = $xpOnNewLvl;
+								$u['User']['level'] += 1;
+								$u['User']['nextlvl'] += $this->getXPJump($u['User']['level']);
+								$u['User']['health'] = $this->getHealth($u['User']['level']);
+								$_SESSION['loggedInUser']['User']['level'] = $u['User']['level'];
+							}else
+								$u['User']['xp'] = $xpOld;
+							
 							$eloDifference = abs($_SESSION['loggedInUser']['User']['elo_rating_mode'] - $preTsumego['Tsumego']['elo_rating_mode']);
 							if($_SESSION['loggedInUser']['User']['elo_rating_mode'] > $preTsumego['Tsumego']['elo_rating_mode'])
 								$eloBigger = 'u';
@@ -1367,7 +1388,6 @@ class TsumegosController extends AppController{
 							if(isset($_COOKIE['av']))
 								$activityValueTime = $_COOKIE['av'];
 							$activityValueTime = $this->getNewElo($eloDifference, $eloBigger, $activityValueTime, 'w');
-							if($activityValueTime['tsumego']<-15) $activityValueTime['tsumego'] = -15;
 							$preTsumego['Tsumego']['elo_rating_mode'] += $activityValueTime['tsumego'];
 							$this->Tsumego->save($preTsumego);
 							
@@ -1416,11 +1436,10 @@ class TsumegosController extends AppController{
 					$tsumegoEloBefore = $preTsumego['Tsumego']['elo_rating_mode'];
 					$diff = $preTsumego['Tsumego']['elo_rating_mode'] - $u['User']['elo_rating_mode'];
 					
-					$ratingModeUt = $this->TsumegoStatus->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'tsumego_id' => $t['Tsumego']['id'])));
+					$ratingModeUt = $this->TsumegoStatus->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'tsumego_id' => $preTsumego['Tsumego']['id'])));
 					
 					if(!isset($ratingModeUt['TsumegoStatus']['status']))
 						$ratingModeUt['TsumegoStatus']['status'] = 'V';
-					
 					if($ratingModeUt['TsumegoStatus']['status']=='W'){
 						$ratingModeXp = $preTsumego['Tsumego']['difficulty']/2;
 					}else if($ratingModeUt['TsumegoStatus']['status']=='S' || $ratingModeUt['TsumegoStatus']['status']=='C'){
@@ -1428,7 +1447,6 @@ class TsumegosController extends AppController{
 					}else{
 						$ratingModeXp = $preTsumego['Tsumego']['difficulty'];
 					}
-					
 					
 					$xpOld = $u['User']['xp'] + $ratingModeXp;
 					if($xpOld >= $u['User']['nextlvl']){
@@ -1459,7 +1477,6 @@ class TsumegosController extends AppController{
 					if(isset($_COOKIE['av']))
 						$activityValueRating = $_COOKIE['av'];
 					$newUserEloWRating = $this->getNewElo($eloDifference, $eloBigger, $activityValueRating, 'w');
-					if($newUserEloWRating['tsumego']<-15) $newUserEloWRating['tsumego'] = -15;
 					$preTsumego['Tsumego']['elo_rating_mode'] += $newUserEloWRating['tsumego'];
 					$this->Tsumego->save($preTsumego);
 					

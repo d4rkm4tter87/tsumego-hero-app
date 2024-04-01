@@ -331,10 +331,10 @@
 				echo $this->Form->input('admin_id', array('type' => 'hidden', 'value' => $_SESSION['loggedInUser']['User']['id']));
 				echo $this->Form->input('modifyDescription', array('value' => $placeholder, 'label' => '', 'type' => 'text', 'placeholder' => 'description'));
 				echo $this->Form->input('modifyHint', array('value' => $t['Tsumego']['hint'], 'label' => '', 'type' => 'text', 'placeholder' => 'hint'));
-				if($isSandbox)
-					echo $this->Form->input('modifyElo', array('value' => $t['Tsumego']['elo_rating_mode'], 'label' => '', 'type' => 'text', 'placeholder' => 'rating'));
-				if($isSandbox)
-					echo $this->Form->input('modifyAuthor', array('value' => $t['Tsumego']['author'], 'label' => '', 'type' => 'text', 'placeholder' => 'author'));
+				if($isSandbox) $modifyDescriptionType = 'text';
+				else $modifyDescriptionType = 'hidden';
+				echo $this->Form->input('modifyElo', array('value' => $t['Tsumego']['elo_rating_mode'], 'label' => '', 'type' => $modifyDescriptionType, 'placeholder' => 'rating'));
+				echo $this->Form->input('modifyAuthor', array('value' => $t['Tsumego']['author'], 'label' => '', 'type' => $modifyDescriptionType, 'placeholder' => 'author'));
 				if($isSandbox)
 					echo $this->Form->input('deleteProblem', array('value' => '', 'label' => '', 'type' => 'text', 'placeholder' => 'delete'));
 				echo $this->Form->end('Submit');
@@ -2151,7 +2151,7 @@
 				$xxx2 = (($crs+1)/$stopParameter)*100; 
 				if($xxx2>100) $xxx2 = 100;
 			?>
-			$("#xp-bar-fill").css({"width":"'.$xxx2.'%"});
+			$("#xp-bar-fill").css({"width":"<?php echo $xxx2; ?>%"});
 			$("#xp-bar-fill").css("-webkit-transition","all 1s ease");
 			$("#xp-increase-fx").fadeIn(0);
 			$("#xp-bar-fill").css({"-webkit-transition":"all 1s ease","box-shadow":""});

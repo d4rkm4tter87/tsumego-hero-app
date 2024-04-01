@@ -124,6 +124,7 @@
 	
 	$(document).ready(function(){
 		notMode3 = false;
+		$("#modeSelector").hide();
 	});
 	
 	function settings(){

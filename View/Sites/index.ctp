@@ -93,6 +93,23 @@
 			</li>
 			<br><br>
 		</div>
+		<p class="title4">Update 01.04.2024</p>
+		<div class="new1">
+		<b>Improvements of rank display and score mechanics</b><br><br>
+		
+		<b>• Broader rank system:</b> Player and Tsumego ranks range from 21k to 9d.<br>
+		<b>• Collection difficulty:</b> Instead of a difficulty value from 1 to 9, the average kyu/dan rank is shown.<br>
+		<b>• Mode-indepentent scores:</b> Problems in rating- and time mode give also xp and they change the problem's status to solved on succeeding. 
+		This means that rating and level 
+		are affected in any mode.<br>
+		<b>• Progress bar switch:</b> The progress bar can display any type and it can be switched on the problem pages by 
+		selecting the lower left corner.<br><br>
+		<div align="center">
+		<img src="/img/bar-example.png" title="bar-example" alt="bar-example" width="140px">
+		
+		<br>
+		</div>
+		</div>
 		<p class="title4">17.03.2024</p>
 		<div class="new1">
 		<b>Prizes</b><br><br>
@@ -600,8 +617,13 @@
 		<div class="new1">
 			<table class="newx" border="0">
 				<tr>
+					<td><h1>31.03.2024</h1></td>
+					<td><h1>Michael Madsen</h1></td>
+					<td><h1>10,00 €</h1></td>
+				</tr>
+				<tr>
 					<td><h1>24.03.2024</h1></td>
-					<td><h1>heron  </h1></td>
+					<td><h1>heron</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<tr>
@@ -617,11 +639,6 @@
 				<tr>
 					<td><h1>08.03.2024</h1></td>
 					<td><h1>aathn </h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>02.03.2024</h1></td>
-					<td><h1>Tom Sokec</h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<!--

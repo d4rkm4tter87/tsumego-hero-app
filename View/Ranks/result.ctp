@@ -206,7 +206,7 @@
 			$("#xp-bar-fill").removeClass("xp-bar-fill-c2");
 			$("#xp-bar-fill").removeClass("xp-bar-fill-c1");
 			$("#account-bar-user a").attr("class", "xp-text-fill-c3x");
-		
+			$("#modeSelector").hide();
 			notMode3 = false;
 			<?php
 				$bt = '15k';
@@ -215,7 +215,6 @@
 				if($c!=0) $bp = ($c/$stopParameterNum)*100;
 				else $bp = 100;
 			?>
-			
 			
 			bartext = "<?php echo $bt; ?>";
 			barPercent = "<?php echo $bp; ?>%";

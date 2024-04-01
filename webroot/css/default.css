@@ -2674,12 +2674,32 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	#heroProfile li a{
 		color:#74d14c;
 	}
-	#heroAchievements{
+	#heroBar{
 		color:#74d14c;
 		position:absolute;
 		left:1145px;
 		width:144px;
 		top:82px;	
+		background: linear-gradient(#808080, #464646);
+		padding:1px 10px;
+		font-family:Georgia;
+		letter-spacing:1px;
+		font-size: 14px;
+		font-weight: 600;
+		z-index:5;
+		cursor:pointer;
+		border-top:1px solid #222;
+		display:none;
+	}
+	#heroBar li a{
+		color:#74d14c;
+	}
+	#heroAchievements{
+		color:#74d14c;
+		position:absolute;
+		left:1145px;
+		width:144px;
+		top:110px;	
 		background: linear-gradient(#808080, #464646);
 		padding:1px 10px;
 		font-family:Georgia;
@@ -2699,7 +2719,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		position:absolute;
 		left:1145px;
 		width:144px;
-		top:110px;	
+		top:138px;	
 		background: linear-gradient(#808080, #464646);
 		padding:1px 10px;
 		font-family:Georgia;
@@ -3928,10 +3948,10 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		cursor:pointer;
 	}
 	.modeSelector1{
-		background-image:linear-gradient(#82c95b, #4f8534);
+		background-image:linear-gradient(#6bac4a, #457128);
 	}
 	.modeSelector2{
-		background-image: linear-gradient(#d19fe4, #b055d2);
+		background-image: linear-gradient(#bd73d9, #9d31be);
 	}
 	
 	.uotd1{background: url(/img/uotd1.png);background-size:99%;background-repeat:no-repeat;}
@@ -4387,6 +4407,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	
 @media screen and (max-width: 1300px){
 	#heroProfile{left:935px;}
+	#heroBar{left:935px;}
 	#heroAchievements{left:935px;}
 	#heroLogout{left:935px;}
 	#boardsInMenu{padding-top:3px;padding-bottom:3px;}

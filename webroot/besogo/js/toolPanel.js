@@ -707,7 +707,10 @@ besogo.makeToolPanel = function(container, editor)
     var div = document.createElement('div');
     div.id = id;
     container.appendChild(div);
-    $("#author-notice").text('File by '+author);
+	if(author!="")
+		$("#author-notice").text('File by '+author);
+	else
+		$("#author-notice").text('');
     return div;
   }
 

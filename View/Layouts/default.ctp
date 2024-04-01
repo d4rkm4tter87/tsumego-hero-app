@@ -228,10 +228,12 @@
 							echo '</ul>';
 						}
 					}
+					if(isset($_SESSION['lastVisit'])) $sessionLastVisit = $_SESSION['lastVisit'];
+					else $sessionLastVisit = 15352;
 					echo '</li>';
 					echo '<li><a class="homeMenuLink" '.$playA.' href="/tsumegos/play/'.$lv.'">Play</a>';
 					echo '<ul class="newMenuLi3">';
-						echo '<li><a href="/tsumegos/play/'.$_SESSION['lastVisit'].'?mode=1" '.$levelModeA.'>Level</a></li>';
+						echo '<li><a href="/tsumegos/play/'.$sessionLastVisit.'?mode=1" '.$levelModeA.'>Level</a></li>';
 						if(isset($_SESSION['loggedInUser']['User']['id'])){
 							echo '<li><a href="/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2" '.$ratingModeA.'>Rating</a></li>';
 							echo '<li><a href="/ranks/overview" '.$timeModeA.'>Time</a></li>';
@@ -321,7 +323,8 @@
 	</div>
 	<?php
 		if(isset($_SESSION['loggedInUser']) && isset($_SESSION['loggedInUser']['User']['id'])){
-			
+			if($levelBar==1) $textBarInMenu = "Rating Bar";
+			else $textBarInMenu = "Level Bar";
 			echo '<div id="account-bar-wrapper" onmouseover="xpHover()" onmouseout="xpNoHover()">
 					  <div id="account-bar">
 							<div id="'.$accountBarLevelToRating.'" class="account-bar-user-class">
@@ -349,14 +352,17 @@
 				<div id="heroProfile" onmouseover="xpHover()" onmouseout="xpNoHover()">
 					<li><a href="/users/view/'.$_SESSION['loggedInUser']['User']['id'].'">Profile</a></li>
 				</div>
+				<div id="heroBar" onmouseover="xpHover()" onmouseout="xpNoHover()">
+					<li><a id="textBarInMenu" onclick="switchBarInMenu()">'.$textBarInMenu.'</a></li>
+				</div>
 				<div id="heroAchievements" onmouseover="xpHover()" onmouseout="xpNoHover()">
 					<li><a href="/achievements">Achievements</a></li>
 				</div>
 				<div id="heroLogout" onmouseover="xpHover()" onmouseout="xpNoHover()">
 					<li><a href="/users/logout">Sign Out</a></li>
-				</div>
-				<div id="modeSelector" class="modeSelector'.$modeSelector.'"></div>
-			';
+				</div>';
+				if($mode!=3)
+					echo '<div id="modeSelector" class="modeSelector'.$modeSelector.'"></div>';
 		}
 	?>
 	<div width="100%" align="left" class="whitebox2">
@@ -495,17 +501,20 @@
 		var notMode3 = true;
 
 		<?php if(isset($_SESSION['loggedInUser'])){ ?>
-		var userXP = <?php echo $user['User']['xp']; ?> ;
-		var userLevel = <?php echo $user['User']['level']; ?> ;
-		var userNextLvl = <?php echo $user['User']['nextlvl']; ?> ;
-		var userElo = <?php echo round($user['User']['elo_rating_mode']); ?> ;
-		var soundValue = 0;
-		let modeSelector = <?php echo $modeSelector; ?>;
-		let levelBar = <?php echo $levelBar; ?>+"";
-		<?php
-		echo 'soundValue = "'.$_SESSION['loggedInUser']['User']['sound'].'";';
-		}else echo 'soundValue = getCookie("sound");';
+			var userXP = <?php echo $user['User']['xp']; ?> ;
+			var userLevel = <?php echo $user['User']['level']; ?> ;
+			var userNextLvl = <?php echo $user['User']['nextlvl']; ?> ;
+			var userElo = <?php echo round($user['User']['elo_rating_mode']); ?> ;
+			var soundValue = 0;
+			let modeSelector = <?php echo $modeSelector; ?>;
+			let levelBar = <?php echo $levelBar; ?>+"";
+			<?php
+			echo 'soundValue = "'.$_SESSION['loggedInUser']['User']['sound'].'";';
+		}else{
 		?>
+			let levelBar = 1;
+			soundValue = getCookie("sound");
+		<?php } ?>
 		updateSoundValue(soundValue == 'on');
 
 		$(document).ready(function(){
@@ -779,29 +788,31 @@
 		}
 
 		function loadBar(){
-			if(notMode3){
-			<?php 
-			$barPercent2 = substr(round($user['User']['elo_rating_mode']), -2);
-			if($mode!=3){ ?>
-				if(levelBar==1){
+			<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
+				if(notMode3){
+				<?php 
+				$barPercent2 = substr(round($user['User']['elo_rating_mode']), -2);
+				if($mode!=3){ ?>
+					if(levelBar==1){
+						$("#xp-increase-fx").css("display","inline-block");
+						$("#xp-bar-fill").css("box-shadow", "-5px 0px 10px #fff inset");
+						$("#xp-bar-fill").css("width", barPercent1+"%");
+						$("#xp-increase-fx").fadeOut(0);$("#xp-bar-fill").css({"-webkit-transition":"all 0.5s ease","box-shadow":""});
+					}else{
+						$("#xp-increase-fx").css("display","inline-block");
+						$("#xp-bar-fill").css("box-shadow", "-5px 0px 10px #fff inset");
+						$("#xp-bar-fill").css("width", barPercent2+"%");
+						$("#xp-increase-fx").fadeOut(0);$("#xp-bar-fill").css({"-webkit-transition":"all 0.5s ease","box-shadow":""});
+					}
+				<?php }else{ ?>
+					<?php $barPercent = 100; ?>
 					$("#xp-increase-fx").css("display","inline-block");
 					$("#xp-bar-fill").css("box-shadow", "-5px 0px 10px #fff inset");
-					$("#xp-bar-fill").css("width", barPercent1+"%");
+					<?php echo '$("#xp-bar-fill").css("width","'.$barPercent.'%");'; ?>
 					$("#xp-increase-fx").fadeOut(0);$("#xp-bar-fill").css({"-webkit-transition":"all 0.5s ease","box-shadow":""});
-				}else{
-					$("#xp-increase-fx").css("display","inline-block");
-					$("#xp-bar-fill").css("box-shadow", "-5px 0px 10px #fff inset");
-					$("#xp-bar-fill").css("width", barPercent2+"%");
-					$("#xp-increase-fx").fadeOut(0);$("#xp-bar-fill").css({"-webkit-transition":"all 0.5s ease","box-shadow":""});
+				<?php }?>
 				}
-			<?php }else{ ?>
-				<?php $barPercent = 100; ?>
-				$("#xp-increase-fx").css("display","inline-block");
-				$("#xp-bar-fill").css("box-shadow", "-5px 0px 10px #fff inset");
-				<?php echo '$("#xp-bar-fill").css("width","'.$barPercent.'%");'; ?>
-				$("#xp-increase-fx").fadeOut(0);$("#xp-bar-fill").css({"-webkit-transition":"all 0.5s ease","box-shadow":""});
 			<?php }?>
-			}
 		}
 
 		function xpHover(){
@@ -811,7 +822,7 @@
 					if($mode==1 || $mode==2){
 					?>
 					if(levelBar==1)
-						document.getElementById("account-bar-xp").innerHTML = userXP+"/"+userNextLvl;
+						document.getElementById("account-bar-xp").innerHTML = Math.round(userXP)+"/"+userNextLvl;
 					else
 						document.getElementById("account-bar-xp").innerHTML = userElo;
 					<?php
@@ -824,6 +835,7 @@
 				?>
 			}
 			document.getElementById("heroProfile").style.display = "inline-block";
+			document.getElementById("heroBar").style.display = "inline-block";
 			document.getElementById("heroAchievements").style.display = "inline-block";
 			document.getElementById("heroLogout").style.display = "inline-block";
 		}
@@ -838,6 +850,7 @@
 				<?php } ?>
 			}
 			document.getElementById("heroProfile").style.display = "none";
+			document.getElementById("heroBar").style.display = "none";
 			document.getElementById("heroAchievements").style.display = "none";
 			document.getElementById("heroLogout").style.display = "none";
 		}
@@ -903,6 +916,15 @@
 					clearInterval(timer);
 				}
 			}, stepTime);
+		}
+		function switchBarInMenu(){
+			if(levelBar===1){
+				$("#textBarInMenu").text("Level Bar");
+				levelBarChange(2);
+			}else{
+				$("#textBarInMenu").text("Rating Bar");
+				levelBarChange(1);
+			}
 		}
 		
 	</script>
