@@ -2839,14 +2839,17 @@ class AppController extends Controller{
 				$utPre['TsumegoStatus']['tsumego_id'] = $_COOKIE['preId'];
 				$utPre['TsumegoStatus']['status'] = 'V';
 			}
+			$_COOKIE['preTsumegoBuffer'] = $utPre['TsumegoStatus']['status'];
 			if($utPre['TsumegoStatus']['status'] == 'W') $utPre['TsumegoStatus']['status'] = 'C';
 			else $utPre['TsumegoStatus']['status'] = 'S';
 		
 			$utPre['TsumegoStatus']['created'] = date('Y-m-d H:i:s');
 			if(isset($_SESSION['loggedInUser']) && !isset($_SESSION['noLogin'])){
-				if(!isset($utPre['TsumegoStatus']['status'])) $utPre['TsumegoStatus']['status'] = 'V';
+				if(!isset($utPre['TsumegoStatus']['status'])) 
+					$utPre['TsumegoStatus']['status'] = 'V';
 				$this->TsumegoStatus->save($utPre);
 			}
+			
 		}
 		
 		}

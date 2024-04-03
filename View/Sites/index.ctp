@@ -93,7 +93,7 @@
 			</li>
 			<br><br>
 		</div>
-		<p class="title4">Update 01.04.2024</p>
+		<p class="title4">Update 03.04.2024</p>
 		<div class="new1">
 		<b>Improvements of rank display and score mechanics</b><br><br>
 		
@@ -105,7 +105,7 @@
 		<b>• Progress bar switch:</b> The progress bar can display any type and it can be switched on the problem pages by 
 		selecting the lower left corner.<br><br>
 		<div align="center">
-		<img src="/img/bar-example.png" title="bar-example" alt="bar-example" width="140px">
+		<img src="/img/thumbs/1.PNG" title="bar-example" alt="bar-example" width="140px">
 		
 		<br>
 		</div>

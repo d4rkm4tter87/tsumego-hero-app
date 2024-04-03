@@ -500,7 +500,7 @@
 		var soundsEnabled = true;
 		var notMode3 = true;
 
-		<?php if(isset($_SESSION['loggedInUser'])){ ?>
+		<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
 			var userXP = <?php echo $user['User']['xp']; ?> ;
 			var userLevel = <?php echo $user['User']['level']; ?> ;
 			var userNextLvl = <?php echo $user['User']['nextlvl']; ?> ;
@@ -918,7 +918,7 @@
 			}, stepTime);
 		}
 		function switchBarInMenu(){
-			if(levelBar===1){
+			if(levelBar==1){
 				$("#textBarInMenu").text("Level Bar");
 				levelBarChange(2);
 			}else{

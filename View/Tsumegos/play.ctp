@@ -1988,18 +1988,21 @@
 		});
 		
 		let tooltipSgfs = [];
+		
 		<?php
-		for($a=0; $a<count($tooltipSgfs); $a++){
-			echo 'tooltipSgfs['.$a.'] = [];';
-			for($y=0; $y<count($tooltipSgfs[$a]); $y++){
-				echo 'tooltipSgfs['.$a.']['.$y.'] = [];';
-				for($x=0; $x<count($tooltipSgfs[$a][$y]); $x++){
-					echo 'tooltipSgfs['.$a.']['.$y.'].push("'.$tooltipSgfs[$a][$x][$y].'");';
+		if($mode!=3){
+			for($a=0; $a<count($tooltipSgfs); $a++){
+				echo 'tooltipSgfs['.$a.'] = [];';
+				for($y=0; $y<count($tooltipSgfs[$a]); $y++){
+					echo 'tooltipSgfs['.$a.']['.$y.'] = [];';
+					for($x=0; $x<count($tooltipSgfs[$a][$y]); $x++){
+						echo 'tooltipSgfs['.$a.']['.$y.'].push("'.$tooltipSgfs[$a][$x][$y].'");';
+					}
 				}
 			}
+			for($i=0; $i<count($navi); $i++)
+				echo 'createPreviewBoard('.$i.', tooltipSgfs['.$i.'], '.$tooltipInfo[$i][0].', '.$tooltipInfo[$i][1].', '.$tooltipBoardSize[$i].');';
 		}
-		for($i=0; $i<count($navi); $i++)
-			echo 'createPreviewBoard('.$i.', tooltipSgfs['.$i.'], '.$tooltipInfo[$i][0].', '.$tooltipInfo[$i][1].', '.$tooltipBoardSize[$i].');';
 		?>
 	});
 	
@@ -2646,6 +2649,8 @@
 						runXPBar(true);
 						runXPNumber("account-bar-xp", <?php echo $user['User']['elo_rating_mode']; ?>, elo2, 1000, ulvl);
 					}
+					console.log(<?php echo $t['Tsumego']['difficulty']; ?>);
+					console.log(xpReward);
 					userXP = xpReward;
 					userElo = Math.round(elo2);
 					<?php } ?>
@@ -2701,6 +2706,9 @@
 						runXPBar(true);
 						runXPNumber("account-bar-xp", <?php echo $user['User']['elo_rating_mode']; ?>, elo2, 1000, ulvl);
 					}
+					console.log(<?php echo $t['Tsumego']['difficulty']; ?>);
+					console.log("<?php echo $t['Tsumego']['status']; ?>");
+					console.log(xpReward);
 					userXP = xpReward;
 					userElo = Math.round(elo2);
 					noXP = true;
