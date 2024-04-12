@@ -606,8 +606,12 @@ besogo.makeGameRoot = function(sizeX = 19, sizeY = 19)
       return {node: root, message: "Can't save diff."};
     if (!this.hasChildIncludingVirtual())
     {
-      if (root.goal == GOAL_NONE && this.nextMove() != root.firstMove && !this.correctSource)
-        return {node: this, message: "Last solver move not marked correct"};
+      if (root.goal == GOAL_NONE &&
+          this.nextMove() != root.firstMove &&
+          !this.correctSource &&
+          this.comment == '' &&
+          this.markup.length == 0)
+        return {node: this, message: "Last solver move not marked correct (unless there are comments or markups)"};
       if (root.goal != GOAL_NONE && this.status.isNone())
         return {node: this, message: "End position without status."};
     }
