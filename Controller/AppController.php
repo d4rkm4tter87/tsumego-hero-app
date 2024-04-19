@@ -2849,7 +2849,6 @@ class AppController extends Controller{
 					$utPre['TsumegoStatus']['status'] = 'V';
 				$this->TsumegoStatus->save($utPre);
 			}
-			
 		}
 		
 		}

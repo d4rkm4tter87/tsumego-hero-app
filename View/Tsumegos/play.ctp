@@ -2649,8 +2649,6 @@
 						runXPBar(true);
 						runXPNumber("account-bar-xp", <?php echo $user['User']['elo_rating_mode']; ?>, elo2, 1000, ulvl);
 					}
-					console.log(<?php echo $t['Tsumego']['difficulty']; ?>);
-					console.log(xpReward);
 					userXP = xpReward;
 					userElo = Math.round(elo2);
 					<?php } ?>
@@ -2706,9 +2704,6 @@
 						runXPBar(true);
 						runXPNumber("account-bar-xp", <?php echo $user['User']['elo_rating_mode']; ?>, elo2, 1000, ulvl);
 					}
-					console.log(<?php echo $t['Tsumego']['difficulty']; ?>);
-					console.log("<?php echo $t['Tsumego']['status']; ?>");
-					console.log(xpReward);
 					userXP = xpReward;
 					userElo = Math.round(elo2);
 					noXP = true;

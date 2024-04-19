@@ -33,10 +33,10 @@
 	<meta name="keywords" content="tsumego, problems, puzzles, baduk, weiqi, tesuji, life and death, solve, solving, hero, go, in-seong, level" >
 	<meta name="Author" content="Joschka Zimdars">
 	<meta property="og:title" content="Tsumego Hero">
-	<link rel="stylesheet" type="text/css" href="/css/default.css?v=3.3">
+	<link rel="stylesheet" type="text/css" href="/css/default.css?v=3.4">
 	<?php
 		if($lightDark=='dark')
-			echo '<link rel="stylesheet" type="text/css" href="/css/dark.css?v=1.1">';
+			echo '<link rel="stylesheet" type="text/css" href="/css/dark.css?v=1.2">';
 		
 		echo $this->Html->meta('icon');
 		echo $this->fetch('meta');
@@ -425,6 +425,11 @@
 	var PHPSESSID = getCookie("PHPSESSID");
 	setCookie("PHPSESSID", PHPSESSID);
 	
+	
+	var lifetime = new Date();
+	lifetime.setTime(lifetime.getTime()+8*24*60*60*1000);
+	lifetime = lifetime.toUTCString()+"";
+	
 	<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
 	var barPercent1 = <?php echo $user['User']['xp']/$user['User']['nextlvl']*100; ?>;
 	var barPercent2 = <?php echo substr(round($user['User']['elo_rating_mode']), -2); ?>;
@@ -461,28 +466,28 @@
         besogo.editor.setSoundEnabled(value);
       soundsEnabled = value;
     }
-		document.cookie = "score=0;SameSite=none;Secure=false";
-		document.cookie = "misplay=0;SameSite=none;Secure=false";
-		document.cookie = "preId=0;SameSite=none;Secure=false";
-		document.cookie = "sprint=0;SameSite=none;Secure=false";
-		document.cookie = "intuition=0;SameSite=none;Secure=false";
-		document.cookie = "rejuvenation=0;SameSite=none;Secure=false";
-		document.cookie = "rejuvenationx=0;SameSite=none;Secure=false";
-		document.cookie = "refinement=0;SameSite=none;Secure=false";
-		document.cookie = "favorite=0;SameSite=none;Secure=false";
-		document.cookie = "mode=0;SameSite=none;Secure=false";
-		document.cookie = "skip=0;SameSite=none;Secure=false";
-		document.cookie = "transition=0;SameSite=none;Secure=false";
-		document.cookie = "difficulty=0;SameSite=none;Secure=false";
-		document.cookie = "seconds=0;SameSite=none;Secure=false";
-		document.cookie = "sequence=0;SameSite=none;Secure=false";
-		document.cookie = "reputation=0;SameSite=none;Secure=false";
-		document.cookie = "rank=0;SameSite=none;Secure=false";
-		document.cookie = "lastMode=0;SameSite=none;Secure=false";
-		document.cookie = "sound=0;SameSite=none;Secure=false";
-		document.cookie = "correctNoPoints=0;SameSite=none;Secure=false";
-		document.cookie = "ui=0;SameSite=none;Secure=false";
-		document.cookie = "requestProblem=0;SameSite=none;Secure=false";
+		document.cookie = "score=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "misplay=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "preId=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "sprint=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "intuition=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "rejuvenation=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "rejuvenationx=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "refinement=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "favorite=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "mode=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "skip=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "transition=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "difficulty=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "seconds=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "sequence=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "reputation=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "rank=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "lastMode=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "sound=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "correctNoPoints=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "ui=0;SameSite=none;expires="+lifetime+";Secure=false";
+		document.cookie = "requestProblem=0;SameSite=none;expires="+lifetime+";Secure=false";
 		setCookie("lightDark", "<?php echo $lightDark; ?>");
 		<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
 			setCookie("levelBar", "<?php echo $levelBar; ?>");
@@ -493,7 +498,7 @@
 		<?php
 			if(isset($textureCookies)){
 				for($i=0;$i<count($textureCookies);$i++){
-					echo 'document.cookie = "'.$textureCookies[$i].'=0;SameSite=none;Secure=false";';
+					echo 'document.cookie = "'.$textureCookies[$i].'=0;SameSite=none;expires="+lifetime+";Secure=false";';
 				}
 			}
 		?>
@@ -648,10 +653,10 @@
 		function setCookie(cookie, value=""){
 			let paths = ["/", "/sets", "/sets/view", "/tsumegos/play", "/users", "/users/view"];
 			for(let i=0;i<paths.length;i++)
-				document.cookie = cookie+"="+value+";SameSite=none;Secure=false;path="+paths[i];
+				document.cookie = cookie+"="+value+";SameSite=none;Secure=false;expires="+lifetime+";path="+paths[i];
 		}
 		function setCookie2(cookie, value=""){
-			document.cookie = cookie+"="+value+";SameSite=none;Secure=false;"
+			document.cookie = cookie+"="+value+";SameSite=none;Secure=false;expires="+lifetime+";"
 		}
 
 		function logoHover(img){
@@ -688,60 +693,60 @@
 			document.getElementById("boardsInMenu").style.backgroundColor = "transparent";
 		}
 		function check2(){
-			if(document.getElementById("newCheck1").checked) document.cookie = "texture1=checked;SameSite=none;Secure=false"; else document.cookie = "texture1= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck2").checked) document.cookie = "texture2=checked;SameSite=none;Secure=false"; else document.cookie = "texture2= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck3").checked) document.cookie = "texture3=checked;SameSite=none;Secure=false"; else document.cookie = "texture3= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck4").checked) document.cookie = "texture4=checked;SameSite=none;Secure=false"; else document.cookie = "texture4= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck5").checked) document.cookie = "texture5=checked;SameSite=none;Secure=false"; else document.cookie = "texture5= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck6").checked) document.cookie = "texture6=checked;SameSite=none;Secure=false"; else document.cookie = "texture6= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck7").checked) document.cookie = "texture7=checked;SameSite=none;Secure=false"; else document.cookie = "texture7= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck8").checked) document.cookie = "texture8=checked;SameSite=none;Secure=false"; else document.cookie = "texture8= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck9").checked) document.cookie = "texture9=checked;SameSite=none;Secure=false"; else document.cookie = "texture9= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck10").checked) document.cookie = "texture10=checked;SameSite=none;Secure=false"; else document.cookie = "texture10= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck11").checked) document.cookie = "texture11=checked;SameSite=none;Secure=false"; else document.cookie = "texture11= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck12").checked) document.cookie = "texture12=checked;SameSite=none;Secure=false"; else document.cookie = "texture12= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck13").checked) document.cookie = "texture13=checked;SameSite=none;Secure=false"; else document.cookie = "texture13= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck14").checked) document.cookie = "texture14=checked;SameSite=none;Secure=false"; else document.cookie = "texture14= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck15").checked) document.cookie = "texture15=checked;SameSite=none;Secure=false"; else document.cookie = "texture15= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck16").checked) document.cookie = "texture16=checked;SameSite=none;Secure=false"; else document.cookie = "texture16= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck17").checked) document.cookie = "texture17=checked;SameSite=none;Secure=false"; else document.cookie = "texture17= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck18").checked) document.cookie = "texture18=checked;SameSite=none;Secure=false"; else document.cookie = "texture18= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck19").checked) document.cookie = "texture19=checked;SameSite=none;Secure=false"; else document.cookie = "texture19= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck20").checked) document.cookie = "texture20=checked;SameSite=none;Secure=false"; else document.cookie = "texture20= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck21").checked) document.cookie = "texture21=checked;SameSite=none;Secure=false"; else document.cookie = "texture21= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck22").checked) document.cookie = "texture22=checked;SameSite=none;Secure=false"; else document.cookie = "texture22= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck23").checked) document.cookie = "texture23=checked;SameSite=none;Secure=false"; else document.cookie = "texture23= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck24").checked) document.cookie = "texture24=checked;SameSite=none;Secure=false"; else document.cookie = "texture24= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck25").checked) document.cookie = "texture25=checked;SameSite=none;Secure=false"; else document.cookie = "texture25= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck26").checked) document.cookie = "texture26=checked;SameSite=none;Secure=false"; else document.cookie = "texture26= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck27").checked) document.cookie = "texture27=checked;SameSite=none;Secure=false"; else document.cookie = "texture27= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck28").checked) document.cookie = "texture28=checked;SameSite=none;Secure=false"; else document.cookie = "texture28= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck29").checked) document.cookie = "texture29=checked;SameSite=none;Secure=false"; else document.cookie = "texture29= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck30").checked) document.cookie = "texture30=checked;SameSite=none;Secure=false"; else document.cookie = "texture30= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck31").checked) document.cookie = "texture31=checked;SameSite=none;Secure=false"; else document.cookie = "texture31= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck32").checked) document.cookie = "texture32=checked;SameSite=none;Secure=false"; else document.cookie = "texture32= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck33").checked) document.cookie = "texture33=checked;SameSite=none;Secure=false"; else document.cookie = "texture33= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck34").checked) document.cookie = "texture34=checked;SameSite=none;Secure=false"; else document.cookie = "texture34= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck35").checked) document.cookie = "texture35=checked;SameSite=none;Secure=false"; else document.cookie = "texture35= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck36").checked) document.cookie = "texture36=checked;SameSite=none;Secure=false"; else document.cookie = "texture36= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck37").checked) document.cookie = "texture37=checked;SameSite=none;Secure=false"; else document.cookie = "texture37= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck38").checked) document.cookie = "texture38=checked;SameSite=none;Secure=false"; else document.cookie = "texture38= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck39").checked) document.cookie = "texture39=checked;SameSite=none;Secure=false"; else document.cookie = "texture39= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck40").checked) document.cookie = "texture40=checked;SameSite=none;Secure=false"; else document.cookie = "texture40= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck41").checked) document.cookie = "texture41=checked;SameSite=none;Secure=false"; else document.cookie = "texture41= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck42").checked) document.cookie = "texture42=checked;SameSite=none;Secure=false"; else document.cookie = "texture42= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck43").checked) document.cookie = "texture43=checked;SameSite=none;Secure=false"; else document.cookie = "texture43= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck44").checked) document.cookie = "texture44=checked;SameSite=none;Secure=false"; else document.cookie = "texture44= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck45").checked) document.cookie = "texture45=checked;SameSite=none;Secure=false"; else document.cookie = "texture45= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck46").checked) document.cookie = "texture46=checked;SameSite=none;Secure=false"; else document.cookie = "texture46= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck47").checked) document.cookie = "texture47=checked;SameSite=none;Secure=false"; else document.cookie = "texture47= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck48").checked) document.cookie = "texture48=checked;SameSite=none;Secure=false"; else document.cookie = "texture48= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck49").checked) document.cookie = "texture49=checked;SameSite=none;Secure=false"; else document.cookie = "texture49= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck50").checked) document.cookie = "texture50=checked;SameSite=none;Secure=false"; else document.cookie = "texture50= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck51").checked) document.cookie = "texture51=checked;SameSite=none;Secure=false"; else document.cookie = "texture51= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck52").checked) document.cookie = "texture52=checked;SameSite=none;Secure=false"; else document.cookie = "texture52= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck53").checked) document.cookie = "texture53=checked;SameSite=none;Secure=false"; else document.cookie = "texture53= ;SameSite=none;Secure=false";
-			if(document.getElementById("newCheck54").checked) document.cookie = "texture54=checked;SameSite=none;Secure=false"; else document.cookie = "texture54= ;SameSite=none;Secure=false";
+			if(document.getElementById("newCheck1").checked) document.cookie = "texture1=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture1= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck2").checked) document.cookie = "texture2=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture2= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck3").checked) document.cookie = "texture3=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture3= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck4").checked) document.cookie = "texture4=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture4= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck5").checked) document.cookie = "texture5=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture5= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck6").checked) document.cookie = "texture6=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture6= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck7").checked) document.cookie = "texture7=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture7= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck8").checked) document.cookie = "texture8=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture8= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck9").checked) document.cookie = "texture9=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture9= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck10").checked) document.cookie = "texture10=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture10= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck11").checked) document.cookie = "texture11=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture11= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck12").checked) document.cookie = "texture12=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture12= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck13").checked) document.cookie = "texture13=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture13= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck14").checked) document.cookie = "texture14=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture14= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck15").checked) document.cookie = "texture15=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture15= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck16").checked) document.cookie = "texture16=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture16= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck17").checked) document.cookie = "texture17=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture17= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck18").checked) document.cookie = "texture18=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture18= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck19").checked) document.cookie = "texture19=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture19= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck20").checked) document.cookie = "texture20=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture20= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck21").checked) document.cookie = "texture21=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture21= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck22").checked) document.cookie = "texture22=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture22= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck23").checked) document.cookie = "texture23=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture23= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck24").checked) document.cookie = "texture24=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture24= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck25").checked) document.cookie = "texture25=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture25= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck26").checked) document.cookie = "texture26=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture26= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck27").checked) document.cookie = "texture27=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture27= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck28").checked) document.cookie = "texture28=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture28= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck29").checked) document.cookie = "texture29=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture29= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck30").checked) document.cookie = "texture30=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture30= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck31").checked) document.cookie = "texture31=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture31= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck32").checked) document.cookie = "texture32=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture32= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck33").checked) document.cookie = "texture33=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture33= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck34").checked) document.cookie = "texture34=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture34= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck35").checked) document.cookie = "texture35=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture35= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck36").checked) document.cookie = "texture36=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture36= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck37").checked) document.cookie = "texture37=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture37= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck38").checked) document.cookie = "texture38=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture38= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck39").checked) document.cookie = "texture39=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture39= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck40").checked) document.cookie = "texture40=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture40= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck41").checked) document.cookie = "texture41=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture41= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck42").checked) document.cookie = "texture42=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture42= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck43").checked) document.cookie = "texture43=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture43= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck44").checked) document.cookie = "texture44=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture44= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck45").checked) document.cookie = "texture45=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture45= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck46").checked) document.cookie = "texture46=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture46= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck47").checked) document.cookie = "texture47=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture47= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck48").checked) document.cookie = "texture48=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture48= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck49").checked) document.cookie = "texture49=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture49= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck50").checked) document.cookie = "texture50=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture50= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck51").checked) document.cookie = "texture51=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture51= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck52").checked) document.cookie = "texture52=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture52= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck53").checked) document.cookie = "texture53=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture53= ;SameSite=none;expires="+lifetime+";Secure=false";
+			if(document.getElementById("newCheck54").checked) document.cookie = "texture54=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture54= ;SameSite=none;expires="+lifetime+";Secure=false";
 		}
 
 		function changeSound(){

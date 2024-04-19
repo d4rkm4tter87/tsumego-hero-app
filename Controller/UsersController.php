@@ -300,51 +300,39 @@ class UsersController extends AppController{
 	public function tsumego_rating2($id=null){
 		
 	}
-	/*
+	
 	//scan for glitches
-	public function test($x=null){
-		
+	public function test1a($x=null){
 		$this->loadModel('Tsumego');
 		$this->loadModel('TsumegoAttempt');
-		
 		$ts = $this->Tsumego->find('all', array('order' => 'id ASC'));
 		$id = $ts[$x]['Tsumego']['id'];
-		
 		$ta = $this->TsumegoAttempt->find('all', array('order' => 'created ASC', 'conditions' => array(
 			'tsumego_id' => $id,
 			'NOT' => array(
 				'tsumego_elo' => 0
 			)
 		)));
-		
 		$change = $ta[count($ta)-1]['TsumegoAttempt']['tsumego_elo'] - $ta[0]['TsumegoAttempt']['tsumego_elo'];
-		
 		$t = $this->Tsumego->findById($id);
 		$t['Tsumego']['rd'] = $change;
 		$this->Tsumego->save($t);
-		
 		$p = $x.'/'.count($ts);
-		
 		echo '<pre>'; print_r($p); echo '</pre>';
 		echo '<pre>'; print_r($id); echo '</pre>';
 		echo '<pre>'; print_r($change); echo '</pre>';
-		
 		$this->set('next', $x+1);
 		$this->set('finish', count($ts)-1);
-		
-		
 	}
-	*/
+	
 	//fix glitched problems
-	public function test($id=null){
-		/*
+	public function test1b($id=null){
 		$this->loadModel('Tsumego');
 		$this->loadModel('TsumegoAttempt');
 		
 		$t = $this->Tsumego->find('all', array('conditions' => array(
-			'rd <' => -300
+			'rd <' => -400
 		)));
-		
 		for($i=0; $i<count($t); $i++){
 			$ta = $this->TsumegoAttempt->find('all', array('limit' => 2, 'order' => 'created ASC', 'conditions' => array(
 				'tsumego_id' => $t[$i]['Tsumego']['id'],
@@ -359,9 +347,35 @@ class UsersController extends AppController{
 		}
 		echo '<pre>'; print_r(count($t)); echo '</pre>';
 		echo '<pre>'; print_r($ta[0]['TsumegoAttempt']['tsumego_elo']); echo '</pre>';
-		*/
+		
 	}
 	
+	//no author
+	public function test1c($id=null){
+		$this->loadModel('Tsumego');
+		$this->loadModel('TsumegoAttempt');
+		
+		$t = $this->Tsumego->find('all', array('conditions' => array(
+			'author' => ''
+		)));
+		/*
+		for($i=0; $i<count($t); $i++){
+			$ta = $this->TsumegoAttempt->find('all', array('limit' => 2, 'order' => 'created ASC', 'conditions' => array(
+				'tsumego_id' => $t[$i]['Tsumego']['id'],
+				'NOT' => array(
+					'tsumego_elo' => 0
+				)
+			)));
+			$t[$i]['Tsumego']['rd'] = 0;
+			$t[$i]['Tsumego']['elo_rating_mode'] = $ta[0]['TsumegoAttempt']['tsumego_elo'];
+			$this->Tsumego->save($t[$i]);
+			echo '<pre>'; print_r('saved '.$t[$i]['Tsumego']['id']); echo '</pre>';
+		}
+		*/
+		echo '<pre>'; print_r(count($t)); echo '</pre>';
+		echo '<pre>'; print_r($t); echo '</pre>';
+		
+	}
 	
 	public function test2(){
 		$this->loadModel('Tsumego');
