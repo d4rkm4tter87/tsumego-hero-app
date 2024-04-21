@@ -422,13 +422,12 @@
 	}
 	?>
 	<script type="text/javascript">
+	var lifetime = new Date();
+	lifetime.setTime(lifetime.getTime()+7*24*60*60*1000);
+	lifetime = lifetime.toUTCString();
+	
 	var PHPSESSID = getCookie("PHPSESSID");
 	setCookie("PHPSESSID", PHPSESSID);
-	
-	
-	var lifetime = new Date();
-	lifetime.setTime(lifetime.getTime()+8*24*60*60*1000);
-	lifetime = lifetime.toUTCString()+"";
 	
 	<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
 	var barPercent1 = <?php echo $user['User']['xp']/$user['User']['nextlvl']*100; ?>;

@@ -1,5 +1,4 @@
 // Load a parsed SGF object into a game state tree
-
 var NORMAL_LOAD = 0;
 var OPEN_FOR_DIFF = 1;
 

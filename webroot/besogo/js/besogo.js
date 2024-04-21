@@ -131,7 +131,6 @@
     {
       let resizer = function()
       {
-
         var windowHeight = window.innerHeight, // Viewport height
         // Calculated width of parent element
         parentWidth = parseFloat(getComputedStyle(container.parentElement).width),
@@ -176,8 +175,6 @@
           if (panelsDiv) // Reduce height to ensure minimum width of panels div
             height = (width < height + minPanelsWidth) ? (width - minPanelsWidth) : height;
         }
-
-
         setDimensions(width, height);
         container.style.width = width + 'px';
       };
@@ -258,6 +255,7 @@
         $("#boardOrientationBR").css("opacity","1");
     }
     besogo.boardDisplay = boardDisplay;
+	
   }
 
   besogo.create = function(container, options)
@@ -407,6 +405,10 @@
 
     if (typeof options.variants === 'number' || typeof options.variants === 'string')
       besogo.editor.setVariantStyle(+options.variants); // Converts to number
+
+	//create signature strings for pattern search
+	if (typeof requestSignature!=='undefined' && requestSignature!=='false')
+		besogo.editor.createSignatures();
 
     //Fixes the asynchronous load of board and content
     sgfLoaded.registerListener(function(val) { besogo.initPanels(options, container, boardDiv, boardDisplay, sgfLoaded.scaleParameters, corner); });

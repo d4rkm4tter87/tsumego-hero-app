@@ -25,7 +25,8 @@ class TsumegosController extends AppController{
 		$this->set('s1', $s1);
 		$this->set('s2', $s2);
 	}
-	public function duplicatesearch($id=null){
+	
+	public function duplicatesearchx($id=null){
 		$this->loadModel('Sgf');
 		$this->loadModel('Set');
 		$this->loadModel('SetConnection');
@@ -52,7 +53,6 @@ class TsumegosController extends AppController{
 		$similarDiffType = array();
 		$similarOrder = array();
 		$t = $this->Tsumego->findById($id);
-		//$s = $this->Set->findById($t['Tsumego']['set_id']);
 		$sc = $this->SetConnection->find('first', array('conditions' =>  array('tsumego_id' => $id)));
 		$s = $this->Set->findById($sc['SetConnection']['set_id']);
 		$title = $s['Set']['title'].' - '.$t['Tsumego']['num'];
@@ -156,6 +156,139 @@ class TsumegosController extends AppController{
 		$this->set('hideSandbox', $hideSandbox);
 	}
 	
+	public function duplicatesearch($id=null){
+		$this->loadModel('Sgf');
+		$this->loadModel('Set');
+		$this->loadModel('SetConnection');
+		$this->loadModel('Signature');
+		$_SESSION['page'] = 'play';
+		
+		$similarId = array();
+		$similarArr = array();
+		$similarArrInfo = array();
+		$similarArrBoardSize = array();
+		$similarTitle = array();
+		$similarDiff = array();
+		$similarDiffType = array();
+		$similarOrder = array();
+		
+		$t = $this->Tsumego->findById($id);
+		$sc = $this->SetConnection->find('first', array('conditions' =>  array('tsumego_id' => $id)));
+		$s = $this->Set->findById($sc['SetConnection']['set_id']);
+		$title = $s['Set']['title'].' - '.$t['Tsumego']['num'];
+		$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $id)));
+		$tSgfArr = $this->processSGF($sgf['Sgf']['sgf']);
+		$tNumStones = count($tSgfArr[1]);
+		
+		$_SESSION['title'] = $s['Set']['title'].' '.$t['Tsumego']['num'].' on Tsumego Hero';
+		
+		$t = $this->Tsumego->findById($id);
+		$sig = $this->Signature->find('all', array('conditions' => array('tsumego_id' => $id)));
+		$ts = array();
+		for($i=0; $i<count($sig); $i++){
+			$sig2 = $this->Signature->find('all', array('conditions' => array('signature' => $sig[$i]['Signature']['signature'])));
+			for($j=0; $j<count($sig2); $j++){
+				array_push($ts, $this->Tsumego->findById($sig2[$j]['Signature']['tsumego_id']));
+			}
+		}
+		echo '<pre>'; print_r(count($ts)); echo '</pre>';
+		
+		for($i=0; $i<count($ts); $i++){
+			if($ts[$i]['Tsumego']['id']!=$id){
+				$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
+				$sgfArr = $this->processSGF($sgf['Sgf']['sgf']);
+				$numStones = count($sgfArr[1]);
+				$stoneNumberDiff = abs($numStones-$tNumStones);
+				$compare = $this->compare($tSgfArr[0], $sgfArr[0], false);
+				array_push($similarId, $ts[$i]['Tsumego']['id']);
+				array_push($similarArr, $sgfArr[0]);
+				array_push($similarArrInfo, $sgfArr[2]);
+				array_push($similarArrBoardSize, $sgfArr[3]);
+				array_push($similarDiff, $compare[0]);
+				if($compare[1]==0) array_push($similarDiffType, '');
+				else if($compare[1]==1) array_push($similarDiffType, 'Shifted position.');
+				else if($compare[1]==2) array_push($similarDiffType, 'Shifted and rotated.');
+				else if($compare[1]==3) array_push($similarDiffType, 'Switched colors.');
+				else if($compare[1]==4) array_push($similarDiffType, 'Switched colors and shifted position.');
+				else if($compare[1]==5) array_push($similarDiffType, 'Switched colors, shifted and rotated.');
+				array_push($similarOrder, $compare[2]);
+				$scx = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
+				$set = $this->Set->findById($scx['SetConnection']['set_id']);
+				$title2 = $set['Set']['title'].' - '.$ts[$i]['Tsumego']['num'];
+				array_push($similarTitle, $title2);
+			}
+		}
+		
+		if(count($similarOrder)>30){
+			$orderCounter = 0;
+			$orderThreshold = 5;
+			while($orderCounter<30){
+				$orderThreshold++;
+				$orderCounter = 0;
+				for($i=0; $i<count($similarOrder); $i++){
+					if(substr($similarOrder[$i],0,2)<$orderThreshold)
+						$orderCounter++;
+				}
+			}
+			/*
+			echo '<pre>'; print_r(count($similarOrder)); echo '</pre>';
+			echo '<pre>'; print_r($orderThreshold); echo '</pre>';
+			echo '<pre>'; print_r($orderCounter); echo '</pre>';
+			*/
+			$similarOrder2 = array();
+			$similarArr2 = array();
+			$similarArrInfo2 = array();
+			$similarTitle2 = array();
+			$similarDiff2 = array();
+			$similarDiffType2 = array();
+			$similarId2 = array();
+			$similarArrBoardSize2 = array();
+			
+			for($i=0; $i<count($similarOrder); $i++){
+				if(substr($similarOrder[$i],0,2)<$orderThreshold){
+					array_push($similarOrder2, $similarOrder[$i]);
+					array_push($similarArr2, $similarArr[$i]);
+					array_push($similarArrInfo2, $similarArrInfo[$i]);
+					array_push($similarTitle2, $similarTitle[$i]);
+					array_push($similarDiff2, $similarDiff[$i]);
+					array_push($similarDiffType2, $similarDiffType[$i]);
+					array_push($similarId2, $similarId[$i]);
+					array_push($similarArrBoardSize2, $similarArrBoardSize[$i]);
+				}
+			}
+			$similarOrder = $similarOrder2;
+			$similarArr = $similarArr2;
+			$similarArrInfo = $similarArrInfo2;
+			$similarTitle = $similarTitle2;
+			$similarDiff = $similarDiff2;
+			$similarDiffType = $similarDiffType2;
+			$similarId = $similarId2;
+			$similarArrBoardSize = $similarArrBoardSize2;
+		}
+		
+		array_multisort($similarOrder, $similarArr, $similarArrInfo, $similarTitle, $similarDiff, $similarDiffType, $similarId, $similarArrBoardSize);
+		/*
+		echo '<pre>'; print_r($similarOrder); echo '</pre>';
+		echo '<pre>'; print_r($similarDiff); echo '</pre>';
+		echo '<pre>'; print_r($similarTitle); echo '</pre>';
+		echo '<pre>'; print_r($similarArrInfo); echo '</pre>';
+		echo '<pre>'; print_r($similarArrBoardSize); echo '</pre>';
+		*/
+		
+		$this->set('tSgfArr', $tSgfArr[0]);
+		$this->set('tSgfArrInfo', $tSgfArr[2]);
+		$this->set('tSgfArrBoardSize', $tSgfArr[3]);
+		$this->set('similarId', $similarId);
+		$this->set('similarArr', $similarArr);
+		$this->set('similarArrInfo', $similarArrInfo);
+		$this->set('similarArrBoardSize', $similarArrBoardSize);
+		$this->set('similarTitle', $similarTitle);
+		$this->set('similarDiff', $similarDiff);
+		$this->set('similarDiffType', $similarDiffType);
+		$this->set('title', $title);
+		$this->set('t', $t);
+	}
+	
 	public function play($id=null){
 		$_SESSION['page'] = 'play';
 		$this->loadModel('User');
@@ -178,6 +311,7 @@ class TsumegosController extends AppController{
 		$this->loadModel('Sgf');
 		$this->loadModel('SetConnection');
 		$this->loadModel('TsumegoVariant');
+		$this->loadModel('Signature');
 		
 		$noUser;
 		$noLogin;
@@ -2207,14 +2341,46 @@ class TsumegosController extends AppController{
 			$avActiveText = '';
 		else
 			$avActiveText = '<font style="color:gray;"> (recently played)</font>';
-		
 		if($avActive2==false)
 			$avActiveText = '<font style="color:gray;"> (out of range)</font>';
 		
 		$eloScoreRounded = round($eloScore);
 		$eloScore2Rounded = round($eloScore2);
 		
+		$existingSignatures = $this->Signature->find('all', array('conditions' => array('tsumego_id' => $id)));
+		//echo '<pre>'; print_r($existingSignatures); echo '</pre>';
+		if($existingSignatures==null || $existingSignatures[0]['Signature']['created']<date('Y-m-d', strtotime('-1 week')))
+			$requestSignature = 'true';
+		else
+			$requestSignature = 'false';
+		if(isset($_COOKIE['signatures']) && $set['Set']['public']==1){
+			//echo '<pre>'; print_r($_COOKIE['signatures']); echo '</pre>';
+			$signature = explode('/', $_COOKIE['signatures']);
+			$oldSignatures = $this->Signature->find('all', array('conditions' => array('tsumego_id' => $signature[count($signature)-1])));
 			
+			for($i=0;$i<count($oldSignatures);$i++)
+				$this->Signature->delete($oldSignatures[$i]['Signature']['id']);
+			
+			for($i=0;$i<count($signature)-1;$i++){
+				$this->Signature->create();
+				$newSignature = array();
+				$newSignature['Signature']['tsumego_id'] = $signature[count($signature)-1];
+				$newSignature['Signature']['signature'] = $signature[$i];
+				$this->Signature->save($newSignature);
+			}
+			unset($_COOKIE['signatures']);
+		}
+		$idForSignature = -1;
+		$idForSignature2 = -1;
+		if(isset($this->params['url']['idForTheThing'])){
+			$idForSignature2 = $this->params['url']['idForTheThing']+1;
+			$idForSignature = $this->getTheIdForTheThing($idForSignature2);
+			echo '<pre>'; print_r($idForSignature); echo '</pre>';
+		}
+		
+		$this->set('requestSignature', $requestSignature);
+		$this->set('idForSignature', $idForSignature);
+		$this->set('idForSignature2', $idForSignature2);
 		$this->set('score3', $score3);
 		$this->set('activityValue', $activityValue);
 		$this->set('avActiveText', $avActiveText);
@@ -2302,89 +2468,22 @@ class TsumegosController extends AppController{
 		$this->set('tv', $tv);
     }
 	
-	public function valuetable(){
-		$win = array();
-		$loss = array();
-		$twin = array();
-		$tloss = array();
-		
-		$win2 = array();
-		$loss2 = array();
-		$win3 = array();
-		$loss3 = array();
-		$win4 = array();
-		$loss4 = array();
-		
-		$u = 500;
-		$t = 1600;
-		$add = 50;
-		$activityValue = 29;
-		
-		while($activityValue<=90){
-			$u = 500;
-			$t = 1600;
-			$add = 50;
-			while($u<=2600){
-				$u += $add;
-				$diff = abs($u-$t);
-				if($u > $t)
-					$eloBigger = 'u';
-				else if($t >= $u)
-					$eloBigger = 't';
-				if($diff==0) $diff = .1;
-				$newUserEloW = $this->getNewElo($diff, $eloBigger, $activityValue, 'w');
-				$newUserEloL = $this->getNewElo($diff, $eloBigger, $activityValue, 'l');
-				//echo '<pre>'; print_r($newUserEloW); echo '</pre>';
-				//echo '<pre>'; print_r($newUserEloL); echo '</pre>';
-				
-				$tsumegoEloWin = $t + $newUserEloW['tsumego2'];
-				$tsumegoEloLoss = $t + $newUserEloL['tsumego2'];
-				
-				$userEloWin = $u+$newUserEloW['user2'];
-				$userEloLoss = $u+$newUserEloL['user2'];
-					
-				$varianceWin = $userEloWin-$u;
-				$varianceLoss = $userEloLoss-$u;
-				$varianceTsumegoWin = $tsumegoEloWin -$t;
-				$varianceTsumegoLoss = $tsumegoEloLoss - $t;
-				
-				//echo '<pre>'; print_r('tsumego elo:'.$t.', diff:'.$diff.', ('.$varianceTsumegoWin.'), win:'.$tsumegoEloWin); echo '</pre>';
-				//echo '<pre>'; print_r('tsumego elo:'.$t.', diff:'.$diff.', ('.$varianceTsumegoLoss.'), loss:'.$tsumegoEloLoss); echo '</pre>';
-				//echo '<pre>'; print_r('user elo:'.$u.', diff:'.$diff.', ('.$varianceWin.'), win:'.$userEloWin); echo '</pre>';
-				//echo '<pre>'; print_r('user elo:'.$u.', diff:'.$diff.', ('.$varianceLoss.'), loss:'.$userEloLoss); echo '</pre>';
-				if($t>$u)
-					$diff *= -1;
-				if($activityValue==29){
-					$win[$diff] = round($varianceWin, 2);
-					$loss[$diff] = round($varianceLoss, 2);
-					$twin[$diff] = round($varianceTsumegoWin);
-					$tloss[$diff] = round($varianceTsumegoLoss);
-				}else if($activityValue==49){
-					$win2[$diff] = round($varianceWin, 2);
-					$loss2[$diff] = round($varianceLoss, 2);
-				}else if($activityValue==69){
-					$win3[$diff] = round($varianceWin, 2);
-					$loss3[$diff] = round($varianceLoss, 2);
-				}else{
-					$win4[$diff] = round($varianceWin, 2);
-					$loss4[$diff] = round($varianceLoss, 2);
-				}
+	private function getTheIdForTheThing($num){
+		$this->loadModel('Set');
+		$this->loadModel('SetConnection');
+		$t = array();
+		$s = $this->Set->find('all', array('order' => 'id ASC', 'conditions' => array('public' => 1)));
+		for($i=0; $i<count($s); $i++){
+			$sc = $this->SetConnection->find('all', array('order' => 'tsumego_id ASC', 'conditions' => array('set_id' => $s[$i]['Set']['id'])));
+			for($j=0; $j<count($sc); $j++){
+				array_push($t, $sc[$j]['SetConnection']['tsumego_id']);
 			}
-			$activityValue+=20;
 		}
-		
-		
-		$this->set('win', $win);
-		$this->set('loss', $loss);
-		$this->set('twin', $twin);
-		$this->set('tloss', $tloss);
-		$this->set('win2', $win2);
-		$this->set('loss2', $loss2);
-		$this->set('win3', $win3);
-		$this->set('loss3', $loss3);
-		$this->set('win4', $win4);
-		$this->set('loss4', $loss4);
+		if($num>=count($t))
+			return -1;
+		return $t[$num];
 	}
+	
 	
 	private function getStartingPlayer($sgf){
 		$bStart = strpos($sgf, ';B');
@@ -2453,16 +2552,12 @@ class TsumegosController extends AppController{
 	}
 	private function compare($a, $b, $switch=false){
 		$compare = array();
-		
 		$this->displayArray($a);
-		
 		$diff1 = $this->compareSingle($a, $b);
 		array_push($compare, $diff1);
 		$this->displayArray($b);
-		
 		if($switch)
 			$d = $this->colorSwitch($b);
-		
 		$arr = $this->getLowest($a);
 		$a = $this->shiftToCorner($a, $arr[0], $arr[1]);
 		$arr = $this->getLowest($b);
@@ -2500,10 +2595,14 @@ class TsumegosController extends AppController{
 				$lowestCompare = $i;
 			}	
 		}
-		$order = $lowestCompare.'-'.$lowestCompareNum;
-		
+		if($lowestCompareNum<10)
+			$lowestCompareNum = '0'.$lowestCompareNum;
+		else if($lowestCompareNum>99)
+			$lowestCompareNum = 99;
+		$order = $lowestCompareNum.'-'.$lowestCompare;
 		return array($lowestCompareNum, $lowestCompare, $order);
 	}
+	
 	private function colorSwitch($b){
 		for($y=0; $y<count($b); $y++){
 			for($x=0; $x<count($b[$y]); $x++){
@@ -2515,6 +2614,7 @@ class TsumegosController extends AppController{
 		}
 		return $b;
 	}
+	
 	private function compareSingle($a, $b){
 		$diff = 0;
 		for($y=0; $y<count($b); $y++){
@@ -2877,150 +2977,82 @@ class TsumegosController extends AppController{
 		return $user;
 	}
 	
-	public function duplicatesearch2($id=null){
-		$this->loadModel('Sgf');
-		$this->loadModel('Set');
-		$this->loadModel('SetConnection');
-		$this->loadModel('Duplicate');
-		
-		$maxDifference = 0;
-		$includeSandbox = 'true';
-		$includeColorSwitch = 'false';
-		if(isset($this->params['url']['diff'])){
-			$maxDifference = $this->params['url']['diff'];
-			$includeSandbox = $this->params['url']['sandbox'];
-			$includeColorSwitch = $this->params['url']['colorSwitch'];
-		}
-		$similarId = array();
-		$similarArr = array();
-		$similarArrInfo = array();
-		$similarTitle = array();
-		$similarDiff = array();
-		$similarDiffType = array();
-		$similarOrder = array();
-		
-		$all = $this->Tsumego->find('all', array('order' => 'id ASC'));
-		$ds1 = file_get_contents('ds1.txt');
-		$t = $all[$ds1];
-		$id = $t['Tsumego']['id'];
-		
-		//$dup = $this->Duplicate->find('all');
-		
-		//$t = $this->Tsumego->findById($id);
-		$s = $this->Set->findById($t['Tsumego']['set_id']);
-		
-		//$sc = $this->SetConnection->find('first', array('conditions' =>  array('tsumego_id' => $id)));
-		//$s = $this->Set->findById($sc['SetConnection']['set_id']);
-		$title = $s['Set']['title'].' - '.$t['Tsumego']['num'];
-		//$inSet = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array('set_id' => $t['Tsumego']['set_id'])));
-		
-		$isValid = false;
-		if($s['Set']['public']==1 || $s['Set']['public']==0)
-			$isValid = true;
-		
-		if($isValid){
-			$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $id)));
-			$tSgfArr = $this->processSGF($sgf['Sgf']['sgf']);
-			$tNumStones = count($tSgfArr[1]);
-			
-			$sets2 = array();
-			$sets1 = $this->Set->find('all', array('conditions' => array('public' => '1')));
-			if($includeSandbox=='true')
-				$sets2 = $this->Set->find('all', array('conditions' => array('public' => '0')));
-			$sets = array_merge($sets1, $sets2);
-			for($h=0; $h<count($sets); $h++){
-				$ts = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array('set_id' => $sets[$h]['Set']['id'])));
-				//$ts = $this->findTsumegoSet($sets[$h]['Set']['id']);
-				for($i=0; $i<count($ts); $i++){
-					if($ts[$i]['Tsumego']['id']!=$id){
-						$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
-						$sgfArr = $this->processSGF($sgf['Sgf']['sgf']);
-						$numStones = count($sgfArr[1]);
-						$stoneNumberDiff = abs($numStones-$tNumStones);
-						if($stoneNumberDiff<=$maxDifference){
-							if($includeColorSwitch=='true')
-								$compare = $this->compare($tSgfArr[0], $sgfArr[0], true);
-							else
-								$compare = $this->compare($tSgfArr[0], $sgfArr[0], false);
-							if($compare[0]<=$maxDifference){
-								array_push($similarId, $ts[$i]['Tsumego']['id']);
-								array_push($similarArr, $sgfArr[0]);
-								array_push($similarArrInfo, $sgfArr[2]);
-								array_push($similarArrBoardSize, $sgfArr[3]);
-								array_push($similarDiff, $compare[0]);
-								if($compare[1]==0) array_push($similarDiffType, '');
-								else if($compare[1]==1) array_push($similarDiffType, 'Shifted position.');
-								else if($compare[1]==2) array_push($similarDiffType, 'Shifted and rotated.');
-								else if($compare[1]==3) array_push($similarDiffType, 'Switched colors.');
-								else if($compare[1]==4) array_push($similarDiffType, 'Switched colors and shifted position.');
-								else if($compare[1]==5) array_push($similarDiffType, 'Switched colors, shifted and rotated.');
-								array_push($similarOrder, $compare[2]);
-								$set = $this->Set->findById($ts[$i]['Tsumego']['set_id']);
-								$title2 = $set['Set']['title'].' - '.$ts[$i]['Tsumego']['num'];
-								array_push($similarTitle, $title2);
-							}
-						}
-					}
+	public function valuetable(){
+		$win = array();
+		$loss = array();
+		$twin = array();
+		$tloss = array();
+		$win2 = array();
+		$loss2 = array();
+		$win3 = array();
+		$loss3 = array();
+		$win4 = array();
+		$loss4 = array();
+		$u = 500;
+		$t = 1600;
+		$add = 50;
+		$activityValue = 29;
+		while($activityValue<=90){
+			$u = 500;
+			$t = 1600;
+			$add = 50;
+			while($u<=2600){
+				$u += $add;
+				$diff = abs($u-$t);
+				if($u > $t)
+					$eloBigger = 'u';
+				else if($t >= $u)
+					$eloBigger = 't';
+				if($diff==0) $diff = .1;
+				$newUserEloW = $this->getNewElo($diff, $eloBigger, $activityValue, 'w');
+				$newUserEloL = $this->getNewElo($diff, $eloBigger, $activityValue, 'l');
+				//echo '<pre>'; print_r($newUserEloW); echo '</pre>';
+				//echo '<pre>'; print_r($newUserEloL); echo '</pre>';
+				$tsumegoEloWin = $t + $newUserEloW['tsumego2'];
+				$tsumegoEloLoss = $t + $newUserEloL['tsumego2'];
+				$userEloWin = $u+$newUserEloW['user2'];
+				$userEloLoss = $u+$newUserEloL['user2'];
+				$varianceWin = $userEloWin-$u;
+				$varianceLoss = $userEloLoss-$u;
+				$varianceTsumegoWin = $tsumegoEloWin -$t;
+				$varianceTsumegoLoss = $tsumegoEloLoss - $t;
+				
+				//echo '<pre>'; print_r('tsumego elo:'.$t.', diff:'.$diff.', ('.$varianceTsumegoWin.'), win:'.$tsumegoEloWin); echo '</pre>';
+				//echo '<pre>'; print_r('tsumego elo:'.$t.', diff:'.$diff.', ('.$varianceTsumegoLoss.'), loss:'.$tsumegoEloLoss); echo '</pre>';
+				//echo '<pre>'; print_r('user elo:'.$u.', diff:'.$diff.', ('.$varianceWin.'), win:'.$userEloWin); echo '</pre>';
+				//echo '<pre>'; print_r('user elo:'.$u.', diff:'.$diff.', ('.$varianceLoss.'), loss:'.$userEloLoss); echo '</pre>';
+				if($t>$u)
+					$diff *= -1;
+				if($activityValue==29){
+					$win[$diff] = round($varianceWin, 2);
+					$loss[$diff] = round($varianceLoss, 2);
+					$twin[$diff] = round($varianceTsumegoWin);
+					$tloss[$diff] = round($varianceTsumegoLoss);
+				}else if($activityValue==49){
+					$win2[$diff] = round($varianceWin, 2);
+					$loss2[$diff] = round($varianceLoss, 2);
+				}else if($activityValue==69){
+					$win3[$diff] = round($varianceWin, 2);
+					$loss3[$diff] = round($varianceLoss, 2);
+				}else{
+					$win4[$diff] = round($varianceWin, 2);
+					$loss4[$diff] = round($varianceLoss, 2);
 				}
 			}
-			array_multisort($similarOrder, $similarArr, $similarArrInfo, $similarTitle, $similarDiff, $similarDiffType, $similarId);
+			$activityValue+=20;
 		}
-		$loop = true;
-		
-		if(count($similarId)>0){
-			$alreadyDuplicate = false;
-			$alreadyD = $this->Duplicate->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
-			if($alreadyD!=null)
-				$alreadyDuplicate = true;
-			for($i=0; $i<count($similarId); $i++){
-				$alreadyD = $this->Duplicate->find('first', array('conditions' => array('tsumego_id' => $similarId[$i])));
-				if($alreadyD!=null)
-					$alreadyDuplicate = true;
-			}
-			if(!$alreadyDuplicate){
-				$dGroup = $this->Duplicate->find('all', array('limit' => 1, 'order' => 'dGroup DESC'));
-				$dGroup = $dGroup[0]['Duplicate']['dGroup']+1;
-				$dupA = array();
-				$dupA['Duplicate']['tsumego_id'] = $t['Tsumego']['id'];
-				$dupA['Duplicate']['dGroup'] = $dGroup;
-				$this->Duplicate->create();
-				$this->Duplicate->save($dupA);
-				for($i=0; $i<count($similarId); $i++){
-					$dupA = array();
-					$dupA['Duplicate']['tsumego_id'] = $similarId[$i];
-					$dupA['Duplicate']['dGroup'] = $dGroup;
-					$this->Duplicate->create();
-					$this->Duplicate->save($dupA);
-				}
-				//$loop = false;
-			}
-		}
-		$ds1++;
-		file_put_contents('ds1.txt', $ds1);
-		
-		if($ds1>=count($all))
-			$loop = false;
-		
-		$this->set('tSgfArr', $tSgfArr[0]);
-		$this->set('tSgfArrInfo', $tSgfArr[2]);
-		$this->set('tSgfArrBoardSize', $tSgfArr[3]);
-		$this->set('similarId', $similarId);
-		$this->set('similarArr', $similarArr);
-		$this->set('similarArrInfo', $similarArrInfo);
-		$this->set('similarArrBoardSize', $similarArrBoardSize);
-		$this->set('similarTitle', $similarTitle);
-		$this->set('similarDiff', $similarDiff);
-		$this->set('similarDiffType', $similarDiffType);
-		$this->set('title', $title);
-		$this->set('t', $t);
-		$this->set('maxDifference', $maxDifference);
-		$this->set('includeSandbox', $includeSandbox);
-		$this->set('includeColorSwitch', $includeColorSwitch);
-		$this->set('foundSomething', count($similarId));
-		$this->set('loop', $loop);
+		$this->set('win', $win);
+		$this->set('loss', $loss);
+		$this->set('twin', $twin);
+		$this->set('tloss', $tloss);
+		$this->set('win2', $win2);
+		$this->set('loss2', $loss2);
+		$this->set('win3', $win3);
+		$this->set('loss3', $loss3);
+		$this->set('win4', $win4);
+		$this->set('loss4', $loss4);
 	}
 }
-
 ?>
 
 

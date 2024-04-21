@@ -377,6 +377,7 @@ class UsersController extends AppController{
 		
 	}
 	
+	//list tsumego variations
 	public function test2(){
 		$this->loadModel('Tsumego');
 		

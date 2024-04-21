@@ -1189,6 +1189,9 @@
 	var clearFile = "<?php echo $set['Set']['title'].' - '.$t['Tsumego']['num']; ?>";
 	var clearFile2 = "<?php echo $set['Set']['folder'].'/'.$t['Tsumego']['num']; ?>";
 	var tsumegoFileLink = "<?php echo $t['Tsumego']['id']; ?>";
+	var requestSignature = "<?php echo $requestSignature; ?>";
+	var idForSignature = "<?php echo $idForSignature; ?>";
+	var idForSignature2 = "<?php echo $idForSignature2; ?>";
 	var author = "<?php echo $t['Tsumego']['author']; ?>";
 	var inFavorite = "<?php echo $inFavorite; ?>";
 	var besogoPlayerColor = "black";
