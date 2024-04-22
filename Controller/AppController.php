@@ -2552,6 +2552,14 @@ class AppController extends Controller{
 		$lastProfileLeft = 1;
 		$lastProfileRight = 2;
 		
+		if(!isset($_SESSION['loggedInUser']['User']['id'])){
+			if(isset($_COOKIE['PHPSESSID']) && isset($_COOKIE['hash'])){
+				$uRelogin = $this->User->find('first', array('conditions' => array('session' => $_COOKIE['PHPSESSID'])));
+				if($uRelogin['User']['session']==$_COOKIE['PHPSESSID'] && md5($uRelogin['User']['name'])==$_COOKIE['hash'])
+					$_SESSION['loggedInUser'] = $uRelogin;
+			}
+		}
+		
     	if(isset($_SESSION['loggedInUser']['User']['id'])){
 			if($_SESSION['loggedInUser']['User']['id']==33) unset($_SESSION['loggedInUser']);
             $loggedInUser = $_SESSION['loggedInUser'];
@@ -2561,7 +2569,9 @@ class AppController extends Controller{
 		
 		$u = null;
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			$_SESSION['loggedInUser']['User']['session'] = $_COOKIE['PHPSESSID'];
 			$u =  $this->User->findById($_SESSION['loggedInUser']['User']['id']);
+			$u['User']['session'] = $_COOKIE['PHPSESSID'];
 			if($u['User']['lastHighscore']==1) $highscoreLink = 'highscore';
 			elseif($u['User']['lastHighscore']==2) $highscoreLink = 'rating';
 			elseif($u['User']['lastHighscore']==3) $highscoreLink = 'leaderboard';

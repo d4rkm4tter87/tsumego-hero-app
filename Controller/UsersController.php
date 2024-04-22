@@ -2410,8 +2410,7 @@ Joschka Zimdars';
 	
 	public function logout() {
 		unset($_SESSION['loggedInUser']);
-		//$this->redirect( '/sets' );
-		$_SESSION['redirect'] = 'sets';
+		//$_SESSION['redirect'] = 'sets';
 		$this->Session->setFlash(__('You have singed out.', true));
 	}
 	

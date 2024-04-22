@@ -191,7 +191,7 @@ class TsumegosController extends AppController{
 				array_push($ts, $this->Tsumego->findById($sig2[$j]['Signature']['tsumego_id']));
 			}
 		}
-		echo '<pre>'; print_r(count($ts)); echo '</pre>';
+		//echo '<pre>'; print_r(count($ts)); echo '</pre>';
 		
 		for($i=0; $i<count($ts); $i++){
 			if($ts[$i]['Tsumego']['id']!=$id){
@@ -265,7 +265,6 @@ class TsumegosController extends AppController{
 			$similarId = $similarId2;
 			$similarArrBoardSize = $similarArrBoardSize2;
 		}
-		
 		array_multisort($similarOrder, $similarArr, $similarArrInfo, $similarTitle, $similarDiff, $similarDiffType, $similarId, $similarArrBoardSize);
 		/*
 		echo '<pre>'; print_r($similarOrder); echo '</pre>';
@@ -274,7 +273,6 @@ class TsumegosController extends AppController{
 		echo '<pre>'; print_r($similarArrInfo); echo '</pre>';
 		echo '<pre>'; print_r($similarArrBoardSize); echo '</pre>';
 		*/
-		
 		$this->set('tSgfArr', $tSgfArr[0]);
 		$this->set('tSgfArrInfo', $tSgfArr[2]);
 		$this->set('tSgfArrBoardSize', $tSgfArr[3]);

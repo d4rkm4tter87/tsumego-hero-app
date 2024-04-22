@@ -427,9 +427,9 @@
 	lifetime = lifetime.toUTCString();
 	
 	var PHPSESSID = getCookie("PHPSESSID");
-	setCookie("PHPSESSID", PHPSESSID);
-	
 	<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
+	setCookie("PHPSESSID", PHPSESSID);
+	setCookie("hash", "<?php echo md5($_SESSION['loggedInUser']['User']['name']); ?>");
 	var barPercent1 = <?php echo $user['User']['xp']/$user['User']['nextlvl']*100; ?>;
 	var barPercent2 = <?php echo substr(round($user['User']['elo_rating_mode']), -2); ?>;
 	var barLevelNum = "<?php echo 'Level '.$user['User']['level']; ?>";
