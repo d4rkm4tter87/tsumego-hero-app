@@ -374,7 +374,7 @@
           categories: elo3
         },
 		yaxis: {
-		   min: -5,
+		   min: -100,
 		  max: 0
         },
 		fill: {

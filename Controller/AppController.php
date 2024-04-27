@@ -381,7 +381,11 @@ class AppController extends Controller{
 		}
 	}
 	
-	public function getNewElo($diff, $eloBigger, $activityValue, $outcome){
+	public function getNewElo($diff, $eloBigger, $activityValue, $tid, $outcome){
+		$t = $this->Tsumego->findById($tid);
+		if($t['Tsumego']['activity_value']>300)
+			$t['Tsumego']['activity_value'] = 300;
+		$tsumegoAvtivityValue = max(round((2/3)*$t['Tsumego']['activity_value']),15);
 		$kFactor1 = 1;
 		$kFactor2 = 1;
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
@@ -401,10 +405,9 @@ class AppController extends Controller{
 		}
 		if($diff==0) $diff = .1;
 		if($eloBigger=='u'){
-			$tWin = $diff/100;
+			$tWin = $diff/$tsumegoAvtivityValue;
 			$tLoss = 0;
 			
-			//$uWin = 5.5-$diff/100;
 			$uWin = log($diff, 2)-$diff/70;
 			if($diff<=100) $uWin = 5;
 			$uWin *= $kFactor2;
@@ -412,7 +415,6 @@ class AppController extends Controller{
 			if($uWin>5) $uWin = 5;
 			
 			$uLoss = log($diff, 2)*2.2-12;
-			//$uLoss = $diff/100+4;
 			$uLoss *= $kFactor2;
 			if($uLoss<5) $uLoss = 5;
 			$uLoss *= -1;
@@ -423,14 +425,12 @@ class AppController extends Controller{
 			}
 		}else if($eloBigger=='t'){
 			$tWin = 0;
-			$tLoss = $diff/100*(-1);
+			$tLoss = $diff/$tsumegoAvtivityValue*(-1);
 			
-			//$uWin = $diff/100+5;
 			$uWin = log($diff, 2)*2.2-11;
 			$uWin *= $kFactor2;
 			if($uWin<5) $uWin = 5;
 			
-			//$uLoss = 4.4-$diff/100;
 			$uLoss = log($diff, 2)-$diff/70-1;
 			if($diff<100) $uLoss = 4;
 			$uLoss *= $kFactor2;
@@ -465,6 +465,7 @@ class AppController extends Controller{
 	}
 	
 	public function getActivityValue($uid, $tid){
+		$this->loadModel('Tsumego');
 		$this->loadModel('TsumegoAttempt');
 		$tsumegoNum = 90;
 		$ra = $this->TsumegoAttempt->find('all', array('limit' => $tsumegoNum, 'order' => 'created DESC', 'conditions' => array('user_id' => $uid)));
@@ -2674,13 +2675,15 @@ class AppController extends Controller{
 			$activityValue = 1;
 			if(isset($_COOKIE['av']))
 				$activityValue = $_COOKIE['av'];
-			$newUserEloL = $this->getNewElo($eloDifference, $eloBigger, $activityValue, 'l');
+			$newUserEloL = $this->getNewElo($eloDifference, $eloBigger, $activityValue, $preTsumego['Tsumego']['id'], 'l');
 			$_SESSION['loggedInUser']['User']['elo_rating_mode'] += $newUserEloL['user'];
 			$u['User']['elo_rating_mode'] = $_SESSION['loggedInUser']['User']['elo_rating_mode'];
 			$this->User->save($u);
 			$preTsumego['Tsumego']['elo_rating_mode'] += $newUserEloL['tsumego'];
+			$preTsumego['Tsumego']['activity_value']++;
 			$preTsumego['Tsumego']['difficulty'] = $this->convertEloToXp($preTsumego['Tsumego']['elo_rating_mode']);
-			$this->Tsumego->save($preTsumego);
+			if($preTsumego['Tsumego']['elo_rating_mode']>100)
+				$this->Tsumego->save($preTsumego);
 		}
 			
 		//Correct!
@@ -2694,13 +2697,15 @@ class AppController extends Controller{
 			$activityValue = 1;
 			if(isset($_COOKIE['av']))
 				$activityValue = $_COOKIE['av'];
-			$newUserEloW = $this->getNewElo($eloDifference, $eloBigger, $activityValue, 'w');
+			$newUserEloW = $this->getNewElo($eloDifference, $eloBigger, $activityValue, $preTsumego['Tsumego']['id'], 'w');
 			$_SESSION['loggedInUser']['User']['elo_rating_mode'] += $newUserEloW['user'];
 			$u['User']['elo_rating_mode'] = $_SESSION['loggedInUser']['User']['elo_rating_mode'];
 			$this->User->save($u);
 			$preTsumego['Tsumego']['elo_rating_mode'] += $newUserEloW['tsumego'];
+			$preTsumego['Tsumego']['activity_value']++;
 			$preTsumego['Tsumego']['difficulty'] = $this->convertEloToXp($preTsumego['Tsumego']['elo_rating_mode']);
-			$this->Tsumego->save($preTsumego);
+			if($preTsumego['Tsumego']['elo_rating_mode']>100)
+				$this->Tsumego->save($preTsumego);
 		}
 		
 		if(($_COOKIE['mode']=='1' || $_COOKIE['mode']=='2') && $_COOKIE['score'] != '0' && $_COOKIE['preId'] != '0'){

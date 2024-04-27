@@ -331,7 +331,7 @@ class UsersController extends AppController{
 		$this->loadModel('TsumegoAttempt');
 		
 		$t = $this->Tsumego->find('all', array('conditions' => array(
-			'rd <' => -400
+			'rd <' => -500
 		)));
 		for($i=0; $i<count($t); $i++){
 			$ta = $this->TsumegoAttempt->find('all', array('limit' => 2, 'order' => 'created ASC', 'conditions' => array(
@@ -347,7 +347,6 @@ class UsersController extends AppController{
 		}
 		echo '<pre>'; print_r(count($t)); echo '</pre>';
 		echo '<pre>'; print_r($ta[0]['TsumegoAttempt']['tsumego_elo']); echo '</pre>';
-		
 	}
 	
 	//no author
@@ -374,7 +373,22 @@ class UsersController extends AppController{
 		*/
 		echo '<pre>'; print_r(count($t)); echo '</pre>';
 		echo '<pre>'; print_r($t); echo '</pre>';
+	}
+	
+	//list ratings
+	public function test1d(){
+		$this->loadModel('Tsumego');
+		$this->loadModel('TsumegoAttempt');
+		$this->loadModel('SetConnection');
+		$this->loadModel('Set');
 		
+		$ts = $this->Tsumego->find('all', array('order' => 'elo_rating_mode ASC'));
+		for($i=0;$i<count($ts);$i++){
+			$sc = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
+			$s = $this->Set->findById($sc['SetConnection']['set_id']);
+			$ts[$i]['Tsumego']['public'] = $s['Set']['public'];
+		}
+		$this->set('ts', $ts);
 	}
 	
 	//list tsumego variations
@@ -2411,7 +2425,7 @@ Joschka Zimdars';
 	public function logout() {
 		unset($_SESSION['loggedInUser']);
 		//$_SESSION['redirect'] = 'sets';
-		$this->Session->setFlash(__('You have singed out.', true));
+		//$this->Session->setFlash(__('You have singed out.', true));
 	}
 	
 	public function delete($id){
@@ -3737,7 +3751,6 @@ Joschka Zimdars';
 						$lowest = $distance[$j];
 					}
 				}
-				
 				$newTs3['id'][$i][$jc] = $xxx[$i][$k]['Tsumego']['id'];
 				$newTs3['count'][$i][$jc] = $xxx[$i][$k]['Tsumego']['userLoss'];
 				$newTs3['percent'][$i][$jc] = $xxx[$i][$k]['Tsumego']['userWin'];
@@ -3748,8 +3761,6 @@ Joschka Zimdars';
 				$newTs3['newxp'][$i][$jc] = ($pos+1)*10;
 				$newTs3['multiplier'][$i][$jc] = $xxx[$i][$k]['Tsumego']['multiplier'];
 				$newTs3['multiplied'][$i][$jc] = ceil($xxx[$i][$k]['Tsumego']['multiplier']*$newTs3['newxp'][$i][$jc]);
-				
-				
 				/*
 				if($newTs3['setid'][$i][$jc]==104){
 					$tsu = $this->Tsumego->findById($newTs3['id'][$i][$jc]);

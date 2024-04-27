@@ -1096,17 +1096,13 @@
 		echo '<font color="grey"></font>';
 		echo '</div>';
 	}
-	
 	$browser = $_SERVER['HTTP_USER_AGENT'] . "\n\n";
-
 	echo '<audio><source src="/sounds/newStone.ogg"></audio>';
 	echo '';
 	
 	/* 
-	TESTING AREA§
+	§TESTING AREA§
 	echo '<pre>'; print_r($levelBar); echo '</pre>';
-	echo '<pre>'; print_r($eloScore); echo '</pre>';
-	echo '<pre>'; print_r($eloScore2); echo '</pre>';
 	*/
 	?>
 
