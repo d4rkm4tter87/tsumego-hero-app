@@ -29,7 +29,6 @@ class AppController extends Controller{
 				$board[$i][$j] = '-';
 			}
 		}
-		
 		$lowestX = 18;
 		$lowestY = 18;
 		$highestX = 0;
@@ -674,7 +673,6 @@ class AppController extends Controller{
 		
 		$sid = $ts['Tsumego']['id'];
 		$ts['Tsumego']['id'] = $id;
-		//$ts['Tsumego']['set_id'] = $to;
 		$ts['Tsumego']['created'] = $date.' 22:00:00';
 		$ts['Tsumego']['solved'] = 0;
 		$ts['Tsumego']['failed'] = 0;
@@ -689,7 +687,6 @@ class AppController extends Controller{
 			$sgfs[$i]['Sgf']['tsumego_id'] = $id;
 			$this->Sgf->save($sgfs[$i]);
 		}
-		
 		$x = array();
 		$x['PublishDate']['date'] = $date.' 22:00:00';
 		$x['PublishDate']['tsumego_id'] = $id;

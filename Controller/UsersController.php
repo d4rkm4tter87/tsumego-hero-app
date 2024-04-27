@@ -383,12 +383,99 @@ class UsersController extends AppController{
 		$this->loadModel('Set');
 		
 		$ts = $this->Tsumego->find('all', array('order' => 'elo_rating_mode ASC'));
+		
+		$x1min = 2200;
+		$x1max = 2673;
+		$x2min = 2200;
+		$x2max = 2900;
+		
 		for($i=0;$i<count($ts);$i++){
 			$sc = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
 			$s = $this->Set->findById($sc['SetConnection']['set_id']);
 			$ts[$i]['Tsumego']['public'] = $s['Set']['public'];
+			$ts[$i]['Tsumego']['rank'] = $this->getTsumegoRank($ts[$i]['Tsumego']['elo_rating_mode']);
+			$ts[$i]['Tsumego']['shift'] = round($x2min + (($x2max - $x2min) / ($x1max - $x1min)) * ($ts[$i]['Tsumego']['elo_rating_mode'] - $x1min));
+			$ts[$i]['Tsumego']['rank2'] = $this->getTsumegoRank(round($x2min + (($x2max - $x2min) / ($x1max - $x1min)) * ($ts[$i]['Tsumego']['elo_rating_mode'] - $x1min)));
 		}
 		$this->set('ts', $ts);
+	}
+	
+	public function map19k(){
+		$this->loadModel('Tsumego');
+		$this->loadModel('TsumegoAttempt');
+		$this->loadModel('SetConnection');
+		$this->loadModel('Set');
+		
+		$ts = $this->Tsumego->find('all', array('order' => 'elo_rating_mode ASC', 'conditions' => array(
+			'elo_rating_mode >' => 500,
+			'elo_rating_mode <' => 1200
+		)));
+		
+		$x1min = 500;
+		$x1max = 1200;
+		$x2min = 100;
+		$x2max = 1200;
+		
+		for($i=0;$i<count($ts);$i++){
+			$sc = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
+			$s = $this->Set->findById($sc['SetConnection']['set_id']);
+			$ts[$i]['Tsumego']['public'] = $s['Set']['public'];
+			$ts[$i]['Tsumego']['rank'] = $this->getTsumegoRank($ts[$i]['Tsumego']['elo_rating_mode']);
+			$ts[$i]['Tsumego']['shift'] = round($x2min + (($x2max - $x2min) / ($x1max - $x1min)) * ($ts[$i]['Tsumego']['elo_rating_mode'] - $x1min));
+			$ts[$i]['Tsumego']['rank2'] = $this->getTsumegoRank(round($x2min + (($x2max - $x2min) / ($x1max - $x1min)) * ($ts[$i]['Tsumego']['elo_rating_mode'] - $x1min)));
+			if($ts[$i]['Tsumego']['public']==1){
+				$ts[$i]['Tsumego']['elo_rating_mode'] = $ts[$i]['Tsumego']['shift'];
+				//$this->Tsumego->save($ts[$i]);
+			}
+		}
+		$this->set('ts', $ts);
+	}
+	
+	public function map8d(){
+		$this->loadModel('Tsumego');
+		$this->loadModel('TsumegoAttempt');
+		$this->loadModel('SetConnection');
+		$this->loadModel('Set');
+		
+		$ts = $this->Tsumego->find('all', array('order' => 'elo_rating_mode ASC', 'conditions' => array(
+			'elo_rating_mode >=' => 2200
+		)));
+		
+		$x1min = 2200;
+		$x1max = 2673;
+		$x2min = 2200;
+		$x2max = 2900;
+		
+		for($i=0;$i<count($ts);$i++){
+			$sc = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
+			$s = $this->Set->findById($sc['SetConnection']['set_id']);
+			$ts[$i]['Tsumego']['public'] = $s['Set']['public'];
+			$ts[$i]['Tsumego']['rank'] = $this->getTsumegoRank($ts[$i]['Tsumego']['elo_rating_mode']);
+			$ts[$i]['Tsumego']['shift'] = round($x2min + (($x2max - $x2min) / ($x1max - $x1min)) * ($ts[$i]['Tsumego']['elo_rating_mode'] - $x1min));
+			$ts[$i]['Tsumego']['rank2'] = $this->getTsumegoRank(round($x2min + (($x2max - $x2min) / ($x1max - $x1min)) * ($ts[$i]['Tsumego']['elo_rating_mode'] - $x1min)));
+			if($ts[$i]['Tsumego']['public']==1){
+				$ts[$i]['Tsumego']['elo_rating_mode'] = $ts[$i]['Tsumego']['shift'];
+				//$this->Tsumego->save($ts[$i]);
+			}
+		}
+		$this->set('ts', $ts);
+	}
+	
+	public function test1e(){
+		$this->loadModel('Tsumego');
+		$this->loadModel('TsumegoAttempt');
+		$this->loadModel('SetConnection');
+		$this->loadModel('Set');
+		
+		$x1min = 500;
+		$x1max = 1200;
+		$x2min = 100;
+		$x2max = 1200;
+		
+		$x = 700;
+		
+		$result = $x2min + (($x2max - $x2min) / ($x1max - $x1min)) * ($x - $x1min);
+		echo $result;
 	}
 	
 	//list tsumego variations

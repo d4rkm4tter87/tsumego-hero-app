@@ -9,8 +9,8 @@
 				echo '<td>'.$ts[$i]['Tsumego']['elo_rating_mode'].'</td>';
 				echo '<td>'.$ts[$i]['Tsumego']['public'].'</td>';
 				echo '<td>'.$ts[$i]['Tsumego']['rank'].'</td>';
-				//echo '<td>'.$ts[$i]['Tsumego']['shift'].'</td>';
-				//echo '<td>'.$ts[$i]['Tsumego']['rank2'].'</td>';
+				echo '<td>'.$ts[$i]['Tsumego']['shift'].'</td>';
+				echo '<td>'.$ts[$i]['Tsumego']['rank2'].'</td>';
 				echo '</tr>';
 				$counter++;
 			}

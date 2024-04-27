@@ -3002,16 +3002,6 @@ class TsumegosController extends AppController{
 		$add = 50;
 		$activityValue = 29;
 		
-		$new = 1;
-		$new2 = 1;
-		while($new<=300){
-			$new2 = max(round((2/3)*$new),15);
-			//echo $new.': '.$new2.'<br>';
-			$new++;
-		}
-		
-		
-		
 		while($activityValue<=90){
 			$u = 500;
 			$t = 1600;
