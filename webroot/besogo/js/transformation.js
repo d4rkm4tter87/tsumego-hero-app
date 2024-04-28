@@ -16,10 +16,10 @@ besogo.makeTransformation = function()
       result.x = size.x - position.x + 1;
     if (this.vFlip)
       result.y = size.y - position.y + 1;
-    if (this.rotate)
-    {
+    if (this.rotateClockwise)
       [result.x, result.y] = [size.x - result.y + 1, result.x];
-    }
+	if (this.rotateCounterClockwise)
+      [result.y, result.x] = [size.y - result.x + 1, result.y];
     return result;
   }
 

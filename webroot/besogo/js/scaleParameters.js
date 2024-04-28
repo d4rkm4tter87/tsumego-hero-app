@@ -112,6 +112,11 @@ besogo.makeScaleParameters = function(size)
     this.prepareTransformation(transformation);
     root.applyTransformationOnRoot(transformation);
   }
+  
+  scaleParameters.initializeRotation = function(type)
+  {
+    this.rotation = type;
+  }
 
   scaleParameters.clear(size);
 

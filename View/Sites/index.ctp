@@ -46,43 +46,7 @@
 			if(count($scheduleTsumego)<=10) echo '';
 			else echo '<br>';
 		}
-		/*
-			$currentSet = 145;
-			$newTs = array();
-			$newTsMap = array();
-			for($i=0; $i<count($ts); $i++){
-				if($ts[$i]['Tsumego']['created'] == '2021-06-10 22:00:00'){
-				if($ts[$i]['Tsumego']['set_id'] == $currentSet){
-					array_push($newTs, $ts[$i]);
-					array_push($newTsMap, $ts[$i]['Tsumego']['num']);
-				}	
-				}
-			}
-			asort($newTsMap);
-			$newTsMap = array_values($newTsMap);
-			
-			echo '<a style="color:#000;" href="/sets/view/'.$setNames[$currentSet]['Set']['id'].'"><b>'.$setNames[$currentSet]['Set']['title'].
-			' '.$setNames[$currentSet]['Set']['title2'].
-			'</b></a> - '.count($newTs).' Problems<br>';
-			
-			for($i=count($newTs)-1; $i>=0; $i--){
-				if(!isset($newTs[$i]['Tsumego']['status'])) $newTs[$i]['Tsumego']['status'] = 'N';
-			}
-			for($i=0; $i<count($newTsMap); $i++){
-				for($j=0; $j<count($newTs); $j++){
-					if($newTs[$j]['Tsumego']['num']==$newTsMap[$i]){
-						echo '
-							<li class="set'.$newTs[$j]['Tsumego']['status'].'1" style="margin-top:4px;">
-								<a href="/tsumegos/play/'.$newTs[$j]['Tsumego']['id'].'?mode=1">'.$newTs[$j]['Tsumego']['num'].'</a>
-							</li>
-						';
-					}
-				}
-			}
-			*/
-		?>		
-			
-		<?php if(count($scheduleTsumego)!=0) echo '<br><br><br>';
+		if(count($scheduleTsumego)!=0) echo '<br><br><br>';
 		else echo ''; 
 		?>
 		<font color="#444">Most popular today:</font><br>
@@ -92,6 +56,24 @@
 				<?php echo $totd['Tsumego']['num']; ?><span><div id="tooltipSvg99"></div></span></a>
 			</li>
 			<br><br>
+		</div>
+		<p class="title4">Update 30.04.2024</p>
+		<div class="new1">
+		
+		<b>Improved search, ratings, sessions and board views</b><br><br>
+		<b>• Longer sessions.</b> <br>
+		<b>• Boards can be roatated.</b> <br>
+		<b>• Broader rank system:</b> While the last update enabled ranks from 21k to 9d, this update scales the existing problems into the new range.<br>
+		<b>• Improved raitng calculation:</b> The Tsumego rating calculation added an activity value that is meant to have a higher variance
+		with fresh problems. For this initial update, all problems are considered fresh, which means, the ratings vary by a lot for a few weeks.<br>
+		
+		<b>• Improved similar problem search:</b> The search has been improved by storing solution types in the database.
+		It always finds many similar problems in any search now and is very fast. <br>
+		<div align="center">
+		<img src="/img/example-search.png" title="search-example" alt="search-example" width="350px"><br>
+		Example: <a href="/tsumegos/duplicatesearch/2897">Life & Death - Elementary 745</a><br>
+		<i>Notice how it finds 30 similar problems almost instantly.</i><br><br>
+		</div>
 		</div>
 		<p class="title4">Update 03.04.2024</p>
 		<div class="new1">

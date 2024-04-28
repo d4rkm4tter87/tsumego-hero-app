@@ -22,8 +22,9 @@
 				else if($similarDiff[$i]==1) $description1 = $similarDiff[$i].' stone different. ';
 				else $description1 = $similarDiff[$i].' stones different. ';
 				echo '<a href="/tsumegos/play/'.$similarId[$i].'">'.$similarTitle[$i].'</a><br>';
-				echo $description1;
-				echo $similarDiffType[$i].'<br>';
+				//echo $description1;
+				//echo $similarDiffType[$i];
+				echo '<br>';
 				echo '<div id="tooltipSvg'.$i.'"></div><br>';
 			}
 			if(count($similarArr)==0)
@@ -32,9 +33,6 @@
 		</td>
 		</tr>
 	</table>
-	<?php	
-	//echo '<pre>'; print_r($similarArrBoardSize); echo '</pre>';
-	?>
 	<script>
 		let similarArr = [];
 		<?php

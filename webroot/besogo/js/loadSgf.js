@@ -18,6 +18,7 @@ besogo.loadSgf = function(sgf, editor, mode = NORMAL_LOAD)
   besogo.scaleParameters = besogo.makeScaleParameters(size);
   besogo.scaleParameters.setupLimitsFromTree(root);
   besogo.scaleParameters.normalizeToTopLeft(size);
+  besogo.scaleParameters.initializeRotation(-1);
 
   if (mode == NORMAL_LOAD)
     editor.loadRoot(root); // Load root into the editor

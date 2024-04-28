@@ -1225,7 +1225,6 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
 	let size = besogo.scaleParameters.boardCoordSize;
 	for(let i=0; i<correctMoves.length; i++){
 		if(correctMoves[i].correct===1){
-			//console.log("correct",correctMoves[i].move.x, correctMoves[i].move.y);
 			let array = [["_","_","_"],["_","_","_"],["_","_","_"]]
 			let x = correctMoves[i].move.x-1;
 			let y = correctMoves[i].move.y-1;
@@ -1260,8 +1259,6 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
 	  let highestValue = 0;
 	  let highestSignature = "";
 	  for(let i=0; i<8; i++){
-		  //console.log((i+1)+"________________");
-		  //outputSignature(a);
 		  value = evaluateSignature(a);
 		  if(value>highestValue){
 			  highestSignature = a[0][0]+a[0][1]+a[0][2]+a[1][0]+a[1][1]+a[1][2]+a[2][0]+a[2][1]+a[2][2];
@@ -1269,10 +1266,10 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
 		  }
 		  a = i!==3 ? rotateSignature(a) : mirrorSignature(a);
 	  }
-	  //console.log(highestSignature,highestValue);
 	  return highestSignature;
   }
   
+  //evaluation to find out which oritentation should be saved
   function evaluateSignature(a)
   {
 	  let values = [0,0,0];
@@ -1285,7 +1282,6 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
 	  let valueString = "1";
 	  for (let i = 0; i < 3; i++) 
 		  valueString += values[i]<10 ? "0"+values[i] : values[i];
-	  //console.log(valueString);
 	  return parseInt(valueString);
   }
   
