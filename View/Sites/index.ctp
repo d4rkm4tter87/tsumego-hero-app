@@ -60,19 +60,19 @@
 		<p class="title4">Update 30.04.2024</p>
 		<div class="new1">
 		
-		<b>Improved search, ratings, sessions and board views</b><br><br>
+		<b>Improved search, ratings, board views and sessions</b><br><br>
 		<b>• Longer sessions.</b> <br>
 		<b>• Boards can be roatated.</b> <br>
 		<b>• Broader rank system:</b> While the last update enabled ranks from 21k to 9d, this update scales the existing problems into the new range.<br>
 		<b>• Improved raitng calculation:</b> The Tsumego rating calculation added an activity value that is meant to have a higher variance
-		with fresh problems. For this initial update, all problems are considered fresh, which means, the ratings vary by a lot for a few weeks.<br>
+		with fresh problems.<br>
 		
 		<b>• Improved similar problem search:</b> The search has been improved by storing solution types in the database.
 		It always finds many similar problems in any search now and is very fast. <br>
 		<div align="center">
 		<img src="/img/example-search.png" title="search-example" alt="search-example" width="350px"><br>
 		Example: <a href="/tsumegos/duplicatesearch/2897">Life & Death - Elementary 745</a><br>
-		<i>Notice how it finds 30 similar problems almost instantly.</i><br><br>
+		<i>In this example, it finds 30 similar problems almost instantly.</i><br><br>
 		</div>
 		</div>
 		<p class="title4">Update 03.04.2024</p>

@@ -253,7 +253,7 @@ besogo.makeFilePanel = function(container, editor)
       text = text.replaceAll("\n", "€");
       text = text.replaceAll("+", "%2B");
       text = text.replaceAll("ß", "ss");
-      document.cookie = "sgfForBesogo="+text+";path=/tsumegos/play";
+      document.cookie = "sgfForBesogo="+text+";path=/tsumegos/play;SameSite=none;Secure=false";
       window.location.href = "/tsumegos/play/"+(besogo.onSite[1]/1337)+"?requestProblem="+besogo.onSite[1];
     }
   }

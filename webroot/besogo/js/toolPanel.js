@@ -249,6 +249,27 @@ besogo.makeToolPanel = function(container, editor)
 						rotationView(currentRotation, besogo.scaleParameters['rotation']%2===rotationDivider);
 					}
 				}
+				else
+				{
+					changeRotationWidth(besogo.scaleParameters['boardCanvasSize'], besogo.boardParameters['corner'], besogo.scaleParameters['rotation']);
+					if (besogo.scaleParameters['rotation']===-1){
+						if (besogo.boardParameters['corner']==='top-left')
+							rotationView(1);
+						else if (besogo.boardParameters['corner']==='top-right')
+							rotationView(0);
+						else if (besogo.boardParameters['corner']==='bottom-right')
+							rotationView(3);
+						else if (besogo.boardParameters['corner']==='bottom-left')
+							rotationView(2);
+					}
+					else
+					{
+						let rotationDivider = besogo.boardParameters['corner']==='top-left'||besogo.boardParameters['corner']==='bottom-right' ? 1 : 0;
+						let currentRotation = besogo.scaleParameters['rotation']!==3 ? besogo.scaleParameters['rotation']+1 : 0;
+						rotationView(currentRotation, besogo.scaleParameters['rotation']%2===rotationDivider);
+					}
+					
+				}
 			}
 			$("#boardSpinCounterClockwise").css("opacity","1");
 			$("#boardSpinClockwise").css("opacity",".62");
@@ -287,7 +308,7 @@ besogo.makeToolPanel = function(container, editor)
 				}
 				else
 				{
-					console.log(besogo.boardParameters['corner']);
+					changeRotationWidth(besogo.scaleParameters['boardCanvasSize'], besogo.boardParameters['corner'], besogo.scaleParameters['rotation']);
 					if (besogo.scaleParameters['rotation']===-1){
 						if (besogo.boardParameters['corner']==='top-left')
 							rotationView(3);
@@ -304,6 +325,7 @@ besogo.makeToolPanel = function(container, editor)
 						let currentRotation = besogo.scaleParameters['rotation']!==0 ? besogo.scaleParameters['rotation']-1 : 3;
 						rotationView(currentRotation, besogo.scaleParameters['rotation']%2===rotationDivider);
 					}
+					
 				}
 			}
 			$("#boardSpinClockwise").css("opacity","1");
@@ -398,13 +420,11 @@ besogo.makeToolPanel = function(container, editor)
 		   function() { window.location.href = "/tsumegos/play/"+besogoMode3Next; },
 		   'besogo-next-button');
       }
-	  
       let reviewButtonId;
       if (editor.getReviewEnabled())
         reviewButtonId = 'besogo-review-button';
       else
         reviewButtonId = 'besogo-review-button-inactive';
-
       let trueBoardWidth = null;
       let trueBoardHeight = null;
       let reviewBoardWidth = null;
@@ -423,8 +443,32 @@ besogo.makeToolPanel = function(container, editor)
           if (!editor.getReviewMode())
           {
             $(".besogo-panels").css("display","flex");
-            if (besogo.scaleParameters['boardCanvasSize'] !== 'vertical half board') //only case where width < 50%
-              $(".besogo-board").css("width", "50%");
+            if (besogo.scaleParameters['boardCanvasSize']==='vertical half board')
+			{
+				if(besogo.boardParameters['corner']==="top-left"){
+					if(besogo.scaleParameters['rotation']===1 || besogo.scaleParameters['rotation']===3)
+						$(".besogo-board").css("width", "50%");
+				}else if(besogo.boardParameters['corner']==="top-right"){
+					if(besogo.scaleParameters['rotation']===0 || besogo.scaleParameters['rotation']===2)
+						$(".besogo-board").css("width", "50%");
+				}
+            }
+			else if (besogo.scaleParameters['boardCanvasSize']==='horizontal half board')
+			{
+				if(besogo.scaleParameters['rotation']===-1){
+					$(".besogo-board").css("width", "50%");
+				}else if(besogo.boardParameters['corner']==="top-left"){
+					if(besogo.scaleParameters['rotation']===0 || besogo.scaleParameters['rotation']===2)
+						$(".besogo-board").css("width", "50%");
+				}else if(besogo.boardParameters['corner']==="bottom-left"){
+					if(besogo.scaleParameters['rotation']===1 || besogo.scaleParameters['rotation']===3)
+						$(".besogo-board").css("width", "50%");
+				}
+			}
+			else
+			{
+				$(".besogo-board").css("width", "50%");
+			}
             $(".besogo-board").css("margin","0");
             $(".besogo-board").css("box-shadow","0 8px 14px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
             
@@ -435,7 +479,7 @@ besogo.makeToolPanel = function(container, editor)
               trueRatio = trueBoardWidth/trueBoardHeight;
               reviewBoardHeight = reviewBoardWidth/trueRatio;
             }
-            $(".besogo-board").css("height",reviewBoardHeight);
+            //$(".besogo-board").css("height",reviewBoardHeight);
             toggleBoardLock(false);
             deleteNextMoveGroup = true;
             editor.setReviewMode(true);
@@ -446,25 +490,61 @@ besogo.makeToolPanel = function(container, editor)
             $(".besogo-panels").css("display","none");
             if (besogo.scaleParameters['boardCanvasSize'] === 'full board')
             {
-              $(".besogo-board").css("width", "60%");
-              $(".besogo-board").css("margin", "0 252px");
-            }
-            else if (besogo.scaleParameters['boardCanvasSize'] === 'horizontal half board')
-            {
-              $(".besogo-board").css("width", "78%");
-              $(".besogo-board").css("margin", "0 138px");
+				$(".besogo-board").css("width", "60%");
+				$(".besogo-board").css("margin", "0 252px");
             }
             else if (besogo.scaleParameters['boardCanvasSize'] === 'vertical half board')
             {
-              $(".besogo-board").css("width", "30%");
-              $(".besogo-board").css("margin", "0 443px");
+				if(besogo.scaleParameters['rotation']===-1){
+					$(".besogo-board").css("width", "30%");
+					$(".besogo-board").css("margin", "0 443px");
+				}else if(besogo.boardParameters['corner']==="top-left"){
+					if(besogo.scaleParameters['rotation']===0 || besogo.scaleParameters['rotation']===2){
+						$(".besogo-board").css("width", "30%");
+						$(".besogo-board").css("margin", "0 443px");
+					}else{
+						$(".besogo-board").css("width", "78%");
+						$(".besogo-board").css("margin", "0 138px");
+					}
+				}else if(besogo.boardParameters['corner']==="top-right"){
+					if(besogo.scaleParameters['rotation']===1 || besogo.scaleParameters['rotation']===3){
+						$(".besogo-board").css("width", "30%");
+						$(".besogo-board").css("margin", "0 443px");
+					}else{
+						$(".besogo-board").css("width", "78%");
+						$(".besogo-board").css("margin", "0 138px");
+					}
+				}
+            }
+            else if (besogo.scaleParameters['boardCanvasSize'] === 'horizontal half board')
+            {
+				if(besogo.scaleParameters['rotation']===-1){
+					$(".besogo-board").css("width", "78%");
+					$(".besogo-board").css("margin", "0 138px");
+				}else if(besogo.boardParameters['corner']==="top-left"){
+					if(besogo.scaleParameters['rotation']===0 || besogo.scaleParameters['rotation']===2){
+						$(".besogo-board").css("width", "78%");
+						$(".besogo-board").css("margin", "0 138px");
+					}else{
+						$(".besogo-board").css("width", "30%");
+						$(".besogo-board").css("margin", "0 443px");
+					}
+				}else if(besogo.boardParameters['corner']==="bottom-left"){
+					if(besogo.scaleParameters['rotation']===1 || besogo.scaleParameters['rotation']===3){
+						$(".besogo-board").css("width", "78%");
+						$(".besogo-board").css("margin", "0 138px");
+					}else{
+						$(".besogo-board").css("width", "30%");
+						$(".besogo-board").css("margin", "0 443px");
+					}
+				}
             }
             else
             {
               $(".besogo-board").css("width", "50%");
               $(".besogo-board").css("margin", "0 315px");
             }
-            $(".besogo-board").css("height",trueBoardHeight);
+            //$(".besogo-board").css("height",trueBoardHeight);
             deleteNextMoveGroup = false;
             editor.setReviewMode(false);
           }
@@ -737,6 +817,7 @@ besogo.makeToolPanel = function(container, editor)
 	//removed buttons - the other editor should be used
   }
   
+  //adjust the viewBox to the rotation
   function rotationView(type = 0, swap = false){
 	if (type===0)
 	{
@@ -792,11 +873,20 @@ besogo.makeToolPanel = function(container, editor)
 	
 	}
 	besogo.scaleParameters['rotation'] = type;
+	besogoRotation = type;
   }
   
+  //remove all rotations when another transformation is clicked
   function revertRotations(corner, rotation = 0){
 	  if (rotation===-1)
 		  return null;
+	  if (besogo.scaleParameters['boardCanvasSize']==='vertical half board'){
+		  $(".besogo-board").css("width", "30%");
+		  $(".besogo-board").css("margin", "0 443px");
+	  }else if (besogo.scaleParameters['boardCanvasSize']==='horizontal half board'){
+		  $(".besogo-board").css("width", "78%");
+		  $(".besogo-board").css("margin", "0 138px");
+	  }
 	  if (corner==='top-right')
 		  rotation++;
 	  else if (corner==='bottom-left')
@@ -830,6 +920,61 @@ besogo.makeToolPanel = function(container, editor)
           besogo.editor.applyTransformation(transformation);
 	  }
 	  besogo.scaleParameters['rotation'] = -1;
+	  besogoRotation = -1;
+  }
+  
+  //the board with should adjust with the rotation sometimes
+  function changeRotationWidth(canvas, corner, rotation){
+	  if (canvas==="vertical half board")
+	  {
+		if(rotation===-1){
+			$(".besogo-board").css("width", "78%");
+			$(".besogo-board").css("margin", "0 138px");
+		}else{
+			if(corner==="top-left"){
+				if(rotation===1 || rotation===3){
+					$(".besogo-board").css("width", "30%");
+					$(".besogo-board").css("margin", "0 443px");
+				}else{
+					$(".besogo-board").css("width", "78%");
+					$(".besogo-board").css("margin", "0 138px");
+				}
+			}else if(corner==="top-right"){
+				if(rotation===0 || rotation===2){
+					$(".besogo-board").css("width", "30%");
+					$(".besogo-board").css("margin", "0 443px");
+				}else{
+					$(".besogo-board").css("width", "78%");
+					$(".besogo-board").css("margin", "0 138px");
+				}
+			}
+		}
+	  }
+	  else if (canvas==="horizontal half board")
+	  {
+		if(rotation===-1){
+			$(".besogo-board").css("width", "30%");
+			$(".besogo-board").css("margin", "0 443px");
+		}else{
+			if(corner==="top-left"){
+				if(rotation===1 || rotation===3){
+					$(".besogo-board").css("width", "78%");
+					$(".besogo-board").css("margin", "0 138px");
+				}else{
+					$(".besogo-board").css("width", "30%");
+					$(".besogo-board").css("margin", "0 443px");
+				}
+			}else if(corner==="bottom-left"){
+				if(rotation===0 || rotation===2){
+					$(".besogo-board").css("width", "78%");
+					$(".besogo-board").css("margin", "0 138px");
+				}else{
+					$(".besogo-board").css("width", "30%");
+					$(".besogo-board").css("margin", "0 443px");
+				}
+			}
+		}
+	  }
   }
 
   // Creates a button holding an SVG image

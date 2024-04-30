@@ -38,9 +38,12 @@
 	$boardSize = 'large';
 	shuffle($choice);
 
+	if($t['Tsumego']['author']=='Stepan')
+		$t['Tsumego']['author'] = 'Stepan Trubitsin';
 	$authorx = $t['Tsumego']['author'];
 	if($authorx=='Joschka Zimdars') $authorx = 'd4rkm4tter';
 	if($authorx=='Jérôme Hubert') $authorx = 'jhubert';
+	if($authorx=='Stepan Trubitsin') $authorx = 'Stepan';
 	$heroPower1 = 'hp1x';
 	$heroPower2 = 'hp2x';
 	$heroPower3 = 'hp3x';
@@ -1212,7 +1215,7 @@
 	let mText = "";
 	let ratingBarLock = false;
 	let passEnabled = <?php echo $t['Tsumego']['pass']; ?>+"";
-	
+	let besogoRotation = -1;
 	
 	<?php 
 	if($tv!=null){
@@ -2531,7 +2534,6 @@
 			document.getElementById("theComment").style.cssText = "display:none;";
 		}
 	}
-
 	<?php
 	$dynamicCommentCoords = array();
 	$dynamicCommentCoords[0] = array();

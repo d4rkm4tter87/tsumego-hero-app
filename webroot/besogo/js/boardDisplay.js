@@ -587,6 +587,8 @@ besogo.makeBoardDisplay = function(container, editor, corner)
 
   function displayHoverCoord(c = -1)
   {
+	if(besogoRotation!==-1)
+		return null;
     let x = -1;
     let y = -1;
     if (c!=-1)
