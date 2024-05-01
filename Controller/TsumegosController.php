@@ -2387,6 +2387,9 @@ class TsumegosController extends AppController{
 			echo '<pre>'; print_r($idForSignature); echo '</pre>';
 		}
 		
+		if(!isset($difficulty))
+			$difficulty = 4;
+		
 		$this->set('requestSignature', $requestSignature);
 		$this->set('idForSignature', $idForSignature);
 		$this->set('idForSignature2', $idForSignature2);

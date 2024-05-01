@@ -2541,35 +2541,54 @@ class AppController extends Controller{
 		$this->loadModel('AchievementCondition');
 		$this->loadModel('SetConnection');
 		
-		ini_set('session.gc_maxlifetime', 7200000);
-		session_set_cookie_params(7200000);
 		$highscoreLink = 'highscore';
 		$resetCookies = false;
 		$lightDark = 'light';
 		$levelBar = 1;
 		$lastProfileLeft = 1;
 		$lastProfileRight = 2;
-		
-		if(!isset($_SESSION['loggedInUser']['User']['id'])){
-			if(isset($_COOKIE['PHPSESSID']) && isset($_COOKIE['hash'])){
-				$uRelogin = $this->User->find('first', array('conditions' => array('session' => $_COOKIE['PHPSESSID'])));
-				if($uRelogin['User']['session']==$_COOKIE['PHPSESSID'] && md5($uRelogin['User']['name'])==$_COOKIE['hash'])
-					$_SESSION['loggedInUser'] = $uRelogin;
-			}
-		}
-		
-    	if(isset($_SESSION['loggedInUser']['User']['id'])){
-			if($_SESSION['loggedInUser']['User']['id']==33) unset($_SESSION['loggedInUser']);
+	
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			if($_SESSION['loggedInUser']['User']['id']==33)
+				unset($_SESSION['loggedInUser']);
             $loggedInUser = $_SESSION['loggedInUser'];
             $this->set('loggedInUser', $loggedInUser);
     	}
-		if(isset($_SESSION['loggedInUser']['User']) && !isset($_SESSION['loggedInUser']['User']['id'])) unset($_SESSION['loggedInUser']);
+		if(isset($_SESSION['loggedInUser']['User']) && !isset($_SESSION['loggedInUser']['User']['id']))
+			unset($_SESSION['loggedInUser']);
 		
+		if($_SESSION['loggedInUser']['User']['id'] && !isset($_COOKIE['userChecksum7'])){
+			unset($_SESSION['loggedInUser']);
+			unset($_COOKIE['PHPSESSID']);
+			unset($_COOKIE['hash']);
+		}
+		
+		if(!isset($_COOKIE['userChecksum7'])){
+			unset($_SESSION['loggedInUser']);
+			unset($_COOKIE['PHPSESSID']);
+			unset($_COOKIE['hash']);
+		}
+		
+		/*
+		echo '<pre>'; print_r($_SESSION['check1']); echo '</pre>';
+		*/
+		
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			if($_SESSION['loggedInUser']['User']['id'] != $_COOKIE['check1']){
+				if($_SESSION['check1']==0){
+					//unset($_SESSION['loggedInUser']);
+					$bugfixSession = $_COOKIE['check1']/1337;
+					$bugfixSessionUser = $this->User->findById($bugfixSession);
+					$_SESSION['loggedInUser'] = $bugfixSessionUser;
+				}
+			}
+		}
+		
+		$this->set('check1', $_SESSION['check1']*1337);
+		$_SESSION['check1'] = 0;
 		$u = null;
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
-			$_SESSION['loggedInUser']['User']['session'] = $_COOKIE['PHPSESSID'];
 			$u =  $this->User->findById($_SESSION['loggedInUser']['User']['id']);
-			$u['User']['session'] = $_COOKIE['PHPSESSID'];
 			if($u['User']['lastHighscore']==1) $highscoreLink = 'highscore';
 			elseif($u['User']['lastHighscore']==2) $highscoreLink = 'rating';
 			elseif($u['User']['lastHighscore']==3) $highscoreLink = 'leaderboard';
@@ -3074,6 +3093,7 @@ class AppController extends Controller{
 		
 		$nextDay = new DateTime('tomorrow');
 		
+		
 		$this->set('user', $u);
 		$this->set('mode', $mode);
 		$this->set('nextDay', $nextDay->format('m/d/Y'));
@@ -3101,7 +3121,6 @@ class AppController extends Controller{
 				$_SESSION['loggedInUser']['User']['mode'] = 1;
 			}
 		}
-		
 		unset($_COOKIE['sortColor']);
 		unset($_COOKIE['sortColor']);
 		unset($_COOKIE['sortOrder']);

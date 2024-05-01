@@ -419,19 +419,45 @@
 		if($_SESSION['loggedInUser']['User']['xp']+$xpBonus>=$_SESSION['loggedInUser']['User']['nextlvl']){
 			$increaseValue = 100;
 		}else $increaseValue = 50;
+		
+		
+		
 	}
 	?>
 	<script type="text/javascript">
-	var lifetime = new Date();
-	lifetime.setTime(lifetime.getTime()+7*24*60*60*1000);
-	lifetime = lifetime.toUTCString();
-	
 	var PHPSESSID = getCookie("PHPSESSID");
-	<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
+	
+	<?php 
+	if(isset($_SESSION['loggedInUser']['User']['id'])){
+		echo 'PHPSESSID = "'.$_COOKIE['PHPSESSID'].'";';
+	}
+	?>
+		
 	setCookie("PHPSESSID", PHPSESSID);
-	setCookie("hash", "<?php echo md5($_SESSION['loggedInUser']['User']['name']); ?>");
+	
+	<?php
+		if(!isset($_COOKIE['userChecksum7'])){
+			//echo 'setCookie("PHPSESSID", "-1");';
+			//echo 'setCookie("hash", "-1");';
+			//echo 'deleteAllCookies()';
+		}
+	?>
+	
+	setCookie("userChecksum7", "1");
+	
+	<?php
+	if($check1!=0){
+		echo 'setCookie("check1", "'.($_SESSION['loggedInUser']['User']['id']*1337).'");';
+	}
+	?>
+	
+	var lifetime = new Date();
+	lifetime.setTime(lifetime.getTime()+8*24*60*60*1000);
+	lifetime = lifetime.toUTCString()+"";
+	
+	<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
 	var barPercent1 = <?php echo $user['User']['xp']/$user['User']['nextlvl']*100; ?>;
-	var barPercent2 = <?php echo substr(round($user['User']['elo_rating_mode']), -2); ?>;
+	var barPercent2 = <?php echo substr($user['User']['elo_rating_mode'], -2); ?>;
 	var barLevelNum = "<?php echo 'Level '.$user['User']['level']; ?>";
 	var barRatingNum = "<?php echo $td; ?>";
 	var levelToRatingHover = <?php echo $levelBar; ?>;
@@ -461,9 +487,12 @@
 	?>
     function updateSoundValue(value)
     {
-      if (typeof besogo !== 'undefined')
-        besogo.editor.setSoundEnabled(value);
-      soundsEnabled = value;
+		if (typeof besogo !== 'undefined'){
+			if(typeof value === 'undefined' || value === null)
+				value = false;
+			besogo.editor.setSoundEnabled(value);
+		}
+		soundsEnabled = value;
     }
 		document.cookie = "score=0;SameSite=none;expires="+lifetime+";Secure=false";
 		document.cookie = "misplay=0;SameSite=none;expires="+lifetime+";Secure=false";
@@ -793,10 +822,13 @@
 
 		function loadBar(){
 			<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
+				
 				if(notMode3){
 				<?php 
 				$barPercent2 = substr(round($user['User']['elo_rating_mode']), -2);
+				
 				if($mode!=3){ ?>
+				
 					if(levelBar==1){
 						$("#xp-increase-fx").css("display","inline-block");
 						$("#xp-bar-fill").css("box-shadow", "-5px 0px 10px #fff inset");
@@ -805,7 +837,7 @@
 					}else{
 						$("#xp-increase-fx").css("display","inline-block");
 						$("#xp-bar-fill").css("box-shadow", "-5px 0px 10px #fff inset");
-						$("#xp-bar-fill").css("width", barPercent2+"%");
+						$("#xp-bar-fill").css("width", <?php echo $barPercent2; ?>+"%");
 						$("#xp-increase-fx").fadeOut(0);$("#xp-bar-fill").css({"-webkit-transition":"all 0.5s ease","box-shadow":""});
 					}
 				<?php }else{ ?>
@@ -893,6 +925,7 @@
 			if(newXP2>=100){
 				newXP2=100;
 			}
+			
 			$("#xp-bar-fill").css({"width":newXP2+"%"});
 			$("#xp-bar-fill").css("-webkit-transition","all 1s ease");
 			$("#xp-increase-fx").fadeIn(0);$("#xp-bar-fill").css({"-webkit-transition":"all 1s ease","box-shadow":""});
@@ -928,6 +961,17 @@
 			}else{
 				$("#textBarInMenu").text("Rating Bar");
 				levelBarChange(1);
+			}
+		}
+		
+		function deleteAllCookies() {
+			const cookies = document.cookie.split(";");
+
+			for (let i = 0; i < cookies.length; i++) {
+				const cookie = cookies[i];
+				const eqPos = cookie.indexOf("=");
+				const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+				document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
 			}
 		}
 		

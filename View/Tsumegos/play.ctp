@@ -1217,7 +1217,10 @@
 	let passEnabled = <?php echo $t['Tsumego']['pass']; ?>+"";
 	let besogoRotation = -1;
 	
+	
+	
 	<?php 
+	
 	if($tv!=null){
 	if($tv['TsumegoVariant']['type']=='multiple_choice' && $tv['TsumegoVariant']['explanation']!=""){
 		echo 'mText = "'.$tv['TsumegoVariant']['explanation'].'";';

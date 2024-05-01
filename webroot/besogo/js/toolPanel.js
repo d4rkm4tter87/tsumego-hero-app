@@ -480,6 +480,16 @@ besogo.makeToolPanel = function(container, editor)
               reviewBoardHeight = reviewBoardWidth/trueRatio;
             }
             //$(".besogo-board").css("height",reviewBoardHeight);
+			if($(".besogo-tree").height() > 350)
+			{
+				$(".besogo-panels").css("max-height", "350px");
+				$(".besogo-panels").css("overflow","scroll");
+				$(".besogo-panels").css("overflow-x","hidden");
+			}
+			else
+			{
+				$(".besogo-panels").css("overflow","hidden");
+			}
             toggleBoardLock(false);
             deleteNextMoveGroup = true;
             editor.setReviewMode(true);

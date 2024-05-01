@@ -57,11 +57,14 @@
 			</li>
 			<br><br>
 		</div>
+		<p class="title4">Bugfix 01.05.2024</p>
+		<div class="new1">
+		Longer sessions were not working properly, so this feature is reverted. If there are still any issues, such as log-outs, try to delete the cookies.<br><br>
+		</div>
 		<p class="title4">Update 30.04.2024</p>
 		<div class="new1">
 		
-		<b>Improved search, ratings, board views and sessions</b><br><br>
-		<b>• Longer sessions.</b> <br>
+		<b>Improved search, ratings and board views</b><br><br>
 		<b>• Boards can be roatated.</b> <br>
 		<b>• Broader rank system:</b> While the last update enabled ranks from 21k to 9d, this update scales the existing problems into the new range.<br>
 		<b>• Improved raitng calculation:</b> The Tsumego rating calculation added an activity value that is meant to have a higher variance

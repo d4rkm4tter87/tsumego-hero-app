@@ -1592,6 +1592,7 @@ Joschka Zimdars';
 						if($u['User']['texture'.$i] == '1') $u['User']['texture'.$i] = 'checked';
 						$_SESSION['texture'.$i] = $u['User']['texture'.$i];
 					}
+					$_SESSION['check1'] = $u['User']['id'];
 					$this->Session->setFlash(__('Login successful.', true));
 					
 					$isLoaded = $this->TsumegoStatus->find('first', array('conditions' => array('user_id' => $u['User']['id'])));
@@ -2511,8 +2512,9 @@ Joschka Zimdars';
 	
 	public function logout() {
 		unset($_SESSION['loggedInUser']);
-		//$_SESSION['redirect'] = 'sets';
-		//$this->Session->setFlash(__('You have singed out.', true));
+		//$this->redirect( '/sets' );
+		$_SESSION['redirect'] = 'sets';
+		$this->Session->setFlash(__('You have singed out.', true));
 	}
 	
 	public function delete($id){
