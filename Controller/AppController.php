@@ -2541,58 +2541,29 @@ class AppController extends Controller{
 		$this->loadModel('AchievementCondition');
 		$this->loadModel('SetConnection');
 		
+		ini_set('session.gc_maxlifetime', 7200000);
+		session_set_cookie_params(7200000);
 		$highscoreLink = 'highscore';
-		$resetCookies = false;
 		$lightDark = 'light';
+		$resetCookies = false;
 		$levelBar = 1;
 		$lastProfileLeft = 1;
 		$lastProfileRight = 2;
-	
-		if(isset($_SESSION['loggedInUser']['User']['id'])){
+		
+    	if(isset($_SESSION['loggedInUser']['User']['id'])){
 			if($_SESSION['loggedInUser']['User']['id']==33) unset($_SESSION['loggedInUser']);
             $loggedInUser = $_SESSION['loggedInUser'];
             $this->set('loggedInUser', $loggedInUser);
     	}
 		if(isset($_SESSION['loggedInUser']['User']) && !isset($_SESSION['loggedInUser']['User']['id'])) unset($_SESSION['loggedInUser']);
 		
-		if($_SESSION['loggedInUser']['User']['id'] && !isset($_COOKIE['userChecksum7'])){
-			//unset($_SESSION['loggedInUser']);
-			//unset($_COOKIE['PHPSESSID']);
-			//unset($_COOKIE['hash']);
-		}
-		
-		if(!isset($_COOKIE['userChecksum7'])){
-			//unset($_SESSION['loggedInUser']);
-			//unset($_COOKIE['PHPSESSID']);
-			//unset($_COOKIE['hash']);
-		}
-		
-		/*
-		echo '<pre>'; print_r($_SESSION['check1']); echo '</pre>';
-		*/
-		
+		$u = null;
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			if($_COOKIE['PHPSESSID']==0 || $_COOKIE['PHPSESSID']==-1){
 				unset($_SESSION['loggedInUser']);
 				unset($_COOKIE['PHPSESSID']);
 				unset($_COOKIE['hash']);
 			}
-			
-			
-			if($_SESSION['loggedInUser']['User']['id'] != $_COOKIE['check1']){
-				if($_SESSION['check1']==0){
-					//unset($_SESSION['loggedInUser']);
-					$bugfixSession = $_COOKIE['check1']/1337;
-					$bugfixSessionUser = $this->User->findById($bugfixSession);
-					$_SESSION['loggedInUser'] = $bugfixSessionUser;
-				}
-			}
-		}
-		
-		$this->set('check1', $_SESSION['check1']*1337);
-		$_SESSION['check1'] = 0;
-		$u = null;
-		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			$u =  $this->User->findById($_SESSION['loggedInUser']['User']['id']);
 			if($u['User']['lastHighscore']==1) $highscoreLink = 'highscore';
 			elseif($u['User']['lastHighscore']==2) $highscoreLink = 'rating';
@@ -2612,6 +2583,7 @@ class AppController extends Controller{
 				unset($_COOKIE['sound']);
 			}
 			$this->set('ac', true);
+			$this->set('user', $u);
 		}
 		
 		if(isset($_COOKIE['lightDark']) && $_COOKIE['lightDark'] != '0'){

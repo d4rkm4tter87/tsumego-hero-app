@@ -422,31 +422,6 @@
 	}
 	?>
 	<script type="text/javascript">
-	var PHPSESSID = getCookie("PHPSESSID");
-	
-	<?php 
-	if(isset($_SESSION['loggedInUser']['User']['id'])){
-		if(isset($_COOKIE['PHPSESSID']) && $_COOKIE['PHPSESSID']!=0 && $_COOKIE['PHPSESSID']!=-1 && $_COOKIE['PHPSESSID']!=null){
-			echo 'PHPSESSID = "'.$_COOKIE['PHPSESSID'].'";';
-		}
-	}
-	?>
-		
-	setCookie("PHPSESSID", PHPSESSID);
-	
-	<?php
-		if(!isset($_COOKIE['userChecksum7'])){
-			//echo 'deleteAllCookies()';
-		}
-	?>
-	
-	setCookie("userChecksum7", "1");
-	
-	<?php
-	if($check1!=0){
-		echo 'setCookie("check1", "'.($_SESSION['loggedInUser']['User']['id']*1337).'");';
-	}
-	?>
 	
 	var lifetime = new Date();
 	lifetime.setTime(lifetime.getTime()+8*24*60*60*1000);
