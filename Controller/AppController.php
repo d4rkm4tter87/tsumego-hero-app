@@ -2549,24 +2549,22 @@ class AppController extends Controller{
 		$lastProfileRight = 2;
 	
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
-			if($_SESSION['loggedInUser']['User']['id']==33)
-				unset($_SESSION['loggedInUser']);
+			if($_SESSION['loggedInUser']['User']['id']==33) unset($_SESSION['loggedInUser']);
             $loggedInUser = $_SESSION['loggedInUser'];
             $this->set('loggedInUser', $loggedInUser);
     	}
-		if(isset($_SESSION['loggedInUser']['User']) && !isset($_SESSION['loggedInUser']['User']['id']))
-			unset($_SESSION['loggedInUser']);
+		if(isset($_SESSION['loggedInUser']['User']) && !isset($_SESSION['loggedInUser']['User']['id'])) unset($_SESSION['loggedInUser']);
 		
 		if($_SESSION['loggedInUser']['User']['id'] && !isset($_COOKIE['userChecksum7'])){
-			unset($_SESSION['loggedInUser']);
-			unset($_COOKIE['PHPSESSID']);
-			unset($_COOKIE['hash']);
+			//unset($_SESSION['loggedInUser']);
+			//unset($_COOKIE['PHPSESSID']);
+			//unset($_COOKIE['hash']);
 		}
 		
 		if(!isset($_COOKIE['userChecksum7'])){
-			unset($_SESSION['loggedInUser']);
-			unset($_COOKIE['PHPSESSID']);
-			unset($_COOKIE['hash']);
+			//unset($_SESSION['loggedInUser']);
+			//unset($_COOKIE['PHPSESSID']);
+			//unset($_COOKIE['hash']);
 		}
 		
 		/*
@@ -2574,6 +2572,13 @@ class AppController extends Controller{
 		*/
 		
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			if($_COOKIE['PHPSESSID']==0 || $_COOKIE['PHPSESSID']==-1){
+				unset($_SESSION['loggedInUser']);
+				unset($_COOKIE['PHPSESSID']);
+				unset($_COOKIE['hash']);
+			}
+			
+			
 			if($_SESSION['loggedInUser']['User']['id'] != $_COOKIE['check1']){
 				if($_SESSION['check1']==0){
 					//unset($_SESSION['loggedInUser']);

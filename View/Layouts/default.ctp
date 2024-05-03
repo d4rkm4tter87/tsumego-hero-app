@@ -419,9 +419,6 @@
 		if($_SESSION['loggedInUser']['User']['xp']+$xpBonus>=$_SESSION['loggedInUser']['User']['nextlvl']){
 			$increaseValue = 100;
 		}else $increaseValue = 50;
-		
-		
-		
 	}
 	?>
 	<script type="text/javascript">
@@ -429,7 +426,9 @@
 	
 	<?php 
 	if(isset($_SESSION['loggedInUser']['User']['id'])){
-		echo 'PHPSESSID = "'.$_COOKIE['PHPSESSID'].'";';
+		if(isset($_COOKIE['PHPSESSID']) && $_COOKIE['PHPSESSID']!=0 && $_COOKIE['PHPSESSID']!=-1 && $_COOKIE['PHPSESSID']!=null){
+			echo 'PHPSESSID = "'.$_COOKIE['PHPSESSID'].'";';
+		}
 	}
 	?>
 		
@@ -437,8 +436,6 @@
 	
 	<?php
 		if(!isset($_COOKIE['userChecksum7'])){
-			//echo 'setCookie("PHPSESSID", "-1");';
-			//echo 'setCookie("hash", "-1");';
 			//echo 'deleteAllCookies()';
 		}
 	?>

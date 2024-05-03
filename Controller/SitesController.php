@@ -85,10 +85,6 @@ class SitesController extends AppController{
 		}
 		
 		if(isset($_SESSION['loggedInUser'])){
-			if($_SESSION['loggedInUser']['User']['id']==null || $_SESSION['loggedInUser']['User']['name']==null || $_SESSION['loggedInUser']['User']['level']==null){
-				unset($_SESSION['loggedInUser']);
-			}
-			
 			$idArray = array();
 			array_push($idArray, $totd['Tsumego']['id']);
 			for($i=0; $i<count($scheduleTsumego); $i++){
@@ -182,7 +178,7 @@ class SitesController extends AppController{
 		
 		$totd['Tsumego']['set'] = $totdS['Set']['title'];
 		$totd['Tsumego']['set2'] = $totdS['Set']['title2'];
-		
+		$totd['Tsumego']['set_id'] = $totdS['Set']['id'];
 		$newT['Tsumego']['set'] = $newTS['Set']['title'];
 		$newT['Tsumego']['set2'] = $newTS['Set']['title2'];
 		$newT['Tsumego']['set_id'] = $newTS['Set']['id'];
@@ -238,7 +234,6 @@ class SitesController extends AppController{
 		
 		
 		$deletedS = $this->getDeletedSets();
-		//echo '<pre>'; print_r($deletedS); echo '</pre>';
 		
 		$this->set('tsumegos', $tsumegoDates);
 		$this->set('quote', $currentQuote);
