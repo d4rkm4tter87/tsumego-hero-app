@@ -427,6 +427,16 @@
 	lifetime.setTime(lifetime.getTime()+8*24*60*60*1000);
 	lifetime = lifetime.toUTCString()+"";
 	
+	<?php if(isset($_SESSION['loggedInUser']['User']['id'])){
+		if($_COOKIE['PHPSESSID']!=0 || $_COOKIE['PHPSESSID']!=-1){
+	?>
+			var PHPSESSID = getCookie("PHPSESSID");
+			setCookie("PHPSESSID", PHPSESSID);
+	<?php
+		}}
+	?>
+	
+	
 	<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
 	var barPercent1 = <?php echo $user['User']['xp']/$user['User']['nextlvl']*100; ?>;
 	var barPercent2 = <?php echo substr($user['User']['elo_rating_mode'], -2); ?>;

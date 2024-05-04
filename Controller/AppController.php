@@ -2551,6 +2551,12 @@ class AppController extends Controller{
 		$lastProfileRight = 2;
 		
     	if(isset($_SESSION['loggedInUser']['User']['id'])){
+			if($_COOKIE['PHPSESSID']==0 || $_COOKIE['PHPSESSID']==-1){
+				unset($_SESSION['loggedInUser']);
+				unset($_COOKIE['PHPSESSID']);
+				unset($_COOKIE['hash']);
+			}
+			
 			if($_SESSION['loggedInUser']['User']['id']==33) unset($_SESSION['loggedInUser']);
             $loggedInUser = $_SESSION['loggedInUser'];
             $this->set('loggedInUser', $loggedInUser);
@@ -2559,11 +2565,6 @@ class AppController extends Controller{
 		
 		$u = null;
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
-			if($_COOKIE['PHPSESSID']==0 || $_COOKIE['PHPSESSID']==-1){
-				unset($_SESSION['loggedInUser']);
-				unset($_COOKIE['PHPSESSID']);
-				unset($_COOKIE['hash']);
-			}
 			$u =  $this->User->findById($_SESSION['loggedInUser']['User']['id']);
 			if($u['User']['lastHighscore']==1) $highscoreLink = 'highscore';
 			elseif($u['User']['lastHighscore']==2) $highscoreLink = 'rating';

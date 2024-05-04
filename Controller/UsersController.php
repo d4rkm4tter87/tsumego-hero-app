@@ -1582,7 +1582,10 @@ Joschka Zimdars';
 		$this->loadModel('TsumegoStatus');
 		$_SESSION['page'] = 'user';
 		$_SESSION['title'] = 'Tsumego Hero - Sign In';
+		
+		$clearSession = true;
 		if(!empty($this->data)){
+			$clearSession = false;
 			$u = $this->User->findByName($this->data['User']['name']);
 			if($u){
 				if($this->validateLogin($this->data)){
@@ -1605,7 +1608,10 @@ Joschka Zimdars';
 			}else{
 				$this->Session->setFlash(__('Login incorrect.', true));
 			}
+		}else{
+			$clearSession = true;
 		}
+		$this->set('clearSession', $clearSession);
 	}
 	
 	public function login2(){
