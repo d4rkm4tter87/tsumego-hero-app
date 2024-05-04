@@ -432,17 +432,21 @@
 	?>
 			var PHPSESSID = getCookie("PHPSESSID");
 			setCookie("PHPSESSID", PHPSESSID);
+			setCookie("z_sess", PHPSESSID);
+			setCookie("z_user_hash", "<?php echo md5($_SESSION['loggedInUser']['User']['name']); ?>");
 	<?php
 		}}
 	?>
 	
-	
 	<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
 	var barPercent1 = <?php echo $user['User']['xp']/$user['User']['nextlvl']*100; ?>;
-	var barPercent2 = <?php echo substr($user['User']['elo_rating_mode'], -2); ?>;
+	var barPercent2 = <?php echo substr(round($user['User']['elo_rating_mode']), -2); ?>;
 	var barLevelNum = "<?php echo 'Level '.$user['User']['level']; ?>";
 	var barRatingNum = "<?php echo $td; ?>";
 	var levelToRatingHover = <?php echo $levelBar; ?>;
+	
+	<?php if($_SESSION['loggedInUser']['User']['id']==72){ ?>
+	<?php } ?>
 	<?php } ?>
 	<?php
 	if($_SESSION['page']!='level mode'&&$_SESSION['page']!='rating mode'&&$_SESSION['page']!='time mode')
@@ -819,7 +823,7 @@
 					}else{
 						$("#xp-increase-fx").css("display","inline-block");
 						$("#xp-bar-fill").css("box-shadow", "-5px 0px 10px #fff inset");
-						$("#xp-bar-fill").css("width", <?php echo $barPercent2; ?>+"%");
+						$("#xp-bar-fill").css("width", barPercent2+"%");
 						$("#xp-increase-fx").fadeOut(0);$("#xp-bar-fill").css({"-webkit-transition":"all 0.5s ease","box-shadow":""});
 					}
 				<?php }else{ ?>

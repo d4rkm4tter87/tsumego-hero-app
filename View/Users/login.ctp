@@ -48,6 +48,33 @@
 				<?php
 			}
 		?>
+		
+		
+		var cacheLifetime = new Date();
+		cacheLifetime.setTime(cacheLifetime.getTime()+1*1*1*5*1000);
+		cacheLifetime = cacheLifetime.toUTCString()+"";
+		
+		let cache = getCookie("cache_settings");
+		
+		if(cache == 0){
+			deleteAllCookies();
+			document.cookie = "cache_settings=1;SameSite=none;expires="+cacheLifetime+";Secure=false";
+			location.reload(true);
+		}else{
+			//alert("f")
+		}
+		
+		function deleteAllCookies() {
+			const cookies = document.cookie.split(";");
+
+			for (let i = 0; i < cookies.length; i++) {
+				const cookie = cookies[i];
+				const eqPos = cookie.indexOf("=");
+				const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+				document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+			}
+		}
+		
 		function check1(){
 			if(document.getElementById("dropdown-1").checked == true){
 				document.getElementById("dropdowntable").style.display = "inline-block"; 
@@ -104,4 +131,6 @@
 			for(let i=0;i<paths.length;i++)
 				document.cookie = cookie+"="+value+";SameSite=none;Secure=false;expires="+expires+";path="+paths[i];
 		}
+		
+		
 	</script>

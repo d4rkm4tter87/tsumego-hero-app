@@ -2552,10 +2552,13 @@ class AppController extends Controller{
 		
     	if(isset($_SESSION['loggedInUser']['User']['id'])){
 			if($_COOKIE['PHPSESSID']==0 || $_COOKIE['PHPSESSID']==-1){
-				unset($_SESSION['loggedInUser']);
-				unset($_COOKIE['PHPSESSID']);
-				unset($_COOKIE['hash']);
+				//unset($_SESSION['loggedInUser']);
+				//unset($_COOKIE['PHPSESSID']);
+				//unset($_COOKIE['hash']);
 			}
+			
+			//echo '<pre>'; print_r($_COOKIE['z_sess'].'=='.$_COOKIE['PHPSESSID']); echo '</pre>';
+			//echo '<pre>'; print_r($_COOKIE['z_user_hash'].'=='.md5($_SESSION['loggedInUser']['User']['name'])); echo '</pre>';
 			
 			if($_SESSION['loggedInUser']['User']['id']==33) unset($_SESSION['loggedInUser']);
             $loggedInUser = $_SESSION['loggedInUser'];
@@ -2566,6 +2569,14 @@ class AppController extends Controller{
 		$u = null;
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			$u =  $this->User->findById($_SESSION['loggedInUser']['User']['id']);
+			
+			if(isset($_COOKIE['z_sess']) && $_COOKIE['z_sess'] != 0){
+				if(strlen($_COOKIE['z_sess'])>5){
+					$u['User']['_sessid'] = $_COOKIE['z_sess'];
+					$_SESSION['loggedInUser']['User']['_sessid'] = $_COOKIE['z_sess'];
+					$this->User->save($u);
+				}
+			}
 			if($u['User']['lastHighscore']==1) $highscoreLink = 'highscore';
 			elseif($u['User']['lastHighscore']==2) $highscoreLink = 'rating';
 			elseif($u['User']['lastHighscore']==3) $highscoreLink = 'leaderboard';
