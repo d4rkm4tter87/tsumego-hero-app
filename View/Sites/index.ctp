@@ -57,218 +57,58 @@
 			</li>
 			<br><br>
 		</div>
-		<p class="title4">Bugfix 01.05.2024</p>
-		<div class="new1">
-		Longer sessions were not working properly, so this feature is reverted. If there are still any issues, such as log-outs, try to delete the cookies.<br><br>
-		</div>
-		<p class="title4">Update 30.04.2024</p>
-		<div class="new1">
-		
-		<b>Improved search, ratings and board views</b><br><br>
-		<b>• Boards can be roatated.</b> <br>
-		<b>• Broader rank system:</b> While the last update enabled ranks from 21k to 9d, this update scales the existing problems into the new range.<br>
-		<b>• Improved raitng calculation:</b> The Tsumego rating calculation added an activity value that is meant to have a higher variance
-		with fresh problems.<br>
-		
-		<b>• Improved similar problem search:</b> The search has been improved by storing solution types in the database.
-		It always finds many similar problems in any search now and is very fast. <br>
-		<div align="center">
-		<img src="/img/example-search.png" title="search-example" alt="search-example" width="350px"><br>
-		Example: <a href="/tsumegos/duplicatesearch/2897">Life & Death - Elementary 745</a><br>
-		<i>In this example, it finds 30 similar problems almost instantly.</i><br><br>
-		</div>
-		</div>
-		<p class="title4">Update 03.04.2024</p>
-		<div class="new1">
-		<b>Improvements of rank display and score mechanics</b><br><br>
-		
-		<b>• Broader rank system:</b> Player and Tsumego ranks range from 21k to 9d.<br>
-		<b>• Collection difficulty:</b> Instead of a difficulty value from 1 to 9, the average kyu/dan rank is shown.<br>
-		<b>• Mode-indepentent scores:</b> Problems in rating- and time mode give also xp and they change the problem's status to solved on succeeding. 
-		This means that rating and level 
-		are affected in any mode.<br>
-		<b>• Progress bar switch:</b> The progress bar can display any type and it can be switched on the problem pages by 
-		selecting the lower left corner.<br><br>
-		<div align="center">
-		<img src="/img/thumbs/1.PNG" title="bar-example" alt="bar-example" width="140px">
-		
-		<br>
-		</div>
-		</div>
-		<p class="title4">17.03.2024</p>
-		<div class="new1">
-		<b>Prizes</b><br><br>
-		
-		<b>Madec</b>, <b>Kimok</b> and <b>YuriyStepanovich</b> win a premium account as they have the highest non-premium ratings.<br><br>
-		</div>
-		<p class="title4">10.03.2024</p>
-		<div class="new1">
-		<b>Prizes</b><br><br>
-		
-		<b>GoTalk</b>, <b>Futsal</b> and <b>Imaim</b> win a premium account. One more time we upgrade 3 accounts on 17.03.2024.<br><br>
-		</div>
-		<p class="title4">03.03.2024</p>
-		<div class="new1">
-		<b>Prizes</b><br><br>
-		
-		<b>Rippa</b>, <b>au61413080900</b> and <b>franp9am</b> win a premium account as they have the highest non-premium ratings. On
-		10.03.2024 we give away 3 more.<br><br>
-		</div>
-		<p class="title4">Update 25.02.2024</p>
-		<div class="new1">
-		<b>Overall rating</b><br><br>
-		<div id="progressBarInLevelMode">
-		Progress bar in level mode:<br>
-		<?php
-			$levelBarDisplayChecked1 = '';
-			$levelBarDisplayChecked2 = '';
-			if($levelBar==1)
-				$levelBarDisplayChecked1 = 'checked="checked"';
-			else
-				$levelBarDisplayChecked2 = 'checked="checked"';
-		?>
-		<input type="radio" id="levelBarDisplay1" name="levelBarDisplay" value="1" onclick="levelBarChange(1);" <?php echo $levelBarDisplayChecked1; ?>> <b id="levelBarDisplay1text">Show level</b><br>
-		<input type="radio" id="levelBarDisplay2" name="levelBarDisplay" value="2" onclick="levelBarChange(2);" <?php echo $levelBarDisplayChecked2; ?>> <b id="levelBarDisplay2text">Show rating (new)</b><br>
-		<br>
-		</div>
-		With this update, Tsumego attempts in any mode affect the user rating.<br>
-		<?php
-		$link1 = '';
-		$link2 = '';
-		$link3 = '';
-		if(isset($_SESSION['loggedInUser']['User']['id'])){
-			$link1 = '/tsumegos/play/'.$_SESSION['lastVisit'].'?mode=1';
-			$link2 = '/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2';
-			$link3 = '/ranks/overview';
-		}
-		?>
-		• <a href="<?php echo $link1; ?>" style="color:#74d14c">Level mode</a> problems affect level and user rating.<br>
-		• <a href="<?php echo $link2; ?>" style="color:#c240f7">Rating mode</a> is the same as before, but all formulas for user and tsumego rating calculation have been improved.<br>
-		• <a href="<?php echo $link3; ?>" style="color:#ca6658">Time mode</a> also affects the user rating.<br><br>
-		
-		<b>Rewards:</b> Every Sunday, the 3 highest rated users that have no premium account get a premium upgrade. Next prize giving: 03.03.24. To give everyone a fresh start, all user ratings have been reset.<br><br>
-		
-		<b>Profile page</b><br><br>
-		<?php
-		if(isset($_SESSION['loggedInUser']['User']['id']))
-			echo 'The <a href="/users/view/'.$_SESSION['loggedInUser']['User']['id'].'">profile page</a> contains more data and is organized in line and bar charts.';
-		else
-			echo 'The profile page contains more data and is organized in line and bar charts.';
-		?>
-		<br>
-		<br>
-		<div align="center">
-		<img src="/img/profile-display-example.PNG" title="profile-display-example" alt="profile-display-example" width="65%">
-		<br>
-		</div>
-		</div>
-		<p class="title4">Update 01.02.2024</p>
-		<div class="new1">
-		<b>Explanation for the duplicate update on 01.02.2024</b><br><br>
-		
-		We decided to merge the duplicate problems on the website. This means, that when you solve a problem and it has duplicates,
-		it is also solved in other collections. When you had a collection complete and there were unsolved problems again on 
-		1. February, it means that duplicates were merged and you need to solve it again for all occurences of that board position.<br><br>
-		<div align="center">
-		<img src="/img/duplicate-explanation.JPG" title="duplicate-explanation" alt="duplicate-explanation" width="70%">
-		<br>
-		</div>
-		</div>
-		<p class="title4">Update 11.01.2024</p>
-		<div class="new1">
-		<b>Similar problem search</b><br><br>
-		
-		This update contains a search function that can be used on the problem pages. It searches for problems that are similar to
-		the currently visited problem. A parameter can be set for the maximum difference in stones that are placed on the board.</a><br><br>
-		<div align="center">
-		<img src="/img/similar-problems-example1.PNG" title="similar-problems-example1" alt="similar-problems-example1" width="50%">
-		<img src="/img/similar-problems-example2.PNG" title="similar-problems-example2" alt="similar-problems-example2" width="70%">
-		
-		<br>
-		</div>
-		</div>
-		<p class="title4">Update 28.12.2023</p>
-		<div class="new1">
-		<b>Board previews and more achievements</b><br><br>
-		
-		It is now possible to see previews of the problems. A preview is shown when you move your mouse over a problem.
-		There are also 23 new <a href="/achievements">achievements.</a><br><br>
-		<div align="center">
-		<img src="/img/boardPreviewExample.PNG" title="Board preview example" alt="Board preview example">
-		
-		<br>
-		</div>
-		</div>
-		<p class="title4">Update 23.11.2023</p>
-		<div class="new1">
-		<br>
-		<div align="center">
-		<a class="menuIcons2" id="darkButton2" onclick="darkAndLight();"><img id="darkButtonImage2" src="/img/light-icon1.png" width="30px"></a>
-		<h1 class="darkButton2">Dark Theme</h1>
-		<a class="menuIcons2" id="darkButton3" onclick="darkAndLight();"><img id="darkButtonImage3" src="/img/light-icon1.png" width="30px"></a>
-		</div>
-		<br>
-		<br>
-		<br>
-		</div>
-		<p class="title4">Update 06.11.2023</p>
-		<div class="new1">
-			<b>More achievements</b><br><br>
+		<p class="title4">New Collection: Direction of the Play  | 28.07.2024</p>
+		<div class="new1">	
+			This collection covers full board positions, mostly from professional games. 
+			The task is to choose the best move from the given options. The problems were checked with AI for correctness. <br><br>
+			<div align="center"><img width="95%" src="/img/directionofplay-info.png" alt="New Collection: Direction of the Play" title="New Collection: Direction of the Play">
 			
-			The achievements have been stocked up to 91 and there is now an achievement highscore.<br><br>
-			<table width="90%"><tr>
-			<td><a href="/achievements">View Achievements</a></td>
-			<td><a href="/users/achievements">Achievement Highscore</a></td>
-			</tr></table>
-			<br>
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/236">Play</a><br><br></div>
 		</div>
-		<p class="title4">Update 27.10.2023</p>
-		<div class="new1">
-			<b>Achievements!</b><br><br>
+		<p class="title4">New Collection: Techniques of TsumeGo  | 04.07.2024</p>
+		<div class="new1">	
+			In the game of Go, to solve crucial situations, one has to master the different techniques that the game presents. Those techniques, 
+			also known as Tesuji, are presented in this collection.
+			The first topics and the first Tesuji techniques to master are ladders (Shicho) and nets (Geta).<br><br>
+			<i>Kageyama says "If you want to capture stones, hold up two fingers and say to yourself: 'Can I capture with the net?' and 'Can I capture with the ladder?'"</i><br><br>
+			<div align="center"><img width="95%" src="/img/techniques.PNG" alt="New Collection: Techniques of TsumeGo" title="New Collection: Techniques of TsumeGo">
 			
-			With today's update, you can hunt for achievements. Achievements give additional XP. There will be a user ranking
-			and possibly other rewards. This update contains the first 46 achievements of many more.
-			<br><br>
-			<a href="/achievements">View Achievements</a>
-			<br><br>
-			<div align="center"><img width="90%" src="/img/achievementExample.png"></div>
-			<br>
-			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/235">Play</a><br><br></div>
 		</div>
-		<p class="title4">Update 14.10.2023</p>
-		<div class="new1">
-			<b>Improved comments</b><br><br>
-			• <b>Link position in comments</b>: It is now possible to link board positions by clicking "Link current position".
-			<br>
-			<div align="center"><img width="90%" src="/img/commentPositionExample1.JPG"></div>
-			<br>
-			The position can be accessed by selecting the icon in the comment.
-			<br>
-			<div align="center"><img width="50%" src="/img/commentPositionExample2.png"></div>
-			<br>
-			• <b>Dynamic coordinates</b>: The coordinates written in the comments adjust according to the visible board area.
-			<br>
-			<div align="center"><img width="90%" src="/img/dynCommentsExample.png"></div>
-			<br>
-			Example: <a href="/tsumegos/play/25881">1000 Weiqi problems - 58</a>
+		<p class="title4">New Collection: Kano Yoshinori | 31.12.2023</p>
+		<div class="new1">	
+					This series written by Kano Yoshinori in 1985 covers a large range of fundamental topics. 
+			Volume 1 contains problems about recognizing atari, ladders, snapbacks and basic life and death problems. Created for Tsumego Hero by Stepan Trubitsin.
+			<div align="center"><img width="95%" src="/img/kano-yoshinori-promo.png" alt="New Collection: Kano Yoshinori" title="New Collection: Kano Yoshinori">
 			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/214">Play</a><br><br></div>
+		
+		</div>
+		<p class="title4">New Collection: 9x9 Endgame Problems</p>
+		<div class="new1">
+			There's a saying in Go that your overall strength is limited by your endgame strength. Even if you are leading a lot in the opening and middle game, mistakes in endgame can still lose you the game. This collection allows you to practice and level-up your endgame in a small 9x9 board with real-game examples.   
+			<div align="center"><img width="95%" src="/img/9x9-startpage.png">
+			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/207">Play</a><br><br></div>
+		</div>
+		<p class="title4">New Collection: Sacrifical Tsumego</p>
+		<div class="new1">
+			Sometimes sacrifices are necessary in order to kill, but how many stones can you sacrifice before killing? 
+			That's the question this collection aims to answer. 
+			<div align="center"><img width="95%" src="/img/sacrifical-tsumego-home.png">
+			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/197">Play</a><br><br></div>
+		</div>
+		<p class="title4">New Collection: Yi Kuo</p>
+		<div class="new1">
+			Yi Kuo is a classical kifu and tsumego book written by Huang Longshi (1651-1700). It was posthumously published in 1710. 
+			Go Seigen once commented that Longshi's fighting skill 
+			was of 13-dan strength. The problems in this collection are focused mainly on endgame tesujis. 
+			<div align="center"><img width="95%" src="/img/yi-kuo-home.png">
+			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/195">Play</a><br><br></div>
 		</div>
 		
-		
-		<p class="title4">Update 20.07.2023</p>
-		<div class="new1">
-			<b>New board viewer: BesoGo</b><br><br>
-			We changed the technology that is used to display the problems from jGoBoard to BesoGo. There are various advantages, such as 
-			a tree display in the review, changing views without refresh, editing and saving problems on the website and more. It also opens
-			possibilities to merge recurring board positions and to make a better result distinction. Instead of correct and incorrect,
-			a future update is going to include more details.
-			<br><br>
-			<div align="center"><img width="60%" src="/img/besoGoExample.png"></div>
-			<br>
-			It comes
-			with a separate editor which was the starting point to make this possible. <a href="https://kovarex.github.io/besogo/testing.html" target="_blank">Editor</a>
-			<br><br>
-		</div>
 			<?php
 			if(isset($_SESSION['loggedInUser'])){
 			
@@ -602,29 +442,29 @@
 		<div class="new1">
 			<table class="newx" border="0">
 				<tr>
-					<td><h1>25.04.2024</h1></td>
-					<td><h1>recursive </h1></td>
+					<td><h1>27.07.2024</h1></td>
+					<td><h1>Sophia Lee </h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<tr>
-					<td><h1>25.04.2024</h1></td>
-					<td><h1>gazzawhite </h1></td>
+					<td><h1>25.07.2024</h1></td>
+					<td><h1>rtgoonly </h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<tr>
-					<td><h1>23.04.2024</h1></td>
-					<td><h1>pepi </h1></td>
+					<td><h1>20.07.2024</h1></td>
+					<td><h1>Gelins_one  </h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<tr>
-					<td><h1>21.04.2024</h1></td>
-					<td><h1>Baldomero Andreo</h1></td>
-					<td><h1>10,00 €</h1></td>
+					<td><h1>19.07.2024</h1></td>
+					<td><h1>MichaelJ </h1></td>
+					<td><h1>15,00 €</h1></td>
 				</tr>
 				<tr>
-					<td><h1>19.04.2024</h1></td>
-					<td><h1>Grzegorz Ber</h1></td>
-					<td><h1>2,00 €</h1></td>
+					<td><h1>14.07.2024</h1></td>
+					<td><h1>Lord Peeves  </h1></td>
+					<td><h1>10,00 €</h1></td>
 				</tr>
 				<!--
 				<tr>
@@ -752,38 +592,217 @@
 		<br>
 		</div>
 		
-		<p class="title4">New Collection: Kano Yoshinori | 31.12.2023</p>
-		<div class="new1">	
-					This series written by Kano Yoshinori in 1985 covers a large range of fundamental topics. 
-			Volume 1 contains problems about recognizing atari, ladders, snapbacks and basic life and death problems. Created for Tsumego Hero by Stepan Trubitsin.
-			<div align="center"><img width="95%" src="/img/kano-yoshinori-promo.png" alt="New Collection: Kano Yoshinori" title="New Collection: Kano Yoshinori">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/214">Play</a><br><br></div>
+		<p class="title4">Bugfix 01.05.2024</p>
+		<div class="new1">
+		Longer sessions were not working properly, so this feature is reverted. If there are still any issues, such as log-outs, try to delete the cookies.<br><br>
+		</div>
+		<p class="title4">Update 30.04.2024</p>
+		<div class="new1">
 		
+		<b>Improved search, ratings and board views</b><br><br>
+		<b>• Boards can be roatated.</b> <br>
+		<b>• Broader rank system:</b> While the last update enabled ranks from 21k to 9d, this update scales the existing problems into the new range.<br>
+		<b>• Improved raitng calculation:</b> The Tsumego rating calculation added an activity value that is meant to have a higher variance
+		with fresh problems.<br>
+		
+		<b>• Improved similar problem search:</b> The search has been improved by storing solution types in the database.
+		It always finds many similar problems in any search now and is very fast. <br>
+		<div align="center">
+		<img src="/img/example-search.png" title="search-example" alt="search-example" width="350px"><br>
+		Example: <a href="/tsumegos/duplicatesearch/2897">Life & Death - Elementary 745</a><br>
+		<i>In this example, it finds 30 similar problems almost instantly.</i><br><br>
 		</div>
-		<p class="title4">New Collection: 9x9 Endgame Problems</p>
-		<div class="new1">
-			There's a saying in Go that your overall strength is limited by your endgame strength. Even if you are leading a lot in the opening and middle game, mistakes in endgame can still lose you the game. This collection allows you to practice and level-up your endgame in a small 9x9 board with real-game examples.   
-			<div align="center"><img width="95%" src="/img/9x9-startpage.png">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/207">Play</a><br><br></div>
 		</div>
-		<p class="title4">New Collection: Sacrifical Tsumego</p>
+		<p class="title4">Update 03.04.2024</p>
 		<div class="new1">
-			Sometimes sacrifices are necessary in order to kill, but how many stones can you sacrifice before killing? 
-			That's the question this collection aims to answer. 
-			<div align="center"><img width="95%" src="/img/sacrifical-tsumego-home.png">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/197">Play</a><br><br></div>
+		<b>Improvements of rank display and score mechanics</b><br><br>
+		
+		<b>• Broader rank system:</b> Player and Tsumego ranks range from 21k to 9d.<br>
+		<b>• Collection difficulty:</b> Instead of a difficulty value from 1 to 9, the average kyu/dan rank is shown.<br>
+		<b>• Mode-indepentent scores:</b> Problems in rating- and time mode give also xp and they change the problem's status to solved on succeeding. 
+		This means that rating and level 
+		are affected in any mode.<br>
+		<b>• Progress bar switch:</b> The progress bar can display any type and it can be switched on the problem pages by 
+		selecting the lower left corner.<br><br>
+		<div align="center">
+		<img src="/img/thumbs/1.PNG" title="bar-example" alt="bar-example" width="140px">
+		
+		<br>
 		</div>
-		<p class="title4">New Collection: Yi Kuo</p>
+		</div>
+		<p class="title4">17.03.2024</p>
 		<div class="new1">
-			Yi Kuo is a classical kifu and tsumego book written by Huang Longshi (1651-1700). It was posthumously published in 1710. 
-			Go Seigen once commented that Longshi's fighting skill 
-			was of 13-dan strength. The problems in this collection are focused mainly on endgame tesujis. 
-			<div align="center"><img width="95%" src="/img/yi-kuo-home.png">
+		<b>Prizes</b><br><br>
+		
+		<b>Madec</b>, <b>Kimok</b> and <b>YuriyStepanovich</b> win a premium account as they have the highest non-premium ratings.<br><br>
+		</div>
+		<p class="title4">10.03.2024</p>
+		<div class="new1">
+		<b>Prizes</b><br><br>
+		
+		<b>GoTalk</b>, <b>Futsal</b> and <b>Imaim</b> win a premium account. One more time we upgrade 3 accounts on 17.03.2024.<br><br>
+		</div>
+		<p class="title4">03.03.2024</p>
+		<div class="new1">
+		<b>Prizes</b><br><br>
+		
+		<b>Rippa</b>, <b>au61413080900</b> and <b>franp9am</b> win a premium account as they have the highest non-premium ratings. On
+		10.03.2024 we give away 3 more.<br><br>
+		</div>
+		<p class="title4">Update 25.02.2024</p>
+		<div class="new1">
+		<b>Overall rating</b><br><br>
+		<div id="progressBarInLevelMode">
+		Progress bar in level mode:<br>
+		<?php
+			$levelBarDisplayChecked1 = '';
+			$levelBarDisplayChecked2 = '';
+			if($levelBar==1)
+				$levelBarDisplayChecked1 = 'checked="checked"';
+			else
+				$levelBarDisplayChecked2 = 'checked="checked"';
+		?>
+		<input type="radio" id="levelBarDisplay1" name="levelBarDisplay" value="1" onclick="levelBarChange(1);" <?php echo $levelBarDisplayChecked1; ?>> <b id="levelBarDisplay1text">Show level</b><br>
+		<input type="radio" id="levelBarDisplay2" name="levelBarDisplay" value="2" onclick="levelBarChange(2);" <?php echo $levelBarDisplayChecked2; ?>> <b id="levelBarDisplay2text">Show rating (new)</b><br>
+		<br>
+		</div>
+		With this update, Tsumego attempts in any mode affect the user rating.<br>
+		<?php
+		$link1 = '';
+		$link2 = '';
+		$link3 = '';
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			$link1 = '/tsumegos/play/'.$_SESSION['lastVisit'].'?mode=1';
+			$link2 = '/tsumegos/play/'.$nextMode['Tsumego']['id'].'?mode=2';
+			$link3 = '/ranks/overview';
+		}
+		?>
+		• <a href="<?php echo $link1; ?>" style="color:#74d14c">Level mode</a> problems affect level and user rating.<br>
+		• <a href="<?php echo $link2; ?>" style="color:#c240f7">Rating mode</a> is the same as before, but all formulas for user and tsumego rating calculation have been improved.<br>
+		• <a href="<?php echo $link3; ?>" style="color:#ca6658">Time mode</a> also affects the user rating.<br><br>
+		
+		<b>Rewards:</b> Every Sunday, the 3 highest rated users that have no premium account get a premium upgrade. Next prize giving: 03.03.24. To give everyone a fresh start, all user ratings have been reset.<br><br>
+		
+		<b>Profile page</b><br><br>
+		<?php
+		if(isset($_SESSION['loggedInUser']['User']['id']))
+			echo 'The <a href="/users/view/'.$_SESSION['loggedInUser']['User']['id'].'">profile page</a> contains more data and is organized in line and bar charts.';
+		else
+			echo 'The profile page contains more data and is organized in line and bar charts.';
+		?>
+		<br>
+		<br>
+		<div align="center">
+		<img src="/img/profile-display-example.PNG" title="profile-display-example" alt="profile-display-example" width="65%">
+		<br>
+		</div>
+		</div>
+		<p class="title4">Update 01.02.2024</p>
+		<div class="new1">
+		<b>Explanation for the duplicate update on 01.02.2024</b><br><br>
+		
+		We decided to merge the duplicate problems on the website. This means, that when you solve a problem and it has duplicates,
+		it is also solved in other collections. When you had a collection complete and there were unsolved problems again on 
+		1. February, it means that duplicates were merged and you need to solve it again for all occurences of that board position.<br><br>
+		<div align="center">
+		<img src="/img/duplicate-explanation.JPG" title="duplicate-explanation" alt="duplicate-explanation" width="70%">
+		<br>
+		</div>
+		</div>
+		<p class="title4">Update 11.01.2024</p>
+		<div class="new1">
+		<b>Similar problem search</b><br><br>
+		
+		This update contains a search function that can be used on the problem pages. It searches for problems that are similar to
+		the currently visited problem. A parameter can be set for the maximum difference in stones that are placed on the board.</a><br><br>
+		<div align="center">
+		<img src="/img/similar-problems-example1.PNG" title="similar-problems-example1" alt="similar-problems-example1" width="50%">
+		<img src="/img/similar-problems-example2.PNG" title="similar-problems-example2" alt="similar-problems-example2" width="70%">
+		
+		<br>
+		</div>
+		</div>
+		<p class="title4">Update 28.12.2023</p>
+		<div class="new1">
+		<b>Board previews and more achievements</b><br><br>
+		
+		It is now possible to see previews of the problems. A preview is shown when you move your mouse over a problem.
+		There are also 23 new <a href="/achievements">achievements.</a><br><br>
+		<div align="center">
+		<img src="/img/boardPreviewExample.PNG" title="Board preview example" alt="Board preview example">
+		
+		<br>
+		</div>
+		</div>
+		<p class="title4">Update 23.11.2023</p>
+		<div class="new1">
+		<br>
+		<div align="center">
+		<a class="menuIcons2" id="darkButton2" onclick="darkAndLight();"><img id="darkButtonImage2" src="/img/light-icon1.png" width="30px"></a>
+		<h1 class="darkButton2">Dark Theme</h1>
+		<a class="menuIcons2" id="darkButton3" onclick="darkAndLight();"><img id="darkButtonImage3" src="/img/light-icon1.png" width="30px"></a>
+		</div>
+		<br>
+		<br>
+		<br>
+		</div>
+		<p class="title4">Update 06.11.2023</p>
+		<div class="new1">
+			<b>More achievements</b><br><br>
 			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/195">Play</a><br><br></div>
+			The achievements have been stocked up to 91 and there is now an achievement highscore.<br><br>
+			<table width="90%"><tr>
+			<td><a href="/achievements">View Achievements</a></td>
+			<td><a href="/users/achievements">Achievement Highscore</a></td>
+			</tr></table>
+			<br>
+		</div>
+		<p class="title4">Update 27.10.2023</p>
+		<div class="new1">
+			<b>Achievements!</b><br><br>
+			
+			With today's update, you can hunt for achievements. Achievements give additional XP. There will be a user ranking
+			and possibly other rewards. This update contains the first 46 achievements of many more.
+			<br><br>
+			<a href="/achievements">View Achievements</a>
+			<br><br>
+			<div align="center"><img width="90%" src="/img/achievementExample.png"></div>
+			<br>
+			
+		</div>
+		<p class="title4">Update 14.10.2023</p>
+		<div class="new1">
+			<b>Improved comments</b><br><br>
+			• <b>Link position in comments</b>: It is now possible to link board positions by clicking "Link current position".
+			<br>
+			<div align="center"><img width="90%" src="/img/commentPositionExample1.JPG"></div>
+			<br>
+			The position can be accessed by selecting the icon in the comment.
+			<br>
+			<div align="center"><img width="50%" src="/img/commentPositionExample2.png"></div>
+			<br>
+			• <b>Dynamic coordinates</b>: The coordinates written in the comments adjust according to the visible board area.
+			<br>
+			<div align="center"><img width="90%" src="/img/dynCommentsExample.png"></div>
+			<br>
+			Example: <a href="/tsumegos/play/25881">1000 Weiqi problems - 58</a>
+			
+		</div>
+		
+		
+		<p class="title4">Update 20.07.2023</p>
+		<div class="new1">
+			<b>New board viewer: BesoGo</b><br><br>
+			We changed the technology that is used to display the problems from jGoBoard to BesoGo. There are various advantages, such as 
+			a tree display in the review, changing views without refresh, editing and saving problems on the website and more. It also opens
+			possibilities to merge recurring board positions and to make a better result distinction. Instead of correct and incorrect,
+			a future update is going to include more details.
+			<br><br>
+			<div align="center"><img width="60%" src="/img/besoGoExample.png"></div>
+			<br>
+			It comes
+			with a separate editor which was the starting point to make this possible. <a href="https://kovarex.github.io/besogo/testing.html" target="_blank">Editor</a>
+			<br><br>
 		</div>
 		</div>
 		<br>

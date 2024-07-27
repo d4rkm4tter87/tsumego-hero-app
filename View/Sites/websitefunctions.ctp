@@ -109,7 +109,7 @@
 		</table>	
 		<br>
 
-		<b>(3) PLayer color and board orientation</b><br><br>
+		<b>(3) Player color and board orientation</b><br><br>
 		The icons show the current player color and board orientation. You can also select your preferrec color and orientation.
 		<br><br>
 		<b>(4) Mark as favorite</b><br><br>

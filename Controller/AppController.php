@@ -2556,14 +2556,37 @@ class AppController extends Controller{
 				//unset($_COOKIE['PHPSESSID']);
 				//unset($_COOKIE['hash']);
 			}
-			
-			//echo '<pre>'; print_r($_COOKIE['z_sess'].'=='.$_COOKIE['PHPSESSID']); echo '</pre>';
-			//echo '<pre>'; print_r($_COOKIE['z_user_hash'].'=='.md5($_SESSION['loggedInUser']['User']['name'])); echo '</pre>';
-			
 			if($_SESSION['loggedInUser']['User']['id']==33) unset($_SESSION['loggedInUser']);
             $loggedInUser = $_SESSION['loggedInUser'];
             $this->set('loggedInUser', $loggedInUser);
-    	}
+    	}else{
+			echo '<pre>'; print_r($_COOKIE['z_sess']); echo '</pre>';
+			echo '<pre>'; print_r($_COOKIE['z_user_hash']); echo '</pre>';
+			echo '<pre>'; print_r($_COOKIE['z_hash']); echo '</pre>';
+			if(isset($_COOKIE['z_sess']) && $_COOKIE['z_sess'] != 0){
+				if(strlen($_COOKIE['z_sess'])>5){
+					if(isset($_COOKIE['z_user_hash']) && $_COOKIE['z_user_hash'] != 0){
+						if(strlen($_COOKIE['z_user_hash'])>3){
+							echo '<pre>'; print_r($_COOKIE['z_sess']); echo '</pre>';
+							echo '<pre>'; print_r($_COOKIE['z_user_hash']); echo '</pre>';
+							$uRelogin = $this->User->find('first', array('conditions' => array('_sessid' => $_COOKIE['z_sess'])));
+							if($uRelogin!=null){
+								echo '<pre>'; print_r($uRelogin['User']['_sessid']); echo '</pre>';
+								echo '<pre>'; print_r($uRelogin['User']['name']); echo '</pre>';
+								echo '<pre>'; print_r(md5($uRelogin['User']['name'])); echo '</pre>';
+								if($_COOKIE['z_user_hash'] == md5($uRelogin['User']['name']) && $_COOKIE['z_sess'] == $uRelogin['User']['_sessid']){
+									echo '<pre>'; print_r("!"); echo '</pre>';
+									if($_COOKIE['z_hash'] != 1){
+										$_SESSION['loggedInUser'] = $uRelogin;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
 		if(isset($_SESSION['loggedInUser']['User']) && !isset($_SESSION['loggedInUser']['User']['id'])) unset($_SESSION['loggedInUser']);
 		
 		$u = null;

@@ -3,8 +3,6 @@
 			echo '<script type="text/javascript">window.location.href = "/";</script>';
 		}
 	?>
-
-
 	<meta name="google-signin-client_id" content="AIzaSyAFJAFSm13m8FWYR5FOY1QaUptg8LN12jg.apps.googleusercontent.com">
 	<br>
 	<div align="center">
@@ -57,13 +55,13 @@
 		let cache = getCookie("cache_settings");
 		
 		if(cache == 0){
-			deleteAllCookies();
+			//deleteAllCookies();
 			document.cookie = "cache_settings=1;SameSite=none;expires="+cacheLifetime+";Secure=false";
 			location.reload(true);
 		}else{
 			//alert("f")
 		}
-		
+		setCookie("z_hash", "0");
 		function deleteAllCookies() {
 			const cookies = document.cookie.split(";");
 

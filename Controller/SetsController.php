@@ -1371,10 +1371,7 @@ class SetsController extends AppController{
 			)
 		)));
 		
-		
 		$text = file_get_contents('download_archive.txt');
-		
-		
 		
 		echo '<pre>'; print_r($text); echo '</pre>';
 		echo '<pre>'; print_r($s[$text]['Set']['id']); echo '</pre>';

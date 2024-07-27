@@ -509,6 +509,9 @@
 		setCookie("lastProfileLeft", "<?php echo $lastProfileLeft; ?>");
 		setCookie("lastProfileRight", "<?php echo $lastProfileRight; ?>");
 		setCookie("type", "0");
+		
+		if(getCookie("z_hash"!=="1"))
+			setCookie("z_hash", "0");
 		<?php
 			if(isset($textureCookies)){
 				for($i=0;$i<count($textureCookies);$i++){
