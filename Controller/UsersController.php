@@ -1187,20 +1187,32 @@ Joschka Zimdars';
 			$a[$i]['d'] = date('d', strtotime($ans[$i]['Answer']['created']));
 		}
 		array_pop($a);
-		$aNew = array();
-		$aNew['date'] = '2019-02-06 07:15:05';
-		$aNew['num'] = 53;
-		$aNew['y'] = 2019;
-		$aNew['m'] = '02';
-		$aNew['d'] = '06';
-		array_push($a, $aNew);
-		$aNew = array();
-		$aNew['date'] = '2019-01-09 07:15:05';
-		$aNew['num'] = 28;
-		$aNew['y'] = 2019;
-		$aNew['m'] = '01';
-		$aNew['d'] = '09';
-		array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2020-01-28 07:15:05';$aNew['num'] = 259;$aNew['y'] = 2020;$aNew['m'] = '01';$aNew['d'] = '28';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2020-01-21 07:15:05';$aNew['num'] = 223;$aNew['y'] = 2020;$aNew['m'] = '01';$aNew['d'] = '21';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-10-31 07:15:05';$aNew['num'] = 187;$aNew['y'] = 2019;$aNew['m'] = '10';$aNew['d'] = '31';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-05-15 07:15:05';$aNew['num'] = 171;$aNew['y'] = 2019;$aNew['m'] = '05';$aNew['d'] = '15';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-03-24 07:15:05';$aNew['num'] = 163;$aNew['y'] = 2019;$aNew['m'] = '03';$aNew['d'] = '24';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-03-15 07:15:05';$aNew['num'] = 141;$aNew['y'] = 2019;$aNew['m'] = '03';$aNew['d'] = '15';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-03-13 07:15:05';$aNew['num'] = 134;$aNew['y'] = 2019;$aNew['m'] = '03';$aNew['d'] = '13';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-03-12 07:15:05';$aNew['num'] = 121;$aNew['y'] = 2019;$aNew['m'] = '03';$aNew['d'] = '12';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-03-07 07:15:05';$aNew['num'] = 106;$aNew['y'] = 2019;$aNew['m'] = '03';$aNew['d'] = '07';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-02-28 07:15:05';$aNew['num'] = 103;$aNew['y'] = 2019;$aNew['m'] = '02';$aNew['d'] = '28';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-02-22 07:15:05';$aNew['num'] = 85;$aNew['y'] = 2019;$aNew['m'] = '02';$aNew['d'] = '22';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-02-19 07:15:05';$aNew['num'] = 82;$aNew['y'] = 2019;$aNew['m'] = '02';$aNew['d'] = '19';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-02-18 07:15:05';$aNew['num'] = 75;$aNew['y'] = 2019;$aNew['m'] = '02';$aNew['d'] = '18';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-02-15 07:15:05';$aNew['num'] = 73;$aNew['y'] = 2019;$aNew['m'] = '02';$aNew['d'] = '15';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-02-14 07:15:05';$aNew['num'] = 72;$aNew['y'] = 2019;$aNew['m'] = '02';$aNew['d'] = '14';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-02-11 07:15:05';$aNew['num'] = 54;$aNew['y'] = 2019;$aNew['m'] = '02';$aNew['d'] = '11';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-02-06 07:15:05';$aNew['num'] = 53;$aNew['y'] = 2019;$aNew['m'] = '02';$aNew['d'] = '06';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-02-04 07:15:05';$aNew['num'] = 47;$aNew['y'] = 2019;$aNew['m'] = '02';$aNew['d'] = '04';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-01-31 07:15:05';$aNew['num'] = 48;$aNew['y'] = 2019;$aNew['m'] = '01';$aNew['d'] = '31';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-01-27 07:15:05';$aNew['num'] = 37;$aNew['y'] = 2019;$aNew['m'] = '01';$aNew['d'] = '27';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-01-22 07:15:05';$aNew['num'] = 31;$aNew['y'] = 2019;$aNew['m'] = '01';$aNew['d'] = '22';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-01-19 07:15:05';$aNew['num'] = 33;$aNew['y'] = 2019;$aNew['m'] = '01';$aNew['d'] = '19';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-01-16 07:15:05';$aNew['num'] = 32;$aNew['y'] = 2019;$aNew['m'] = '01';$aNew['d'] = '16';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-01-09 07:15:05';$aNew['num'] = 26;$aNew['y'] = 2019;$aNew['m'] = '01';$aNew['d'] = '09';array_push($a, $aNew);
+		$aNew = array();$aNew['date'] = '2019-01-07 07:15:05';$aNew['num'] = 20;$aNew['y'] = 2019;$aNew['m'] = '01';$aNew['d'] = '07';array_push($a, $aNew);
+
 		$this->set('a', $a);
 	}
 	
@@ -2516,7 +2528,7 @@ Joschka Zimdars';
 		$this->set('id', $id);
 	}
 	
-	public function logout() {
+	public function logout(){
 		unset($_SESSION['loggedInUser']);
 		//$this->redirect( '/sets' );
 		//$_SESSION['redirect'] = 'sets';

@@ -1240,7 +1240,9 @@
 	}
 	
 	if($pl==1) echo 'besogoPlayerColor = "white";';
-	if($t['Tsumego']['set_id']==208 || $t['Tsumego']['set_id']==210 || $t['Tsumego']['set_id']==109 || $t['Tsumego']['set_id']==233) echo 'besogoPlayerColor = "black";';
+	if($t['Tsumego']['set_id']==208 || $t['Tsumego']['set_id']==210 || $t['Tsumego']['set_id']==109
+	|| $t['Tsumego']['set_id']==233 || $t['Tsumego']['set_id']==236) 
+	echo 'besogoPlayerColor = "black";';
 	
 	if($authorx==$_SESSION['loggedInUser']['User']['name']) echo 'authorProblem = true;';
 	//if($_SESSION['loggedInUser']['User']['id']==72) echo 'authorProblem = true;';

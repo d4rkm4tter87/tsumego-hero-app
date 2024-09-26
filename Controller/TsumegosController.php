@@ -1840,7 +1840,7 @@ class TsumegosController extends AppController{
 		if(isset($this->params['url']['requestProblem'])){
 			if($_SESSION['loggedInUser']['User']['isAdmin']>=1){
 				if(($this->params['url']['requestProblem']/1337)==$id){
-					$requestProblem = $_COOKIE['sgfForBesogo'];
+					$requestProblem = $_POST['sgfForBesogo'];
 					$requestProblem = str_replace('@', ';', $requestProblem);
 					$requestProblem = str_replace('€', "\n", $requestProblem);
 					$requestProblem = str_replace('%2B', "+", $requestProblem);

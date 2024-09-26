@@ -57,6 +57,19 @@
 			</li>
 			<br><br>
 		</div>
+		<p class="title4">New: Diabolical - the whole book | 19.08.2024</p>
+		<div class="new1">
+			Today we start publishing all problems from the Diabolical Vol. 1 book. That is 100 boards with each containing 4 or more problems.
+			Props to posetcay for adding the missing solutions and greetings to David Mitchell, who is the author and also a friend of the website
+			for several years.
+			PDFs and more books by him and his association can be found here: 
+			<a href="https://australiango.asn.au/aga-books" target="_blank">australiango.asn.au/aga-books</a>
+
+			<br><br>
+			<div align="center"><img width="95%" src="/img/diabolical-new-promo.png" alt="New: Diabolical - the whole book" title="New: Diabolical - the whole book">
+			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/237">Play</a><br><br></div>
+		</div>
 		<p class="title4">New Collection: Direction of the Play  | 28.07.2024</p>
 		<div class="new1">	
 			This collection covers full board positions, mostly from professional games. 
@@ -442,28 +455,28 @@
 		<div class="new1">
 			<table class="newx" border="0">
 				<tr>
-					<td><h1>27.07.2024</h1></td>
-					<td><h1>Sophia Lee </h1></td>
+					<td><h1>15.08.2024</h1></td>
+					<td><h1>WhiteSpy </h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<tr>
-					<td><h1>25.07.2024</h1></td>
-					<td><h1>rtgoonly </h1></td>
+					<td><h1>13.08.2024</h1></td>
+					<td><h1>Aron Vig </h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<tr>
-					<td><h1>20.07.2024</h1></td>
-					<td><h1>Gelins_one  </h1></td>
-					<td><h1>10,00 €</h1></td>
+					<td><h1>11.08.2024</h1></td>
+					<td><h1>TotalIrre</h1></td>
+					<td><h1>40,00 €</h1></td>
 				</tr>
 				<tr>
-					<td><h1>19.07.2024</h1></td>
-					<td><h1>MichaelJ </h1></td>
-					<td><h1>15,00 €</h1></td>
+					<td><h1>02.08.2024</h1></td>
+					<td><h1>Av0idMan0  </h1></td>
+					<td><h1>11,00 €</h1></td>
 				</tr>
 				<tr>
-					<td><h1>14.07.2024</h1></td>
-					<td><h1>Lord Peeves  </h1></td>
+					<td><h1>29.07.2024</h1></td>
+					<td><h1>Andrei73 </h1></td>
 					<td><h1>10,00 €</h1></td>
 				</tr>
 				<!--
@@ -536,6 +549,7 @@
 			//if($date==date_create('2023-09-01')) $td[$j]['num'] -= 141;
 			if($date==date_create('2023-09-01')) $td[$j]['num'] -= 4;
 			if($date==date_create('2023-10-04')) $td[$j]['num'] -= 10;
+			if($date==date_create('2024-08-18')) $td[$j]['num'] -= 30;
 			$x = $td[$j]['num'];
 			$sum = $x;
 			

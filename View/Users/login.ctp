@@ -57,7 +57,6 @@
 		if(cache == 0){
 			//deleteAllCookies();
 			document.cookie = "cache_settings=1;SameSite=none;expires="+cacheLifetime+";Secure=false";
-			location.reload(true);
 		}else{
 			//alert("f")
 		}
