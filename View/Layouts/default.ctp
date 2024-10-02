@@ -427,15 +427,38 @@
 	lifetime.setTime(lifetime.getTime()+8*24*60*60*1000);
 	lifetime = lifetime.toUTCString()+"";
 	
-	<?php if(isset($_SESSION['loggedInUser']['User']['id'])){
-		if($_COOKIE['PHPSESSID']!=0 || $_COOKIE['PHPSESSID']!=-1){
+	<?php 
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
+		if($_COOKIE['PHPSESSID']!=0 && $_COOKIE['PHPSESSID']!=-1){
 	?>
 			var PHPSESSID = getCookie("PHPSESSID");
 			setCookie("PHPSESSID", PHPSESSID);
+
 			setCookie("z_sess", PHPSESSID);
+			localStorage.setItem("z_sess", PHPSESSID);
+
 			setCookie("z_user_hash", "<?php echo md5($_SESSION['loggedInUser']['User']['name']); ?>");
+			localStorage.setItem("z_user_hash", "<?php echo md5($_SESSION['loggedInUser']['User']['name']); ?>");
+
+			setCookie("z_hash", "0");
+			localStorage.setItem("z_hash", "0");
 	<?php
-		}}
+		}}else{
+			if(!isset($_COOKIE['z_sess'])){
+	?>
+				if(localStorage.hasOwnProperty('z_sess') && localStorage.hasOwnProperty('z_user_hash')){
+					let zSess = localStorage.getItem("z_sess");
+					let zUserHash = localStorage.getItem("z_user_hash");
+					setCookie("z_sess", zSess);
+					setCookie("z_user_hash", zUserHash);
+					setCookie("z_hash", "0");
+					localStorage.removeItem("z_sess");
+					localStorage.removeItem("z_user_hash");
+					window.location.href = "/";
+				}
+	<?php
+			}
+		}
 	?>
 	
 	<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>

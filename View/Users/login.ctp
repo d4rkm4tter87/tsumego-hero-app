@@ -61,9 +61,9 @@
 			//alert("f")
 		}
 		setCookie("z_hash", "0");
+		localStorage.setItem("z_hash", "0");
 		function deleteAllCookies() {
 			const cookies = document.cookie.split(";");
-
 			for (let i = 0; i < cookies.length; i++) {
 				const cookie = cookies[i];
 				const eqPos = cookie.indexOf("=");

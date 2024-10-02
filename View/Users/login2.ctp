@@ -39,6 +39,8 @@ Sign in with:<br><br><br>
 <br>
 
 <script>
+		setCookie("z_hash", "0");
+		localStorage.setItem("z_hash", "0");
 		function check1(){
 			if(document.getElementById("dropdown-1").checked == true){
 				document.getElementById("dropdowntable").style.display = "inline-block"; 

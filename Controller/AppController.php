@@ -2550,44 +2550,66 @@ class AppController extends Controller{
 		$lastProfileLeft = 1;
 		$lastProfileRight = 2;
 		
+		echo '<pre>'; print_r('[test environment] <a target="_blank" href="/userLogger.html">logs</a>'); echo '</pre>';
+
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			if($_COOKIE['PHPSESSID']==0 || $_COOKIE['PHPSESSID']==-1){
 				//unset($_SESSION['loggedInUser']);
 				//unset($_COOKIE['PHPSESSID']);
 				//unset($_COOKIE['hash']);
 			}
+
+			$dateLog = date_create('now');
+			file_put_contents("userLogger.html",$_SESSION['loggedInUser']['User']['name'].' '.date_format($dateLog, 'Y-m-d H:i:s').'<br> '.file_get_contents("userLogger.html"));
+
 			if($_SESSION['loggedInUser']['User']['id']==33) unset($_SESSION['loggedInUser']);
 			$loggedInUser = $_SESSION['loggedInUser'];
 			$this->set('loggedInUser', $loggedInUser);
 		}else{
-			echo '<pre>'; print_r("user not logged in"); echo '</pre>';
-			echo '<pre>'; print_r($_COOKIE['z_sess']); echo '</pre>';
-			echo '<pre>'; print_r($_COOKIE['z_user_hash']); echo '</pre>';
-			echo '<pre>'; print_r($_COOKIE['z_hash']); echo '</pre>';
-			if(isset($_COOKIE['z_sess']) && $_COOKIE['z_sess'] != 0){
+			// echo '<pre>'; print_r("user not logged in"); echo '</pre>';
+			// echo '<pre>'; print_r("z_sess ".$_COOKIE['z_sess']); echo '</pre>';
+			// echo '<pre>'; print_r("z_user_hash ".$_COOKIE['z_user_hash']); echo '</pre>';
+			// echo '<pre>'; print_r("z_hash ".$_COOKIE['z_hash']); echo '</pre>';
+			$reLoginSuccessful = "";
+			if(isset($_COOKIE['z_sess'])){
 				if(strlen($_COOKIE['z_sess'])>5){
-					if(isset($_COOKIE['z_user_hash']) && $_COOKIE['z_user_hash'] != 0){
+					if(isset($_COOKIE['z_user_hash'])){
 						if(strlen($_COOKIE['z_user_hash'])>3){
-							echo '<pre>'; print_r($_COOKIE['z_sess']); echo '</pre>';
-							echo '<pre>'; print_r($_COOKIE['z_user_hash']); echo '</pre>';
+							// echo '<pre>'; print_r($_COOKIE['z_sess']); echo '</pre>';
+							// echo '<pre>'; print_r($_COOKIE['z_user_hash']); echo '</pre>';
 							$uRelogin = $this->User->find('first', array('conditions' => array('_sessid' => $_COOKIE['z_sess'])));
 							if($uRelogin!=null){
-								echo '<pre>'; print_r("relogin found"); echo '</pre>';
-								echo '<pre>'; print_r($uRelogin['User']['_sessid']); echo '</pre>';
-								echo '<pre>'; print_r($uRelogin['User']['name']); echo '</pre>';
-								echo '<pre>'; print_r(md5($uRelogin['User']['name'])); echo '</pre>';
+								// echo '<pre>'; print_r("relogin found"); echo '</pre>';
+								// echo '<pre>'; print_r($uRelogin['User']['_sessid']); echo '</pre>';
+								// echo '<pre>'; print_r($uRelogin['User']['name']); echo '</pre>';
+								// echo '<pre>'; print_r(md5($uRelogin['User']['name'])); echo '</pre>';
 								if($_COOKIE['z_user_hash'] == md5($uRelogin['User']['name']) && $_COOKIE['z_sess'] == $uRelogin['User']['_sessid']){
-									echo '<pre>'; print_r("session found"); echo '</pre>';
+									// echo '<pre>'; print_r("session found"); echo '</pre>';
 									if($_COOKIE['z_hash'] != 1){
-										echo '<pre>'; print_r("relogin allowed"); echo '</pre>';
+										// echo '<pre>'; print_r("Automatic sign-in successful."); echo '</pre>';
 										$_SESSION['loggedInUser'] = $uRelogin;
+										$reLoginSuccessful = "relogin successful";
 									}
 								}
+							}else{
+								// echo '<pre>'; print_r("no uRelogin found"); echo '</pre>';
+								$reLoginSuccessful = "no uRelogin found";
 							}
 						}
+					}else{
+						// echo '<pre>'; print_r("z_user_hash not set"); echo '</pre>';
+						$reLoginSuccessful = "z_user_hash not set";
 					}
+				}else{
+					// echo '<pre>'; print_r("???"); echo '</pre>';
+					$reLoginSuccessful = "???";
 				}
+			}else{
+				// echo '<pre>'; print_r("z_sess not set"); echo '</pre>';
+				$reLoginSuccessful = "z_sess not set";
 			}
+			$dateLog = date_create('now');
+			file_put_contents("userLogger.html", $_SESSION['loggedInUser']['User']['name'].' *'.$reLoginSuccessful.'* '.date_format($dateLog, 'Y-m-d H:i:s').'<br> '.file_get_contents("userLogger.html"));
 		}
 		
 		if(isset($_SESSION['loggedInUser']['User']) && !isset($_SESSION['loggedInUser']['User']['id'])) unset($_SESSION['loggedInUser']);
@@ -2598,6 +2620,10 @@ class AppController extends Controller{
 			
 			if(isset($_COOKIE['z_sess']) && $_COOKIE['z_sess'] != 0){
 				if(strlen($_COOKIE['z_sess'])>5){
+					// echo '<pre>'; print_r("sess refreshed ".$_COOKIE['z_sess']); echo '</pre>';
+					// $dateLog = date_create('now');
+					// file_put_contents("userLogger.html",$_SESSION['loggedInUser']['User']['name'].' "'.$_COOKIE['z_sess'].'" '.date_format($dateLog, 'Y-m-d H:i:s').'<br> '.file_get_contents("userLogger.html"));
+
 					$u['User']['_sessid'] = $_COOKIE['z_sess'];
 					$_SESSION['loggedInUser']['User']['_sessid'] = $_COOKIE['z_sess'];
 					$this->User->save($u);
