@@ -37,7 +37,6 @@
 	<br>
 
 	<script>
-		let expires = "expires=Thu, 01 Jan 1970 00:00:00 GMT";
 		<?php
 			if($clearSession){
 				?> 
@@ -126,7 +125,7 @@
 		function setCookie(cookie, value=""){
 			let paths = ["/", "/sets", "/sets/view", "/tsumegos/play", "/users", "/users/view"];
 			for(let i=0;i<paths.length;i++)
-				document.cookie = cookie+"="+value+";SameSite=none;Secure=false;expires="+expires+";path="+paths[i];
+				document.cookie = cookie+"="+value+";SameSite=none;Secure=false;expires="+cacheLifetime+";path="+paths[i];
 		}
 		
 		

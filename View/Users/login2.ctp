@@ -39,6 +39,10 @@ Sign in with:<br><br><br>
 <br>
 
 <script>
+		var cacheLifetime = new Date();
+		cacheLifetime.setTime(cacheLifetime.getTime()+1*1*1*5*1000);
+		cacheLifetime = cacheLifetime.toUTCString()+"";
+
 		setCookie("z_hash", "0");
 		localStorage.setItem("z_hash", "0");
 		function check1(){
@@ -76,5 +80,10 @@ Sign in with:<br><br><br>
 			if(document.getElementById("newCheck18").checked) document.cookie = "texture18=checked"; else document.cookie = "texture18= ";
 			if(document.getElementById("newCheck19").checked) document.cookie = "texture19=checked"; else document.cookie = "texture19= ";
 			if(document.getElementById("newCheck20").checked) document.cookie = "texture20=checked"; else document.cookie = "texture20= ";
+		}
+		function setCookie(cookie, value=""){
+			let paths = ["/", "/sets", "/sets/view", "/tsumegos/play", "/users", "/users/view"];
+			for(let i=0;i<paths.length;i++)
+				document.cookie = cookie+"="+value+";SameSite=none;Secure=false;expires="+cacheLifetime+";path="+paths[i];
 		}
 	</script>

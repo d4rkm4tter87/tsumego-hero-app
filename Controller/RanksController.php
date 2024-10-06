@@ -54,6 +54,7 @@ class RanksController extends AppController {
 			}
 			$rs = $this->RankSetting->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
 		}
+
 		
 		if(isset($this->data['Settings'])){
 			if(count($this->data['Settings']>=41)){
@@ -93,6 +94,7 @@ class RanksController extends AppController {
 					'user_id' => $_SESSION['loggedInUser']['User']['id'],
 					'set_id' => $sets[$i]['Set']['id']
 				)));
+
 				if(count($settingsSingle>1)){
 					for($j=0;$j<count($settingsSingle);$j++){
 						if($j!=0) $this->RankSetting->delete($settingsSingle[$j]['RankSetting']['id']);
@@ -105,7 +107,36 @@ class RanksController extends AppController {
 					}
 					array_push($settings['checked'], 'checked');
 				}else{
-					array_push($settings['checked'], '');
+					if(!isset($settingsSingle[0])){
+						if($sets[$i]['Set']['id']==186 ||
+						$sets[$i]['Set']['id']==187 ||
+						$sets[$i]['Set']['id']==190 ||
+						$sets[$i]['Set']['id']==192 ||
+						$sets[$i]['Set']['id']==193 ||
+						$sets[$i]['Set']['id']==195 ||
+						$sets[$i]['Set']['id']==196 ||
+						$sets[$i]['Set']['id']==197 ||
+						$sets[$i]['Set']['id']==198 ||
+						$sets[$i]['Set']['id']==200 ||
+						$sets[$i]['Set']['id']==203 ||
+						$sets[$i]['Set']['id']==204 ||
+						$sets[$i]['Set']['id']==214 ||
+						$sets[$i]['Set']['id']==216 ||
+						$sets[$i]['Set']['id']==226 ||
+						$sets[$i]['Set']['id']==227 ||
+						$sets[$i]['Set']['id']==231
+						){
+							$newRsx = array();
+							$newRsx['RankSetting']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+							$newRsx['RankSetting']['set_id'] = $sets[$i]['Set']['id'];
+							$newRsx['RankSetting']['status'] = '1';
+							$this->RankSetting->create();
+							$this->RankSetting->save($newRsx);
+							array_push($settings['checked'], 'checked');
+						}else{
+							array_push($settings['checked'], '');
+						}
+					}
 				}
 			}
 		}
@@ -263,6 +294,8 @@ class RanksController extends AppController {
 		$achievementUpdate = $this->checkTimeModeAchievements();
 		if(count($achievementUpdate)>0) $this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
 		
+		//echo '<pre>'; print_r($settings); echo '</pre>';
+
 		$this->set('lastMode', $lastMode);
 		$this->set('lowestMode', $lowestMode);
 		$this->set('modes', $modes);

@@ -2550,8 +2550,7 @@ class AppController extends Controller{
 		$lastProfileLeft = 1;
 		$lastProfileRight = 2;
 		
-		echo '<pre>'; print_r('[test environment] <a target="_blank" href="/userLogger.html">logs</a>'); echo '</pre>';
-
+		//echo '<pre>'; print_r('[test environment] <a target="_blank" href="/userLogger.html">logs</a>'); echo '</pre>';
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			if($_COOKIE['PHPSESSID']==0 || $_COOKIE['PHPSESSID']==-1){
 				//unset($_SESSION['loggedInUser']);
@@ -2559,8 +2558,8 @@ class AppController extends Controller{
 				//unset($_COOKIE['hash']);
 			}
 
-			$dateLog = date_create('now');
-			file_put_contents("userLogger.html",$_SESSION['loggedInUser']['User']['name'].' '.date_format($dateLog, 'Y-m-d H:i:s').'<br> '.file_get_contents("userLogger.html"));
+			//$dateLog = date_create('now');
+			//file_put_contents("userLogger.html",$_SESSION['loggedInUser']['User']['name'].' '.date_format($dateLog, 'Y-m-d H:i:s').'<br> '.file_get_contents("userLogger.html"));
 
 			if($_SESSION['loggedInUser']['User']['id']==33) unset($_SESSION['loggedInUser']);
 			$loggedInUser = $_SESSION['loggedInUser'];
@@ -2589,6 +2588,8 @@ class AppController extends Controller{
 										// echo '<pre>'; print_r("Automatic sign-in successful."); echo '</pre>';
 										$_SESSION['loggedInUser'] = $uRelogin;
 										$reLoginSuccessful = "relogin successful";
+										$dateLog = date_create('now');
+										file_put_contents("userLogger.html", $_SESSION['loggedInUser']['User']['name'].' *'.$reLoginSuccessful.'* '.date_format($dateLog, 'Y-m-d H:i:s').'<br> '.file_get_contents("userLogger.html"));
 									}
 								}
 							}else{
@@ -2608,8 +2609,6 @@ class AppController extends Controller{
 				// echo '<pre>'; print_r("z_sess not set"); echo '</pre>';
 				$reLoginSuccessful = "z_sess not set";
 			}
-			$dateLog = date_create('now');
-			file_put_contents("userLogger.html", $_SESSION['loggedInUser']['User']['name'].' *'.$reLoginSuccessful.'* '.date_format($dateLog, 'Y-m-d H:i:s').'<br> '.file_get_contents("userLogger.html"));
 		}
 		
 		if(isset($_SESSION['loggedInUser']['User']) && !isset($_SESSION['loggedInUser']['User']['id'])) unset($_SESSION['loggedInUser']);
