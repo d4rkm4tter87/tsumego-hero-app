@@ -1,6 +1,5 @@
 <?php
 class RanksController extends AppController {
-
 	public function overview(){
 		$this->loadModel('Tsumego');
 		$this->loadModel('User');
@@ -19,8 +18,14 @@ class RanksController extends AppController {
 		$settings['checked'] = array();
 		$ro = $this->RankOverview->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
 		$sets = $this->Set->find('all', array('conditions' => array('public' => 1)));
+
 		$rs = $this->RankSetting->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
-		
+		$rsIndexes = array();
+		for($i=0;$i<count($rs);$i++){
+			$rsIndexes[$rs[$i]['RankSetting']['set_id']] = $rs[$i]['RankSetting']['status'];
+		}
+		$rs = $this->checkForNewCollections($rsIndexes);
+
 		if(isset($_SESSION['loggedInUser'])){
 			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
 			$lastMode = $u['User']['lastMode'];
@@ -107,36 +112,7 @@ class RanksController extends AppController {
 					}
 					array_push($settings['checked'], 'checked');
 				}else{
-					if(!isset($settingsSingle[0])){
-						if($sets[$i]['Set']['id']==186 ||
-						$sets[$i]['Set']['id']==187 ||
-						$sets[$i]['Set']['id']==190 ||
-						$sets[$i]['Set']['id']==192 ||
-						$sets[$i]['Set']['id']==193 ||
-						$sets[$i]['Set']['id']==195 ||
-						$sets[$i]['Set']['id']==196 ||
-						$sets[$i]['Set']['id']==197 ||
-						$sets[$i]['Set']['id']==198 ||
-						$sets[$i]['Set']['id']==200 ||
-						$sets[$i]['Set']['id']==203 ||
-						$sets[$i]['Set']['id']==204 ||
-						$sets[$i]['Set']['id']==214 ||
-						$sets[$i]['Set']['id']==216 ||
-						$sets[$i]['Set']['id']==226 ||
-						$sets[$i]['Set']['id']==227 ||
-						$sets[$i]['Set']['id']==231
-						){
-							$newRsx = array();
-							$newRsx['RankSetting']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-							$newRsx['RankSetting']['set_id'] = $sets[$i]['Set']['id'];
-							$newRsx['RankSetting']['status'] = '1';
-							$this->RankSetting->create();
-							$this->RankSetting->save($newRsx);
-							array_push($settings['checked'], 'checked');
-						}else{
-							array_push($settings['checked'], '');
-						}
-					}
+					array_push($settings['checked'], '');
 				}
 			}
 		}
@@ -294,8 +270,6 @@ class RanksController extends AppController {
 		$achievementUpdate = $this->checkTimeModeAchievements();
 		if(count($achievementUpdate)>0) $this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
 		
-		//echo '<pre>'; print_r($settings); echo '</pre>';
-
 		$this->set('lastMode', $lastMode);
 		$this->set('lowestMode', $lowestMode);
 		$this->set('modes', $modes);
@@ -634,6 +608,21 @@ class RanksController extends AppController {
 		return $rx;
 	}
 	
+	private function checkForNewCollections($indexes){
+		$check = array(186,187,190,192,193,195,196,197,198,200,203,204,214,216,226,227,231);
+		for($i=0;$i<count($check);$i++){
+			if(!isset($indexes[$check[$i]])){
+				$newRsx = array();
+				$newRsx['RankSetting']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+				$newRsx['RankSetting']['set_id'] = $check[$i];
+				$newRsx['RankSetting']['status'] = '1';
+				$this->RankSetting->create();
+				$this->RankSetting->save($newRsx);
+			}
+		}
+		$rs = $this->RankSetting->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+		return $rs;
+	}
 }
 
 

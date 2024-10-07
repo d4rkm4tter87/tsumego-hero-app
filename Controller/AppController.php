@@ -2587,6 +2587,13 @@ class AppController extends Controller{
 									if($_COOKIE['z_hash'] != 1){
 										// echo '<pre>'; print_r("Automatic sign-in successful."); echo '</pre>';
 										$_SESSION['loggedInUser'] = $uRelogin;
+										$vs = $this->TsumegoStatus->find('first', array('order' => 'created DESC', 'conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+										if($vs!=null) $_SESSION['lastVisit'] = $vs['TsumegoStatus']['tsumego_id'];
+										for($i=1;$i<=54;$i++){
+											if($_SESSION['loggedInUser']['User']['texture'.$i] == '1') $_SESSION['loggedInUser']['User']['texture'.$i] = 'checked';
+											$_SESSION['texture'.$i] = $_SESSION['loggedInUser']['User']['texture'.$i];
+										}
+										$_SESSION['check1'] = $_SESSION['loggedInUser']['User']['id'];
 										$reLoginSuccessful = "relogin successful";
 										$dateLog = date_create('now');
 										file_put_contents("userLogger.html", $_SESSION['loggedInUser']['User']['name'].' *'.$reLoginSuccessful.'* '.date_format($dateLog, 'Y-m-d H:i:s').'<br> '.file_get_contents("userLogger.html"));
@@ -3133,6 +3140,19 @@ class AppController extends Controller{
 		
 		$nextDay = new DateTime('tomorrow');
 		
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			if(!isset($_SESSION['texture1'])){
+				$vs = $this->TsumegoStatus->find('first', array('order' => 'created DESC', 'conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+				if($vs!=null) $_SESSION['lastVisit'] = $vs['TsumegoStatus']['tsumego_id'];
+				for($i=1;$i<=54;$i++){
+					if($_SESSION['loggedInUser']['User']['texture'.$i] == '1') $_SESSION['loggedInUser']['User']['texture'.$i] = 'checked';
+					$_SESSION['texture'.$i] = $_SESSION['loggedInUser']['User']['texture'.$i];
+				}
+			}
+			if(!isset($_SESSION['check1'])){
+				$_SESSION['check1'] = $_SESSION['loggedInUser']['User']['id'];
+			}
+		}
 		
 		$this->set('user', $u);
 		$this->set('mode', $mode);
