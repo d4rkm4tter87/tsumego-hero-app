@@ -1050,6 +1050,18 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	.besogo-panels{
 		
 	}
+	.new-button-default{
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius: 5px;
+		background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.16, rgb(207, 207, 207)), color-stop(0.79, rgb(252, 252, 252)));
+		background-image: -moz-linear-gradient(center bottom, rgb(207, 207, 207) 16%, rgb(252, 252, 252) 79%);
+		background-image: linear-gradient(to top, rgb(207, 207, 207) 16%, rgb(252, 252, 252) 79%); 
+		padding: 3px;
+		border: 1px solid #000;
+		color: black;
+		text-decoration: none;
+	}
 	.new-button-time{
 		font-family:Times New Roman,verdana,helvetica,arial,sans-serif;
 		font-size:16px;
@@ -1799,7 +1811,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	#login-box{
 		position: relative;
 		margin: 5% auto;
-		width: 600px;
+		width: 690px;
 		height: 450px;
 		background: #FFF;
 		border-radius: 2px;
@@ -1812,7 +1824,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		box-sizing: border-box;
 		padding: 40px;
 		padding-top: 20px;
-		width: 300px;
+		width: 345px;
 		height: 450px;
 	}
 	.right{
@@ -1821,7 +1833,7 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		right: 0;
 		box-sizing: border-box;
 		padding: 40px;
-		width: 300px;
+		width: 345px;
 		height: 450px;
 		background-color: black;
 		background-image: url('/img/loginBg3.PNG');
@@ -2494,6 +2506,9 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 		font-style: italic;
 		margin:20px 8px;
 	}
+	.privacy-policy-list li{
+		width:100%;
+	}
 	#customText a{
 		color:black;
 	}
@@ -2743,6 +2758,18 @@ src: local('Exo Black Italic'), url('/fonts/Exo-BlackItalic.woff') format('woff'
 	}
 	#heroLogout li a{
 		color:#74d14c;
+	}
+	.google-profile-image{
+		position:relative;
+		top:2px;
+		border-radius:50%;
+		width:16px;
+		height:16px;
+		border:1px solid #ea4537;
+		margin-right:1px;
+	}
+	.g-signin{
+		width:60%;
 	}
 	#sandboxLink{
 		color:#74d14c;

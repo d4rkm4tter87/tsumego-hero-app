@@ -1,5 +1,28 @@
-<?php ?>
+<?php 
+	$donations = array();
+	$donations[0]['date'] = '12.10.2024';
+	$donations[0]['user'] = 'Timurlan ';
+	$donations[0]['amount'] = '10,00 €';
+
+	$donations[1]['date'] = '10.10.2024';
+	$donations[1]['user'] = 'Arjan ';
+	$donations[1]['amount'] = '10,00 €';
+
+	$donations[2]['date'] = '10.10.2024';
+	$donations[2]['user'] = 'Gonuzul ';
+	$donations[2]['amount'] = '10,00 €';
+
+	$donations[3]['date'] = '05.10.2024';
+	$donations[3]['user'] = 'Andre83 ';
+	$donations[3]['amount'] = '10,00 €';
+
+	$donations[4]['date'] = '02.10.2024';
+	$donations[4]['user'] = 'Jean-Fred Moulin ';
+	$donations[4]['amount'] = '10,00 €';
+	//$donations[4]['amount'] = '10,00 € <font size="2px">subscription</font>';
+?>
 	<script src ="/js/previewBoard.js"></script>
+	<script src="https://accounts.google.com/gsi/client" async defer></script>
 	<div class="homeRight">
 		<p class="title4 title4right"><?php echo $d1; ?></p>
 		<?php
@@ -9,19 +32,6 @@
 			echo '<img id="title-image" src="/img/modeSelect24x.png" width="100%" alt="Tsumego Hero Modes" title="Tsumego Hero Modes">';
 		?>
 		<br>
-			<?php
-			/*
-			if(isset($_SESSION['loggedInUser'])){
-			if($_SESSION['loggedInUser']['User']['premium']>=2){
-			echo '<p class="title4">New Collection</p>
-			<br><font color="blue">Hello '.$_SESSION['loggedInUser']['User']['name'].', please check and comment on the collection 
-			<a href="/sets/view/142">Diabolical</a> in the Sandbox. Upload by original author David Mitchell (DaviidM). </font>
-			<br><br>';
-			}}
-			
-			*/
-			//print_r($newT);
-		?>
 		<p class="title4">Problems of the Day</p>
 		<div class="new1">
 		<?php
@@ -56,6 +66,39 @@
 				<?php echo $totd['Tsumego']['num']; ?><span><div id="tooltipSvg99"></div></span></a>
 			</li>
 			<br><br>
+		</div>
+		<!-- RIGHT NEWS -->
+		<!-- RIGHT NEWS -->
+		<!-- RIGHT NEWS -->
+		<p class="title4">Update 13.10.2024</p>
+		<div class="new1">
+			• Longer sessions.<br><br>
+			• Sign in with Google account.<br><br>
+			• Option to delete all account related data.<br><br>
+			<div align="center">
+				<div class="g-signin">
+					<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
+					<img src="/img/google-logo.png" title="google-logo" alt="google-logo" width="40px" style="border-radius:25%">
+					<?php }else{ ?>
+					<div
+						id="g_id_onload"
+						data-client_id="842499094931-nt12l2fehajo4k7f39bb44fsjl0l4h6u.apps.googleusercontent.com"
+						data-context="signin"
+						data-ux_mode="popup"
+						data-login_uri="/users/googlesignin"
+						data-auto_prompt="false"
+					></div>
+					<div
+						class="g_id_signin"
+						data-type="standard"
+						data-shape="rectangular"
+						data-theme="outline"
+						data-text="sign_in_with"
+						data-size="large"
+					></div>
+					<?php } ?>
+				</div>
+			</div>
 		</div>
 		<p class="title4">New: Diabolical - the whole book | 19.08.2024</p>
 		<div class="new1">
@@ -124,13 +167,7 @@
 		
 			<?php
 			if(isset($_SESSION['loggedInUser'])){
-			
-			
-			
-			//if($_SESSION['loggedInUser']['User']['completed']==1){
 			if(false){
-			//if($_SESSION['loggedInUser']['User']['id']==72){
-			//echo '<pre>';print_r($ux);echo '</pre>';
 			?>
 			<div id="sandboxVolunteers2">
 				<p class="title4">Sandbox</p>
@@ -202,56 +239,13 @@
 				</tr>
 				</table>
 				</div>
-				
 			</div>
-				
 			<?php 
 			}
 			?>
 			
-			<?php
-			/*if(isset($_SESSION['loggedInUser'])){
-			if($_SESSION['loggedInUser']['User']['completed']==1){
-			?>
-			
-			<div >
-				<p class="title4">Sandbox</p>
-				<br>
-				<div align="left"><font size="4px">
-				There are new problems in the <a href="/sets/beta">Sandbox</a>, please check.
-				<br><br>
-				</font>
-				
-				</div>
-			</div>
-			
-			<?php
-			}
-			}*/
-			/*
-			if(isset($_SESSION['loggedInUser'])){
-			} 
-				echo '<p class="title4">Your last Activities</p><div class="new1">';
-				echo '<a style="color:#000;" href="/sets/view/'.$visit1['Set']['id'].'">
-					<b>'.$visit1['Set']['title'];
-					if($visit1['Set']['title2']!=null) echo ', '.$visit1['Set']['title2'];
-				echo '</b></a><br>'; 
-				if(isset($visit2)){
-					echo '<a style="color:#000;" href="/sets/view/'.$visit2['Set']['id'].'">
-						<b>'.$visit2['Set']['title'];
-						if($visit2['Set']['title2']!=null) echo ', '.$visit2['Set']['title2'];
-					echo '</b></a><br>'; 
-					if(isset($visit3)){
-						echo '<a style="color:#000;" href="/sets/view/'.$visit3['Set']['id'].'">
-							<b>'.$visit3['Set']['title'];
-							if($visit3['Set']['title2']!=null) echo ', '.$visit3['Set']['title2'];
-						echo '</b></a><br>'; 
-					}
-				}
-			echo '<br></div>';
-			*/	
+		<?php
 		}	
-			
 		?>
 	</div>
 	
@@ -259,48 +253,13 @@
 		<p class="title4">Most Recent Achievements</p>
 		<?php
 			$quotePick = ceil(substr($quote, 1)/3);
-			
-			//$quotePick = 8;
 			if(!isset($_SESSION['lastVisit'])) $_SESSION['lastVisit'] = 15352;
 			$modeActions = '';
 			$modeActions2 = 'class="modeboxes"';
 			if(isset($_SESSION['loggedInUser']) && $ac) $modeActions = 'class="modeboxes" onmouseover="mode2hover()" onmouseout="modeNoHover()"';
 			if($ac) $modeActions2 = 'class="modeboxes"';
 			else $modeActions2 = 'class="modeboxes"';
-		
-			
 			echo '<div class="quotePick'.$quotePick.'" id="ajaxWallpaper"></div>';
-			/*
-			if(isset($_SESSION['loggedInUser'])){
-				$url1 = '';
-				$url2 = '';
-				$url3 = '';
-				$url4 = '';
-				
-				if($_SESSION['loggedInUser']['User']['id']==72){
-					$url1 = '<a href="/users/stats">Page Stats</a><br>';
-					$url2 = '<a href="/users/userstats">User Stats</a><br>';
-					$url3 = '<a href="/users/adminstats">Admin Stats</a><br>';
-					$url4 = '<a href="/tsumego_records/">Tsumego Records</a><br>
-							<a href="/users/purge">Purge</a><br>';
-					
-				}elseif($_SESSION['loggedInUser']['User']['id']==408){
-					$url2 = '<a href="/users/userstats">User Stats</a><br>';
-					$url3 = '<a href="/users/adminstats">Admin Stats</a><br>';
-					$url4 = '<a href="/tsumego_records/">Tsumego Records</a><br>';
-				}elseif($_SESSION['loggedInUser']['User']['isAdmin']>0){
-					$url3 = '<a href="/users/adminstats">Admin Stats</a><br>';
-					$url2 = '<a href="/users/userstats">User Stats</a><br>';
-				}
-				
-				echo '<div style="position:absolute;top:60px;left:28px;">';
-				echo $url1;
-				echo $url2;
-				echo $url3;
-				echo $url4;
-				echo '</div>';
-			}
-			*/
 		?>
 		<a href="/tsumegos/play/<?php echo $_SESSION['lastVisit']; ?>?mode=1">
 			<div class="modeBox1" onmouseover="mode1hover()" onmouseout="modeNoHover()"></div>
@@ -330,99 +289,7 @@
 		<?php
 		}
 		echo '<img src="/img/new_startpage/'.$quotePick.'.PNG" width="100%" alt="Tsumego Hero Message of the Day" title="Tsumego Hero Message of the Day">';
-		/*
-		<div class="danielml-bg">
-		<br>
-		<i>"Baduk Borough. This used to be a quiet city. A city that could be that could be any town USA. That is, until an evil cat samurai
-		threatened the lifes and the livelihoods of the people in this town... Looks like this city needs a hero. A Tsumego Hero!"</i>
-		<br><br>
-		<div align="center">
-		<iframe width="560" height="315" src="https://www.youtube.com/embed/OMIfyzXS9Vo" frameborder="0" allow="accelerometer; 
-		autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-		</div>
-		<br>
-		<b>Video by Daniel ML</b><br>
-		Twitch: <a href="https://www.twitch.tv/danielml001" target="_blank">https://www.twitch.tv/danielml001</a><br>
-		Youtube: <a href="https://www.youtube.com/channel/UCc4gkScb1PJAiDDtZ00eAjA" target="_blank">Daniel ML</a><br>
-		<br>
-		<b>All Episodes</b><br>
-		E1: <a href="https://www.youtube.com/watch?v=t4dR3JrP_x8" target="_blank">Tsumego Hero 1 : Hard Mode</a><br>
-		E2: <a href="https://www.youtube.com/watch?v=rZBmLnzSWWI" target="_blank">Tsumego Hero 2 : Extra Life</a><br>
-		E3: <a href="https://www.youtube.com/watch?v=OMIfyzXS9Vo" target="_blank">Tsumego Hero 3 : Hero Rising</a><br>
-		<br>
-		<b>About</b><br>
-		Daniel ML is a Go streamer and I'm a fan of his content since he started streaming on twitch about 3 years ago.
-		He is very enjoyable to watch, a great entertainer and always in a good mood.
-		<br>
-		*/
-		
-			//if(isset($_SESSION['loggedInUser'])){
-				/*
-				$url1 = '';
-				$url2 = '';
-				$url3 = '';
-				$url4 = '';
-				
-				if($_SESSION['loggedInUser']['User']['id']==72){
-					$url1 = '<a href="/users/stats">Page Stats</a><br>';
-					$url2 = '<a href="/users/userstats">User Stats</a><br>';
-					$url3 = '<a href="/users/adminstats">Admin Stats</a><br>';
-					$url4 = '<a href="/tsumego_records/">Tsumego Records</a><br>';
-				}elseif($_SESSION['loggedInUser']['User']['id']==1543){
-					$url2 = '<a href="/users/userstats">User Stats</a><br>';
-					$url3 = '<a href="/users/adminstats">Admin Stats</a><br>';
-					$url4 = '<a href="/tsumego_records/">Tsumego Records</a><br>';
-				}elseif($_SESSION['loggedInUser']['User']['isAdmin']>0){
-					$url3 = '<a href="/users/adminstats">Admin Stats</a><br>';
-				}
-				
-				echo '<div style="position:absolute;top:60px;left:28px;">';
-				echo $url1;
-				echo $url2;
-				echo $url3;
-				echo $url4;
-				echo '</div>';
-				
-				The rating mode gives you a rank for your ability to solve tsumego. 
-				The system is based on <a target="_blank" href="https://en.wikipedia.org/wiki/Elo_rating_system">elo rating</a>, which is used for tournaments in 
-				chess, go and other games. As in tournaments players get opponents 
-				around their rank, the rating mode matches you with go problems 
-				around your skill level.<br><br>
-				echo '<div style="position:absolute;width:662px;top:60px;left:28px;font-weight:800;color:white;padding:2px 15px;">
-				<div style="text-decoration:underline;font-size:22px;" align="center">Rating Mode – 2<sup>nd</sup> Iteration</div><br>
-				
-				The rating mode gives you a rank for your ability to solve tsumego. 
-				The system is based on <a style="color:white;" target="_blank" href="https://en.wikipedia.org/wiki/Elo_rating_system">elo rating</a>, which is used for tournaments in 
-				chess, go and other games. As in tournaments players get opponents 
-				around their rank, the rating mode matches you with tsumego problems 
-				around your skill level.<br><br>
-				<div id="cd2" style="font-size:25px;float:left;padding-left:190px;">
-				<p style="float:left">Available in:&nbsp;</p>
-				<p style="float:left" id="hours"></p>
-				<p style="float:left" id="mins"></p>
-				<p style="float:left" id="secs"></p>
-				</div>
-				<br><br><br><br><br>
-				
-				Availability:<br>
-				○ This will be available for all premium users.<br>
-				○ The 2<sup>nd</sup> iteration is going to end on 01.10.2020 (If later, this date will be updated)<br>
-				○ There will be iterations and prizes each month.<br><br>
-
-				Prizes:<br>
-				○ The first 5 places of the 1<sup>st</sup> iteration won the exclusive secret area “Hand of God”. The winners are: PepinoNegro, StephaneLamy, Farkas, yaya and Fupfv.<br>
-				○ The first place by the end of the 2<sup>nd</sup> iteration wins 20,00 €.<br><br><br>
-				
-				<a style="color:white;" href="/activates">Configuration details >></a>
-
-				</div>';
-				*/
-				
-			//}
 		?>
-		
-		
-		
 		<p class="title4">User of the Day </p>
 		<div class="new1">
 		<div class="uotd mid uotd<?php echo $uotdbg; ?> mid<?php echo $uotdbg; ?> ">
@@ -430,8 +297,6 @@
 		</div>
 		<p class="uotdmargin">&nbsp;</p>
 		</div>
-		
-		
 		<?php if(isset($_SESSION['loggedInUser'])){ ?>
 		<?php if($_SESSION['loggedInUser']['User']['premium']==0 && $user['User']['id']!=1165){ ?>
 			<p class="title4">Donations</p>
@@ -454,38 +319,16 @@
 		<p class="title4">Recent Donations and Upgrades</p>
 		<div class="new1">
 			<table class="newx" border="0">
-				<tr>
-					<td><h1>15.08.2024</h1></td>
-					<td><h1>WhiteSpy </h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>13.08.2024</h1></td>
-					<td><h1>Aron Vig </h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>11.08.2024</h1></td>
-					<td><h1>TotalIrre</h1></td>
-					<td><h1>40,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>02.08.2024</h1></td>
-					<td><h1>Av0idMan0  </h1></td>
-					<td><h1>11,00 €</h1></td>
-				</tr>
-				<tr>
-					<td><h1>29.07.2024</h1></td>
-					<td><h1>Andrei73 </h1></td>
-					<td><h1>10,00 €</h1></td>
-				</tr>
-				<!--
-				<tr>
-					<td><h1>10,00 € <font size="2px">subscription</font></h1></td>
-				</tr>
-				-->
+				<?php 
+					for($i=0;$i<count($donations);$i++){
+						echo '<tr>';
+							echo '<td><h1>'.$donations[$i]['date'].'</h1></td>';
+							echo '<td><h1>'.$donations[$i]['user'].'</h1></td>';
+							echo '<td><h1>'.$donations[$i]['amount'].'</h1></td>';
+						echo '</tr>';
+					}
+				?>
 			</table>	
-		<br>
 		</div>
 		
 		<p class="title4">Problem Database Size </p>
@@ -546,14 +389,12 @@
 			if($date==date_create('2019-05-01')) $td[$j]['num'] -= 32;
 			if($date==date_create('2019-05-19')) $td[$j]['num'] -= 40;
 			if($date==date_create('2020-02-22')) $td[$j]['num'] -= 347;
-			//if($date==date_create('2023-09-01')) $td[$j]['num'] -= 141;
 			if($date==date_create('2023-09-01')) $td[$j]['num'] -= 4;
 			if($date==date_create('2023-10-04')) $td[$j]['num'] -= 10;
 			if($date==date_create('2024-08-18')) $td[$j]['num'] -= 30;
 			$x = $td[$j]['num'];
 			$sum = $x;
 			
-			//echo '<pre>';print_r($date);echo '</pre>';
 			$td[$j]['y'] = $date->format('Y');
 			$td[$j]['m'] = $date->format('m');
 			$td[$j]['m'] = $td[$j]['m'] - 1;
@@ -606,6 +447,9 @@
 		<br>
 		</div>
 		
+		<!-- LEFT NEWS -->
+		<!-- LEFT NEWS -->
+		<!-- LEFT NEWS -->
 		<p class="title4">Bugfix 01.05.2024</p>
 		<div class="new1">
 		Longer sessions were not working properly, so this feature is reverted. If there are still any issues, such as log-outs, try to delete the cookies.<br><br>

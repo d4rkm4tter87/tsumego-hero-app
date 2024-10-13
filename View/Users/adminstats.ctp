@@ -1,5 +1,14 @@
-<?php
-	
+
+
+<?php 
+	if($requestDeletion!=null){
+		echo '<div align="left" width="100%" style="padding:0 6px">';
+		for($i=0; $i<count($requestDeletion); $i++){
+			echo $requestDeletion[$i]['User']['name'].' has requested account deletion.&nbsp;';
+			echo '<a class="new-button-default" href="/users/adminstats?delete='.($requestDeletion[$i]['User']['id']*1111).'&hash='.md5($requestDeletion[$i]['User']['name']).'">Delete Account</a><br><br>';
+		}
+		echo '</div>';
+	}
 	if(isset($_SESSION['loggedInUser'])){
 		if($_SESSION['loggedInUser']['User']['isAdmin']<1){
 			echo '<script type="text/javascript">window.location.href = "/";</script>';

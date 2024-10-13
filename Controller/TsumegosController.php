@@ -1047,7 +1047,9 @@ class TsumegosController extends AppController{
 			if(strpos($co[$i]['Comment']['message'], '<a href="/files/ul1/') === false)
 				$co[$i]['Comment']['message'] = htmlspecialchars($co[$i]['Comment']['message']);
 			$cou = $this->User->findById($co[$i]['Comment']['user_id']);
-			$co[$i]['Comment']['user'] = $cou['User']['name'];
+			if($cou==null)
+				$cou['User']['name'] = '[deleted user]';
+			$co[$i]['Comment']['user'] = $this->checkPicture($cou);
 			$cad = $this->User->findById($co[$i]['Comment']['admin_id']);
 			if($cad!=null){
 				if($cad['User']['id'] == 73) $cad['User']['name'] = 'Admin';
@@ -2384,12 +2386,12 @@ class TsumegosController extends AppController{
 		if(isset($this->params['url']['idForTheThing'])){
 			$idForSignature2 = $this->params['url']['idForTheThing']+1;
 			$idForSignature = $this->getTheIdForTheThing($idForSignature2);
-			echo '<pre>'; print_r($idForSignature); echo '</pre>';
 		}
-		
 		if(!isset($difficulty))
 			$difficulty = 4;
-		
+
+		$u['User']['name'] = $this->checkPicture($u);
+
 		$this->set('requestSignature', $requestSignature);
 		$this->set('idForSignature', $idForSignature);
 		$this->set('idForSignature2', $idForSignature2);

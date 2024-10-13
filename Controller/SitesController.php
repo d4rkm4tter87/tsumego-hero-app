@@ -271,6 +271,11 @@ class SitesController extends AppController{
 		$_SESSION['page'] = 'gotutorial';
 		$_SESSION['title'] = 'Tsumego Hero - Go Tutorial';
 	}
+
+	public function privacypolicy(){
+		$_SESSION['page'] = 'privacypolicy';
+		$_SESSION['title'] = 'Tsumego Hero - Privacy Policy';
+	}
 	
 	public function ugco5ujc(){
 	

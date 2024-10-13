@@ -146,9 +146,11 @@ class AppController extends Controller{
 		for($i=0; $i<count($latest); $i++){
 			$a = $this->Achievement->findById($latest[$i]['AchievementStatus']['achievement_id']);
 			$u = $this->User->findById($latest[$i]['AchievementStatus']['user_id']);
-			$startPageUser = $u['User']['name'];
-			if(strlen($u['User']['name'])>17)
-				$startPageUser = substr($u['User']['name'],0,17).'...';
+			if(substr($u['User']['name'],0,3)=='g__' && $u['User']['external_id']!=null){
+				$startPageUser = $this->checkPicture($u);
+			}else{
+				if(strlen($u['User']['name'])>17) $startPageUser = substr($u['User']['name'],0,17).'...';
+			}
 			$latest[$i]['AchievementStatus']['name'] = $a['Achievement']['name'];
 			$latest[$i]['AchievementStatus']['color'] = $a['Achievement']['color'];
 			$latest[$i]['AchievementStatus']['image'] = $a['Achievement']['image'];
@@ -878,6 +880,12 @@ class AppController extends Controller{
 		$key = hash( 'sha256', $secret_key );
 		$iv = substr( hash( 'sha256', $secret_iv ), 0, 16);
 		return openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
+	}
+
+	public function checkPicture($u){
+		if(substr($u['User']['name'],0,3)=='g__' && $u['User']['external_id']!=null)
+			return '<img class="google-profile-image" src="/img/google/'.$u['User']['picture'].'">'.substr($u['User']['name'],3);
+		return $u['User']['name'];
 	}
 	
 	public function getTsumegoRank($t){
@@ -2522,6 +2530,17 @@ class AppController extends Controller{
 		
 		$this->User->save($u);
 	}
+
+	public function signIn($u){
+		$_SESSION['loggedInUser'] = $u;
+		$vs = $this->TsumegoStatus->find('first', array('order' => 'created DESC', 'conditions' => array('user_id' => $u['User']['id'])));
+		if($vs!=null) $_SESSION['lastVisit'] = $vs['TsumegoStatus']['tsumego_id'];
+		for($i=1;$i<=54;$i++){
+			if($u['User']['texture'.$i] == '1') $u['User']['texture'.$i] = 'checked';
+			$_SESSION['texture'.$i] = $u['User']['texture'.$i];
+		}
+		$_SESSION['check1'] = $u['User']['id'];
+	}
 	
 	function beforeFilter(){
 		$this->loadModel('User');
@@ -2557,10 +2576,8 @@ class AppController extends Controller{
 				//unset($_COOKIE['PHPSESSID']);
 				//unset($_COOKIE['hash']);
 			}
-
 			//$dateLog = date_create('now');
 			//file_put_contents("userLogger.html",$_SESSION['loggedInUser']['User']['name'].' '.date_format($dateLog, 'Y-m-d H:i:s').'<br> '.file_get_contents("userLogger.html"));
-
 			if($_SESSION['loggedInUser']['User']['id']==33) unset($_SESSION['loggedInUser']);
 			$loggedInUser = $_SESSION['loggedInUser'];
 			$this->set('loggedInUser', $loggedInUser);
@@ -2586,17 +2603,10 @@ class AppController extends Controller{
 									// echo '<pre>'; print_r("session found"); echo '</pre>';
 									if($_COOKIE['z_hash'] != 1){
 										// echo '<pre>'; print_r("Automatic sign-in successful."); echo '</pre>';
-										$_SESSION['loggedInUser'] = $uRelogin;
-										$vs = $this->TsumegoStatus->find('first', array('order' => 'created DESC', 'conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
-										if($vs!=null) $_SESSION['lastVisit'] = $vs['TsumegoStatus']['tsumego_id'];
-										for($i=1;$i<=54;$i++){
-											if($_SESSION['loggedInUser']['User']['texture'.$i] == '1') $_SESSION['loggedInUser']['User']['texture'.$i] = 'checked';
-											$_SESSION['texture'.$i] = $_SESSION['loggedInUser']['User']['texture'.$i];
-										}
-										$_SESSION['check1'] = $_SESSION['loggedInUser']['User']['id'];
+										$this->signIn($uRelogin);
 										$reLoginSuccessful = "relogin successful";
-										$dateLog = date_create('now');
-										file_put_contents("userLogger.html", $_SESSION['loggedInUser']['User']['name'].' *'.$reLoginSuccessful.'* '.date_format($dateLog, 'Y-m-d H:i:s').'<br> '.file_get_contents("userLogger.html"));
+										//$dateLog = date_create('now');
+										//file_put_contents("userLogger.html", $_SESSION['loggedInUser']['User']['name'].' *'.$reLoginSuccessful.'* '.date_format($dateLog, 'Y-m-d H:i:s').'<br> '.file_get_contents("userLogger.html"));
 									}
 								}
 							}else{
@@ -3140,20 +3150,8 @@ class AppController extends Controller{
 		
 		$nextDay = new DateTime('tomorrow');
 		
-		if(isset($_SESSION['loggedInUser']['User']['id'])){
-			if(!isset($_SESSION['texture1'])){
-				$vs = $this->TsumegoStatus->find('first', array('order' => 'created DESC', 'conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
-				if($vs!=null) $_SESSION['lastVisit'] = $vs['TsumegoStatus']['tsumego_id'];
-				for($i=1;$i<=54;$i++){
-					if($_SESSION['loggedInUser']['User']['texture'.$i] == '1') $_SESSION['loggedInUser']['User']['texture'.$i] = 'checked';
-					$_SESSION['texture'.$i] = $_SESSION['loggedInUser']['User']['texture'.$i];
-				}
-			}
-			if(!isset($_SESSION['check1'])){
-				$_SESSION['check1'] = $_SESSION['loggedInUser']['User']['id'];
-			}
-		}
-		
+		$u['User']['name'] = $this->checkPicture($u);
+			
 		$this->set('user', $u);
 		$this->set('mode', $mode);
 		$this->set('nextDay', $nextDay->format('m/d/Y'));
@@ -3167,7 +3165,7 @@ class AppController extends Controller{
 		$this->set('lastProfileLeft', $lastProfileLeft);
 		$this->set('lastProfileRight', $lastProfileRight);
 		$this->set('resetCookies', $resetCookies);
-    }
+  }
 	
 	function afterFilter(){
 		$this->loadModel('Rank');

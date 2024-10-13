@@ -21,7 +21,6 @@
 		}
 		//if($_SERVER['REMOTE_ADDR'] != '188.104.244.212') echo '<script type="text/javascript">window.location.href = "https://tsumego-hero.com/";</script>';
 		echo $this->Html->charset();
-		
 	?>
 	<title>
 		<?php
@@ -395,7 +394,7 @@
 		<a href="/users/authors">About</a><br><br><br>
 	</div>
 	<?php
-	
+
 	if(isset($_SESSION['loggedInUser']['User']['id'])){
 		$xpBonus = 0;
 		for($i=0;$i<count($achievementUpdate);$i++){

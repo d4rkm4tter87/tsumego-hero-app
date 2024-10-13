@@ -1498,6 +1498,8 @@ Joschka Zimdars';
 		$_SESSION['page'] = 'user';
 		$_SESSION['title'] = 'ADMIN STATS';
 		$this->LoadModel('TsumegoStatus');
+		$this->LoadModel('TsumegoAttempts');
+		$this->LoadModel('TsumegoRatingAttempts');
 		$this->LoadModel('Comment');
 		$this->LoadModel('User');
 		$this->LoadModel('DayRecord');
@@ -1577,13 +1579,27 @@ Joschka Zimdars';
 		for($i=0; $i<count($ca['tsumego_id']); $i++){
 			array_multisort($ca['created'], $ca['tsumego_id'], $ca['tsumego'], $ca['name'], $ca['answer'], $ca['type']);
 		}
+		if($_SESSION['loggedInUser']['User']['isAdmin']>0){
+			if(isset($this->params['url']['delete']) && isset($this->params['url']['hash'])){
+				$toDelete = $this->User->findById($this->params['url']['delete']/1111);
+				$del1 = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => $toDelete['User']['id'])));
+				$del2 = $this->TsumegoAttempts->find('all', array('conditions' => array('user_id' => $toDelete['User']['id'])));
+				$del3 = $this->TsumegoRatingAttempts->find('all', array('conditions' => array('user_id' => $toDelete['User']['id'])));
+				if(md5($toDelete['User']['name']) == $this->params['url']['hash']){
+					for($i=0; $i<count($del1); $i++)
+						$this->TsumegoStatus->delete($del1[$i]['TsumegoStatus']['id']);
+					for($i=0; $i<count($del2); $i++)
+						$this->TsumegoAttempts->delete($del2[$i]['TsumegoAttempts']['id']);
+					for($i=0; $i<count($del3); $i++)
+						$this->TsumegoRatingAttempts->delete($del3[$i]['TsumegoRatingAttempts']['id']);
+					$this->User->delete($toDelete['User']['id']);
+					echo '<pre>'; print_r('Deleted user '.$toDelete['User']['name']); echo '</pre>';
+				}
+			}
+		}
+		$requestDeletion = $this->User->find('all', array('conditions' => array('dbstorage' => 1111)));
 		
-		//echo '<pre>'; print_r($aa[count($aa)-1]['AdminActivity']['created']); echo '</pre>'; 
-		//echo '<pre>'; print_r($adminComments); echo '</pre>'; 
-		//echo '<pre>'; print_r($aa2); echo '</pre>'; 
-		//echo '<pre>';print_r($aa1);echo '</pre>';
-		//echo '<pre>';print_r($aa2);echo '</pre>';
-		
+		$this->set('requestDeletion', $requestDeletion);
 		$this->set('aa', $aa);
 		$this->set('aa1', $aa1);
 		$this->set('aa2', $aa2);
@@ -1601,19 +1617,10 @@ Joschka Zimdars';
 			$u = $this->User->findByName($this->data['User']['name']);
 			if($u){
 				if($this->validateLogin($this->data)){
-					$vs = $this->TsumegoStatus->find('first', array('order' => 'created DESC', 'conditions' => array('user_id' => $u['User']['id'])));
-					if($vs!=null) $_SESSION['lastVisit'] = $vs['TsumegoStatus']['tsumego_id'];
-					for($i=1;$i<=54;$i++){
-						if($u['User']['texture'.$i] == '1') $u['User']['texture'.$i] = 'checked';
-						$_SESSION['texture'.$i] = $u['User']['texture'.$i];
-					}
-					$_SESSION['check1'] = $u['User']['id'];
+					$this->signIn($u);
 					$this->Session->setFlash(__('Login successful.', true));
-					
 					$isLoaded = $this->TsumegoStatus->find('first', array('conditions' => array('user_id' => $u['User']['id'])));
-					
 					$_SESSION['redirect'] = 'sets';
-					
 				}else{
 					$this->Session->setFlash(__('Login incorrect.', true));
 				}
@@ -1632,17 +1639,10 @@ Joschka Zimdars';
 		$_SESSION['title'] = 'Tsumego Hero - Sign In';
 		if(!empty($this->data)){
 			$u = $this->User->findByEmail($this->data['User']['email']);
-			//$u = $this->User->find('first', array('conditions' =>  array('email' => $this->data['User']['email'])));
 			if($u){
 				if($this->validateLogin2($this->data)){
-					$vs = $this->TsumegoStatus->find('first', array('order' => 'created DESC', 'conditions' => array('user_id' => $u['User']['id'])));
-					if($vs!=null) $_SESSION['lastVisit'] = $vs['TsumegoStatus']['tsumego_id'];
-					for($i=1;$i<=54;$i++){
-						if($u['User']['texture'.$i] == '1') $u['User']['texture'.$i] = 'checked';
-						$_SESSION['texture'.$i] = $u['User']['texture'.$i];
-					}
+					$this->signIn($u);
 					$this->Session->setFlash(__('Login successful.', true));
-					
 					$isLoaded = $this->TsumegoStatus->find('first', array('conditions' => array('user_id' => $u['User']['id'])));
 					$_SESSION['redirect'] = 'sets';
 				}else{
@@ -1656,7 +1656,6 @@ Joschka Zimdars';
 	
 	public function loading(){
 	}
-	
 	
 	public function add(){
 		$_SESSION['page'] = 'user';
@@ -1676,8 +1675,7 @@ Joschka Zimdars';
 			$this->User->create();
 			if($this->User->save($userData, true)){
 				if($this->validateLogin($this->data)) $this->Session->setFlash(__('Registration successful.', true));
-                else $this->Session->setFlash(__('Login incorrect.', true));
-				//$this->redirect('/sets');
+        else $this->Session->setFlash(__('Login incorrect.', true));
 				$_SESSION['redirect'] = 'sets';
 			}
 		}
@@ -1718,7 +1716,6 @@ Joschka Zimdars';
 					if($j>=101) $xpJump = 0;
 					$sum+=$startxp;
 					$startxp+=$xpJump;
-					
 				}
 				$sum += $users[$i]['User']['xp'];
 				$users[$i]['User']['xpSum'] = $sum;
@@ -1739,7 +1736,7 @@ Joschka Zimdars';
 			if($stop<=1000 && $anz<1000){
 				array_push($UxpSum, $users[$i]['User']['xpSum']);
 				if(strlen($users[$i]['User']['name'])>20) $users[$i]['User']['name'] = substr($users[$i]['User']['name'], 0, 20);
-				array_push($Uname, $users[$i]['User']['name']);
+				array_push($Uname, $this->checkPicture($users[$i]));
 				array_push($Ulevel, $users[$i]['User']['level']);
 				array_push($Uid, $users[$i]['User']['id']);
 				array_push($Utype, $users[$i]['User']['premium']);
@@ -1787,7 +1784,9 @@ Joschka Zimdars';
 		$users = $this->User->find('all', array('limit' => 1000, 'order' => 'elo_rating_mode DESC', 'conditions' =>  array(
 			'NOT' => array('id' => array(33, 34, 35))
 		)));
-		
+		for($i=0; $i<count($users); $i++){
+			//$users[$i]['User']['name'] = $this->checkPicture($users[$i]);
+		}
 		/*
 		//delete null uts
 		$uts = $this->TsumegoStatus->find('all', array('limit' => 1000, 'conditions' =>  array('user_id' => 33)));
@@ -1830,6 +1829,7 @@ Joschka Zimdars';
 		$uaNum = array();
 		foreach ($as3 as $key => $value){
 			$u = $this->User->findById($key);
+			$u['User']['name'] = $this->checkPicture($u);
 			array_push($uName, $u['User']['name']);
 			array_push($uaNum, $value);
 			
@@ -1896,6 +1896,7 @@ Joschka Zimdars';
 		}
 		$roAll = array();
 		$roAll['user'] = array();
+		$roAll['picture'] = array();
 		$roAll['points'] = array();
 		$roAll['result'] = array();
 		
@@ -1907,6 +1908,7 @@ Joschka Zimdars';
 			}
 			if(!$alreadyIn){
 				array_push($roAll['user'], $us['User']['name']);
+				array_push($roAll['picture'], $us['User']['picture']);
 				array_push($roAll['points'], $ro[$i]['RankOverview']['points']);
 				array_push($roAll['result'], $ro[$i]['RankOverview']['status']);
 			}
@@ -2119,11 +2121,21 @@ Joschka Zimdars';
 			$hideEmail = true;
 		}
 		if(!empty($this->data)){
-			$changeUser = $user;
-			$changeUser['User']['email'] = $this->data['User']['email'];
-			$this->set('data', $changeUser['User']['email']);
-			$this->User->save($changeUser, true);
-			$user = $this->User->findById($id);
+			if(isset($this->data['User']['email'])){
+				$changeUser = $user;
+				$changeUser['User']['email'] = $this->data['User']['email'];
+				$this->set('data', $changeUser['User']['email']);
+				$this->User->save($changeUser, true);
+				$user = $this->User->findById($id);
+			}
+		}
+		if(isset($this->params['url']['undo'])){
+			if($this->params['url']['undo']/1111 == $id){
+				$user['User']['dbstorage'] = 1;
+				$_SESSION['loggedInUser']['User']['dbstorage'] = $user['User']['dbstorage'];
+				$this->User->save($user);
+				$user = $this->User->findById($id);
+			}
 		}
 		
 		$tsumegos = $this->SetConnection->find('all');
@@ -2296,6 +2308,11 @@ Joschka Zimdars';
 		$countGraph = 160+count($graph)*25;
 		$countTimeGraph = 160+count($timeGraph)*25;
 		
+		$user['User']['name'] = $this->checkPicture($user);
+
+		if(substr($_SESSION['loggedInUser']['User']['email'],0,3)=='g__' && $_SESSION['loggedInUser']['User']['external_id']!=null)
+			$user['User']['email'] = substr($_SESSION['loggedInUser']['User']['email'],3);
+
 		$this->set('ta2', $ta2);
 		$this->set('xpSum', $sumx);
 		$this->set('graph', $graph);
@@ -3579,7 +3596,6 @@ Joschka Zimdars';
 
 			if($t['Tsumego']['set_id']==$id) array_push($a, $r[$i]);
 		}
-		
 		$likes = 0;
 		$dislikes = 0;
 		
@@ -3594,12 +3610,8 @@ Joschka Zimdars';
 			$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 
 			$a[$i]['Reputation']['tsumego'] = $s['Set']['title'].' '.$t['Tsumego']['num'];
-			
 			$a[$i]['Reputation']['set_id'] = $t['Tsumego']['set_id'];
 		}
-		
-			
-		
 		$this->set('a', $a);
 		$this->set('id', $id);
 		$this->set('s', $s);
@@ -3607,39 +3619,84 @@ Joschka Zimdars';
 		$this->set('dislikes', $dislikes);
 	}
 	
-	public function i2($id=null){
-		$this->loadModel('Set');
-		$this->loadModel('Tsumego');
-		$this->loadModel('Reputation');
-		
-		$u = $this->User->findById($id);
-		$a = $this->Reputation->find('all', array('order' => 'created DESC', 'conditions' => array('user_id' => $id)));
-		
-		$likes = 0;
-		$dislikes = 0;
-		
-		for($i=0;$i<count($a);$i++){
-			if($a[$i]['Reputation']['value']==1) $likes++;
-			else $dislikes++;
-			
-			$a[$i]['Reputation']['user'] = $u['User']['name'];
-			
-			$t = $this->Tsumego->findById($a[$i]['Reputation']['tsumego_id']);
-			$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
-
-			$s = $this->Set->findById($t['Tsumego']['set_id']);
-			$a[$i]['Reputation']['tsumego'] = $s['Set']['title'].' '.$t['Tsumego']['num'];
-			
-			$a[$i]['Reputation']['set_id'] = $t['Tsumego']['set_id'];
+	public function googlesignin(){
+		$name = '';
+		$email = '';
+		$picture = '';
+		$id_token = $_POST['credential'];
+		$client_id = '842499094931-nt12l2fehajo4k7f39bb44fsjl0l4h6u.apps.googleusercontent.com';
+		$token_info = file_get_contents("https://oauth2.googleapis.com/tokeninfo?id_token=" . $id_token);
+		$token_data = json_decode($token_info, true);
+		if (isset($token_data['aud']) && $token_data['aud'] == $client_id){
+			$name = $token_data['name'];
+			$email = $token_data['email'];
+			$picture = $token_data['picture'];
+		}else{
+			echo "Invalid token";
 		}
-		
+		$externalId = 'g__'.$token_data['sub'];
+		$u = $this->User->find('first', array('conditions' => array('external_id' => $externalId)));
+		if($u==null){
+			$imageUrl = $picture;
+			$imageContent = file_get_contents($imageUrl);
 			
-		
-		$this->set('a', $a);
-		$this->set('id', $id);
-		$this->set('u', $u);
-		$this->set('likes', $likes);
-		$this->set('dislikes', $dislikes);
+			$userData = array();
+			$userData['User']['name'] = 'g__'.$name;
+			$userData['User']['email'] = 'g__'.$email;
+			$userData['User']['pw'] = 'k4y284t2w4v264z2a4t2h464h4x2m5x2t4v2';
+			$userData['User']['pw2'] = 'k4y284t2w4v264z2a4t2h464h4x2m5x2t4v2';
+			$userData['User']['external_id'] = $externalId;
+
+			if ($imageContent === FALSE) {
+				$userData['User']['picture'] = 'default.png';
+			}else{
+				$userData['User']['picture'] = $externalId.'.png';
+				file_put_contents('img/google/'.$externalId.'.png', $imageContent);
+			}
+			$this->User->create();
+			$this->User->save($userData, true);
+			$u = $this->User->find('first', array('conditions' => array('external_id' => $externalId)));
+		}
+		$this->signIn($u);
+		$_SESSION['redirect'] = 'sets';
+
+		$this->set('name', $name);
+		$this->set('email', $email);
+		$this->set('picture', $picture);
+	}
+
+	public function fbsignin($id=null){
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+				// Get the access token from the request
+				$input = json_decode(file_get_contents('php://input'), true);
+				$accessToken = $input['accessToken'];
+
+				// Your app credentials
+				$app_id = '866506025665869';
+				$app_secret = '6f7fd195f177db9fe30205fc52dba785';
+
+				// Exchange the short-lived token for a long-lived one (optional)
+				$url = "https://graph.facebook.com/oauth/access_token?"
+						. "grant_type=fb_exchange_token&"
+						. "client_id={$app_id}&"
+						. "client_secret={$app_secret}&"
+						. "fb_exchange_token={$accessToken}";
+
+				$response = file_get_contents($url);
+				$responseData = json_decode($response, true);
+
+				// Get user info from Facebook
+				$url = "https://graph.facebook.com/me?fields=id,name,email&access_token=" . $responseData['access_token'];
+				$userInfo = file_get_contents($url);
+				$userInfoData = json_decode($userInfo, true);
+
+				// Handle login logic here, such as checking if the user exists in your database
+				// and creating a session.
+
+				echo json_encode($userInfoData); // Return user info as JSON
+		} else {
+				echo json_encode(['error' => 'Invalid request']);
+		}
 	}
 	
 	public function overview1(){
@@ -3655,7 +3712,7 @@ Joschka Zimdars';
 		));
 		
 		
-		//echo '<pre>'; print_r($test); echo '</pre>'; 
+		//echo '<pre>'; print_r($test); echo '</pre>';
 		
 		$comments = $this->Comment->find('all', array(
 			'order' => 'created DESC', 
@@ -3794,6 +3851,33 @@ Joschka Zimdars';
 		$this->set('s', $s);
 		$this->set('p', $p);
 		$this->set('pl', $pl);
+	}
+
+	public function delete_account(){
+		$u = null;
+		$redirect = false;
+		$status = '';
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
+		}
+
+		if(!empty($this->data)){
+			if(isset($this->data['User']['delete'])){
+				if($u['User']['pw'] == $this->tinkerEncode($this->data['User']['delete'], 1)){
+					$u['User']['dbstorage'] = 1111;
+					$_SESSION['loggedInUser']['User']['dbstorage'] = $u['User']['dbstorage'];
+					$this->User->save($u);
+					$redirect = true;
+				}else{
+					$status = '<p style="color:#d63a49">Password incorrect.</p>';
+				}
+			}
+		}
+		$u['User']['name'] = $this->checkPicture($u);
+
+		$this->set('redirect', $redirect);
+		$this->set('status', $status);
+		$this->set('u', $u);
 	}
 	
 	public function set_score(){

@@ -3,7 +3,7 @@
 			echo '<script type="text/javascript">window.location.href = "/";</script>';
 		}
 	?>
-	<meta name="google-signin-client_id" content="AIzaSyAFJAFSm13m8FWYR5FOY1QaUptg8LN12jg.apps.googleusercontent.com">
+	<script src="https://accounts.google.com/gsi/client" async defer></script>
 	<br>
 	<div align="center">
 	Sign in with:<br><br><br>
@@ -30,6 +30,24 @@
 			<a href="/users/add">Sign Up</a><br><br>
 			Forgot password?<br>
 			<a href="/users/resetpassword">Reset</a>
+			<br><br>
+
+			<div
+				id="g_id_onload"
+				data-client_id="842499094931-nt12l2fehajo4k7f39bb44fsjl0l4h6u.apps.googleusercontent.com"
+				data-context="signin"
+				data-ux_mode="popup"
+				data-login_uri="/users/googlesignin"
+				data-auto_prompt="false"
+			></div>
+			<div
+				class="g_id_signin"
+				data-type="standard"
+				data-shape="rectangular"
+				data-theme="outline"
+				data-text="sign_in_with"
+				data-size="large"
+			></div>
 		</div>
 		<div class="right">
 		</div>
@@ -45,14 +63,11 @@
 				<?php
 			}
 		?>
-		
-		
 		var cacheLifetime = new Date();
 		cacheLifetime.setTime(cacheLifetime.getTime()+1*1*1*5*1000);
 		cacheLifetime = cacheLifetime.toUTCString()+"";
 		
 		let cache = getCookie("cache_settings");
-		
 		if(cache == 0){
 			//deleteAllCookies();
 			document.cookie = "cache_settings=1;SameSite=none;expires="+cacheLifetime+";Secure=false";
@@ -70,7 +85,6 @@
 				document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
 			}
 		}
-		
 		function check1(){
 			if(document.getElementById("dropdown-1").checked == true){
 				document.getElementById("dropdowntable").style.display = "inline-block"; 
@@ -127,6 +141,4 @@
 			for(let i=0;i<paths.length;i++)
 				document.cookie = cookie+"="+value+";SameSite=none;Secure=false;expires="+cacheLifetime+";path="+paths[i];
 		}
-		
-		
 	</script>

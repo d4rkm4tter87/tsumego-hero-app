@@ -100,6 +100,10 @@
 				
 				if($a[$i]['User']['name'] == $dayRecord) $a[$i]['User']['name'].=' *';
 				
+				if(substr($a[$i]['User']['name'],0,3)=='g__' && $a[$i]['User']['external_id']!=null){
+					$a[$i]['User']['name'] = '<img class="google-profile-image" src="/img/google/'.$a[$i]['User']['picture'].'">'.substr($a[$i]['User']['name'],3);
+				}
+
 				echo '
 					<tr style="background-color:'.$bgColor.';">
 						<td align="right" style="padding:10px;">

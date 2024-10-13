@@ -99,7 +99,7 @@
 			}elseif($deletedProblems==2){
 				echo '<font style="font-weight:800;color:#74d14c" >The progress of '.$dNum.' problems has been deleted.</font>'; 
 			}
-			echo 'If you have completed at least 75%, you can reset progress older than 1 year.<br><br>';
+			echo 'If you have completed at least 75%, you can reset progress older than 1 year.<br>';
 			?>
 		</td>
 		</tr>
@@ -332,7 +332,16 @@
 				</td>
 			</tr>
 		</table>
-		
+		<div width="100%" align="right">
+			<?php
+				if($user['User']['dbstorage'] != 1111){
+					echo '<div><a style="color:gray;" href="/users/delete_account">Request account deletion</a></div><br>';
+				}else{
+					echo '<p style="color:#d63a49;">You have requested account deletion.&nbsp;';
+					echo '<a class="new-button-default" href="/users/view/'.$user['User']['id'].'?undo='.($user['User']['id']*1111).'">Undo</a></p>';
+				}
+			?>
+		</div>
 	</div>
 	
 	<script>

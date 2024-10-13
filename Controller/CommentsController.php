@@ -1,6 +1,6 @@
 <?php
 class CommentsController extends AppController{
-    public function index(){
+  public function index(){
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Set');
@@ -124,7 +124,7 @@ class CommentsController extends AppController{
 							$s = $this->Set->findById($t['Tsumego']['set_id']);
 							$counter++;
 							$comments[$i]['Comment']['counter'] = $counter+$index;
-							$comments[$i]['Comment']['user_name'] = $u['User']['name'];
+							$comments[$i]['Comment']['user_name'] = $this->checkPicture($u);
 							$comments[$i]['Comment']['set'] = $s['Set']['title'];
 							$comments[$i]['Comment']['set2'] = $s['Set']['title2'];
 							$comments[$i]['Comment']['num'] = $scT['SetConnection']['num'];
@@ -170,7 +170,7 @@ class CommentsController extends AppController{
 					$s = $this->Set->findById($t['Tsumego']['set_id']);
 					$counter++;
 					$comments[$i]['Comment']['counter'] = $counter+$index;
-					$comments[$i]['Comment']['user_name'] = $u['User']['name'];
+					$comments[$i]['Comment']['user_name'] = $this->checkPicture($u);
 					$comments[$i]['Comment']['set'] = $s['Set']['title'];
 					$comments[$i]['Comment']['set2'] = $s['Set']['title2'];
 					$comments[$i]['Comment']['num'] = $scT['SetConnection']['num'];
@@ -250,7 +250,7 @@ class CommentsController extends AppController{
 					$s = $this->Set->findById($t['Tsumego']['set_id']);
 					$yourcounter++;
 					$yourComments[$i]['Comment']['counter'] = $yourcounter+$yourindex;
-					$yourComments[$i]['Comment']['user_name'] = $u['User']['name'];
+					$yourComments[$i]['Comment']['user_name'] = $this->checkPicture($u);
 					$yourComments[$i]['Comment']['set'] = $s['Set']['title'];
 					$yourComments[$i]['Comment']['set2'] = $s['Set']['title2'];
 					$yourComments[$i]['Comment']['num'] = $scT['SetConnection']['num'];
@@ -296,7 +296,7 @@ class CommentsController extends AppController{
 				$s = $this->Set->findById($t['Tsumego']['set_id']);
 				$counter++;
 				$yourComments[$i]['Comment']['counter'] = $counter;
-				$yourComments[$i]['Comment']['user_name'] = $u['User']['name'];
+				$yourComments[$i]['Comment']['user_name'] = $this->checkPicture($u);
 				$yourComments[$i]['Comment']['set'] = $s['Set']['title'];
 				$yourComments[$i]['Comment']['set2'] = $s['Set']['title2'];
 				$yourComments[$i]['Comment']['num'] = $scT['SetConnection']['num'];

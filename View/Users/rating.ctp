@@ -44,13 +44,18 @@
 		$place = 1;
 		for($i=0; $i<count($users); $i++){
 			if($users[$i]['User']['name']!='SaberRider' && $users[$i]['User']['name']!='test11' && $users[$i]['User']['elo_rating_mode']!=100 && $users[$i]['User']['elo_rating_mode']!=900){
-			if(strlen($users[$i]['User']['name'])>20) $users[$i]['User']['name'] = substr($users[$i]['User']['name'], 0, 20);
+			
+			if(substr($users[$i]['User']['name'],0,3)=='g__' && $users[$i]['User']['external_id']!=null){
+				$users[$i]['User']['name'] = '<img class="google-profile-image" src="/img/google/'.$users[$i]['User']['picture'].'">'.substr($users[$i]['User']['name'],3);
+			}else{
+				if(strlen($users[$i]['User']['name'])>20) $users[$i]['User']['name'] = substr($users[$i]['User']['name'], 0, 20);
+			}
+
 			$bgColor = '#dddddd';
 			$tableRowColor = 'color13';
 			$uType = '';
 			if($users[$i]['User']['premium']==1) $uType = '<img alt="Account Type" title="Account Type" src="/img/premium1.png" height="16px">';
 			else if($users[$i]['User']['premium']==2) $uType = '<img alt="Account Type" title="Account Type" src="/img/premium2.png" height="16px">';
-			
 			
 			if($users[$i]['User']['elo_rating_mode']>=2900) $td = '9d';
 			elseif($users[$i]['User']['elo_rating_mode']>=2800) $td = '8d';

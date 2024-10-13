@@ -73,7 +73,16 @@
 	<?php
 		$place = 1;
 		for($i=0; $i<count($roAll['user']); $i++){
-			if(strlen($roAll['user'][$i])>20) $roAll['user'][$i] = substr($roAll['user'][$i], 0, 20);
+			
+
+			if(substr($roAll['user'][$i],0,3)=='g__'){
+				$roAll['user'][$i] = '<img class="google-profile-image" src="/img/google/'.$roAll['picture'][$i].'">'.substr($roAll['user'][$i],3);
+			}else{
+				if(strlen($roAll['user'][$i])>20) $roAll['user'][$i] = substr($roAll['user'][$i], 0, 20);
+			}
+
+
+
 			$bgColor = '#dddddd';
 			$tableRowColor = 'timeTableColor10';
 			$uType = '';
