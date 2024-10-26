@@ -80,7 +80,7 @@ class SetsController extends AppController{
 			array_push($d2[$counter], $td);
 			$currentGroup = $d[$i]['Duplicate']['dGroup'];
 			
-			$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $td['Tsumego']['id'])));
+			$sgf = $this->Sgf->find('first', array('order' => 'version DESC', 'conditions' =>  array('tsumego_id' => $td['Tsumego']['id'])));
 			$sgfArr = $this->processSGF($sgf['Sgf']['sgf']);
 			
 			array_push($similarArr, $sgfArr[0]);
@@ -546,7 +546,8 @@ class SetsController extends AppController{
 					if(isset($utsMap[$ts[$k]['Tsumego']['id']])){
 						if($utsMap[$ts[$k]['Tsumego']['id']] == 'S' || $utsMap[$ts[$k]['Tsumego']['id']] == 'W' || $utsMap[$ts[$k]['Tsumego']['id']] == 'C'){
 							$counter++;
-							$globalSolvedCounter++;
+							if(isset($globalSolvedCounter))
+								$globalSolvedCounter++;
 						}
 					}
 				}
@@ -718,7 +719,7 @@ class SetsController extends AppController{
 		$this->set('redirect', $redirect);
 	}
 
-    public function view($id=null){
+  public function view($id=null){
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Favorite');
@@ -731,6 +732,8 @@ class SetsController extends AppController{
 		$this->LoadModel('AchievementCondition');
 		$this->LoadModel('Sgf');
 		$this->LoadModel('SetConnection');
+		$this->LoadModel('TagName');
+		$this->LoadModel('Tag');
 		$_SESSION['page'] = 'set';
 		
 		$josekiOrder = 0;
@@ -1331,14 +1334,56 @@ class SetsController extends AppController{
 		$tooltipInfo = array();
 		$tooltipBoardSize = array();
 		for($i=0; $i<count($ts); $i++){
-			$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
+			$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'version DESC', 'conditions' => array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
 			$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
 			array_push($tooltipSgfs, $tArr[0]);
 			array_push($tooltipInfo, $tArr[2]);
 			array_push($tooltipBoardSize, $tArr[3]);
 		}
 		
+		$allTags = $this->TagName->find('all');
+		$allTagsSorted = array();
+		$allTagsKeys = array();
+		for($i=0;$i<count($allTags);$i++){
+			array_push($allTagsSorted, $allTags[$i]['TagName']['name']);
+			$allTagsKeys[$allTags[$i]['TagName']['name']] = $allTags[$i];
+		}
+		sort($allTagsSorted);
+		$s2Tags = array();
+		for($i=0;$i<count($allTagsSorted);$i++)
+			array_push($s2Tags, $allTagsKeys[$allTagsSorted[$i]]);
+
+		$allTags = $s2Tags;
+
+		if($_SESSION['loggedInUser']['User']['isAdmin']>0){
+			if(isset($_COOKIE['addTag']) && $_COOKIE['addTag'] != 0){
+				if($this->params['url']['hash'] == '32bb90e8976aab5298d5da10fe66f21d'){
+					$newAddTag = explode("-", $_COOKIE['addTag']);
+					$tagSetId = $newAddTag[0];
+					$newTagName = $this->TagName->find('first', array('conditions' => array('name' => str_replace($tagSetId.'-', '', $_COOKIE['addTag']))));
+					
+					$tagSc = $this->findTsumegoSet($tagSetId);
+					
+					for($i=0; $i<count($tagSc); $i++){
+						$tagAlreadyThere = $this->Tag->find('first', array('conditions' => array(
+							'tsumego_id' => $tagSc[$i]['Tsumego']['id'], 'tag_name_id' => $newTagName['TagName']['id']
+						)));
+						if($tagAlreadyThere == null){
+							$saveTag = array();
+							$saveTag['Tag']['tag_name_id'] = $newTagName['TagName']['id'];
+							$saveTag['Tag']['tsumego_id'] = $tagSc[$i]['Tsumego']['id'];
+							$saveTag['Tag']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+							$saveTag['Tag']['approved'] = 1;
+							$this->Tag->create();
+							$this->Tag->save($saveTag);
+						}
+					}
+					$this->set('removeCookie', 'addTag');
+				}
+			}
+		}
 		
+		$this->set('allTags', $allTags);
 		$this->set('tfs', $tfs[count($tfs)-1]);
 		$this->set('ts', $ts);
 		$this->set('set', $set);
@@ -1347,20 +1392,20 @@ class SetsController extends AppController{
 		$this->set('avgTime', $avgTime);
 		$this->set('accuracy', $accuracy);
 		$this->set('scoring', $scoring);
-        $this->set('allVcActive', $allVcActive);
-        $this->set('allVcInactive', $allVcInactive);
-        $this->set('allArActive', $allArActive);
-        $this->set('allArInactive', $allArInactive);
+		$this->set('allVcActive', $allVcActive);
+		$this->set('allVcInactive', $allVcInactive);
+		$this->set('allArActive', $allArActive);
+		$this->set('allArInactive', $allArInactive);
 		$this->set('allPassActive', $allPassActive);
-        $this->set('allPassInactive', $allPassInactive);
-        $this->set('pdCounter', $pdCounter);
+		$this->set('allPassInactive', $allPassInactive);
+		$this->set('pdCounter', $pdCounter);
 		$this->set('acS', $acS);
 		$this->set('acA', $acA);
 		$this->set('achievementUpdate', $achievementUpdate);
 		$this->set('tooltipSgfs', $tooltipSgfs);
 		$this->set('tooltipInfo', $tooltipInfo);
 		$this->set('tooltipBoardSize', $tooltipBoardSize);
-    }
+  }
 	
 	public function download_archive(){
 		
@@ -1438,7 +1483,7 @@ class SetsController extends AppController{
 			
 			for($i=0; $i<count($t); $i++){
 				$t[$i]['Tsumego']['title'] = $s['Set']['title'].' '.$t[$i]['Tsumego']['num'];
-				$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $t[$i]['Tsumego']['id'])));
+				$sgf = $this->Sgf->find('first', array('order' => 'version DESC', 'conditions' =>  array('tsumego_id' => $t[$i]['Tsumego']['id'])));
 				$sgf['Sgf']['sgf'] = str_replace("\r", '', $sgf['Sgf']['sgf']);
 				//$sgf['Sgf']['sgf'] = str_replace("\n", '"+"\n"+"', $sgf['Sgf']['sgf']);
 				$t[$i]['Tsumego']['sgf'] = $sgf['Sgf']['sgf'];
@@ -1639,34 +1684,16 @@ class SetsController extends AppController{
 			$this->User->save($u);
 		}
 		
-		//echo '<pre>'; print_r($setsX); echo '</pre>';
 		$this->set('sets', $setsX);
 		$this->set('sortOrder', $sortOrder);
 		$this->set('sortColor', $sortColor);
-    }
+  }
 
 	private function findUt($id=null, $allUts=null, $map=null){
 		$currentUt = array_search($id, $map);
 		$ut = $allUts[$currentUt];
 		if($currentUt==0) if($id!=$map[0]) $ut = null;
 		return $ut;
-	}
-
-	private function getHealth($lvl = null)
-  {
-    return ($lvl / 5) + 10;
-  }
-
-	private function getXPJump($lvl = null){
-		$j = 10;
-		if($lvl>=12) $j = 25;
-		if($lvl>=20) $j = 50;
-		if($lvl>=40) $j = 100;
-		if($lvl>=70) $j = 150;
-		if($lvl==100) $j = 50000;
-		if($lvl==101) $j = 1150;
-		if($lvl>=102) $j = 0;
-		return $j;
 	}
 
 	private function getDifficultyColor($difficulty = null){

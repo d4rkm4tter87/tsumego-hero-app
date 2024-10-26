@@ -10,8 +10,8 @@
 		<br>
 		<a class="new-button buttonx-current" href="/users/highscore">level</a>
 		<a class="new-button new-buttonx" href="/users/rating">rating</a>
-		<a class="new-button new-buttonx" href="/users/highscore3">time</a>
 		<a class="new-button new-buttonx" href="/users/achievements">achievements</a>
+		<a class="new-button new-buttonx" href="/users/added_tags">tags</a>
 		<a class="new-button new-buttonx" href="/users/leaderboard">daily</a>
 		<br><br>
 		</div>
@@ -69,7 +69,7 @@
 			else if($i>399) $tableRowColor = 'color9';
 			else if($i>299) $tableRowColor = 'color10';
 			else if($i>199) $tableRowColor = 'color11';
-			else if($i>99) $tableRowColor = 'color12';
+			else if($i>99) $tableRowColor = 'color12x';
 			else $tableRowColor = 'color13';
 			echo '
 				<tr class="'.$tableRowColor.'">

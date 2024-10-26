@@ -1,7 +1,6 @@
 <?php ?>
 	<div class="homeCenter2">
 		<?php
-			echo '<p class="title6">Profile</p>';
 			if($hideEmail){
 				$user = null;
 				$solved = 0;
@@ -10,13 +9,31 @@
 				$rank = 0;
 			}
 		?>
+	<div class="user-header-container">
+		<div class="user-header1">
+			<p class="title6">Profile</p>
+			
+		</div>
+		<div class="user-header2">
+			<a href="/users/rewards" class="new-button-time">Get rewards</a>
+		</div>
+	</div>
 	<div class="userMain1">
+		
 		<div class="userTop2">
 		<table class="userTopTable1" border="0">
 		<tr>
 		<td>
+			<?php if($_SESSION['loggedInUser']['User']['premium'] == 2){ ?>
+				<div style="float:left;width:50%;"><?php echo $user['User']['name'] ?></div>
+				<div style="float:left;width:50%;"><img alt="Account Type" title="Account Type" src="/img/premium2.png" height="16px"></div>
+			<?php }else if($_SESSION['loggedInUser']['User']['premium'] == 1){ ?>
+				<div style="float:left;width:50%;"><?php echo $user['User']['name'] ?></div>
+				<div style="float:left;width:50%;"><img alt="Account Type" title="Account Type" src="/img/premium1.png" height="16px"></div>
+			<?php }else{ ?>
+				<div><?php echo $user['User']['name'] ?></div>
+			<?php }?>
 		<?php
-		echo $user['User']['name'].'<br>';	
 		if(!$hideEmail){
 			echo '<div id="msg1">'.$user['User']['email'].' <a id="show" style="color:#74d14c;">change</a></div>';
 			echo '<div id="msg2">';
@@ -985,6 +1002,19 @@
 		vertical-align:top;padding:7px;
 		text-align:left;
 		width:50%;
+	}
+	.user-header-container{
+		width:100%;
+		height:50px;
+	}
+	.user-header1{
+		width:50%;
+		float:left;
+	}
+	.user-header2{
+		width:50%;
+		float:left;
+		margin-top: 14px;
 	}
 	</style>
 	

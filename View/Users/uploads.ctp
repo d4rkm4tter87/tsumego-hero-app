@@ -51,7 +51,6 @@
 </div>
 <br>
 
-<?php //echo '<pre>'; print_r($s); echo '</pre>'; ?>
 <script>
 	<?php for($i=0; $i<count($s); $i++){ ?>
 		$("#open-<?php echo $s[$i]['Sgf']['id'] ?>").attr("href", "<?php echo '/tsumegos/open/'.$s[$i]['Sgf']['tsumego_id'].'/'.$s[$i]['Sgf']['id']; ?>");

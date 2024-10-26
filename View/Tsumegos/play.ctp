@@ -42,8 +42,8 @@
 		$t['Tsumego']['author'] = 'Stepan Trubitsin';
 	$authorx = $t['Tsumego']['author'];
 	if($authorx=='Joschka Zimdars') $authorx = 'd4rkm4tter';
-	if($authorx=='Jérôme Hubert') $authorx = 'jhubert';
-	if($authorx=='Stepan Trubitsin') $authorx = 'Stepan';
+	else if($authorx=='Jérôme Hubert') $authorx = 'jhubert';
+	else if($authorx=='Stepan Trubitsin') $authorx = 'Stepan';
 	$heroPower1 = 'hp1x';
 	$heroPower2 = 'hp2x';
 	$heroPower3 = 'hp3x';
@@ -332,12 +332,13 @@
 				echo $this->Form->create('Comment');
 				echo $this->Form->input('id', array('type' => 'hidden', 'value' => $t['Tsumego']['id']));
 				echo $this->Form->input('admin_id', array('type' => 'hidden', 'value' => $_SESSION['loggedInUser']['User']['id']));
-				echo $this->Form->input('modifyDescription', array('value' => $placeholder, 'label' => '', 'type' => 'text', 'placeholder' => 'description'));
-				echo $this->Form->input('modifyHint', array('value' => $t['Tsumego']['hint'], 'label' => '', 'type' => 'text', 'placeholder' => 'hint'));
-				if($isSandbox) $modifyDescriptionType = 'text';
+				echo $this->Form->input('modifyDescription', array('value' => $placeholder, 'label' => '', 'type' => 'text', 'placeholder' => 'Description'));
+				echo $this->Form->input('modifyHint', array('value' => $t['Tsumego']['hint'], 'label' => '', 'type' => 'text', 'placeholder' => 'Hint'));
+				if(true) $modifyDescriptionType = 'text';
 				else $modifyDescriptionType = 'hidden';
-				echo $this->Form->input('modifyElo', array('value' => $t['Tsumego']['elo_rating_mode'], 'label' => '', 'type' => $modifyDescriptionType, 'placeholder' => 'rating'));
-				echo $this->Form->input('modifyAuthor', array('value' => $t['Tsumego']['author'], 'label' => '', 'type' => $modifyDescriptionType, 'placeholder' => 'author'));
+				echo $this->Form->input('modifyElo', array('value' => $t['Tsumego']['elo_rating_mode'], 'label' => '', 'type' => $modifyDescriptionType, 'placeholder' => 'Rating'));
+				echo $this->Form->input('modifyAuthor', array('value' => $t['Tsumego']['author'], 'label' => '', 'type' => $modifyDescriptionType, 'placeholder' => 'Author'));
+				echo $this->Form->input('deleteTag', array('label' => '', 'type' => 'text', 'placeholder' => 'Delete Tag'));
 				if($isSandbox)
 					echo $this->Form->input('deleteProblem', array('value' => '', 'label' => '', 'type' => 'text', 'placeholder' => 'delete'));
 				echo $this->Form->end('Submit');
@@ -351,7 +352,7 @@
 	</td>
 	<td align="center" width="29%">
 		<?php
-			if($mode==1){//not mode 3
+			if($mode==1){
 				if($user['User']['level']>=20 && $sprintEnabled==1){
 					echo '
 						<a href="#"><img id="sprint" title="Sprint: Double XP for 2 minutes." alt="Sprint" src="/img/hp1.png"
@@ -402,6 +403,12 @@
 						<a href="#"><img id="refinement" title="Refinement (Level 100 or Premium): Gives you a chance to solve a golden tsumego. If you fail, it disappears." src="/img/'.$heroPower4.'.png"
 						style="cursor: context-menu;" alt="Refinement"></a>
 					';
+				}
+				if($hasRevelation){
+					echo '
+							<a href="#"><img id="revelation" title="Revelation: Solves a problem, but you don\'t get any reward." src="/img/hp6.png"
+							onmouseover="revelationHover()" onmouseout="revelationNoHover()" onclick="revelation(); return false;"></a>
+					';	
 				}
 				if($user['User']['premium']>0 || $user['User']['level']>=50){
 					if($potionActive){
@@ -482,6 +489,7 @@
 	<?php } ?>
 	<?php if($t['Tsumego']['set_id']==208 || $t['Tsumego']['set_id']==210 || ($tv!=null&&$tv['TsumegoVariant']['type']=='multiple_choice')){ ?>
 	<div align="center">
+	<br>
 		<a href="/tsumegos/play/<?php echo $t['Tsumego']['id']; ?>" title="reset problem" id="besogo-next-button">Reset</a>
 		<br><br>
 	</div>
@@ -503,7 +511,18 @@
 		$naviAdjust1 = 25;
 	}
 	?>
-	
+	<div class="tag-container" align="center">
+		<div class="tag-list"></div>
+		<div class="add-tag-list-button"><a class="add-tag-list-anchor" id="open-add-tag-menu">
+		<?php if($isAllowedToContribute){ ?>
+		<?php if($firstRanks==0){ ?>
+			Add tag
+		<?php } ?>
+		<?php } ?>
+		</a></div>
+		<div class="add-tag-list-popular"></div>
+		<div class="add-tag-list"></div>
+	</div>
 	<?php if($firstRanks==0){ ?>
 	<div class="tsumegoNavi1">
 		<div class="tsumegoNavi2">
@@ -536,10 +555,27 @@
 	
 	if(isset($_SESSION['loggedInUser'])){
 		if($firstRanks==0){
+			$makeProposal = '';
+			$proposalSentColor = '';
+			if($_SESSION['loggedInUser']['User']['isAdmin'] > 0)
+				$makeProposal = 'Open';
+			else{
+				if(!$hasSgfProposal){
+					if($isAllowedToContribute)
+						$makeProposal = 'Make Proposal';
+				}else{
+					$makeProposal = 'Proposal sent';
+					$proposalSentColor = 'color:#717171;';
+				}
+			}
+				
 			$getTitle = str_replace('&','and',$set['Set']['title']);
 			$getTitle .= ' '.$t['Tsumego']['num'];
+
+			echo '<a id="showx5" style="margin-right:20px;'.$proposalSentColor.'" class="selectable-text">'.$makeProposal.'</a>';
+			
 			echo '<a id="showx3" style="margin-right:20px;" class="selectable-text">Download SGF</a>';
-			echo '<a id="showx7x" style="margin-right:20px;" class="selectable-text">Find similar problems</a>';
+			echo '<a id="showx7x" style="margin-right:20px;" class="selectable-text">Find Similar Problems</a>';
 			
 			echo '<br><br>';
 			if(isset($_SESSION['loggedInUser']['User']['id'])){
@@ -563,7 +599,6 @@
 					echo '<a id="showx99" style="margin-right:20px;" class="selectable-text">Admin-Request Solution</a>';
 					echo '<a id="showx4" style="margin-right:20px;" class="selectable-text">Admin-Download</a>';
 					echo '<a id="show4" style="margin-right:20px;" class="selectable-text">Admin-Upload<img id="greyArrow4" src="/img/greyArrow1.png"></a>';
-					echo '<a id="showx5" style="margin-right:20px;" class="selectable-text">Open</a>';
 					echo '<a id="showx6" style="margin-right:20px;" class="selectable-text '.$adHighlight.'">History</a>';
 					echo '<a id="showx8" style="margin-right:20px;" class="selectable-text">Rating</a>';
 					echo '<a id="show5" class="selectable-text">Settings<img id="greyArrow5" src="/img/greyArrow1.png"></a>';
@@ -1130,6 +1165,7 @@
 	var intuitionEnabled = true;
 	var rejuvenationEnabled = true;
 	var refinementEnabled = true;
+	var revelationEnabled = true;
 	var multipleChoiceSelected = false;
 	var safetyLock = false;
 	var msg2selected = false;
@@ -1217,10 +1253,9 @@
 	let passEnabled = <?php echo $t['Tsumego']['pass']; ?>+"";
 	let besogoRotation = -1;
 	
-	
+
 	
 	<?php 
-	
 	if($tv!=null){
 	if($tv['TsumegoVariant']['type']=='multiple_choice' && $tv['TsumegoVariant']['explanation']!=""){
 		echo 'mText = "'.$tv['TsumegoVariant']['explanation'].'";';
@@ -1377,6 +1412,7 @@
 		e.preventDefault();
 		$(".modify-description-panel").toggle(250);
 	});
+
 	<?php if($tv!=null&&$tv['TsumegoVariant']['type']=='score_estimating'){ ?>
 		$("#submitScoreEstimatingSE").click(function(e){
 			e.preventDefault();
@@ -1518,8 +1554,9 @@
 		';
 	}
 
-	if($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2' || $t['Tsumego']['status']=='setW2') echo 'var showCommentSpace = true;';
-	else echo 'var showCommentSpace = false;';
+	if($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2' || $t['Tsumego']['status']=='setW2'){
+		echo 'var showCommentSpace = true;';
+	}else echo 'var showCommentSpace = false;';
 	if($_SESSION['loggedInUser']['User']['isAdmin']>0){
 		echo 'var showCommentSpace = true;';
 		echo '$("#show5").css("display", "inline-block");';
@@ -1590,6 +1627,9 @@
 
 	$(document).ready(function(){
 		<?php
+		if($t['Tsumego']['set_id']==210){ 
+			echo '$("#author-notice").hide();';
+		}
 			if($ui==1) echo 'document.cookie = "ui=1;path=/tsumegos/play;SameSite=none;Secure=false";';
 			elseif($ui==2) echo 'document.cookie = "ui=2;path=/tsumegos/play;SameSite=none;Secure=false";';
 
@@ -1657,9 +1697,157 @@
 			$reviewEnabled = true;
 			echo 'reviewEnabled = true;';
 		}
-
 		?>
-		
+	let tags = [];
+	let unapprovedTags = [];
+	let tagsGivesHint = [];
+	let idTags = [];
+	let allTags = [];
+	let popularTags = [];
+	let newTag = null;
+	<?php
+		for($i=0;$i<count($tags);$i++){
+			echo 'tags.push("'.$tags[$i]['Tag']['name'].'");';
+			echo 'unapprovedTags.push("'.$tags[$i]['Tag']['approved'].'");';
+			echo 'tagsGivesHint.push("'.$tags[$i]['Tag']['hint'].'");';
+			echo 'idTags.push("'.$tags[$i]['Tag']['tag_name_id'].'");';
+		}
+		for($i=0;$i<count($allTags);$i++)
+			echo 'allTags.push("'.$allTags[$i]['TagName']['name'].'");';
+		for($i=0;$i<count($popularTags);$i++)
+			echo 'popularTags.push("'.$popularTags[$i].'");';
+	?>
+	<?php if($firstRanks==0){ ?>
+	drawTags();
+	<?php } ?>
+	function drawTags(){
+		if(tags.length>0) $(".tag-list").append("Tags: ");
+		let foundNewTag = false;
+		for(let i=0;i<tags.length;i++){
+			let isNewTag = '';
+			if(tags[i]===newTag){
+				isNewTag = 'is-new-tag';
+				foundNewTag = true;
+			}else if(unapprovedTags[i]==0){
+				isNewTag = 'is-new-tag';
+			}
+			if(tagsGivesHint[i]==1){
+				isNewTag = 'tag-gives-hint '+isNewTag;
+			}
+			let tagLink = 'href="/tag_names/view/'+idTags[i]+'"';
+			let tagLinkId = 'id="tag-'+tags[i].replaceAll(' ', '-')+'"';
+			if(typeof idTags[i] === "undefined"){
+				tagLink = '';
+				tagLinkId = '';
+			}
+			$(".tag-list").append('<a '+tagLink+' class="'+isNewTag+'" '+tagLinkId+'>'+tags[i]+'</a>');	
+			if(i<tags.length-1){
+				if(tagsGivesHint[i]==1){
+					$(".tag-list").append('<p class="tag-gives-hint">, </p>');
+				}else{
+					if(!isLastComma(i, tagsGivesHint, tags))
+						$(".tag-list").append('<p class="tag-comma">, </p>');
+					else
+						$(".tag-list").append('<p class="tag-gives-hint">, </p>');
+				}
+			}
+		}
+		if(foundNewTag){
+			$(".tag-list").append(" ");
+			$(".tag-list").append('<button id="undo-tags-button">x</button>');
+			$("#undo-tags-button").show();
+		}
+
+		$(".add-tag-list-popular").append("Add tag: ");
+		for(let i=0;i<popularTags.length;i++){
+			$(".add-tag-list-popular").append('<a class="add-tag-list-anchor" id="tag-'
+			+popularTags[i].replaceAll(' ', '-')+'">'
+			+popularTags[i]+'</a>');	
+			if(i<popularTags.length-1)
+				$(".add-tag-list-popular").append(', ');
+		}
+		$(".add-tag-list-popular").append(' <a class="add-tag-list-anchor" id="open-more-tags">[more]</a>');
+
+		$(".add-tag-list").append("Add tag: ");
+		for(let i=0;i<allTags.length;i++){
+			$(".add-tag-list").append('<a class="add-tag-list-anchor" id="tag-'
+			+allTags[i].replaceAll(' ', '-')+'">'
+			+allTags[i]+'</a>');	
+			if(i<allTags.length-1)
+				$(".add-tag-list").append(', ');
+		}
+		$(".add-tag-list").append(' <a class="add-tag-list-anchor" href="/tag_names/add">[Create new tag]</a>');
+		<?php 
+			if($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2' || $t['Tsumego']['status']=='setW2')
+				echo '$(".tag-gives-hint").css("display", "inline");';
+		?>
+	}
+
+	function isLastComma(index, hints, tags){
+		if(index >= hints.length-1){
+			if(newTag!=null)
+				return false;
+			else
+				return true;
+		}
+		for(let i=index+1;i<hints.length;i++){
+			if(hints[i]==0)
+				return false;
+		}
+		return true;
+	}
+
+	for(let i=0;i<allTags.length;i++){
+		let currentIdValue = "#tag-"+allTags[i].replaceAll(' ', '-');
+		$('.tag-container').on('click', currentIdValue, function(e) {
+			e.preventDefault();
+			setCookie("addTag", "<?php echo $t['Tsumego']['id']; ?>-"+allTags[i]);
+			newTag = $(currentIdValue).text();
+			let newAllTags = [];
+			for(let i=0;i<allTags.length;i++){
+				if(allTags[i] !== $(currentIdValue).text())
+					newAllTags.push(allTags[i]);
+			}	
+			allTags = newAllTags;
+			tags.push($(currentIdValue).text());
+			$(".tag-list").html("");
+			$(".add-tag-list").html("");
+			$(".add-tag-list-popular").html("");
+			drawTags();
+			$(".add-tag-list").hide();
+			$(".add-tag-list-popular").hide();
+		});
+	}
+	$('.tag-container').on('click', '#undo-tags-button', function(){
+		setCookie("addTag", 0);
+		$(".tag-list").html("");
+		$(".add-tag-list").html("");
+		$(".add-tag-list-popular").html("");
+		$(".add-tag-list-popular").show();
+		$(".add-tag-list").hide();
+		tags = [];
+		allTags = [];
+		newTag = null;
+		<?php
+			for($i=0;$i<count($tags);$i++)
+				echo 'tags.push("'.$tags[$i]['Tag']['name'].'");';
+			for($i=0;$i<count($allTags);$i++)
+				echo 'allTags.push("'.$allTags[$i]['TagName']['name'].'");';
+		?>
+		drawTags();
+	});
+
+	$('.tag-container').on('click', "#open-add-tag-menu", function(e){
+		$("#open-add-tag-menu").hide();
+		$(".add-tag-list").hide();
+		$(".add-tag-list-popular").show();
+	});
+
+	$('.tag-container').on('click', "#open-more-tags", function(e){
+		$("#open-add-tag-menu").hide();
+		$(".add-tag-list").show();
+		$(".add-tag-list-popular").hide();
+	});
 		var now = new Date().getTime();
 		var distance = countDownDate - now;
 		var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -2023,9 +2211,10 @@
 		enableDownloads = true;
 		$("#showx3").css("display", "inline-block");
 		$("#showx7x").css("display", "inline-block");
-		<?php if($_SESSION['loggedInUser']['User']['isAdmin']==1){ ?>
+		$("#showx5").css("display", "inline-block");
+		$("#showx5").attr("href", "<?php echo '/tsumegos/open/'.$t['Tsumego']['id'].'/'.$sgf['Sgf']['id']; ?>");
+		<?php if($_SESSION['loggedInUser']['User']['isAdmin']>0){ ?>
 		<?php if($t['Tsumego']['duplicate']==0 || $t['Tsumego']['duplicate']==-1){ ?>
-			$("#showx5").attr("href", "<?php echo '/tsumegos/open/'.$t['Tsumego']['id'].'/'.$sgf['Sgf']['id']; ?>");
 			$("#showx6").attr("href", "<?php echo '/sgfs/view/'.($t['Tsumego']['id']*1337); ?>");
 		<?php }else{
 			$duplicateOther = array();
@@ -2046,12 +2235,10 @@
 					$duplicateParamsUrl .= '-';
 			}
 			?>
-			$("#showx5").attr("href", "<?php echo '/tsumegos/open/'.$t['Tsumego']['id'].'/'.$sgf['Sgf']['id']; ?>");
 			$("#showx6").attr("href", "<?php echo '/sgfs/view/'.($t['Tsumego']['id']*1337); ?>");
 		<?php } ?>
 		$("#showx8").attr("href", "<?php echo '/users/tsumego_rating/'.$t['Tsumego']['id']; ?>");
-		$("#showx4").css("display", "inline-block");		
-		$("#showx5").css("display", "inline-block");		
+		$("#showx4").css("display", "inline-block");
 		$("#show4").css("display", "inline-block");
 		$("#show5").css("display", "inline-block");
 		$("#showx6").css("display", "inline-block");
@@ -2281,7 +2468,6 @@
 					}
 				}
 			}, 250);
-
 			sprintEnabled = false;
 		}
 	}
@@ -2337,6 +2523,30 @@
 			<?php echo 'window.location.href = "/tsumegos/play/'.$g['Tsumego']['id'].'";'; ?>
 		}
 		refinementEnabled = false;
+	}
+
+	function revelation(){
+		if(revelationEnabled){
+			<?php if($t['Tsumego']['status']!='setS2' && $t['Tsumego']['status']!='setC2'){ ?>
+				document.getElementById("status").style.color = "<?php echo $playGreenColor; ?>";
+				document.getElementById("status").innerHTML = "<h2>Correct!</h2>";
+				if(light==true)
+					$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(67, 255, 40, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
+				else
+					$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(67, 255, 40, 0.7), 0 6px 20px 0 rgba(80, 255, 0, 0.2)");
+				besogo.editor.setReviewEnabled(true);
+				besogo.editor.setControlButtonLock(false);
+				$("#besogo-review-button-inactive").attr("id","besogo-review-button");
+				$("#commentSpace").show();
+				document.getElementById("currentElement").style.backgroundColor = "<?php echo $playGreenColor ?>";
+				displaySettings();
+				setCookie("noScore", "<?php echo $score1; ?>");
+				setCookie("noPreId", "<?php echo $t['Tsumego']['id']; ?>");
+			<?php } ?>
+			document.getElementById("revelation").src = "/img/hp6x.png";
+			document.getElementById("revelation").style = "cursor: context-menu;";
+			revelationEnabled = false;
+		}
 	}
 
 	if(document.querySelector("input[name=favCheckbox]")){
@@ -2407,6 +2617,12 @@
 	}
 	function refinementNoHover(){
 		if(refinementEnabled) document.getElementById("refinement").src = "/img/hp4.png";
+	}
+	function revelationHover(){
+		if(revelationEnabled) document.getElementById("revelation").src = '/img/hp6h.png';
+	}
+	function revelationNoHover(){
+		if(revelationEnabled) document.getElementById("revelation").src = "/img/hp6.png";
 	}
 	function thumbsUpHover(){
 		if(!thumbsUpSelected && !thumbsUpSelected2) document.getElementById("thumbs-up").src = '/img/thumbs-up.png';
@@ -2481,7 +2697,6 @@
 					echo 'player = JGO.'.$playerColor[$whoPlays2].';';
 				}
 			?>
-			
 			opponent = (player == JGO.BLACK) ? JGO.WHITE : JGO.BLACK;
 			ko = false, lastMove = false;
 			lastHover = false, lastX = -1, lastY = -1;
@@ -2584,6 +2799,7 @@
 	function displayResult(result){
 		setCookie("av", <?php echo $activityValue[0]; ?>);
 		if(result=='S'){
+			$(".tag-gives-hint").css("display", "inline");
 			elo2 = <?php echo $user['User']['elo_rating_mode']; ?>+eloScore;
 			let ulvl;
 			if(mode!=2){//mode 1 and 3 correct
@@ -2595,17 +2811,17 @@
 					$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(67, 255, 40, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.2)");
 				else
 					$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(67, 255, 40, 0.7), 0 6px 20px 0 rgba(80, 255, 0, 0.2)");
-				if(set159){document.getElementById("theComment").style.cssText = "visibility:visible;color:green;";
-				document.getElementById("theComment").innerHTML = "xxx";}
+				if(set159){
+					document.getElementById("theComment").style.cssText = "visibility:visible;color:green;";
+					document.getElementById("theComment").innerHTML = "xxx";
+				}
 				$("#commentSpace").show();
 				if(mode==3){
 					document.cookie = "rank=<?php echo $mode3ScoreArray[0]; ?>";
 					secondsy = seconds*10*<?php echo $t['Tsumego']['id']; ?>;
 					document.cookie = "seconds="+secondsy+";path=/tsumegos/play;SameSite=none;Secure=false";
 					timeModeEnabled = false;
-					//document.cookie = "score=<?php echo $score1; ?>";
 					setCookie("score", "<?php echo $score1; ?>");
-					//document.cookie = "preId=<?php echo $t['Tsumego']['id']; ?>";
 					setCookie("preId", "<?php echo $t['Tsumego']['id']; ?>");
 					setCookie("mode", mode);
 					$("#time-mode-countdown").css("color","<?php echo $playGreenColor; ?>");
@@ -2629,7 +2845,6 @@
 						x2 = "<?php echo $score1; ?>";
 						x3 = 1;
 					}
-					//updateCookie("score=",x2);
 					setCookie("score", x2);
 					setCookie("mode", mode);
 					if(goldenTsumego)
@@ -2971,9 +3186,7 @@
     options.reviewMode = false;
     options.reviewEnabled = <?php echo $reviewEnabled ? 'true' : 'false'; ?>;
 	<?php
-		if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['id']==72){
-			echo 'options.reviewEnabled = true;';
-		}}
+		//if(isset($_SESSION['loggedInUser'])){ if($_SESSION['loggedInUser']['User']['id']==72){ echo 'options.reviewEnabled = true;'; }}
 		if($requestSolution)
 			echo 'options.reviewEnabled = true;';
 	?>

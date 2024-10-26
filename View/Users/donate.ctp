@@ -13,7 +13,7 @@
 	</div>
 	<div id="login-box2" class="users form">
 		<div class="left2 signin">
-			<u><b>10,00 € Tsumego Hero Premium (lifetime)</b></u><br><br>
+			<u><b>20,00 € Tsumego Hero Premium (lifetime)</b></u><br><br>
 		
 			Thank you for considering a donation! If you support Tsumego Hero, the following rewards await you:<br>
 			<br>

@@ -63,7 +63,7 @@
 				echo '<li class="set'.$ts[$i]['Tsumego']['status'].'1">
 					<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$ts[$i]['Tsumego']['id'].$duplicateLink.$fav.'">
 					'.$num.$num2.$num3.'<span><div id="tooltipSvg'.$i.'"></div></span></a>
-					</li>';
+				</li>';
 			}
 		}
 		
@@ -171,8 +171,7 @@
 									$solvedColor = '#3ecf78';
 								}
 							}
-							echo '<b>'.$set['Set']['anz'].' Problems<br>'; 
-							
+							echo '<b>'.$set['Set']['anz'].' Problems<br>';
 						?>
 						</div>
 						</td>
@@ -183,7 +182,6 @@
 							<?php 
 							echo '<b>'.$set['Set']['difficultyRank'].'</b>';
 							//echo '<img src="/img/stars'. $set['Set']['difficulty'].'.png" alt="Tsumego difficulty: '. $set['Set']['difficulty'].'" title="Tsumego difficulty: '. $set['Set']['difficulty'].'">'; 
-							
 							?>
 						</div>
 						</td>
@@ -381,6 +379,12 @@
 								<br>
 								<input value="Submit" type="submit"/>
 							</form>
+							<br>
+							<div class="tag-container" align="left">
+								<div class="tag-list"></div>
+								<div class="add-tag-list-button"><a class="add-tag-list-anchor" id="open-add-tag-menu" >Add tag</a></div>
+								<div class="add-tag-list"></div>
+							</div>
 						</div>
 						<br><br>
 					';
@@ -578,15 +582,103 @@
 			$(".setViewTime").css("border", "1px solid #b34717");
 		}
 	
-		/*var tooltipSpan = document.getElementById('tooltip-span');
+	<?php if($_SESSION['loggedInUser']['User']['isAdmin']>=1){ ?>
+		
+	let tags = [];
+	let unapprovedTags = [];
+	let idTags = [];
+	let allTags = [];
+	let newTag = null;
+	<?php
+		for($i=0;$i<count($allTags);$i++)
+			echo 'allTags.push("'.$allTags[$i]['TagName']['name'].'");';
+	?>
+	drawTags();
 
-		window.onmousemove = function (e) {
-			var x = e.clientX,
-				y = e.clientY;
-			tooltipSpan.style.top = (y + 20) + 'px';
-			tooltipSpan.style.left = (x + 20) + 'px';
-		};
-		*/
+	function drawTags(){
+		if(tags.length>0) $(".tag-list").append("Tags: ");
+		let foundNewTag = false;
+		for(let i=0;i<tags.length;i++){
+			let isNewTag = '';
+			if(tags[i]===newTag){
+				isNewTag = 'class="is-new-tag"';
+				foundNewTag = true;
+			}
+			if(unapprovedTags[i]==0){
+				isNewTag = 'class="is-new-tag"';
+			}
+			let tagLink = 'href="/tag_names/view/'+idTags[i]+'"';
+			let tagLinkId = 'id="tag-'+tags[i].replaceAll(' ', '-')+'"';
+			if(typeof idTags[i] === "undefined"){
+				tagLink = '';
+				tagLinkId = '';
+			}
+			$(".tag-list").append('<a '+tagLink+' '+isNewTag+' '+tagLinkId+'>'+tags[i]+'</a>');	
+			if(i<tags.length-1)
+				$(".tag-list").append(', ');
+		}
+		if(foundNewTag){
+			$(".tag-list").append(" ");
+			$(".tag-list").append('<button id="undo-tags-button">Undo</button>');
+			$(".tag-list").append(' <a class="new-button-default" href="/sets/view/<?php echo $set['Set']['id'] ?>?hash=32bb90e8976aab5298d5da10fe66f21d">Submit</a>');
+			$("#undo-tags-button").show();
+		}
+
+		$(".add-tag-list").append("Add tag to ALL problems in this collection: ");
+		for(let i=0;i<allTags.length;i++){
+			$(".add-tag-list").append('<a class="add-tag-list-anchor" id="tag-'
+			+allTags[i].replaceAll(' ', '-')+'">'
+			+allTags[i]+'</a>');	
+			if(i<allTags.length-1)
+				$(".add-tag-list").append(', ');
+		}
+		$(".add-tag-list").append(' <a class="add-tag-list-anchor" href="/tag_names/add">[Create new tag]</a>');
+	}
+
+	for(let i=0;i<allTags.length;i++){
+		let currentIdValue = "#tag-"+allTags[i].replaceAll(' ', '-');
+		$('.tag-container').on('click', currentIdValue, function(e) {
+			e.preventDefault();
+			setCookie("addTag", "<?php echo $set['Set']['id']; ?>-"+allTags[i]);
+			newTag = $(currentIdValue).text();
+			let newAllTags = [];
+			for(let i=0;i<allTags.length;i++){
+				if(allTags[i] !== $(currentIdValue).text())
+					newAllTags.push(allTags[i]);
+			}	
+			allTags = newAllTags;
+			tags.push($(currentIdValue).text());
+			$(".tag-list").html("");
+			$(".add-tag-list").html("");
+			drawTags();
+			$(".add-tag-list").hide();
+		});
+	}
+
+	$('.tag-container').on('click', '#undo-tags-button', function(){
+		setCookie("addTag", 0);
+		$(".tag-list").html("");
+		$(".add-tag-list").html("");
+		$(".add-tag-list").show();
+		tags = [];
+		allTags = [];
+		newTag = null;
+		<?php
+			for($i=0;$i<count($tags);$i++)
+				echo 'tags.push("'.$tags[$i]['Tag']['name'].'");';
+			for($i=0;$i<count($allTags);$i++)
+				echo 'allTags.push("'.$allTags[$i]['TagName']['name'].'");';
+		?>
+		drawTags();
+	});
+
+	$('.tag-container').on('click', "#open-add-tag-menu", function(e){
+		$("#open-add-tag-menu").hide();
+		$(".add-tag-list").show();
+	});
+
+	<?php } ?> 
+
 		let tooltipSgfs = [];
 		<?php
 			if($refreshView) echo 'window.location.href = "/sets/view/'.$set['Set']['id'].'";';

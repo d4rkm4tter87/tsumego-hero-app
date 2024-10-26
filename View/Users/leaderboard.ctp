@@ -1,6 +1,4 @@
-
 	<div align="center" class="highscore">
-	
 	<table border="0" width="100%">
 		<tr>
 			<td width="23%" valign="top">
@@ -11,8 +9,8 @@
 				<br>
 				<a class="new-button new-buttonx" href="/users/highscore">level</a>
 				<a class="new-button new-buttonx" href="/users/rating">rating</a>
-				<a class="new-button new-buttonx" href="/users/highscore3">time</a>
 				<a class="new-button new-buttonx" href="/users/achievements">achievements</a>
+				<a class="new-button new-buttonx" href="/users/added_tags">tags</a>
 				<a class="new-button buttonx-current" href="/users/leaderboard">daily</a>
 				<br><br>
 				</div>
@@ -40,10 +38,7 @@
 			</td>
 		</tr>
 	</table>
-	
-	
-	<?php 
-
+	<?php
 	$d1 = date(' d, Y');
 	$d1day = date('d. ');
 	$d1year = date('Y');
@@ -51,18 +46,13 @@
 	$d2 = date('Y-m-d H:i:s');
 	$month = date("F", strtotime(date('Y-m-d')));
 	$d1 = $d1day.$month.' '.$d1year;
-
 	echo $d1;
-	//echo $dayRecord['DayRecord']['id'];
 	?>
-	
 	<br><br>
 	<table class="dailyHighscoreTable">
 	<?php
-		//echo '<pre>';print_r($a);echo '</pre>';
-		
 		for($i=0; $i<=count($a); $i++){
-			if($a[$i]['User']['reuse3']>0){
+			if($a[$i]['reuse3']>0){
 				$bgColor = '#fff';
 				if($i==0) $bgColor = '#ffec85';
 				if($i==1) $bgColor = '#939393';
@@ -98,10 +88,10 @@
 				if($i>=40) $bgColor = '#d3f9c2';
 				if($i>=50) $bgColor = '#e8f9e0';
 				
-				if($a[$i]['User']['name'] == $dayRecord) $a[$i]['User']['name'].=' *';
+				if($a[$i]['name'] == $dayRecord) $a[$i]['name'].=' *';
 				
-				if(substr($a[$i]['User']['name'],0,3)=='g__' && $a[$i]['User']['external_id']!=null){
-					$a[$i]['User']['name'] = '<img class="google-profile-image" src="/img/google/'.$a[$i]['User']['picture'].'">'.substr($a[$i]['User']['name'],3);
+				if(substr($a[$i]['name'],0,3)=='g__' && $a[$i]['external_id']!=null){
+					$a[$i]['name'] = '<img class="google-profile-image" src="/img/google/'.$a[$i]['picture'].'">'.substr($a[$i]['name'],3);
 				}
 
 				echo '
@@ -110,13 +100,13 @@
 							<b>'.($i+1).'</b>
 						</td>
 						<td style="padding:10px;" width="200px">
-							<b>'.$a[$i]['User']['name'].'</b>
+							<b>'.$a[$i]['name'].'</b>
 						</td>
 						<td align="right" style="padding:10px;font-weight:400;">
-							'.$a[$i]['User']['reuse2'].' solved
+							'.$a[$i]['reuse2'].' solved
 						</td>
 						<td align="right" style="padding:10px;">
-							<b>'.$a[$i]['User']['reuse3'].' XP</b>
+							<b>'.$a[$i]['reuse3'].' XP</b>
 						</td>
 					</tr>
 				';
@@ -125,8 +115,6 @@
 	?>
 	</table>
 	<br><br>
-		
-	
 	</div>
 	<div align="center">
 	<div class="accessList" style="font-weight:400;">
@@ -138,7 +126,6 @@
 		}
 	?>
 	<br><br>
-	
 	</div>
 	</div>
 		<script>

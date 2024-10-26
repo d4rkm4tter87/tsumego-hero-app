@@ -59,8 +59,6 @@ class RanksController extends AppController {
 			}
 			$rs = $this->RankSetting->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
 		}
-
-		
 		if(isset($this->data['Settings'])){
 			if(count($this->data['Settings']>=41)){
 				$rds0 = $this->RankSetting->find('all', array('conditions' => array(
@@ -106,16 +104,34 @@ class RanksController extends AppController {
 					}
 				}
 				if(isset($settingsSingle[0]) && $settingsSingle[0]['RankSetting']['status']==1){
-					$tx = $this->findTsumegoSet($sets[$i]['Set']['id']);	
-					for($j=0;$j<count($tx);$j++){
-						array_push($tsumegos, $tx[$j]);
-					}
 					array_push($settings['checked'], 'checked');
 				}else{
 					array_push($settings['checked'], '');
 				}
 			}
 		}
+
+		$rx = array();
+		array_push($rx, '15k');
+		array_push($rx, '14k');
+		array_push($rx, '13k');
+		array_push($rx, '12k');
+		array_push($rx, '11k');
+		array_push($rx, '10k');
+		array_push($rx, '9k');
+		array_push($rx, '8k');
+		array_push($rx, '7k');
+		array_push($rx, '6k');
+		array_push($rx, '5k');
+		array_push($rx, '4k');
+		array_push($rx, '3k');
+		array_push($rx, '2k');
+		array_push($rx, '1k');
+		array_push($rx, '1d');
+		array_push($rx, '2d');
+		array_push($rx, '3d');
+		array_push($rx, '4d');
+		array_push($rx, '5d');
 		
 		$modes = array();
 		$modes[0] = array();
@@ -160,102 +176,6 @@ class RanksController extends AppController {
 				}
 			}
 		}
-		$points = array();
-		$points[0] = array();
-		$points[1] = array();
-		$points[2] = array();
-		
-		for($i=0;$i<3;$i++){
-			for($j=0;$j<count($modes[$i]);$j++){
-				$points[$i][$j] = 'x';
-			}
-		}
-		
-		for($i=0;$i<3;$i++){
-			for($j=0;$j<count($points[$i]);$j++){
-				$rox = $this->RankOverview->find('all', array('conditions' =>  array(
-					'user_id' => $_SESSION['loggedInUser']['User']['id'], 
-					'rank' => $modes[$i][$j],
-					'mode' => $i
-				)));
-				$highest = 0;
-				for($k=0;$k<count($rox);$k++){
-					if($rox[$k]['RankOverview']['points'] > $highest){
-						$highest = $rox[$k]['RankOverview']['points'];
-						$points[$i][$j] = $rox[$k]['RankOverview']['points'].'/'.$rox[$k]['RankOverview']['status'];
-					}
-				}
-			}
-		}
-		$rx = array();
-		array_push($rx, '15k');
-		array_push($rx, '14k');
-		array_push($rx, '13k');
-		array_push($rx, '12k');
-		array_push($rx, '11k');
-		array_push($rx, '10k');
-		array_push($rx, '9k');
-		array_push($rx, '8k');
-		array_push($rx, '7k');
-		array_push($rx, '6k');
-		array_push($rx, '5k');
-		array_push($rx, '4k');
-		array_push($rx, '3k');
-		array_push($rx, '2k');
-		array_push($rx, '1k');
-		array_push($rx, '1d');
-		array_push($rx, '2d');
-		array_push($rx, '3d');
-		array_push($rx, '4d');
-		array_push($rx, '5d');
-		$rxx = array();
-		for($i=0;$i<count($rx);$i++)
-			$rxx[$rx[$i]] = array();
-		
-		for($i=0;$i<count($tsumegos);$i++){
-			if($tsumegos[$i]['Tsumego']['elo_rating_mode']>=2500) array_push($rxx['5d'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=2400) array_push($rxx['4d'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=2300) array_push($rxx['3d'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=2200) array_push($rxx['2d'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=2100) array_push($rxx['1d'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=2000) array_push($rxx['1k'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1900) array_push($rxx['2k'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1800) array_push($rxx['3k'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1700) array_push($rxx['4k'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1600) array_push($rxx['5k'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1500) array_push($rxx['6k'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1400) array_push($rxx['7k'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1300) array_push($rxx['8k'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1200) array_push($rxx['9k'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1100) array_push($rxx['10k'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=1000) array_push($rxx['11k'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=900) array_push($rxx['12k'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=800) array_push($rxx['13k'], $tsumegos[$i]);
-			elseif($tsumegos[$i]['Tsumego']['elo_rating_mode']>=700) array_push($rxx['14k'], $tsumegos[$i]);
-			else array_push($rxx['15k'], $tsumegos[$i]);
-		}
-		
-		$rxxCount = array();
-		array_push($rxxCount, count($rxx['15k']));
-		array_push($rxxCount, count($rxx['14k']));
-		array_push($rxxCount, count($rxx['13k']));
-		array_push($rxxCount, count($rxx['12k']));
-		array_push($rxxCount, count($rxx['11k']));
-		array_push($rxxCount, count($rxx['10k']));
-		array_push($rxxCount, count($rxx['9k']));
-		array_push($rxxCount, count($rxx['8k']));
-		array_push($rxxCount, count($rxx['7k']));
-		array_push($rxxCount, count($rxx['6k']));
-		array_push($rxxCount, count($rxx['5k']));
-		array_push($rxxCount, count($rxx['4k']));
-		array_push($rxxCount, count($rxx['3k']));
-		array_push($rxxCount, count($rxx['2k']));
-		array_push($rxxCount, count($rxx['1k']));
-		array_push($rxxCount, count($rxx['1d']));
-		array_push($rxxCount, count($rxx['2d']));
-		array_push($rxxCount, count($rxx['3d']));
-		array_push($rxxCount, count($rxx['4d']));
-		array_push($rxxCount, count($rxx['5d']));
 		
 		$lowestMode = array();
 		for($i=0;$i<count($locks);$i++){
@@ -270,12 +190,13 @@ class RanksController extends AppController {
 		$achievementUpdate = $this->checkTimeModeAchievements();
 		if(count($achievementUpdate)>0) $this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
 		
+		$json = json_decode(file_get_contents('json/time_mode_overview.json'), true);
+
 		$this->set('lastMode', $lastMode);
 		$this->set('lowestMode', $lowestMode);
 		$this->set('modes', $modes);
 		$this->set('locks', $locks);
-		$this->set('points', $points);
-		$this->set('rxxCount', $rxxCount);
+		$this->set('rxxCount', $json);
 		$this->set('settings', $settings);
 		$this->set('ro', $ro);
 		$this->set('achievementUpdate', $achievementUpdate);

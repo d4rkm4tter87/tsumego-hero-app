@@ -3,7 +3,7 @@
 <head>
 <?php
 	$cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework');
-	$cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
+	$cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version());
 ?>
 	<?php
 		$url = parse_url($_SERVER['HTTP_HOST']);
@@ -19,7 +19,6 @@
 			$_SESSION['initialLoading'] = 'true';
 			echo '<script type="text/javascript">window.location.href = "/users/loading";</script>';
 		}
-		//if($_SERVER['REMOTE_ADDR'] != '188.104.244.212') echo '<script type="text/javascript">window.location.href = "https://tsumego-hero.com/";</script>';
 		echo $this->Html->charset();
 	?>
 	<title>
@@ -183,7 +182,7 @@
 				}else{
 					$nextMode['Tsumego']['id'] = 15352;
 				}
-				if(isset($_SESSION['loggedInUser'])){
+				if(isset($_SESSION['loggedInUser']['User']['id'])){
 					if($_SESSION['loggedInUser']['User']['isAdmin']==0) $discussFilter = '';
 					else $discussFilter = '?filter=false';
 					if($_SESSION['loggedInUser']['User']['completed']==1 || $_SESSION['loggedInUser']['User']['premium']>=1){
@@ -215,14 +214,15 @@
 							echo '<ul class="newMenuLi2">';
 								echo '<li><a '.$refreshLinkToSandbox.' '.$sandboxA.' href="/sets/beta">Sandbox</a></li>';
 								if($_SESSION['loggedInUser']['User']['isAdmin']>=1){
-									echo '<li><a class="adminLink" href="/users/uploads">Uploads</a></li>';
-									echo '<li><a class="adminLink" href="/users/adminstats">Admin Activities</a></li>';
-									echo '<li><a class="adminLink" href="/users/duplicates">Merge Duplicates</a></li>';
-									echo '<li><a class="adminLink" href="/sets/duplicatesearch">Duplicate Search Results</a></li>';
-									echo '<li><a class="adminLink" href="/users/publish">Publish Schedule</a></li>';
-									echo '<li><a class="adminLink" href="/app/webroot/editor">Editor</a></li>';
-									echo '<li><a class="adminLink" href="/users/userstats">User Activities</a></li>';
-									echo '<li><a class="adminLink" href="/users/uservisits">Users Per Day</a></li>';
+									echo '<li><a class="adminLink" href="/users/adminstats">Activities</a></li>';
+									echo '<li class="additional-adminLink2"><a id="adminLink-more" class="adminLink adminLink3"><i>more</i></a></li>';
+									echo '<li class="additional-adminLink"><a class="adminLink" href="/users/uploads">Uploads</a></li>';
+									echo '<li class="additional-adminLink"><a class="adminLink" href="/users/duplicates">Merge Duplicates</a></li>';
+									echo '<li class="additional-adminLink"><a class="adminLink" href="/sets/duplicatesearch">Duplicate Search Results</a></li>';
+									echo '<li class="additional-adminLink"><a class="adminLink" href="/users/publish">Publish Schedule</a></li>';
+									echo '<li class="additional-adminLink"><a class="adminLink" href="/app/webroot/editor">Editor</a></li>';
+									echo '<li class="additional-adminLink"><a class="adminLink" href="/users/userstats">User Activities</a></li>';
+									echo '<li class="additional-adminLink"><a class="adminLink" href="/users/uservisits">Users Per Day</a></li>';
 								}
 							echo '</ul>';
 						}
@@ -242,8 +242,8 @@
 					echo '<ul class="newMenuLi4">';
 						echo '<li><a id="tutorialLink" href="/users/highscore" '.$levelHighscoreA.'>Level Highscore</a></li>';
 						echo '<li><a id="tutorialLink" href="/users/rating" '.$ratingHighscoreA.'>Rating Highscore</a></li>';
-						echo '<li><a id="tutorialLink" href="/users/highscore3" '.$timeHighscoreA.'>Time Highscore</a></li>';
 						echo '<li><a id="tutorialLink" href="/users/achievements" '.$achievementHighscoreA.'>Achievement Highscore</a></li>';
+						echo '<li><a id="tutorialLink" href="/users/added_tags" '.$timeHighscoreA.'>Tag Highscore</a></li>';
 						echo '<li><a id="tutorialLink" href="/users/leaderboard" '.$dailyHighscoreA.'>Daily Highscore</a></li>';
 					echo '</ul>';
 					if(isset($_SESSION['loggedInUser'])) echo '<li><a  '.$refreshLinkToDiscuss.'  '.$discussA.'href="/comments'.$discussFilter.'">Discuss</a></li>';
@@ -425,8 +425,10 @@
 	var lifetime = new Date();
 	lifetime.setTime(lifetime.getTime()+8*24*60*60*1000);
 	lifetime = lifetime.toUTCString()+"";
-	
 	<?php 
+		if(isset($removeCookie)){
+			echo 'setCookie("'.$removeCookie.'", "0");';
+		}
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
 		if($_COOKIE['PHPSESSID']!=0 && $_COOKIE['PHPSESSID']!=-1){
 	?>
@@ -524,6 +526,7 @@
 		document.cookie = "correctNoPoints=0;SameSite=none;expires="+lifetime+";Secure=false";
 		document.cookie = "ui=0;SameSite=none;expires="+lifetime+";Secure=false";
 		document.cookie = "requestProblem=0;SameSite=none;expires="+lifetime+";Secure=false";
+		
 		setCookie("lightDark", "<?php echo $lightDark; ?>");
 		<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
 			setCookie("levelBar", "<?php echo $levelBar; ?>");
@@ -531,7 +534,10 @@
 		setCookie("lastProfileLeft", "<?php echo $lastProfileLeft; ?>");
 		setCookie("lastProfileRight", "<?php echo $lastProfileRight; ?>");
 		setCookie("type", "0");
-		
+
+		setCookie("noScore", "0");
+		setCookie("noPreId", "0");
+
 		if(getCookie("z_hash"!=="1"))
 			setCookie("z_hash", "0");
 		<?php
@@ -576,7 +582,12 @@
 			
 			$("#modeSelector").click(function(){
 				levelBarChange(modeSelector);
-			})
+			});
+
+			$("#adminLink-more").click(function(){
+				$(".additional-adminLink").show();
+				$(".additional-adminLink2").hide();
+			});
 
 			<?php
 				if($mode==1 || $mode==2){

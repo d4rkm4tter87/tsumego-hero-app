@@ -330,7 +330,7 @@ class CommentsController extends AppController{
 			$c[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $c[$i]['Comment']['message']);
 			
 			$tBuffer = $this->Tsumego->findById($c[$i]['Comment']['tsumego_id']);
-			$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $tBuffer['Tsumego']['id'])));
+			$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'version DESC', 'conditions' => array('tsumego_id' => $tBuffer['Tsumego']['id'])));
 			$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
 			array_push($tooltipSgfs, $tArr[0]);
 			array_push($tooltipInfo, $tArr[2]);
@@ -340,17 +340,22 @@ class CommentsController extends AppController{
 			$yourc[$i]['Comment']['message'] = str_replace('[current position]', $currentPositionPlaceholder, $yourc[$i]['Comment']['message']);
 			
 			$tBuffer = $this->Tsumego->findById($yourc[$i]['Comment']['tsumego_id']);
-			$tts2 = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $tBuffer['Tsumego']['id'])));
+			$tts2 = $this->Sgf->find('all', array('limit' => 1, 'order' => 'version DESC', 'conditions' => array('tsumego_id' => $tBuffer['Tsumego']['id'])));
 			$tArr2 = $this->processSGF($tts2[0]['Sgf']['sgf']);
 			$tooltipSgfs2[$i] = $tArr2[0];
 			$tooltipInfo2[$i] = $tArr2[2];
 			array_push($tooltipBoardSize2, $tArr2[3]);
 		}
 		$admins = $this->User->find('all', array('conditions' => array('isAdmin' => 1))); 
-		
-		
-		//echo '<pre>'; print_r($yourc); echo '</pre>';
-		
+
+		if($_SESSION['loggedInUser']['User']['isAdmin'] > 0){
+			$uc = $this->Comment->find('all', array('conditions' => array(
+				'user_id' => 0,
+				'tsumego_id' => 0
+			)));
+			for($i=0; $i<count($uc); $i++)
+				$this->Comment->delete($uc[$i]['Comment']['id']);
+		}
 		$this->set('admins', $admins);
 		$this->set('paramindex', $paramindex);
 		$this->set('paramdirection', $paramdirection);
@@ -371,7 +376,7 @@ class CommentsController extends AppController{
 		$this->set('tooltipInfo2', $tooltipInfo2);
 		$this->set('tooltipBoardSize', $tooltipBoardSize);
 		$this->set('tooltipBoardSize2', $tooltipBoardSize2);
-    }
+  }
 }
 
 ?>

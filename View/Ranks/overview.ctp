@@ -1,12 +1,4 @@
-	<?php
-	if(isset($_SESSION['loggedInUser'])){
-		
-	}else{
-		echo '<script type="text/javascript">window.location.href = "/";</script>';
-	}
-	//echo '<pre>'; print_r($_SESSION['loggedInUser']['User']['secretArea3']); echo '</pre>'; 
-	//echo '<pre>'; print_r($settings); echo '</pre>'; 
-	?>
+	<?php	if(!isset($_SESSION['loggedInUser']['User']['id'])) echo '<script type="text/javascript">window.location.href = "/";</script>';	?>
 	
 	<div align="center">
 		<h2>Time Mode Select</h2>
@@ -61,19 +53,11 @@
 	echo '<div id="'.$text.'">';
 		for($i=0;$i<count($modes[$h]);$i++){
 			if($locks[$h][$i]=='x'){
-				if($points[$h][$i]!='x'){ 
-					$imageContainerText = 'imageContainerText1';
-					$imageContainerSpace = '&nbsp;&nbsp;&nbsp;';
-					$p = explode('/', $points[$h][$i]);
-					if($p[1]=='s') $p[1] = '<img class="timeModeIcons" src="/img/timeModeChecked.png">';
-					elseif($p[1]=='f') $p[1] = '<img class="timeModeIcons" src="/img/timeModeCrossed.png">';
-				}else{
-					$p = array();
-					$p[1] = '';
-					$p[0] = '';
-					$imageContainerText = 'imageContainerText2';
-					$imageContainerSpace = '';
-				}
+				$p = array();
+				$p[1] = '';
+				$p[0] = '';
+				$imageContainerText = 'imageContainerText2';
+				$imageContainerSpace = '';
 				echo '<div class="imageContainer1">
 				<a style="text-decoration:none;" href="/tsumegos/play/5127?rank='.$modes[$h][$i].'&modelink='.$modeLink.'">
 					<img id="i-'.$h.'-'.$modes[$h][$i].'" src="/img/rankButton'.$modes[$h][$i].'.png" onmouseover="hover_'.$h.'_'.$modes[$h][$i].'()" onmouseout="noHover_'.$h.'_'.$modes[$h][$i].'()">

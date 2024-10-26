@@ -56,7 +56,7 @@ class TsumegosController extends AppController{
 		$sc = $this->SetConnection->find('first', array('conditions' =>  array('tsumego_id' => $id)));
 		$s = $this->Set->findById($sc['SetConnection']['set_id']);
 		$title = $s['Set']['title'].' - '.$t['Tsumego']['num'];
-		$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $id)));
+		$sgf = $this->Sgf->find('first', array('order' => 'version DESC', 'conditions' =>  array('tsumego_id' => $id)));
 		$tSgfArr = $this->processSGF($sgf['Sgf']['sgf']);
 		$tNumStones = count($tSgfArr[1]);
 		
@@ -105,7 +105,7 @@ class TsumegosController extends AppController{
 				$ts = $this->findTsumegoSet($sets[$h]['Set']['id']);
 				for($i=0; $i<count($ts); $i++){
 					if($ts[$i]['Tsumego']['id']!=$id){
-						$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
+						$sgf = $this->Sgf->find('first', array('order' => 'version DESC', 'conditions' =>  array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
 						$sgfArr = $this->processSGF($sgf['Sgf']['sgf']);
 						$numStones = count($sgfArr[1]);
 						$stoneNumberDiff = abs($numStones-$tNumStones);
@@ -176,7 +176,7 @@ class TsumegosController extends AppController{
 		$sc = $this->SetConnection->find('first', array('conditions' =>  array('tsumego_id' => $id)));
 		$s = $this->Set->findById($sc['SetConnection']['set_id']);
 		$title = $s['Set']['title'].' - '.$t['Tsumego']['num'];
-		$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $id)));
+		$sgf = $this->Sgf->find('first', array('order' => 'version DESC', 'conditions' =>  array('tsumego_id' => $id)));
 		$tSgfArr = $this->processSGF($sgf['Sgf']['sgf']);
 		$tNumStones = count($tSgfArr[1]);
 		
@@ -195,7 +195,7 @@ class TsumegosController extends AppController{
 		
 		for($i=0; $i<count($ts); $i++){
 			if($ts[$i]['Tsumego']['id']!=$id){
-				$sgf = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
+				$sgf = $this->Sgf->find('first', array('order' => 'version DESC', 'conditions' =>  array('tsumego_id' => $ts[$i]['Tsumego']['id'])));
 				$sgfArr = $this->processSGF($sgf['Sgf']['sgf']);
 				$numStones = count($sgfArr[1]);
 				$stoneNumberDiff = abs($numStones-$tNumStones);
@@ -310,6 +310,9 @@ class TsumegosController extends AppController{
 		$this->loadModel('SetConnection');
 		$this->loadModel('TsumegoVariant');
 		$this->loadModel('Signature');
+		$this->loadModel('Tag');
+		$this->loadModel('TagName');
+		$this->LoadModel('UserContribution');
 		
 		$noUser;
 		$noLogin;
@@ -717,6 +720,14 @@ class TsumegosController extends AppController{
 					$adminActivity['AdminActivity']['answer'] = 'Problem deleted. ('.$t['Tsumego']['set_id'].'-'.$t['Tsumego']['id'].')';
 					$adminActivity['AdminActivity']['file'] = '/delete';
 				}
+				if($this->data['Comment']['deleteTag']!=null){
+					$tagsToDelete = $this->Tag->find('all', array('conditions' => array('tsumego_id' => $id)));
+					for($i=0; $i<count($tagsToDelete); $i++){
+						$tagNameForDelete = $this->TagName->findById($tagsToDelete[$i]['Tag']['tag_name_id']);
+						if($tagNameForDelete['TagName']['name'] == $this->data['Comment']['deleteTag'])
+							$this->Tag->delete($tagsToDelete[$i]['Tag']['id']);
+					}
+				}
 				$this->AdminActivity->save($adminActivity);
 			}elseif(isset($this->data['Study'])){
 				$tv['TsumegoVariant']['answer1'] = $this->data['Study']['study1'];
@@ -923,11 +934,9 @@ class TsumegosController extends AppController{
 			$file_type=$_FILES['adminUpload']['type'];
 			$file_ext=strtolower(end(explode('.',$_FILES['adminUpload']['name'])));
 			$extensions= array("sgf");
-
 			if(in_array($file_ext,$extensions)=== false) $errors[]="Only SGF files are allowed.";
 			if($file_size > 2097152) $errors[]='The file is too large.';
 			$fSet = $this->Set->find('first', array('conditions' => array('id' => $t['Tsumego']['set_id'])));
-			
 			$this->AdminActivity->create();
 			$adminActivity = array();
 			$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
@@ -941,9 +950,9 @@ class TsumegosController extends AppController{
 
 			if(empty($errors)==true){
 				if($t['Tsumego']['duplicate']<=9)
-					$lastV = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $id)));
+					$lastV = $this->Sgf->find('first', array('order' => 'version DESC', 'conditions' =>  array('tsumego_id' => $id)));
 				else
-					$lastV = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $t['Tsumego']['duplicate'])));
+					$lastV = $this->Sgf->find('first', array('order' => 'version DESC', 'conditions' =>  array('tsumego_id' => $t['Tsumego']['duplicate'])));
 				$sgf = array();
 				$sgf['Sgf']['sgf'] = file_get_contents($_FILES['adminUpload']['tmp_name']);
 				$sgf['Sgf']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
@@ -952,27 +961,9 @@ class TsumegosController extends AppController{
 					$sgf['Sgf']['tsumego_id'] = $id;
 				else
 					$sgf['Sgf']['tsumego_id'] = $t['Tsumego']['duplicate'];
-				if($lastV['Sgf']['version']==1){
-					$sgf['Sgf']['version'] = 1.1;
-				}else{
-					if($lastV['Sgf']['user_id']!=$_SESSION['loggedInUser']['User']['id']){
-						$nextV = $lastV['Sgf']['version']*10;
-						if(floor($nextV)==$nextV)
-							$nextV += .01;
-						$nextV = ceil($nextV);
-						$sgf['Sgf']['version'] = $nextV/10;
-					}else{
-						if(strtotime($lastV['Sgf']['created'])<strtotime('-2 days')){
-							$nextV = $lastV['Sgf']['version']*10;
-							if(floor($nextV)==$nextV)
-								$nextV += .01;
-							$nextV = ceil($nextV);
-							$sgf['Sgf']['version'] = $nextV/10;
-						}else{
-							$sgf['Sgf']['version'] = $lastV['Sgf']['version'] + .01;
-						}
-					}
-				}
+
+				$sgf['Sgf']['version'] = $this->createNewVersionNumber($lastV, $_SESSION['loggedInUser']['User']['id']);
+				$this->handleContribution($_SESSION['loggedInUser']['User']['id'], 'made_proposal');
 				$this->Sgf->save($sgf);
 			}
 		}
@@ -1802,11 +1793,11 @@ class TsumegosController extends AppController{
 		
 		$sgf = array();
 		if($t['Tsumego']['duplicate']<=9)
-			$sgfdb = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $id)));
+			$sgfdb = $this->Sgf->find('first', array('order' => 'version DESC', 'conditions' =>  array('tsumego_id' => $id)));
 		else
-			$sgfdb = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $t['Tsumego']['duplicate'])));
+			$sgfdb = $this->Sgf->find('first', array('order' => 'version DESC', 'conditions' =>  array('tsumego_id' => $t['Tsumego']['duplicate'])));
 		if($sgfdb==null){
-			$sgf['Sgf']['sgf'] = file_get_contents('6473k339312/'.$set['Set']['folder'].'/'.$t['Tsumego']['num'].'.sgf');
+			$sgf['Sgf']['sgf'] = file_get_contents('placeholder2.sgf');
 			$sgf['Sgf']['user_id'] = 33;
 			$sgf['Sgf']['tsumego_id'] = $id;
 			$sgf['Sgf']['version'] = 1;
@@ -1840,47 +1831,31 @@ class TsumegosController extends AppController{
 		//$sgf['Sgf']['sgf'] = str_replace("\n", ' ', $sgf['Sgf']['sgf']);
 		
 		if(isset($this->params['url']['requestProblem'])){
-			if($_SESSION['loggedInUser']['User']['isAdmin']>=1){
-				if(($this->params['url']['requestProblem']/1337)==$id){
-					$requestProblem = $_POST['sgfForBesogo'];
-					$requestProblem = str_replace('@', ';', $requestProblem);
-					$requestProblem = str_replace('€', "\n", $requestProblem);
-					$requestProblem = str_replace('%2B', "+", $requestProblem);
+			if(($this->params['url']['requestProblem']/1337)==$id){
+				$requestProblem = $_POST['sgfForBesogo'];
+				$requestProblem = str_replace('@', ';', $requestProblem);
+				$requestProblem = str_replace('€', "\n", $requestProblem);
+				$requestProblem = str_replace('%2B', "+", $requestProblem);
+				
+				if($t['Tsumego']['duplicate']<=9)
+					$lastV = $this->Sgf->find('first', array('order' => 'version DESC', 'conditions' =>  array('tsumego_id' => $id)));
+				else
+					$lastV = $this->Sgf->find('first', array('order' => 'version DESC', 'conditions' =>  array('tsumego_id' => $t['Tsumego']['duplicate'])));
+				if($requestProblem !== $lastV['Sgf']['sgf']){
+					$sgf = array();
+					$sgf['Sgf']['sgf'] = $requestProblem;
+					$sgf['Sgf']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$sgf['Sgf']['tsumego_id'] = $id;
 					
-					if($t['Tsumego']['duplicate']<=9)
-						$lastV = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $id)));
-					else
-						$lastV = $this->Sgf->find('first', array('order' => 'created DESC', 'conditions' =>  array('tsumego_id' => $t['Tsumego']['duplicate'])));
-					if($requestProblem !== $lastV['Sgf']['sgf']){
-						$sgf = array();
-						$sgf['Sgf']['sgf'] = $requestProblem;
-						$sgf['Sgf']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-						$sgf['Sgf']['tsumego_id'] = $id;
-						
-						if($lastV['Sgf']['version']==1){
-							$sgf['Sgf']['version'] = 1.1;
-						}else{
-							if($lastV['Sgf']['user_id']!=$_SESSION['loggedInUser']['User']['id']){
-								$nextV = $lastV['Sgf']['version']*10;
-								if(floor($nextV)==$nextV)
-									$nextV += .01;
-								$nextV = ceil($nextV);
-								$sgf['Sgf']['version'] = $nextV/10;
-							}else{
-								if(strtotime($lastV['Sgf']['created'])<strtotime('-2 days')){
-									$nextV = $lastV['Sgf']['version']*10;
-									if(floor($nextV)==$nextV)
-										$nextV += .01;
-									$nextV = ceil($nextV);
-									$sgf['Sgf']['version'] = $nextV/10;
-								}else{
-									$sgf['Sgf']['version'] = $lastV['Sgf']['version'] + .01;
-								}
-							}
-						}
-						$this->Sgf->save($sgf);
-						$sgf['Sgf']['sgf'] = str_replace("\r", '', $sgf['Sgf']['sgf']);
-						$sgf['Sgf']['sgf'] = str_replace("\n", '"+"\n"+"', $sgf['Sgf']['sgf']);
+					if($_SESSION['loggedInUser']['User']['isAdmin'] > 0){
+						$sgf['Sgf']['version'] = $this->createNewVersionNumber($lastV, $_SESSION['loggedInUser']['User']['id']);
+					}else{
+						$sgf['Sgf']['version'] = 0;
+					}
+					$this->Sgf->save($sgf);
+					$sgf['Sgf']['sgf'] = str_replace("\r", '', $sgf['Sgf']['sgf']);
+					$sgf['Sgf']['sgf'] = str_replace("\n", '"+"\n"+"', $sgf['Sgf']['sgf']);
+					if($_SESSION['loggedInUser']['User']['isAdmin'] > 0){
 						$this->AdminActivity->create();
 						$adminActivity = array();
 						$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
@@ -1888,7 +1863,9 @@ class TsumegosController extends AppController{
 						$adminActivity['AdminActivity']['file'] = $t['Tsumego']['num'];
 						$adminActivity['AdminActivity']['answer'] = $t['Tsumego']['num'].'.sgf'.' <font color="grey">(direct save)</font>';
 						$this->AdminActivity->save($adminActivity);
+						$this->handleContribution($_SESSION['loggedInUser']['User']['id'], 'made_proposal');
 					}
+
 				}
 			}
 		}
@@ -2117,8 +2094,8 @@ class TsumegosController extends AppController{
 		}
 		
 		if(!isset($t['Tsumego']['file']) || $t['Tsumego']['file']=='') $t['Tsumego']['file'] = $t['Tsumego']['num'];
-		$file = '6473k339312/'.$set['Set']['folder'].'/'.$t['Tsumego']['file'].'.sgf';
-		if($t['Tsumego']['variance']==100) $file = '6473k339312/easycapture/1.sgf';
+		$file = 'placeholder2.sgf';
+		if($t['Tsumego']['variance']==100) $file = 'placeholder2.sgf';
 		
 		$orientation = null;
 		$colorOrientation = null;
@@ -2148,7 +2125,7 @@ class TsumegosController extends AppController{
 		$tooltipInfo = array();
 		$tooltipBoardSize = array();
 		for($i=0; $i<count($navi); $i++){
-			$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'created DESC', 'conditions' => array('tsumego_id' => $navi[$i]['Tsumego']['id'])));
+			$tts = $this->Sgf->find('all', array('limit' => 1, 'order' => 'version DESC', 'conditions' => array('tsumego_id' => $navi[$i]['Tsumego']['id'])));
 			$tArr = $this->processSGF($tts[0]['Sgf']['sgf']);
 			array_push($tooltipSgfs, $tArr[0]);
 			array_push($tooltipInfo, $tArr[2]);
@@ -2307,7 +2284,7 @@ class TsumegosController extends AppController{
 		}
 		
 		$ui = 2;
-		$file = '6473k339312/easycapture/1.sgf';
+		$file = 'placeholder2.sgf';
 		
 		if($mode==1){
 			$scPrev = $this->SetConnection->find('all', array('conditions' => array('tsumego_id' => $prev)));
@@ -2391,7 +2368,29 @@ class TsumegosController extends AppController{
 			$difficulty = 4;
 
 		$u['User']['name'] = $this->checkPicture($u);
+		$tags = $this->getTags($id);
+		$allTags = $this->getAllTags($tags);
+		$popularTags = $this->getPopularTags($tags);
+		$uc = $this->UserContribution->find('first', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+		$hasRevelation = false;
+		if($uc!=null)
+			$hasRevelation = $uc['UserContribution']['reward3'];
+		
+		$sgfProposal = $this->Sgf->find('first', array('conditions' => array('tsumego_id' => $id, 'version' => 0, 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
+		$isAllowedToContribute = false;
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			if($_SESSION['loggedInUser']['User']['level'] >= 40)
+				$isAllowedToContribute = true;
+			else if($_SESSION['loggedInUser']['User']['elo_rating_mode'] >= 1500)
+				$isAllowedToContribute = true;
+		}
 
+		$this->set('isAllowedToContribute', $isAllowedToContribute);
+		$this->set('hasSgfProposal', $sgfProposal!=null);
+		$this->set('hasRevelation', $hasRevelation);
+		$this->set('allTags', $allTags);
+		$this->set('tags', $tags);
+		$this->set('popularTags', $popularTags);
 		$this->set('requestSignature', $requestSignature);
 		$this->set('idForSignature', $idForSignature);
 		$this->set('idForSignature2', $idForSignature2);
@@ -2480,8 +2479,44 @@ class TsumegosController extends AppController{
 		$this->set('requestSolution', $requestSolution);
 		$this->set('startingPlayer', $startingPlayer);
 		$this->set('tv', $tv);
-    }
-	
+  }
+
+	private function getPopularTags($tags){
+		$json = json_decode(file_get_contents('json/popular_tags.json'));
+		$a = array();
+		$tn = $this->TagName->find('all');
+		$tnKeys = array();
+		for($i=0;$i<count($tn);$i++)
+			$tnKeys[$tn[$i]['TagName']['id']] = $tn[$i]['TagName']['name'];
+		for($i=0;$i<count($json);$i++)
+			array_push($a, $tnKeys[$json[$i]->id]);
+		$aNew = array();
+		$added = 0;
+		$x = 0;
+		while($added<10 && $x<count($a)){
+			$found = false;
+			for($i=0;$i<count($tags);$i++)
+				if($a[$x] == $tags[$i]['Tag']['name'])
+					$found = true;
+			if(!$found){
+				array_push($aNew, $a[$x]);
+				$added++;
+			}
+			$x++;
+		}
+		return $aNew;
+	}
+
+	private function getTags($tsumego_id){
+		$tags = $this->Tag->find('all', array('conditions' => array('tsumego_id' => $tsumego_id)));
+		for($i=0;$i<count($tags);$i++){
+			$tn = $this->TagName->findById($tags[$i]['Tag']['tag_name_id']);
+			$tags[$i]['Tag']['name'] = $tn['TagName']['name'];
+			$tags[$i]['Tag']['hint'] = $tn['TagName']['hint'];
+		}
+		return $tags;
+	}
+
 	private function getTheIdForTheThing($num){
 		$this->loadModel('Set');
 		$this->loadModel('SetConnection');
@@ -2661,44 +2696,6 @@ class TsumegosController extends AppController{
 			$ut = null;
 		}
 		return $ut;
-	}
-	
-	private function getHealth($lvl = null){
-		$hp = 10;
-		if($lvl>=2) $hp = 10;
-		if($lvl>=4) $hp = 11;
-		if($lvl>=10)$hp = 12;
-		if($lvl>=15)$hp = 13;
-		if($lvl>=20)$hp = 14;
-		if($lvl>=25)$hp = 15;
-		if($lvl>=30)$hp = 16;
-		if($lvl>=35)$hp = 17;
-		if($lvl>=40)$hp = 18;
-		if($lvl>=45)$hp = 19;
-		if($lvl>=50)$hp = 20;
-		if($lvl>=55)$hp = 21;
-		if($lvl>=60)$hp = 22;
-		if($lvl>=65)$hp = 23;
-		if($lvl>=70)$hp = 24;
-		if($lvl>=75)$hp = 25;
-		if($lvl>=80)$hp = 26;
-		if($lvl>=85)$hp = 27;
-		if($lvl>=90)$hp = 28;
-		if($lvl>=95)$hp = 29;
-		if($lvl>=100)$hp = 30;
-		return $hp;
-    }
-	
-	private function getXPJump($lvl=null){
-		$j = 10;
-		if($lvl>=12) $j = 25;
-		if($lvl>=20) $j = 50;
-		if($lvl>=40) $j = 100;
-		if($lvl>=70) $j = 150;
-		if($lvl==100) $j = 50000;
-		if($lvl==101) $j = 1150;
-		if($lvl>=102) $j = 0;
-		return $j;
 	}
 	
 	private function compileBoardState($black=null, $white=null, $m=null, $ms=null, $index=null){
@@ -2949,14 +2946,11 @@ class TsumegosController extends AppController{
 		$rd_1 = $old_1['old_rd'];
 		$r_2 = $old_2['old_r'];
 		$rd_2 = $old_2['old_rd'];
-
+		$g_rd_2 = 1;
 		$g_rd = $this->g_rd($rd_2);
 		$E_s = $this->E_s($r_1, $r_2, $g_rd_2);
-
 		$d_sq = 1.0 / (Q**2 * $g_rd**2 * $E_s * (1.0 - $E_s));
-
 		$new_rd = 1 / sqrt(1 / $rd_1**2 + 1 / $d_sq);
-
 		$coeff = Q / (1 / $r_1**2 + 1 / $d_sq);
 		$new_rating = $r_1 + $coeff * $g_rd * ($success - $E_s);
 		return array($new_rating, $new_rd);
@@ -2979,7 +2973,6 @@ class TsumegosController extends AppController{
 		if(false){
 			$t = $user['User']['t_glicko'];
 			$old_rd = $user['User']['rd'];
-
 			// Computes new RD after some time
 			$current_rd = min(sqrt($old_rd**2 + C**2 * $t), INITIAL_RD);
 			// Resets counter for next day

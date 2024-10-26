@@ -56,7 +56,7 @@ class AchievementsController extends AppController {
 		else $andMore = '.';
 		for($i=0; $i<$count; $i++){
 			$u = $this->User->findById($asAll[$i]['AchievementStatus']['user_id']);
-			$asAll[$i]['AchievementStatus']['name'] = $u['User']['name'];
+			$asAll[$i]['AchievementStatus']['name'] = $this->checkPicture($u);
 			array_push($asAll2, $asAll[$i]);
 		}
 		$asAll = $asAll2;
@@ -72,6 +72,7 @@ class AchievementsController extends AppController {
 			if($a['Achievement']['id']==97)
 				$a['Achievement']['additionalDescription'] = 'Progress: '.$acGoldenCount.'/10';
 		}
+
 		
 		$this->set('a', $a);
 		$this->set('as', $as);

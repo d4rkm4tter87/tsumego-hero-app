@@ -23,6 +23,15 @@
 ?>
 	<script src ="/js/previewBoard.js"></script>
 	<script src="https://accounts.google.com/gsi/client" async defer></script>
+	
+	<?php if($_SESSION['loggedInUser']['User']['isAdmin'] > 0){ ?>
+	<div class="admin-panel-main-page">
+		<ul>
+			<li><a class="adminLink2" href="/users/adminstats">Activities</a></li>
+		</ul>
+	</div>
+	<?php } ?>
+
 	<div class="homeRight">
 		<p class="title4 title4right"><?php echo $d1; ?></p>
 		<?php
@@ -70,11 +79,34 @@
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
+		<p class="title4">Update 26.10.2024</p>
+		<div class="new1">
+			<b>Contributions & rewards</b><br><br>
+			We need your help! The problems on this website are currently uncategorized, which we should change. 
+			The goal is to assign matching tags to every problem. All users that have passed level 40 or 6k 
+			are welcome to help with this meaningful task. There are amazing <a href="/users/rewards">rewards</a> for those who 
+			help with adding and creating tags and/or proposals. So the next time you see a problem, for example, 
+			with a <a href="/tag_names/view/8">Seki</a>, a <a href="/tag_names/view/6">Snapback</a> or an 
+			<a href="/tag_names/view/7">Under the Stones</a> tesuji, leave a tag.
+			<br>
+			<div align="center">
+				<img style="margin:5px" src="/img/example-tags-proposals.PNG" title="Example for tags and proposals" width="72%">
+			</div>
+			It is now also possible to make proposals for improving the problem files. You select "Make Proposal", modify the move tree and save. An
+			admin is going to check and approve the changes. For getting rewards, a point system has been implemented: <b>Add tag (1 pt)</b>, <b>create new tag (3 pts)</b>, 
+			<b>make proposal (5 pts)</b>. Any contribution has to be accepted by an admin to become public. 
+			<br><br>
+			<div align="center">
+				<a href="/users/rewards" class="new-button-time">Rewards</a>
+			</div>
+			<br>
+		</div>
 		<p class="title4">Update 13.10.2024</p>
 		<div class="new1">
-			• Longer sessions.<br><br>
-			• Sign in with Google account.<br><br>
-			• Option to delete all account related data.<br><br>
+			<b>Account management</b><br><br>
+			• Longer sessions.<br>
+			• Sign in with Google account.<br>
+			• Option to delete all account related data.<br>
 			<div align="center">
 				<div class="g-signin">
 					<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
@@ -316,20 +348,6 @@
 			</div>
 			</div>
 		<?php } ?>
-		<p class="title4">Recent Donations and Upgrades</p>
-		<div class="new1">
-			<table class="newx" border="0">
-				<?php 
-					for($i=0;$i<count($donations);$i++){
-						echo '<tr>';
-							echo '<td><h1>'.$donations[$i]['date'].'</h1></td>';
-							echo '<td><h1>'.$donations[$i]['user'].'</h1></td>';
-							echo '<td><h1>'.$donations[$i]['amount'].'</h1></td>';
-						echo '</tr>';
-					}
-				?>
-			</table>	
-		</div>
 		
 		<p class="title4">Problem Database Size </p>
 		<div class="new1">

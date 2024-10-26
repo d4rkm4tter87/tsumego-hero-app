@@ -10,8 +10,8 @@
 		<br>
 		<a class="new-button new-buttonx" href="/users/highscore">level</a>
 		<a class="new-button new-buttonx" href="/users/rating">rating</a>
-		<a class="new-button new-buttonx" href="/users/highscore3">time</a>
 		<a class="new-button buttonx-current" href="/users/achievements">achievements</a>
+		<a class="new-button new-buttonx" href="/users/added_tags">tags</a>
 		<a class="new-button new-buttonx" href="/users/leaderboard">daily</a>
 		<br><br>
 		</div>
