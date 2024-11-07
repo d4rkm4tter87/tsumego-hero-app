@@ -170,23 +170,30 @@ class AppController extends Controller{
 		$this->LoadModel('Achievement');
 		$this->LoadModel('AchievementCondition');
 		$today = date('Y-m-d');
-		
-		$ux = $this->User->find('first', array('order' => 'reuse3 DESC', 'conditions' => array(
-			'NOT' => array(
-				'id' => array(33)
-			)
+		$ux2 = $this->User->find('all', array('limit' => '8', 'order' => 'reuse3 DESC', 'conditions' => array(
+			'NOT' => array('id' => array(33))
 		)));
-		
-		$lastUotd = $this->DayRecord->find('first', array('order' => 'id DESC'));
-		
-		if($lastUotd['DayRecord']['user_id']==$ux['User']['id']){
-			$ux2 = $this->User->find('all', array('limit' => 2, 'order' => 'reuse3 DESC', 'conditions' => array(
-				'NOT' => array(
-					'id' => array(33)
-				)
-			)));
-			$ux = $ux2[1];
+		$last = $this->DayRecord->find('all', array('limit' => '7', 'order' => 'date DESC'));
+		$lastUotds = array();
+		$lastUsers = array();
+		for($i=0; $i<count($last); $i++)
+			array_push($lastUotds, $last[$i]['DayRecord']['user_id']);
+		for($i=0; $i<count($ux2); $i++)
+			array_push($lastUsers, $ux2[$i]['User']['id']);
+		$resultUser = 72;
+		for($i=0; $i<count($lastUsers); $i++){
+			$foundUser = false;
+			for($j=0; $j<count($lastUotds); $j++){
+				if($lastUsers[$i] == $lastUotds[$j])
+					$foundUser = true;
+			}
+			if(!$foundUser){
+				$resultUser = $lastUsers[$i];
+				break;
+			}
 		}
+		$ux = $this->User->findById($resultUser);
+		
 		$recentlyUsed = array();
 		$d = 1;
 		while($d<=10){
@@ -322,6 +329,42 @@ class AppController extends Controller{
 		for($i=0; $i<count($ts); $i++)
 			$ts[$i]['Tsumego']['set_id'] = $id;
 		return $ts;
+	}
+
+	public function deleteUnusedStatuses($uid){
+		$s = $this->Set->find('all', array('conditions' => array(
+			'OR' => array(
+				array('public' => 1),
+				array('public' => 0),
+			)
+		)));
+		$ids = array();
+		for($i=0; $i<count($s); $i++){
+			$tSet = $this->findTsumegoSet($s[$i]['Set']['id']);
+			for($j=0; $j<count($tSet); $j++){
+				array_push($ids, $tSet[$j]['Tsumego']['id']);
+			}
+		}
+		$ut = $this->TsumegoStatus->find('all', array('conditions' => array(
+			'user_id' => $uid,
+			'NOT' => array(
+				'tsumego_id' => $ids
+			)
+		)));
+		for($i=0; $i<count($ut); $i++){
+			$test1 = $this->Tsumego->findById($ut[$i]['TsumegoStatus']['tsumego_id']);
+			$test2 = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $test1['Tsumego']['id'])));
+			$test3 = $this->Set->find('first', array('conditions' => array(
+				'id' => $test2['SetConnection']['set_id'],
+				'OR' => array(
+					array('public' => 1),
+					array('public' => 0),
+				)
+			)));
+			if($test3==null){
+				$this->TsumegoStatus->delete($ut[$i]['TsumegoStatus']['id']);
+			}
+		}
 	}
 	
 	public function saveSolvedNumber($uid){
@@ -572,9 +615,12 @@ class AppController extends Controller{
 
 	public function getAllTags($not){
 		$a = array();
+		$notApproved = $this->TagName->find('all', array('conditions' => array('approved' => 0)));
 		for($i=0;$i<count($not);$i++)
 			array_push($a, $not[$i]['Tag']['tag_name_id']);
-		$tn = $this->TagName->find('all', array('conditions' =>  array(
+		for($i=0;$i<count($notApproved);$i++)
+			array_push($a, $notApproved[$i]['TagName']['id']);
+		$tn = $this->TagName->find('all', array('conditions' => array(
 			'NOT' => array('id' => $a)
 		)));
 		$sorted = array();

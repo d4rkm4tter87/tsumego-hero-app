@@ -1213,6 +1213,7 @@ li a.menuLi {
   border: 1px solid #000;
   color: black;
   text-decoration: none;
+  cursor: pointer;
 }
 .new-button-time {
   font-family: Times New Roman, verdana, helvetica, arial, sans-serif;
@@ -1422,6 +1423,9 @@ li a.menuLi {
   -moz-border-radius-topleft: 9px;
   border-top-right-radius: 9px;
   border-top-left-radius: 9px;
+}
+.tag-submit-button {
+  display: none;
 }
 .inactiveAdjust {
   color: #74d13f;

@@ -15,7 +15,8 @@
 			
 		</div>
 		<div class="user-header2">
-			<a href="/users/rewards" class="new-button-time">Get rewards</a>
+			<a href="/tag_names/user/<?php echo $_SESSION['loggedInUser']['User']['id']; ?>" class="new-button-time">contributions</a>
+			<a href="/users/rewards" class="new-button-time">rewards</a>
 		</div>
 	</div>
 	<div class="userMain1">

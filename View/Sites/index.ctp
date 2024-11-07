@@ -81,7 +81,7 @@
 		<!-- RIGHT NEWS -->
 		<p class="title4">Update 26.10.2024</p>
 		<div class="new1">
-			<b>Contributions & rewards</b><br><br>
+			<b>Tags, proposals and rewards</b><br><br>
 			We need your help! The problems on this website are currently uncategorized, which we should change. 
 			The goal is to assign matching tags to every problem. All users that have passed level 40 or 6k 
 			are welcome to help with this meaningful task. There are amazing <a href="/users/rewards">rewards</a> for those who 

@@ -101,7 +101,6 @@ class TsumegosController extends AppController{
 		$sets = array_merge($sets1, $sets2, $sets3);
 		
 		for($h=0; $h<count($sets); $h++){
-				//$ts = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array('set_id' => $sets[$h]['Set']['id'])));
 				$ts = $this->findTsumegoSet($sets[$h]['Set']['id']);
 				for($i=0; $i<count($ts); $i++){
 					if($ts[$i]['Tsumego']['id']!=$id){
@@ -867,7 +866,8 @@ class TsumegosController extends AppController{
 			}else{
 				if($this->data['Comment']['user_id']!=33){
 					$this->Comment->create();
-					$this->Comment->save($this->data, true);
+					if($this->checkCommentValid($_SESSION['loggedInUser']['User']['id']))
+						$this->Comment->save($this->data, true);
 				}
 			}
 			$this->set('formRedirect', true);
@@ -1761,9 +1761,14 @@ class TsumegosController extends AppController{
 		$_SESSION['loggedInUser']['User']['secretArea10'] = $u['User']['secretArea10'];
 		
 		if(isset($noUser)) $_SESSION['noUser'] = $noUser;
-		if(isset($_SESSION['loggedInUser']) && $u['User']['id']!=33){
+		if(isset($_SESSION['loggedInUser']['User']['id']) && $u['User']['id']!=33){
 			$u['User']['mode'] = $_SESSION['loggedInUser']['User']['mode'];
-			$u['User']['created'] = date('Y-m-d H:i:s');
+			$userDate = new DateTime($u['User']['created']);
+			$userDate = $userDate->format('Y-m-d');
+			if($userDate!=date('Y-m-d')){
+				$u['User']['created'] = date('Y-m-d H:i:s');
+				$this->deleteUnusedStatuses($_SESSION['loggedInUser']['User']['id']);
+			}
 			$this->User->save($u);
 		}
 		
@@ -2533,6 +2538,18 @@ class TsumegosController extends AppController{
 		return $t[$num];
 	}
 	
+	private function checkCommentValid($uid){
+		$comments = $this->Comment->find('all', array('limit' => 5, 'order' => 'created DESC', 'conditions' => array('user_id' => $uid)));
+		$limitReachedCounter = 0;
+		for($i=0;$i<count($comments);$i++){
+			$d = new DateTime($comments[$i]['Comment']['created']);
+			$d = $d->format('Y-m-d');
+			if($d == date('Y-m-d'))
+				$limitReachedCounter++;
+		}
+		if($limitReachedCounter>=5) return false;
+		return true;
+	}
 	
 	private function getStartingPlayer($sgf){
 		$bStart = strpos($sgf, ';B');

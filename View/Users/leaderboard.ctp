@@ -17,7 +17,7 @@
 			</td>
 			<td width="23%" valign="top">
 				<div align="right">	
-				<font size="3px" style="font-weight:400;font-style:italic;">* Users can't be user of the day two times in a row.</font>
+				<font size="3px" style="font-weight:400;font-style:italic;">Users can be user of the day once per week.</font>
 				</div>
 			</td>
 		</tr>
@@ -87,8 +87,6 @@
 				if($i>=30) $bgColor = '#b6f998';
 				if($i>=40) $bgColor = '#d3f9c2';
 				if($i>=50) $bgColor = '#e8f9e0';
-				
-				if($a[$i]['name'] == $dayRecord) $a[$i]['name'].=' *';
 				
 				if(substr($a[$i]['name'],0,3)=='g__' && $a[$i]['external_id']!=null){
 					$a[$i]['name'] = '<img class="google-profile-image" src="/img/google/'.$a[$i]['picture'].'">'.substr($a[$i]['name'],3);

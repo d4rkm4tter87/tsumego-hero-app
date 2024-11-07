@@ -41,10 +41,10 @@
 						<a id="tooltip-hover999'.$i.'" class="tooltip" href="/tsumegos/play/'.$sgfTsumegos[$i]['Tsumego']['id'].'">'.$sgfTsumegos[$i]['Tsumego']['num'].'
 						<span><div id="tooltipSvg999'.$i.'"></div></span></a>
 					</li></td>';
-					echo '<td><a class="new-button-default2" href="/users/adminstats?accept=true&proposal_id='
-					.$approveSgfs[$i]['Sgf']['id'].'&hash='.md5($_SESSION['loggedInUser']['User']['id']).'">Accept</a></td>';
-					echo '<td><a class="new-button-default2" href="/users/adminstats?accept=false&proposal_id='
-					.$approveSgfs[$i]['Sgf']['id'].'&hash='.md5($_SESSION['loggedInUser']['User']['id']).'">Reject</a></td>';
+					echo '<td><a class="new-button-default2" id="proposal-accept'.$i.'">Accept</a>
+					<a class="new-button-default2 tag-submit-button" id="proposal-submit'.$i.'" href="/users/adminstats?accept=true&tag_id='
+					.$approveSgfs[$i]['Sgf']['id'].'&hash='.md5($_SESSION['loggedInUser']['User']['id']).'">Submit (1)</a>
+					<a class="new-button-default2" id="proposal-reject'.$i.'">Reject</a></td>';
 				echo '</tr>';
 			}
 			echo '</table><hr>';
@@ -55,10 +55,10 @@
 				echo '<tr>';
 					echo '<td>'.$tagNames[$i]['TagName']['user'].' created a new tag: <a href="/tag_names/view/'.$tagNames[$i]['TagName']['id'].'">'
 					.$tagNames[$i]['TagName']['name'].'</a></td>';
-					echo '<td><a class="new-button-default2" href="/users/adminstats?accept=true&name_id='
-					.$tagNames[$i]['TagName']['id'].'&hash='.md5($_SESSION['loggedInUser']['User']['id']).'">Accept</a></td>';
-					echo '<td><a class="new-button-default2" href="/users/adminstats?accept=false&name_id='
-					.$tagNames[$i]['TagName']['id'].'&hash='.md5($_SESSION['loggedInUser']['User']['id']).'">Reject</a></td>';
+					echo '<td><a class="new-button-default2" id="tagname-accept'.$i.'">Accept</a>
+					<a class="new-button-default2 tag-submit-button" id="tagname-submit'.$i.'" href="/users/adminstats?accept=true&tag_id='
+					.$tagNames[$i]['TagName']['id'].'&hash='.md5($_SESSION['loggedInUser']['User']['id']).'">Submit (1)</a>
+					<a class="new-button-default2" id="tagname-reject'.$i.'">Reject</a></td>';
 				echo '</tr>';
 			}
 			echo '</table><hr>';
@@ -78,17 +78,19 @@
 			echo '<table border="0">';
 			for($i=0; $i<count($tags); $i++){
 				echo '<tr>';
-					echo '<td class="adminpanel-table-text">'.$tags[$i]['Tag']['user'].' added a tag for <a class="adminpanel-link" href="/tsumegos/play/'
+					echo '<td>'.$i.'</td><td class="adminpanel-table-text">'.$tags[$i]['Tag']['user'].' added a tag for <a class="adminpanel-link" href="/tsumegos/play/'
 					.$tags[$i]['Tag']['tsumego_id'].'">'.$tags[$i]['Tag']['tsumego'].'</a>: <a class="adminpanel-link" href="/tag_names/view/'
 					.$tags[$i]['Tag']['tag_name_id'].'">'.$tags[$i]['Tag']['name'].'</a></td>';
 					echo '<td><li class="set'.$tagTsumegos[$i]['Tsumego']['status'].'1">
 						<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$tagTsumegos[$i]['Tsumego']['id'].'">'.$tagTsumegos[$i]['Tsumego']['num'].'
 						<span><div id="tooltipSvg'.$i.'"></div></span></a>
 					</li></td>';
-					echo '<td><a class="new-button-default2" href="/users/adminstats?accept=true&tag_id='
-					.$tags[$i]['Tag']['id'].'&hash='.md5($_SESSION['loggedInUser']['User']['id']).'">Accept</a></td>';
-					echo '<td><a class="new-button-default2" href="/users/adminstats?accept=false&tag_id='
-					.$tags[$i]['Tag']['id'].'&hash='.md5($_SESSION['loggedInUser']['User']['id']).'">Reject</a></td>';
+					echo '<td><a class="new-button-default2" id="tag-accept'.$i.'">Accept</a>
+					<a class="new-button-default2" id="tag-reject'.$i.'">Reject</a>
+					<a class="new-button-default2 tag-submit-button" id="tag-submit'.$i.'" href="/users/adminstats?accept=true&tag_id='
+					.$tags[$i]['Tag']['id'].'&hash='.md5($_SESSION['loggedInUser']['User']['id']).'">Submit</a>
+					</td>';
+					echo '<td style="font-size:13px">'.$tags[$i]['Tag']['created'].'</td>';
 				echo '</tr>';
 			}
 			echo '</table><br><br><br><br><br>';
@@ -98,9 +100,75 @@
 ?>
 <script>
 	let tooltipSgfs = [];
-	<?php
-		if($refreshView) echo 'window.location.href = "/sets/view/'.$set['Set']['id'].'";';
-		
+	let tagList = "null";
+	let tagNameList = "null";
+	let proposalList = "null";
+	let submitCount = 0;
+
+	<?php if($refreshView) echo 'window.location.href = "/sets/view/'.$set['Set']['id'].'";'; ?>
+
+	<?php	
+		for($h=0; $h<count($tags); $h++){
+			echo '$("#tag-accept'.$h.'").click(function() {
+				$("#tag-submit'.$h.'").show();
+				$("#tag-accept'.$h.'").hide();
+				$("#tag-reject'.$h.'").hide();
+				tagList = tagList + "-" + "a'.$tags[$h]['Tag']['id'].'";
+				setCookie("tagList", tagList);
+				submitCount++;
+				$(".tag-submit-button").html("Submit ("+submitCount+")");
+			});';
+			echo '$("#tag-reject'.$h.'").click(function() {
+				$("#tag-submit'.$h.'").show();
+				$("#tag-accept'.$h.'").hide();
+				$("#tag-reject'.$h.'").hide();
+				tagList = tagList + "-" + "r'.$tags[$h]['Tag']['id'].'";
+				setCookie("tagList", tagList);
+				submitCount++;
+				$(".tag-submit-button").html("Submit ("+submitCount+")");
+			});';
+		}
+		for($h=0; $h<count($approveSgfs); $h++){
+			echo '$("#proposal-accept'.$h.'").click(function() {
+				$("#proposal-submit'.$h.'").show();
+				$("#proposal-accept'.$h.'").hide();
+				$("#proposal-reject'.$h.'").hide();
+				proposalList = proposalList + "-" + "a'.$approveSgfs[$h]['Sgf']['id'].'";
+				setCookie("proposalList", proposalList);
+				submitCount++;
+				$(".tag-submit-button").html("Submit ("+submitCount+")");
+			});';
+			echo '$("#proposal-reject'.$h.'").click(function() {
+				$("#proposal-submit'.$h.'").show();
+				$("#proposal-accept'.$h.'").hide();
+				$("#proposal-reject'.$h.'").hide();
+				proposalList = proposalList + "-" + "r'.$approveSgfs[$h]['Sgf']['id'].'";
+				setCookie("proposalList", proposalList);
+				submitCount++;
+				$(".tag-submit-button").html("Submit ("+submitCount+")");
+			});';
+		}
+		for($h=0; $h<count($tagNames); $h++){
+			echo '$("#tagname-accept'.$h.'").click(function() {
+				$("#tagname-submit'.$h.'").show();
+				$("#tagname-accept'.$h.'").hide();
+				$("#tagname-reject'.$h.'").hide();
+				tagNameList = tagNameList + "-" + "a'.$tagNames[$h]['TagName']['id'].'";
+				setCookie("tagNameList", tagNameList);
+				submitCount++;
+				$(".tag-submit-button").html("Submit ("+submitCount+")");
+			});';
+			echo '$("#tagname-reject'.$h.'").click(function() {
+				$("#tagname-submit'.$h.'").show();
+				$("#tagname-accept'.$h.'").hide();
+				$("#tagname-reject'.$h.'").hide();
+				tagNameList = tagNameList + "-" + "r'.$tagNames[$h]['TagName']['id'].'";
+				setCookie("tagNameList", tagNameList);
+				submitCount++;
+				$(".tag-submit-button").html("Submit ("+submitCount+")");
+			});';
+		}
+
 		for($a=0; $a<count($tooltipSgfs); $a++){
 			echo 'tooltipSgfs['.$a.'] = [];';
 			for($y=0; $y<count($tooltipSgfs[$a]); $y++){

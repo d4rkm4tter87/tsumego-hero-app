@@ -575,7 +575,6 @@ class UsersController extends AppController{
 			$p[$i]['Schedule']['num'] = $t['Tsumego']['num'];
 			$p[$i]['Schedule']['set'] = $s['Set']['title'].' '.$s['Set']['title2'].' ';
 		}
-		
 		$this->set('p', $p);
 	}
 	
@@ -789,7 +788,7 @@ Joschka Zimdars';
 		$this->userRefresh(12);
 	}
 	public function routine20(){//popular tags
-		$tags = $this->Tag->find('all');
+		$tags = $this->Tag->find('all', array('conditions' => array('approved' => 1)));
 		$tagCount = array();
 		for($i=0; $i<count($tags); $i++)
 			array_push($tagCount, $tags[$i]['Tag']['tag_name_id']);
@@ -895,19 +894,19 @@ Joschka Zimdars';
 			}
 		}
 		$as3 = array_count_values($as2);
-		$uName = array();
 		$uaNum = array();
+		$uaId = array();
 		foreach ($as3 as $key => $value){
 			$u = $this->User->findById($key);
 			$u['User']['name'] = $this->checkPicture($u);
-			array_push($uName, utf8_encode($u['User']['name']));
 			array_push($uaNum, $value);
+			array_push($uaId, $u['User']['id']);
 		}
-		array_multisort($uaNum, $uName);
+		array_multisort($uaNum, $uaId);
 		
 		$toJson = array();
 		$toJson['uaNum'] = $uaNum;
-		$toJson['uName'] = $uName;
+		$toJson['uaId'] = $uaId;
 		$toJson['aNum'] = $aNum;
 
 		file_put_contents('json/achievement_highscore.json', json_encode($toJson));
@@ -1726,48 +1725,80 @@ Joschka Zimdars';
 		$this->LoadModel('TagName');
 		$this->LoadModel('Sgf');
 		$this->LoadModel('UserContribution');
+		$this->LoadModel('Reject');
 
 		if($_SESSION['loggedInUser']['User']['isAdmin']>0){
 			if(isset($this->params['url']['accept']) && isset($this->params['url']['tag_id'])){
 				if(md5($_SESSION['loggedInUser']['User']['id']) == $this->params['url']['hash']){
-					$tagToApprove = $this->Tag->findById($this->params['url']['tag_id']);
-					$this->handleContribution($_SESSION['loggedInUser']['User']['id'], 'reviewed');
-					if($this->params['url']['accept'] == 'true'){
-						$tagToApprove['Tag']['approved'] = '1';
-						$this->Tag->save($tagToApprove);
-						$this->handleContribution($tagToApprove['Tag']['user_id'], 'added_tag');
-					}else{
-						$this->Tag->delete($tagToApprove['Tag']['id']);
+
+					$tagsToApprove = explode("-",$_COOKIE['tagList']);
+					for($i=1; $i<count($tagsToApprove); $i++){
+						$tagToApprove = $this->Tag->findById(substr($tagsToApprove[$i], 1));
+						if($tagToApprove!=null && $tagToApprove['Tag']['approved']!=1){
+							$this->handleContribution($_SESSION['loggedInUser']['User']['id'], 'reviewed');
+							if(substr($tagsToApprove[$i], 0,1) == 'a'){
+								$tagToApprove['Tag']['approved'] = '1';
+								$this->Tag->save($tagToApprove);
+								$this->handleContribution($tagToApprove['Tag']['user_id'], 'added_tag');
+							}else{
+								$reject = array();
+								$reject['Reject']['tsumego_id'] = $tagToApprove['Tag']['tsumego_id'];
+								$reject['Reject']['user_id'] = $tagToApprove['Tag']['user_id'];
+								$reject['Reject']['type'] = 'tag';
+								$tagNameId = $this->TagName->findById($tagToApprove['Tag']['tag_name_id']);
+								$reject['Reject']['text'] = $tagNameId['TagName']['name'];
+								$this->Reject->create();
+								$this->Reject->save($reject);
+								$this->Tag->delete($tagToApprove['Tag']['id']);
+							}
+						}
+					}
+
+					$tagNamesToApprove = explode("-",$_COOKIE['tagNameList']);
+					for($i=1; $i<count($tagNamesToApprove); $i++){
+						$tagNameToApprove = $this->TagName->findById(substr($tagNamesToApprove[$i], 1));
+						if($tagNameToApprove!=null && $tagNameToApprove['TagName']['approved']!=1){
+							$this->handleContribution($_SESSION['loggedInUser']['User']['id'], 'reviewed');
+							if(substr($tagNamesToApprove[$i], 0,1) == 'a'){
+								$tagNameToApprove['TagName']['approved'] = '1';
+								$this->TagName->save($tagNameToApprove);
+								$this->handleContribution($tagNameToApprove['TagName']['user_id'], 'created_tag');
+							}else{
+								$reject = array();
+								$reject['Reject']['user_id'] = $tagNameToApprove['TagName']['user_id'];
+								$reject['Reject']['type'] = 'tag name';
+								$reject['Reject']['text'] = $tagNameToApprove['TagName']['name'];
+								$this->Reject->create();
+								$this->Reject->save($reject);
+								$this->TagName->delete($tagNameToApprove['TagName']['id']);
+							}
+						}
+					}
+
+					$proposalsToApprove = explode("-",$_COOKIE['proposalList']);
+					for($i=1; $i<count($proposalsToApprove); $i++){
+						$proposalToApprove =  $this->Sgf->findById(substr($proposalsToApprove[$i], 1));
+						if($proposalToApprove!=null && $proposalToApprove['Sgf']['version']==0){
+							$this->handleContribution($_SESSION['loggedInUser']['User']['id'], 'reviewed');
+							if(substr($proposalsToApprove[$i], 0,1) == 'a'){
+								$recentSgf = $this->Sgf->find('first', array('order' => 'version DESC', 'conditions' =>  array('tsumego_id' => $proposalToApprove['Sgf']['tsumego_id'])));
+								$proposalToApprove['Sgf']['version'] = $this->createNewVersionNumber($recentSgf, 0);
+								$this->Sgf->save($proposalToApprove);
+								$this->handleContribution($proposalToApprove['Sgf']['user_id'], 'made_proposal');
+							}else{
+								$reject = array();
+								$reject['Reject']['user_id'] = $proposalToApprove['Sgf']['user_id'];
+								$reject['Reject']['tsumego_id'] = $proposalToApprove['Sgf']['tsumego_id'];
+								$reject['Reject']['type'] = 'proposal';
+								$this->Reject->create();
+								$this->Reject->save($reject);
+								$this->Sgf->delete($proposalToApprove['Sgf']['id']);
+							}
+						}
 					}
 				}
 			}
-			if(isset($this->params['url']['accept']) && isset($this->params['url']['proposal_id'])){
-				if(md5($_SESSION['loggedInUser']['User']['id']) == $this->params['url']['hash']){
-					$sgfToApprove = $this->Sgf->findById($this->params['url']['proposal_id']);
-					$this->handleContribution($_SESSION['loggedInUser']['User']['id'], 'reviewed');
-					if($this->params['url']['accept'] == 'true'){
-						$recentSgf = $this->Sgf->find('first', array('order' => 'version DESC', 'conditions' =>  array('tsumego_id' => $sgfToApprove['Sgf']['tsumego_id'])));
-						$sgfToApprove['Sgf']['version'] = $this->createNewVersionNumber($recentSgf, 0);
-						$this->Sgf->save($sgfToApprove);
-						$this->handleContribution($sgfToApprove['Sgf']['user_id'], 'made_proposal');
-					}else{
-						$this->Sgf->delete($sgfToApprove['Sgf']['id']);
-					}
-				}
-			}
-			if(isset($this->params['url']['accept']) && isset($this->params['url']['name_id'])){
-				if(md5($_SESSION['loggedInUser']['User']['id']) == $this->params['url']['hash']){
-					$tagNameToApprove = $this->TagName->findById($this->params['url']['name_id']);
-					$this->handleContribution($_SESSION['loggedInUser']['User']['id'], 'reviewed');
-					if($this->params['url']['accept'] == 'true'){
-						$tagNameToApprove['TagName']['approved'] = '1';
-						$this->TagName->save($tagNameToApprove);
-						$this->handleContribution($tagNameToApprove['TagName']['user_id'], 'created_tag');
-					}else{
-						$this->TagName->delete($tagNameToApprove['TagName']['id']);
-					}
-				}
-			}
+			
 			if(isset($this->params['url']['delete']) && isset($this->params['url']['hash'])){
 				$toDelete = $this->User->findById($this->params['url']['delete']/1111);
 				$del1 = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => $toDelete['User']['id'])));
@@ -2036,7 +2067,14 @@ Joschka Zimdars';
 			$activate = $this->Activate->find('first', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
 		
 		$json = json_decode(file_get_contents('json/level_highscore.json'), true);
-
+		
+		$uAll = $this->User->find('all', array('limit' => 1250, 'order' => 'level DESC'));
+		$uMap = array();
+		for($i=0; $i<count($uAll); $i++)
+			$uMap[$uAll[$i]['User']['id']] = $uAll[$i]['User']['name'];
+		for($i=0; $i<count($json); $i++)
+			$json[$i]['name'] = $uMap[$json[$i]['id']];
+		
 		$this->set('users', $json);
 		$this->set('activate', $activate);
 	}
@@ -2056,16 +2094,7 @@ Joschka Zimdars';
 		$users = $this->User->find('all', array('limit' => 1000, 'order' => 'elo_rating_mode DESC', 'conditions' =>  array(
 			'NOT' => array('id' => array(33, 34, 35))
 		)));
-		for($i=0; $i<count($users); $i++){
-			//$users[$i]['User']['name'] = $this->checkPicture($users[$i]);
-		}
-		/*
-		//delete null uts
-		$uts = $this->TsumegoStatus->find('all', array('limit' => 1000, 'conditions' =>  array('user_id' => 33)));
-		for($i=0; $i<count($uts); $i++){
-			$this->TsumegoStatus->delete($uts[$i]['TsumegoStatus']['id']);
-		}
-		*/
+	
 		$this->set('users', $users);
 	}
 
@@ -2140,7 +2169,7 @@ Joschka Zimdars';
 				}
 			}
 		}
-		$reachedGoals = floor($uc['UserContribution']['score']/40);
+		$reachedGoals = floor($uc['UserContribution']['score']/35);
 		$goals = array();
 		$goals[0] = $reachedGoals >= 1;
 		$goals[1] = $reachedGoals >= 2;
@@ -2173,8 +2202,13 @@ Joschka Zimdars';
 		}
 		$json = json_decode(file_get_contents('json/achievement_highscore.json'), true);
 
+		for($i=count($json['uaId'])-1; $i>=count($json['uaId'])-100; $i--){
+			$u = $this->User->findById($json['uaId'][$i]);
+			$json['uaId'][$i] = $u['User']['name'];
+		}
+
 		$this->set('uaNum', $json['uaNum']);
-		$this->set('uName', $json['uName']);
+		$this->set('uName', $json['uaId']);
 		$this->set('aNum', $json['aNum']);
 	}
 	
@@ -2327,6 +2361,10 @@ Joschka Zimdars';
 			$this->User->save($ux);
 		}
 		$json = json_decode(file_get_contents('json/daily_highscore.json'), true);
+		for($i=0; $i<count($json); $i++){
+			$u = $this->User->findById($json[$i]['id']);
+			$json[$i]['name'] = $u['User']['name'];
+		}
 
 		$this->set('a', $json);
 		$this->set('uNum', count($json));
@@ -2876,8 +2914,7 @@ Joschka Zimdars';
 		$this->set('u', $u);
 	}
 	
-	
-	//visualization
+	//visualization and set difficulty
 	public function tsumego_score(){
 		$this->loadModel('TsumegoAttempt');
 		$this->loadModel('Tsumego');

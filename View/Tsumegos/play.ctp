@@ -1778,7 +1778,7 @@
 		}
 		$(".add-tag-list").append(' <a class="add-tag-list-anchor" href="/tag_names/add">[Create new tag]</a>');
 		<?php 
-			if($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2' || $t['Tsumego']['status']=='setW2')
+			if($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2')
 				echo '$(".tag-gives-hint").css("display", "inline");';
 		?>
 	}

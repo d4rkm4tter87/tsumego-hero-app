@@ -7,6 +7,7 @@
 	<?php if($tn['TagName']['hint'] == 1){ ?>
 	<p><i>This tag gives a hint.</i></p>
 	<?php } ?>
+	<p>Created by <?php echo $tn['TagName']['user'] ?>.</p>
 	<?php if($_SESSION['loggedInUser']['User']['isAdmin']>0){ ?>
 		<a href="/tag_names/edit/<?php echo $tn['TagName']['id']; ?>">Edit</a> | 
 		<a href="/tag_names/delete/<?php echo $tn['TagName']['id']; ?>">Delete</a>
@@ -22,4 +23,4 @@
 			}
 		?> <a class="add-tag-list-anchor" href="/tag_names/add">[Create new tag]</a>
 		</div>
-    </div>
+  </div>
