@@ -143,13 +143,23 @@ class AppController extends Controller{
 		$this->LoadModel('AchievementStatus');
 		$str = '';
 		$latest = $this->AchievementStatus->find('all', array('limit' => 6, 'order' => 'created DESC'));
+
 		for($i=0; $i<count($latest); $i++){
 			$a = $this->Achievement->findById($latest[$i]['AchievementStatus']['achievement_id']);
 			$u = $this->User->findById($latest[$i]['AchievementStatus']['user_id']);
 			if(substr($u['User']['name'],0,3)=='g__' && $u['User']['external_id']!=null){
 				$startPageUser = $this->checkPicture($u);
+				if(strlen(substr($startPageUser, strpos($startPageUser, '">')+2))>17){
+					$startPageUser = substr($startPageUser,0,(strpos($startPageUser, '">')+2+17)).'...';
+					$uStartPageUser = array();
+					$uStartPageUser['User']['name'] = $startPageUser;
+					$uStartPageUser['User']['picture'] = $u['User']['picture'];
+					$uStartPageUser['User']['external_id'] = $u['User']['external_id'];
+					$startPageUser = $this->checkPicture($uStartPageUser);
+				}
 			}else{
-				if(strlen($u['User']['name'])>17) $startPageUser = substr($u['User']['name'],0,17).'...';
+				if(strlen($u['User']['name'])>17)
+					$startPageUser = substr($u['User']['name'],0,17).'...';
 				else $startPageUser = $u['User']['name'];
 			}
 			$latest[$i]['AchievementStatus']['name'] = $a['Achievement']['name'];
@@ -322,7 +332,7 @@ class AppController extends Controller{
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('SetConnection');
 		$scIds = array();
-		$sc = $this->SetConnection->find('all', array('order' => 'num', 'direction' => 'ASC', 'conditions' => array('set_id' => $id)));
+		$sc = $this->SetConnection->find('all', array('order' => 'num ASC', 'conditions' => array('set_id' => $id)));
 		for($i=0; $i<count($sc); $i++)
 			array_push($scIds, $sc[$i]['SetConnection']['tsumego_id']);
 		$ts = $this->Tsumego->find('all', array('conditions' => array('id' => $scIds)));
@@ -601,6 +611,7 @@ class AppController extends Controller{
 			$uc['UserContribution']['made_proposal'] = 0;
 			$uc['UserContribution']['reviewed'] = 0;
 			$uc['UserContribution']['score'] = 0;
+			$this->UserContribution->create();
 		}
 		$uc['UserContribution'][$action] += 1;
 		$uc['UserContribution']['score'] = 
@@ -608,8 +619,6 @@ class AppController extends Controller{
 			+ $uc['UserContribution']['created_tag']*3
 			+ $uc['UserContribution']['made_proposal']*5 
 			+ $uc['UserContribution']['reviewed']*2;
-
-		$this->UserContribution->create();
 		$this->UserContribution->save($uc);
 	}
 
@@ -708,6 +717,7 @@ class AppController extends Controller{
 			$u[$i]['User']['intuition'] = 1;
 			$u[$i]['User']['rejuvenation'] = 1;
 			$u[$i]['User']['refinement'] = 1;
+			$u[$i]['User']['revelation'] = 5;
 			$u[$i]['User']['usedSprint'] = 0;
 			$u[$i]['User']['usedRejuvenation'] = 0;
 			$u[$i]['User']['usedRefinement'] = 0;
@@ -1091,10 +1101,21 @@ class AppController extends Controller{
 		return $v + $add;
 	}
 	
-	public function getTsumegoElo($rank, $p){
+	public function getTsumegoElo($rank, $p=null){
+		if($p!=null)
+			$p *= 100;
+		else
+			$p = 0;
 		$elo = 600;
-		$p *= 100;
-		if($rank=='5d'){
+		if($rank=='9d'){
+			$elo = round(2900+$p);
+		}else if($rank=='8d'){
+			$elo = round(2800+$p);
+		}else if($rank=='7d'){
+			$elo = round(2700+$p);
+		}else if($rank=='6d'){
+			$elo = round(2600+$p);
+		}else if($rank=='5d'){
 			$elo = round(2500+$p);
 		}else if($rank=='4d'){
 			$elo = round(2400+$p);
@@ -2648,6 +2669,139 @@ class AppController extends Controller{
 		$this->User->save($u);
 	}
 
+	public function removeEmptyFields($arr){
+		$arr2 = array();
+		for($i=0; $i<count($arr); $i++)
+			if(strlen($arr[$i]) > 0)
+				array_push($arr2, $arr[$i]);
+		return $arr2;
+	}
+
+	public function getPartitionRange($amountRemaining, $collectionSize, $partition){
+		$amountPartitions = floor($amountRemaining / $collectionSize) + 1;
+		if($amountRemaining % $collectionSize == 0)
+			$amountPartitions--;
+		$amountCounter = 0;
+		$amountFrom = 0;
+		$amountTo = $collectionSize-1;
+		while($amountRemaining > $collectionSize){
+			if($partition == $amountCounter)
+				break;
+			$amountRemaining -= $collectionSize;
+			$amountCounter++;
+			$amountFrom += $collectionSize;
+			$amountTo += $collectionSize;
+		}
+		$amountTo = $amountFrom + $collectionSize - 1;
+		if($partition >= $amountPartitions - 1)
+			$amountTo = $amountFrom + $amountRemaining - 1;
+		$a = array();
+		$a[0] = $amountFrom;
+		$a[1] = $amountTo;
+		return $a;
+	}
+
+	public function handleSearchSettings($uid){
+		$this->LoadModel('UserContribution');
+		$uc = $this->UserContribution->find('first', array('conditions' => array('user_id' => $uid)));
+		if($uc==null){
+			$uc = array();
+			$uc['UserContribution']['user_id'] = $uid;
+			$uc['UserContribution']['added_tag'] = 0;
+			$uc['UserContribution']['created_tag'] = 0;
+			$uc['UserContribution']['made_proposal'] = 0;
+			$uc['UserContribution']['reviewed'] = 0;
+			$uc['UserContribution']['score'] = 0;
+			$this->UserContribution->create();
+			$this->UserContribution->save($uc);
+		}
+		$this->processSearchParameters($uid);
+	}
+
+	public function processSearchParameters($uid=null){
+		$query = 'topics';
+		$collectionSize = 200;
+		$search1 = array();
+		$search2 = array();
+		$search3 = array();
+		if($uid!=null){
+			//db
+			$uc = $this->UserContribution->find('first', array('conditions' => array('user_id' => $uid)));
+			if(strlen($uc['UserContribution']['query']) > 0)
+				$query = $uc['UserContribution']['query'];
+			if(strlen($uc['UserContribution']['collectionSize']) > 0)
+				$collectionSize = $uc['UserContribution']['collectionSize'];
+			if(strlen($uc['UserContribution']['search1']) > 0)
+				$search1 = $this->removeEmptyFields(explode("@", $uc['UserContribution']['search1']));
+			if(strlen($uc['UserContribution']['search2']) > 0)
+				$search2 = $this->removeEmptyFields(explode("@", $uc['UserContribution']['search2']));
+			if(strlen($uc['UserContribution']['search3']) > 0)
+				$search3 = $this->removeEmptyFields(explode("@", $uc['UserContribution']['search3']));
+			//cookies
+			if(strlen($_COOKIE['query']) > 0){
+				$uc['UserContribution']['query'] = $_COOKIE['query'];
+				$query = $_COOKIE['query'];
+			}
+			if(strlen($_COOKIE['collectionSize']) > 0){
+				$uc['UserContribution']['collectionSize'] = $_COOKIE['collectionSize'];
+				$collectionSize = $_COOKIE['collectionSize'];
+			}	
+			if(strlen($_COOKIE['search1']) > 0){
+				$uc['UserContribution']['search1'] = $_COOKIE['search1'];
+				$search1 = $this->removeEmptyFields(explode("@", $_COOKIE['search1']));
+			}
+			if(strlen($_COOKIE['search2']) > 0){
+				$uc['UserContribution']['search2'] = $_COOKIE['search2'];
+				$search2 = $this->removeEmptyFields(explode("@", $_COOKIE['search2']));
+			}
+			if(strlen($_COOKIE['search3']) > 0){
+				$uc['UserContribution']['search3'] = $_COOKIE['search3'];
+				$search3 = $this->removeEmptyFields(explode("@", $_COOKIE['search3']));
+			}
+			$this->UserContribution->save($uc);
+		}else{
+			//session
+			if(isset($_SESSION['noQuery']))
+				$query = $_SESSION['noQuery'];
+			if(isset($_SESSION['noCollectionSize']))
+				$collectionSize = $_SESSION['noCollectionSize'];
+			if(isset($_SESSION['noSearch1']))
+				$search1 = $this->removeEmptyFields(explode("@", $_SESSION['noSearch1']));
+			if(isset($_SESSION['noSearch2']))
+				$search2 = $this->removeEmptyFields(explode("@", $_SESSION['noSearch2']));
+			if(isset($_SESSION['noSearch3']))
+				$search3 = $this->removeEmptyFields(explode("@", $_SESSION['noSearch3']));
+			//cookies
+			if(strlen($_COOKIE['query']) > 0){
+				$_SESSION['noQuery'] = $_COOKIE['query'];
+				$query = $_COOKIE['query'];
+			}
+			if(strlen($_COOKIE['collectionSize']) > 0){
+				$_SESSION['noCollectionSize'] = $_COOKIE['collectionSize'];
+				$collectionSize = $_COOKIE['collectionSize'];
+			}	
+			if(strlen($_COOKIE['search1']) > 0){
+				$_SESSION['noSearch1'] = $_COOKIE['search1'];
+				$search1 = $this->removeEmptyFields(explode("@", $_COOKIE['search1']));
+			}
+			if(strlen($_COOKIE['search2']) > 0){
+				$_SESSION['noSearch2'] = $_COOKIE['search2'];
+				$search2 = $this->removeEmptyFields(explode("@", $_COOKIE['search2']));
+			}
+			if(strlen($_COOKIE['search3']) > 0){
+				$_SESSION['noSearch3'] = $_COOKIE['search3'];
+				$search3 = $this->removeEmptyFields(explode("@", $_COOKIE['search3']));
+			}
+		}
+		$r = array();
+		array_push($r, $query);
+		array_push($r, $collectionSize);
+		array_push($r, $search1);
+		array_push($r, $search2);
+		array_push($r, $search3);
+		return $r;
+	}
+
 	public function signIn($u){
 		$_SESSION['loggedInUser'] = $u;
 		$vs = $this->TsumegoStatus->find('first', array('order' => 'created DESC', 'conditions' => array('user_id' => $u['User']['id'])));
@@ -2657,6 +2811,25 @@ class AppController extends Controller{
 			$_SESSION['texture'.$i] = $u['User']['texture'.$i];
 		}
 		$_SESSION['check1'] = $u['User']['id'];
+	}
+
+	private function storeUts($id){
+		$uts = $this->TsumegoStatus->find('all', array('conditions' => array('user_id' => $id)));
+		$d = array();
+		$dFound = array();
+		for($l=0; $l<count($uts); $l++){
+			$_SESSION['loggedInUser']['uts'][$uts[$l]['TsumegoStatus']['tsumego_id']] = $uts[$l]['TsumegoStatus']['status'];
+			if(isset($d[$uts[$l]['TsumegoStatus']['tsumego_id']]))
+				array_push($dFound, $uts[$l]['TsumegoStatus']['tsumego_id']);
+			$d[$uts[$l]['TsumegoStatus']['tsumego_id']] = $uts[$l]['TsumegoStatus']['status'];
+		}
+		for($l=0; $l<count($dFound); $l++){
+			$delUt = $this->TsumegoStatus->find('first', array('conditions' => array(
+				'tsumego_id' => $dFound[$l]
+			)));
+			$this->TsumegoStatus->delete($delUt['TsumegoStatus']['id']);
+		}
+		$_SESSION['loggedInUser']['_utsDate'] = date('Y-m-d');
 	}
 	
 	function beforeFilter(){
@@ -2678,6 +2851,7 @@ class AppController extends Controller{
 		$this->loadModel('SetConnection');
 		$this->loadModel('Tag');
 		$this->loadModel('TagName');
+		$this->loadModel('Favorite');
 		
 		ini_set('session.gc_maxlifetime', 7200000);
 		session_set_cookie_params(7200000);
@@ -2687,13 +2861,9 @@ class AppController extends Controller{
 		$levelBar = 1;
 		$lastProfileLeft = 1;
 		$lastProfileRight = 2;
-		
+		$hasFavs = false;
+
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
-			if($_COOKIE['PHPSESSID']==0 || $_COOKIE['PHPSESSID']==-1){
-				//unset($_SESSION['loggedInUser']);
-				//unset($_COOKIE['PHPSESSID']);
-				//unset($_COOKIE['hash']);
-			}
 			if($_SESSION['loggedInUser']['User']['id']==33) unset($_SESSION['loggedInUser']);
 			$loggedInUser = $_SESSION['loggedInUser'];
 			$this->set('loggedInUser', $loggedInUser);
@@ -2726,10 +2896,13 @@ class AppController extends Controller{
 			}
 		}
 		
-		if(isset($_SESSION['loggedInUser']['User']) && !isset($_SESSION['loggedInUser']['User']['id'])) unset($_SESSION['loggedInUser']);
+		if(isset($_SESSION['loggedInUser']['User']) && !isset($_SESSION['loggedInUser']['User']['id']))
+			unset($_SESSION['loggedInUser']);
 		$u = null;
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			$u =  $this->User->findById($_SESSION['loggedInUser']['User']['id']);
+			if(!isset($_SESSION['loggedInUser']['uts']) || date('Y-m-d')!=$_SESSION['loggedInUser']['_utsDate'])/////////////////////////////////
+				$this->storeUts($_SESSION['loggedInUser']['User']['id']);
 			if(isset($_COOKIE['addTag']) && $_COOKIE['addTag'] != 0 && $_SESSION['page']!='set'){
 				$newAddTag = explode("-", $_COOKIE['addTag']);
 				$tagId = $newAddTag[0];
@@ -2784,6 +2957,10 @@ class AppController extends Controller{
 			}
 		}
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			$this->handleSearchSettings($u['User']['id']);
+			$favx = $this->Favorite->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+			if(count($favx) > 0)
+				$hasFavs = true;
 			if(isset($_COOKIE['levelBar']) && $_COOKIE['levelBar']!='0'){
 				$levelBar = $_COOKIE['levelBar'];
 				$_SESSION['loggedInUser']['User']['levelBar'] = $levelBar;
@@ -2828,9 +3005,7 @@ class AppController extends Controller{
 		
 		if(isset($_COOKIE['preId']) && $_COOKIE['preId'] != '0'){
 			$preTsumego = $this->Tsumego->findById($_COOKIE['preId']);
-			
 			$preSc = $this->SetConnection->find('all', array('conditions' => array('tsumego_id' => $_COOKIE['preId'])));
-			
 			$preTsumego['Tsumego']['set_id'] = $preSc[0]['SetConnection']['set_id'];
 			$utPre = $this->TsumegoStatus->find('first', array('conditions' => array('tsumego_id' => $_COOKIE['preId'], 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
 		}
@@ -2854,10 +3029,11 @@ class AppController extends Controller{
 					else $utPreX['TsumegoStatus']['status'] = 'S';
 					$utPreX['TsumegoStatus']['created'] = date('Y-m-d H:i:s');
 					$this->TsumegoStatus->save($utPreX);
+					$_SESSION['loggedInUser']['uts'][$utPreX['TsumegoStatus']['tsumego_id']] = $utPreX['TsumegoStatus']['status'];
 				}
-				//echo '<pre>'; print_r($scoreArrX); echo '</pre>';
 			}
 		}
+		
 		//Incorrect
 		if(isset($_COOKIE['misplay']) && $_COOKIE['misplay']!=0 && $_COOKIE['preId'] != '0'){
 			$eloDifference = abs($_SESSION['loggedInUser']['User']['elo_rating_mode'] - $preTsumego['Tsumego']['elo_rating_mode']);
@@ -2877,6 +3053,28 @@ class AppController extends Controller{
 			$preTsumego['Tsumego']['difficulty'] = $this->convertEloToXp($preTsumego['Tsumego']['elo_rating_mode']);
 			if($preTsumego['Tsumego']['elo_rating_mode']>100)
 				$this->Tsumego->save($preTsumego);
+			if($mode =! 3){
+				//not used
+				if($u['User']['damage']>$u['User']['health']){
+					if($preTsumego==null){
+						$preTsumego['TsumegoStatus'] = array();
+						$preTsumego['TsumegoStatus']['user_id'] = $u['User']['id'];
+						$preTsumego['TsumegoStatus']['tsumego_id'] = $_COOKIE['preId'];
+					}
+					if($preTsumego['TsumegoStatus']['status']=='W')
+						$preTsumego['TsumegoStatus']['status'] = 'X';//W => X
+					else if($preTsumego['TsumegoStatus']['status']=='V')
+						$preTsumego['TsumegoStatus']['status'] = 'F';// V => F
+					else if($preTsumego['TsumegoStatus']['status']=='G')
+						$preTsumego['TsumegoStatus']['status'] = 'F';// G => F
+					else if($preTsumego['TsumegoStatus']['status']=='S')
+						$preTsumego['TsumegoStatus']['status'] = 'S';//S => S
+					$preTsumego['TsumegoStatus']['created'] = date('Y-m-d H:i:s');
+					if(!isset($preTsumego['TsumegoStatus']['status']))
+						$preTsumego['TsumegoStatus']['status'] = 'V';
+					$_SESSION['loggedInUser']['uts'][$preTsumego['TsumegoStatus']['tsumego_id']] = $preTsumego['TsumegoStatus']['status'];
+				}
+			}
 		}	
 		//Correct!
 		if(isset($_COOKIE['mode']) && isset($_COOKIE['score']) && isset($_COOKIE['preId'])){
@@ -3020,9 +3218,6 @@ class AppController extends Controller{
 							}
 						}
 					}
-					if(true){
-						
-					}
 				}
 			}else{
 				$u['User']['penalty'] += 1;
@@ -3050,9 +3245,9 @@ class AppController extends Controller{
 				if(!isset($utPre['TsumegoStatus']['status'])) 
 					$utPre['TsumegoStatus']['status'] = 'V';
 				$this->TsumegoStatus->save($utPre);
+				$_SESSION['loggedInUser']['uts'][$utPre['TsumegoStatus']['tsumego_id']] = $utPre['TsumegoStatus']['status'];
 			}
 		}
-		
 		}
 		}
 		$boardNames = array();
@@ -3081,7 +3276,7 @@ class AppController extends Controller{
 		$boardNames[23] = 'Amber';
 		$count = 24;
 		
-		if(isset($_SESSION['loggedInUser'])){
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			if($_SESSION['loggedInUser']['User']['premium']>=1){
 				$boardNames[24] = 'Marble 6';
 				$boardNames[25] = 'Marble 7';
@@ -3104,21 +3299,18 @@ class AppController extends Controller{
 				$boardNames[42] = 'Magenta Sky';
 				$boardNames[43] = 'Tsumego Hero';
 				$count = 44;
+				$boardNames[$count] = 'Pretty';
+				$boardNames[$count+1] = 'Hunting';
+				$boardNames[$count+2] = 'Haunted';
+				$boardNames[$count+3] = 'Carnage';
+				$boardNames[$count+4] = 'Blind Spot';
+				$boardNames[$count+5] = 'Giants';
+				$boardNames[$count+6] = 'Gems';
+				$boardNames[$count+7] = 'Grandmaster';
 			}
-			if($_SESSION['loggedInUser']['User']['secretArea1']==1) $boardNames[$count] = 'Pretty';
-			if($_SESSION['loggedInUser']['User']['secretArea2']==1) $boardNames[$count+1] = 'Hunting';
-			if($_SESSION['loggedInUser']['User']['secretArea3']==1) $boardNames[$count+2] = 'Haunted';
-			if($_SESSION['loggedInUser']['User']['secretArea4']==1) $boardNames[$count+3] = 'Carnage';
-			if($_SESSION['loggedInUser']['User']['secretArea5']==1) $boardNames[$count+4] = 'Blind Spot';
-			if($_SESSION['loggedInUser']['User']['secretArea6']==1) $boardNames[$count+5] = 'Giants';
-			if($_SESSION['loggedInUser']['User']['secretArea7']==1) $boardNames[$count+6] = 'Gems';
-			//if($_SESSION['loggedInUser']['User']['secretArea10']==1) $boardNames[$count+7] = 'Hand of God';
-			if($_SESSION['loggedInUser']['User']['premium']>0 || $_SESSION['loggedInUser']['User']['secretArea9']==1) $boardNames[$count+7] = 'Grandmaster';
 		}
-		
 		$enabledBoards = array();
 		$boardPositions = array();
-		
 		if(isset($_SESSION['texture1']) || (isset($_COOKIE['texture1']) && $_COOKIE['texture1']!='0')){
 			if(isset($_COOKIE['texture1']) && $_COOKIE['texture1']!='0'){
 				$textureCookies = array();
@@ -3187,16 +3379,15 @@ class AppController extends Controller{
 					$boardPositions[42] = array(53,'texture53','black34.png','white34.png');
 					$boardPositions[43] = array(54,'texture54','black54.png','white54.png');
 					$count = 44;
+					$boardPositions[$count] = array(23,'texture23','black.png','whiteFlower.png');
+					$boardPositions[$count+1] = array(24,'texture24','black24.png','white24.png');
+					$boardPositions[$count+2] = array(25,'texture25','blackGhost.png','white.png');
+					$boardPositions[$count+3] = array(26,'texture26','blackInvis.png','whiteCarnage.png');
+					$boardPositions[$count+4] = array(27,'texture27','black27.png','white27.png');
+					$boardPositions[$count+5] = array(28,'texture28','blackGiant.png','whiteKo.png');
+					$boardPositions[$count+6] = array(29,'texture29','blackKo.png','whiteKo.png');
+					$boardPositions[$count+7] = array(30,'texture55','blackGalaxy.png','whiteGalaxy.png');
 				}
-				
-				if($_SESSION['loggedInUser']['User']['secretArea1']==1) $boardPositions[$count] = array(23,'texture23','black.png','whiteFlower.png');
-				if($_SESSION['loggedInUser']['User']['secretArea2']==1) $boardPositions[$count+1] = array(24,'texture24','black24.png','white24.png');
-				if($_SESSION['loggedInUser']['User']['secretArea3']==1) $boardPositions[$count+2] = array(25,'texture25','blackGhost.png','white.png');
-				if($_SESSION['loggedInUser']['User']['secretArea4']==1) $boardPositions[$count+3] = array(26,'texture26','blackInvis.png','whiteCarnage.png');
-				if($_SESSION['loggedInUser']['User']['secretArea5']==1) $boardPositions[$count+4] = array(27,'texture27','black27.png','white27.png');
-				if($_SESSION['loggedInUser']['User']['secretArea6']==1) $boardPositions[$count+5] = array(28,'texture28','blackGiant.png','whiteKo.png');
-				if($_SESSION['loggedInUser']['User']['secretArea7']==1) $boardPositions[$count+6] = array(29,'texture29','blackKo.png','whiteKo.png');
-				if($_SESSION['loggedInUser']['User']['secretArea10']==1) $boardPositions[$count+7] = array(30,'texture55','blackGalaxy.png','whiteGalaxy.png');
 			}
 		}else{
 			$enabledBoards[1] = 'checked';
@@ -3222,7 +3413,7 @@ class AppController extends Controller{
 			$enabledBoards[21] = '';
 			$enabledBoards[22] = '';
 			$enabledBoards[23] = '';
-			
+
 			$boardPositions[1] = array(1,'texture1','black34.png','white34.png');
 			$boardPositions[2] = array(2,'texture2','black34.png','white34.png');
 			$boardPositions[3] = array(3,'texture3','black34.png','white34.png');
@@ -3247,7 +3438,6 @@ class AppController extends Controller{
 			$boardPositions[22] = array(21,'texture21','black.png','whiteKo.png');
 			$boardPositions[23] = array(22,'texture22','black34.png','white34.png');
 		}
-		
 		$achievementUpdate = array();
 		if(isset($_SESSION['initialLoading'])){
 			$achievementUpdate1 = $this->checkLevelAchievements();
@@ -3263,9 +3453,8 @@ class AppController extends Controller{
 			$this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
 		
 		$nextDay = new DateTime('tomorrow');
-		
 		$u['User']['name'] = $this->checkPicture($u);
-			
+
 		$this->set('user', $u);
 		$this->set('mode', $mode);
 		$this->set('nextDay', $nextDay->format('m/d/Y'));
@@ -3279,6 +3468,7 @@ class AppController extends Controller{
 		$this->set('lastProfileLeft', $lastProfileLeft);
 		$this->set('lastProfileRight', $lastProfileRight);
 		$this->set('resetCookies', $resetCookies);
+		$this->set('hasFavs', $hasFavs);
   }
 	
 	function afterFilter(){

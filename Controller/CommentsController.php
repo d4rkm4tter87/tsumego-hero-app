@@ -10,6 +10,7 @@ class CommentsController extends AppController{
 		$_SESSION['title'] = 'Tsumego Hero - Discuss';
 		$_SESSION['page'] = 'discuss';
 		$c = array();
+		$setsWithPremium = array();
 		$index = 0;
 		$counter = 0;
 		$reverseOrder = false;
@@ -24,10 +25,19 @@ class CommentsController extends AppController{
 		$unresolvedSet = 'true';
 		if(!isset($this->params['url']['unresolved'])){ $unresolved = 'false'; $unresolvedSet = 'false'; }
 		else $unresolved = $this->params['url']['unresolved'];
-		
 		if(!isset($this->params['url']['filter'])) $filter1 = 'true';
 		else $filter1 = $this->params['url']['filter'];
 		
+		if(!isset($_SESSION['loggedInUser']['User']['id'])
+			|| isset($_SESSION['loggedInUser']['User']['id']) && $_SESSION['loggedInUser']['User']['premium']<1
+		)
+			$hasPremium = false;
+		else
+			$hasPremium = true;
+		$swp = $this->Set->find('all', array('conditions' => array('premium' => 1)));
+		for($i=0;$i<count($swp);$i++)
+			array_push($setsWithPremium, $swp[$i]['Set']['id']);
+
 		if($filter1=='true'){
 			$userTsumegos = $this->TsumegoStatus->find('all', array('conditions' =>  array(
 				'user_id' => $_SESSION['loggedInUser']['User']['id'], 
@@ -102,9 +112,14 @@ class CommentsController extends AppController{
 			$index = $this->params['url']['index'];
 		}
 		if($filter1=='true'){
+			$commentsBuffer = array();
 			for($i=0; $i<count($comments); $i++){
 				$t = $this->Tsumego->findById($comments[$i]['Comment']['tsumego_id']);
-				if($t!=null){
+				$premiumLock = false;
+				if(!$hasPremium)
+					if(in_array($t['Tsumego']['set_id'], $setsWithPremium))
+						$premiumLock = true;
+				if($t!=null && !$premiumLock){
 					if(in_array($t['Tsumego']['id'], $keyList)){
 						if($counter<11){
 							if(!in_array($t['Tsumego']['id'], $keyList)) $solved = 0;
@@ -150,48 +165,53 @@ class CommentsController extends AppController{
 				}
 			}
 		}else{
+			$commentsBuffer = array();
 			for($i=0; $i<count($comments); $i++){
 				if($counter<11){
 					$t = $this->Tsumego->findById($comments[$i]['Comment']['tsumego_id']);
-					if(!in_array($t['Tsumego']['id'], $keyList)) $solved = 0;
-					else{
-						if($keyListStatus[array_search($t['Tsumego']['id'], $keyList)]=='S' || 
-						   $keyListStatus[array_search($t['Tsumego']['id'], $keyList)]=='C' || 
-						   $keyListStatus[array_search($t['Tsumego']['id'], $keyList)]=='W') 
-						   $solved = 1;
-						else $solved = 0;
-					}					
-					$u = $this->User->findById($comments[$i]['Comment']['user_id']);
-					if($comments[$i]['Comment']['set_id']==null)
-						$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
-					else
-						$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'], 'set_id' => $comments[$i]['Comment']['set_id'])));
-					$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
-					$s = $this->Set->findById($t['Tsumego']['set_id']);
-					$counter++;
-					$comments[$i]['Comment']['counter'] = $counter+$index;
-					$comments[$i]['Comment']['user_name'] = $this->checkPicture($u);
-					$comments[$i]['Comment']['set'] = $s['Set']['title'];
-					$comments[$i]['Comment']['set2'] = $s['Set']['title2'];
-					$comments[$i]['Comment']['num'] = $scT['SetConnection']['num'];
-					if(!in_array($t['Tsumego']['id'], $keyList)) $comments[$i]['Comment']['user_tsumego'] = 'N';
-					else $comments[$i]['Comment']['user_tsumego'] = $keyListStatus[array_search($t['Tsumego']['id'], $keyList)];
-					$comments[$i]['Comment']['solved'] = $solved;
-					if($comments[$i]['Comment']['admin_id']!=null){
-						$au = $this->User->findById($comments[$i]['Comment']['admin_id']);
-						if($au['User']['name']=='Morty') $au['User']['name'] = 'Admin';
-						$comments[$i]['Comment']['admin_name'] = $au['User']['name'];
+					$premiumLock = false;
+					if(!$hasPremium)
+						if(in_array($t['Tsumego']['set_id'], $setsWithPremium))
+							$premiumLock = true;
+					if(!$premiumLock){
+						if(!in_array($t['Tsumego']['id'], $keyList)) $solved = 0;
+						else{
+							if($keyListStatus[array_search($t['Tsumego']['id'], $keyList)]=='S' || 
+								$keyListStatus[array_search($t['Tsumego']['id'], $keyList)]=='C' || 
+								$keyListStatus[array_search($t['Tsumego']['id'], $keyList)]=='W') 
+								$solved = 1;
+							else $solved = 0;
+						}
+						$u = $this->User->findById($comments[$i]['Comment']['user_id']);
+						if($comments[$i]['Comment']['set_id']==null)
+							$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+						else
+							$scT = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'], 'set_id' => $comments[$i]['Comment']['set_id'])));
+						$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
+						$s = $this->Set->findById($t['Tsumego']['set_id']);
+						$counter++;
+						$comments[$i]['Comment']['counter'] = $counter+$index;
+						$comments[$i]['Comment']['user_name'] = $this->checkPicture($u);
+						$comments[$i]['Comment']['set'] = $s['Set']['title'];
+						$comments[$i]['Comment']['set2'] = $s['Set']['title2'];
+						$comments[$i]['Comment']['num'] = $scT['SetConnection']['num'];
+						if(!in_array($t['Tsumego']['id'], $keyList)) $comments[$i]['Comment']['user_tsumego'] = 'N';
+						else $comments[$i]['Comment']['user_tsumego'] = $keyListStatus[array_search($t['Tsumego']['id'], $keyList)];
+						$comments[$i]['Comment']['solved'] = $solved;
+						if($comments[$i]['Comment']['admin_id']!=null){
+							$au = $this->User->findById($comments[$i]['Comment']['admin_id']);
+							if($au['User']['name']=='Morty') $au['User']['name'] = 'Admin';
+							$comments[$i]['Comment']['admin_name'] = $au['User']['name'];
+						}
+						$date = new DateTime($comments[$i]['Comment']['created']);
+						$month = date("F", strtotime($comments[$i]['Comment']['created']));
+						$tday = $date->format('d. ');
+						$tyear = $date->format('Y');
+						$tClock = $date->format('H:i');
+						if($tday[0]==0) $tday = substr($tday, -3);
+						$comments[$i]['Comment']['created'] = $tday.$month.' '.$tyear.'<br>'.$tClock;
+						array_push($c, $comments[$i]);
 					}
-					
-					$date = new DateTime($comments[$i]['Comment']['created']);
-					$month = date("F", strtotime($comments[$i]['Comment']['created']));
-					$tday = $date->format('d. ');
-					$tyear = $date->format('Y');
-					$tClock = $date->format('H:i');
-					if($tday[0]==0) $tday = substr($tday, -3);
-					$comments[$i]['Comment']['created'] = $tday.$month.' '.$tyear.'<br>'.$tClock;
-					
-					array_push($c, $comments[$i]);
 				}
 			}
 		}

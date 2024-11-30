@@ -79,6 +79,20 @@
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
+		<p class="title4">Update 29.11.2024</p>
+		<div class="new1">
+			<b>Customizable collection index page</b><br><br>
+			The collection index page got a makeover, which makes use of the newly introduced tags. You can set filters for three categories: 
+				<b style="color:#77c14a">Topics</b>, <b style="color:#be6cdd">Difficulty</b> and <b style="color:#d5795a">Tags</b>. 
+			<br>
+			<div align="center">
+				<img style="margin:5px" src="/img/customizable-collections-example.PNG" title="Customizable Collections Example" width="85%">
+			</div>
+			Further, there are two grouping parameters: Collection types and collection sizes. The type is set to one of the three filters.
+			In this example, the type is difficulty, which groups the problems in collections for the rank. 
+			The applied filters remain set on the problem pages until they are changed or removed.
+			<br><br>
+		</div>
 		<p class="title4">Update 26.10.2024</p>
 		<div class="new1">
 			<b>Tags, proposals and rewards</b><br><br>
@@ -329,22 +343,17 @@
 		</div>
 		<p class="uotdmargin">&nbsp;</p>
 		</div>
-		<?php if(isset($_SESSION['loggedInUser'])){ ?>
-		<?php if($_SESSION['loggedInUser']['User']['premium']==0 && $user['User']['id']!=1165){ ?>
-			<p class="title4">Donations</p>
+		<?php if(
+			!isset($_SESSION['loggedInUser']['User']['id'])
+			|| isset($_SESSION['loggedInUser']['User']['id']) && $_SESSION['loggedInUser']['User']['premium']==0
+		){ ?>
+			<p class="title4">Upgrades and Donations</p>
 			<div class="new1">
-			<div align="center"><a href="/users/donate"><img id="donateH" onmouseover="donateHover()" onmouseout="donateNoHover()" width="180px" src="/img/donateButton1.png"></a><br>
-			Get access to <a href="/users/donate">Tsumego Hero Premium</a>.<br><br>
-			</div>
-			</div>
-		<?php }else{ ?>
-			
-		<?php } ?>
-		<?php }else{ ?>
-			<p class="title4">Donations</p>
-			<div class="new1">
-			<div align="center"><a href="/users/donate"><img id="donateH" onmouseover="donateHover()" onmouseout="donateNoHover()" width="180px" src="/img/donateButton1.png"></a><br>
-			Get access to <a href="/users/donate">Tsumego Hero Premium</a>.<br><br>
+			<div align="center">
+				<br>
+				<a href="/users/donate"><img id="donateH" onmouseover="donateHover()" onmouseout="donateNoHover()" width="180px" src="/img/upgradeButton1.png"></a>
+				<br><br>
+				Get access to <a href="/users/donate">Tsumego Hero Premium</a>.<br><br>
 			</div>
 			</div>
 		<?php } ?>
@@ -409,7 +418,7 @@
 			if($date==date_create('2020-02-22')) $td[$j]['num'] -= 347;
 			if($date==date_create('2023-09-01')) $td[$j]['num'] -= 4;
 			if($date==date_create('2023-10-04')) $td[$j]['num'] -= 10;
-			if($date==date_create('2024-08-18')) $td[$j]['num'] -= 30;
+			if($date==date_create('2024-08-18')) $td[$j]['num'] -= 31;
 			$x = $td[$j]['num'];
 			$sum = $x;
 			
@@ -614,9 +623,9 @@
 		<div class="new1">
 		<br>
 		<div align="center">
-		<a class="menuIcons2" id="darkButton2" onclick="darkAndLight();"><img id="darkButtonImage2" src="/img/light-icon1.png" width="30px"></a>
+		<a class="menuIcons2" id="darkButton2" onclick="darkAndLight();"><img id="darkButtonImage2" src="/img/light-icon1x.png" width="30px"></a>
 		<h1 class="darkButton2">Dark Theme</h1>
-		<a class="menuIcons2" id="darkButton3" onclick="darkAndLight();"><img id="darkButtonImage3" src="/img/light-icon1.png" width="30px"></a>
+		<a class="menuIcons2" id="darkButton3" onclick="darkAndLight();"><img id="darkButtonImage3" src="/img/light-icon1x.png" width="30px"></a>
 		</div>
 		<br>
 		<br>
@@ -724,10 +733,10 @@
 			if(document.getElementById("newCheck20").checked) document.cookie = "texture20=checked"; else document.cookie = "texture20= ";
 		}
 		function donateHover(){
-			document.getElementById("donateH").src = '/img/donateButton1h.png';
+			document.getElementById("donateH").src = '/img/upgradeButton1h.png';
 		}	
 		function donateNoHover(){
-			document.getElementById("donateH").src = "/img/donateButton1.png";
+			document.getElementById("donateH").src = "/img/upgradeButton1.png";
 		}
 		
 		function sandboxY(){
@@ -828,9 +837,9 @@
 	<?php
 	if(!isset($_SESSION['loggedInUser']['User']['id'])){
 		echo '<style>
-		#progressBarInLevelMode{
-			display:none;
-		}
+			#progressBarInLevelMode{
+				display:none;
+			}
 		</style>';
 	}
 	?>

@@ -497,7 +497,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
         displayMessage(transformTextColors(root, "It is " + node.status.strLong() + ", but it should be: " + root.status.strLong()), 'Not the best solution');
       }
       displayResult(success ? 'S' : 'F');
-    }, 360);
+    }, 240);
   }
 
   function navigateToNode(node, byClicking = false)
@@ -541,7 +541,7 @@ besogo.makeEditor = function(sizeX = 19, sizeY = 19, options = [])
                 addToRequired(current.virtualChildren[i].target, current);
         }
         nextNode(1, selectOpponentMove, true /* autoplay move*/);
-      }, 360);
+      }, 240);
     }
     notifyListeners({ navChange: true }); // Notify navigation (with no tree edits)
     tryToFinish(node);

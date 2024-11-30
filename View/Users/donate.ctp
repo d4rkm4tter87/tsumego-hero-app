@@ -1,21 +1,25 @@
 	<div align="center">
-		<?php 
-		/*if(isset($_SESSION['loggedInUser'])){
-			if($_SESSION['loggedInUser']['User']['premium']>0){
-				echo '<br>You have a tier '.$_SESSION['loggedInUser']['User']['premium'].' account.<br>';
-				if($_SESSION['loggedInUser']['User']['secretArea7']==0) echo 'You haven\'t found all secret areas.<br>';
-				else{
-					echo 'You have found all secret areas.<br>';
-				}
-			}
-		}*/
+	<?php if(
+		!isset($_SESSION['loggedInUser']['User']['id'])
+		|| isset($_SESSION['loggedInUser']['User']['id']) && $_SESSION['loggedInUser']['User']['premium']<1
+	)
+		$upgrade = true;
+	else
+		$upgrade = false;
 		?>
 	</div>
 	<div id="login-box2" class="users form">
 		<div class="left2 signin">
 			<u><b>20,00 € Tsumego Hero Premium (lifetime)</b></u><br><br>
 		
-			Thank you for considering a donation! If you support Tsumego Hero, the following rewards await you:<br>
+			Thank you for considering  
+			<?php
+				if($upgrade)
+					echo 'an upgrade!';
+				else
+					echo 'a donation!';
+			?>
+			 The following rewards await you:<br>
 			<br>
 			
 			<table>
@@ -24,23 +28,23 @@
 						<img src="/img/hero powers.png" alt="Secret Area: Ko Gems" title="Secret Area: Ko Gems"><br>
 					</td>
 					<td>
-						<b>Secret Area: Ko Gems</b><br>
+						<b>Premium collections (<?php echo $premiumTsumegos; ?> problems):</b><br> 
+						<?php
+							for($i=0;$i<count($premiumSets);$i++){
+								echo $premiumSets[$i]['Set']['title'];
+								if($i<count($premiumSets)-1)
+									echo ', ';
+							}
+						?>
+						<br>
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<img src="/img/hero powers.png" alt="Secret Area: Tsumego Grandmaster" title="Potion"><br>
+						<img src="/img/hero power sandbox.png" alt="Sandbox" title="Sandbox"><br>
 					</td>
 					<td>
-						<b>Secret Area: Tsumego Grandmaster</b><br>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<img src="/img/hp5.png" alt="Hero Power: Potion" title="Hero Power: Potion"><br>
-					</td>
-					<td>
-						<b>Hero Power: Potion</b><br>Might refill hearts.<br>
+						<b>Sandbox</b><br>Contains hundreds of unpublished problems.<br>
 					</td>
 				</tr>
 				<tr>
@@ -53,18 +57,26 @@
 				</tr>
 				<tr>
 					<td>
-						<img src="/img/Unbenannt4.png" alt="Download SGFs" title="Download SGFs"><br>
+						<img src="/img/hp6.png" alt="Hero Power: Revelation" title="Hero Power: Revelation"><br>
 					</td>
 					<td>
-						<b>Download SGFs</b><br>Download the files of the problems.<br>
+						<b>Hero Power: Revelation</b><br> Solves a problem, but you don't get any reward.<br>
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<img src="/img/hero power sandbox.png" alt="Sandbox" title="Sandbox"><br>
+						<img src="/img/hp5.png" alt="Hero Power: Potion" title="Hero Power: Potion"><br>
 					</td>
 					<td>
-						<b>Sandbox</b><br>Contains hundreds of unpublished problems.<br>
+						<b>Hero Power: Potion</b><br>Might refill hearts.<br>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<img src="/img/Unbenannt7.png" alt="no daily limit" title="no daily limit"><br>
+					</td>
+					<td>
+						<b>No daily limit</b><br>Removes the current limit of 12000 XP.<br>
 					</td>
 				</tr>
 				<tr>
@@ -85,7 +97,13 @@
 				<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
 				<input type="hidden" name="cmd" value="_s-xclick" />
 				<input type="hidden" name="hosted_button_id" value="RC7Z3QUNS9H4E" />
-				<input type="image" id="donateH" src="https://tsumego-hero.com/img/PayPal-Donate-Button.png" onmouseover="donateHover()" onmouseout="donateNoHover()" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+				<?php if($upgrade){ ?>
+					<input type="image" id="donateH" src="/img/PayPal-Upgrade-Button.png" onmouseover="upgradeHover()" onmouseout="upgradeNoHover()" 
+					border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Upgrade with PayPal button" />
+				<?php }else{ ?>
+					<input type="image" id="donateH" src="/img/PayPal-Donate-Button.png" onmouseover="donateHover()" onmouseout="donateNoHover()" 
+					border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+				<?php } ?>
 				<img alt="" border="0" src="https://www.paypal.com/en_EN/i/scr/pixel.gif" width="1" height="1" />
 				</form>
 			</div>
@@ -138,5 +156,11 @@
 		}	
 		function donateNoHover(){
 			document.getElementById("donateH").src = "/img/PayPal-Donate-Button.png";
+		}
+		function upgradeHover(){
+			document.getElementById("donateH").src = '/img/PayPal-Upgrade-ButtonH.png';
+		}	
+		function upgradeNoHover(){
+			document.getElementById("donateH").src = "/img/PayPal-Upgrade-Button.png";
 		}
 	</script>

@@ -44,6 +44,9 @@ font,
   font-size: 19px;
   color: #f75959;
 }
+.admin-panel-main-page ul li:hover {
+  background: linear-gradient(#888787, #666666);
+}
 li.setBlank {
   background-color: #2a2a2a;
   background-image: none;
@@ -264,4 +267,45 @@ li.setG2 {
 .h1profile h1,
 .profileTable2 a {
   color: #fff;
+}
+.dropdown-boxes {
+  background: #222222;
+  padding: 10px;
+  border-radius: 5px;
+  max-width: 380px;
+  border: 1px solid black;
+}
+#set-size-input {
+  background: #2a2a2a;
+  width: 90px;
+  border: 1px solid #1b1b1b;
+  padding: 5px;
+  border-radius: 4px;
+  color: #bfc1c4;
+  font-size: 16px;
+  font-weight: 800;
+  padding: 6px 10px;
+  margin: 5px;
+}
+#submit-size-button {
+  border: 1px solid #1b1b1b;
+  background: #2a2a2a;
+}
+#submit-size-button:disabled {
+  background: #2a2a2a;
+  color: #2f2f2f;
+}
+.tile-color4 {
+  background: #ffffff1a;
+}
+#tags-button:hover,
+#difficulty-button:hover,
+#topics-button:hover {
+  background: #333;
+}
+.box1default:hover {
+  background-image: linear-gradient(
+    rgba(200, 200, 200, 0.3),
+    rgba(33, 33, 33, 0.35)
+  ) !important;
 }

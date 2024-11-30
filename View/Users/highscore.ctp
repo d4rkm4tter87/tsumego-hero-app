@@ -24,19 +24,19 @@
 <table class="highscoreTable" border="0">
 	<tr>
 		<div align="center">	
-				<p class="title">
-					Level Highscore
-				<br><br> 
-				</p>
-				</div>
+			<p class="title">
+				Level Highscore
+			<br><br> 
+			</p>
+		</div>
 	</tr>
 	<tr>
 		<!--<th width="55px"></th>-->
 		<th width="60px">Rank</th>
 		<th width="220px" colspan="2" align="left">&nbsp;Name</th>
 		<th width="150px">Level</th>
-		<th width="150px">Solved</th>
 		<th width="150px">XP</th>
+		<th width="150px" align="left">Solved</th>
 	</tr>
 	<?php
 		$statsLink1 = '';
@@ -91,11 +91,10 @@
 					</td>
 					
 					<td align="center">
-						'.$users[$i]['solved'].'
-					</td>
-					
-					<td align="left">
 						'.$users[$i]['xpSum'].' XP
+					</td>
+					<td align="left">
+						'.$users[$i]['solved'].'
 					</td>
 				</tr>
 			';

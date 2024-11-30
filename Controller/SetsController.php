@@ -1,7 +1,7 @@
 <?php
 class SetsController extends AppController{
 
-    public $helpers = array('Html', 'Form');
+  public $helpers = array('Html', 'Form');
 	public $title = 'tsumego-hero.com';
 
 	public function duplicates($id=null){
@@ -22,7 +22,6 @@ class SetsController extends AppController{
 				$this->Duplicate->delete($unmark[$i]['Duplicate']['id']);
 		}
 		
-		//$ts = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array('set_id' => $id)));
 		$ts = $this->findTsumegoSet($id);
 		$set = $this->Set->findById($ts[0]['Tsumego']['set_id']);
 		for($i=0; $i<count($ts); $i++)
@@ -40,8 +39,6 @@ class SetsController extends AppController{
 				array_push($d, $d01[$j]);
 			}
 		}
-		
-		
 		$dNew = array();
 		for($i=0; $i<count($d); $i++){
 			$dNewMatch = false;
@@ -54,8 +51,6 @@ class SetsController extends AppController{
 			if(!$dNewMatch)
 				array_push($dNew, $d[$i]);
 		}
-		//echo '<pre>'; print_r(count($d)); echo '</pre>';
-		//echo '<pre>'; print_r(count($dNew)); echo '</pre>';
 		$d = $dNew;
 		$similarArr = array();
 		$similarArrInfo = array();
@@ -134,11 +129,11 @@ class SetsController extends AppController{
 		$this->LoadModel('Comment');
 		$this->LoadModel('Favorite');
 		$this->LoadModel('Comment');
-		$this->LoadModel('UserSaMap');
 		$this->LoadModel('SetConnection');
 
 		$_SESSION['page'] = 'sandbox';
 		$_SESSION['title'] = 'Tsumego Hero - Collections';
+		$setsNew = array();
 
 		if(isset($this->params['url']['restore'])){
 			$restore = $this->Set->findById($this->params['url']['restore']);
@@ -147,64 +142,13 @@ class SetsController extends AppController{
 				$this->Set->save($restore);
 			}
 		}
-		$sa = $this->UserSaMap->find('all');
 
-		$setsX = $this->Set->find('all', array(
-			'fields' => array('Set.id', 'Set.title', 'Set.title2', 'Set.author', 'Set.description', 'Set.folder', 'Set.difficulty', 'Set.image', 'Set.order', 'Set.created', 'Set.color' ),
+		$sets = $this->Set->find('all', array(
 			'order' => array('Set.order'),
 			'conditions' => array('public' => 0)
 		));
+		$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
 
-		$secretPoints = 0;
-		$removeMap = array();
-
-		$removeMap[135] = 1;
-		
-		if(isset($_SESSION['loggedInUser'])){
-			if($_SESSION['loggedInUser']['User']['id']==72){
-				unset($removeMap[135]);
-			}
-
-			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
-			if($_SESSION['loggedInUser']['User']['level'] >= 70){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 65){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 60){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 55){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 50){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 45){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 40){ $secretPoints++; }
-
-			if($secretPoints>=7){ $u['User']['secretArea7'] = 1; $_SESSION['loggedInUser']['User']['secretArea7'] = 1; }
-			if($secretPoints>=6){ $u['User']['secretArea6'] = 1; $_SESSION['loggedInUser']['User']['secretArea6'] = 1; }
-			if($secretPoints>=5){ $u['User']['secretArea5'] = 1; $_SESSION['loggedInUser']['User']['secretArea5'] = 1; }
-			if($secretPoints>=4){ $u['User']['secretArea4'] = 1; $_SESSION['loggedInUser']['User']['secretArea4'] = 1; }
-			if($secretPoints>=3){ $u['User']['secretArea3'] = 1; $_SESSION['loggedInUser']['User']['secretArea3'] = 1; }
-			if($secretPoints>=2){ $u['User']['secretArea2'] = 1; $_SESSION['loggedInUser']['User']['secretArea2'] = 1; }
-			if($secretPoints>=1){ $u['User']['secretArea1'] = 1; $_SESSION['loggedInUser']['User']['secretArea1'] = 1; }
-
-			if($_SESSION['loggedInUser']['User']['secretArea10']==0) $removeMap[88156] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea7']==0) $removeMap[81578] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea6']==0) $removeMap[74761] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea5']==0) $removeMap[71790] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea4']==0) $removeMap[33007] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea3']==0) $removeMap[31813] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea2']==0) $removeMap[29156] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea1']==0) $removeMap[11969] = 1;
-		}else{
-			$removeMap[11969] = 1;
-			$removeMap[29156] = 1;
-			$removeMap[31813] = 1;
-			$removeMap[33007] = 1;
-			$removeMap[71790] = 1;
-			$removeMap[74761] = 1;
-			$removeMap[81578] = 1;
-			$removeMap[88156] = 1;
-		}
-
-		$sets = array();
-		for($i=0; $i<count($setsX); $i++){
-			if(!isset($removeMap[$setsX[$i]['Set']['id']])) array_push($sets, $setsX[$i]);
-		}
 		if(isset($_SESSION['loggedInUser'])){
 			$uts = $this->TsumegoStatus->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
 			$utsMap = array();
@@ -212,41 +156,21 @@ class SetsController extends AppController{
 				$utsMap[$uts[$l]['TsumegoStatus']['tsumego_id']] = $uts[$l]['TsumegoStatus']['status'];
 			}
 		}
-
-		$globalSolvedCounter = 0;
-		
 		$overallCounter = 0;
+
 		for($i=0; $i<count($sets); $i++){
 			$ts = $this->findTsumegoSet($sets[$i]['Set']['id']);
 			$sets[$i]['Set']['anz'] = count($ts);
 			$counter = 0;
-
-			if(isset($_SESSION['loggedInUser'])){
+			if(isset($_SESSION['loggedInUser']['User']['id'])){
 				for($k=0; $k<count($ts); $k++){
 					if(isset($utsMap[$ts[$k]['Tsumego']['id']])){
 						if($utsMap[$ts[$k]['Tsumego']['id']] == 'S' || $utsMap[$ts[$k]['Tsumego']['id']] == 'W' || $utsMap[$ts[$k]['Tsumego']['id']] == 'C'){
 							$counter++;
-							$globalSolvedCounter++;
-						}
-					}
-				}
-			}else{
-				if(isset($_SESSION['noLogin'])){
-					$noLogin = $_SESSION['noLogin'];
-					$noLoginStatus = $_SESSION['noLoginStatus'];
-					for($g=0; $g<count($noLogin); $g++){
-						for($f=0; $f<count($ts); $f++){
-							if($ts[$f]['Tsumego']['id']==$noLogin[$g]){
-								$ts[$f]['Tsumego']['status'] = $noLoginStatus[$g];
-								if($noLoginStatus[$g]=='S' || $noLoginStatus[$g]=='W' || $noLoginStatus[$g]=='C'){
-									$counter++;
-								}
-							}
 						}
 					}
 				}
 			}
-
 			$date = new DateTime($sets[$i]['Set']['created']);
 			$month = date("F", strtotime($sets[$i]['Set']['created']));
 			$setday = $date->format('d. ');
@@ -264,25 +188,15 @@ class SetsController extends AppController{
 			$sets[$i]['Set']['difficultyColor'] = $this->getDifficultyColor($sets[$i]['Set']['difficulty']);
 			$sets[$i]['Set']['sizeColor'] = $this->getSizeColor($sets[$i]['Set']['anz']);
 			$sets[$i]['Set']['dateColor'] = $this->getDateColor($sets[$i]['Set']['created']);
-		}
 
-		$sortOrder = 'null';
-		$sortColor = 'null';
-
-		if(isset($_SESSION['loggedInUser'])){
-			if(isset($_COOKIE['sortOrder']) && $_COOKIE['sortOrder']!= 'null'){
-				$u['User']['sortOrder'] = $_COOKIE['sortOrder'];
-				$sortOrder = $_COOKIE['sortOrder'];
-				$_COOKIE['sortOrder'] = 'null';
-				unset($_COOKIE['sortOrder']);
-			}
-			if(isset($_COOKIE['sortColor']) && $_COOKIE['sortColor']!= 'null'){
-				$u['User']['sortColor'] = $_COOKIE['sortColor'];
-				$sortColor = $_COOKIE['sortColor'];
-				$_COOKIE['sortColor'] = 'null';
-				unset($_COOKIE['sortColor']);
-			}
-			$this->User->save($u);
+			$sn = array();
+			$sn['id'] = $sets[$i]['Set']['id'];
+			$sn['name'] = $sets[$i]['Set']['title'];
+			$sn['amount'] = count($ts);
+			$sn['color'] = $sets[$i]['Set']['color'];
+			$sn['difficulty'] = '10k';
+			$sn['solved'] = round($percent, 1);
+			array_push($setsNew, $sn);
 		}
 
 		$accessList = $this->User->find('all', array('conditions' => array('completed' => 1)));
@@ -301,8 +215,9 @@ class SetsController extends AppController{
 		$this->set('sortColor', $sortColor);
 		$this->set('admins', $admins);
 		$this->set('access', $access);
-        $this->set('sets', $sets);
-        $this->set('overallCounter', $overallCounter);
+		$this->set('sets', $sets);
+		$this->set('setsNew', $setsNew);
+		$this->set('overallCounter', $overallCounter);
     }
 
 	public function create($tid=null){
@@ -376,8 +291,6 @@ class SetsController extends AppController{
 
 				$s = $this->Set->findById($set);
 				if($s['Set']['public']==0 || $s['Set']['public']==-1) $this->Set->delete($set);
-
-				//$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => $set)));
 				$ts = $this->findTsumegoSet($set);	
 				if(count($ts)<50){
 					for($i=0;$i<count($ts);$i++){
@@ -387,8 +300,6 @@ class SetsController extends AppController{
 				$redirect = true;
 			}
 		}
-
-
 		$this->set('t', $t);
 		$this->set('redirect', $redirect);
 	}
@@ -400,20 +311,16 @@ class SetsController extends AppController{
 			$t = array();
 			$t['Tsumego']['num'] = $this->data['Tsumego']['num'];
 			$t['Tsumego']['difficulty'] =  $this->data['Tsumego']['difficulty'];
-			//$t['Tsumego']['set_id'] =  $this->data['Tsumego']['set_id'];
 			$t['Tsumego']['variance'] =  $this->data['Tsumego']['variance'];
 			$t['Tsumego']['description'] =  $this->data['Tsumego']['description'];
 			$this->Tsumego->save($t);
 		}
-		$ts = $this->findTsumegoSet($tid);	
-		//$ts = $this->Tsumego->find('all', array('order' => 'num DESC', 'conditions' => array('set_id' => $tid)));
+		$ts = $this->findTsumegoSet($tid);
 		$this->set('t', $ts[0]);
 	}
 
-
 	private function newDate($date=null){
 		$this->LoadModel('Tsumego');
-		//$ts = $this->Tsumego->find('all', array('conditions' => array('set_id' => 94)));
 		$ts = $this->findTsumegoSet(94);	
 		for($i=0; $i<count($ts); $i++){
 			if($ts[$i]['Tsumego']['num']>200 && $ts[$i]['Tsumego']['num']<=300){
@@ -426,172 +333,171 @@ class SetsController extends AppController{
 	public function index(){
 		$this->LoadModel('User');
 		$this->LoadModel('Tsumego');
-		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('Favorite');
 		$this->LoadModel('AchievementCondition');
+		$this->LoadModel('TsumegoStatus');
 		$this->LoadModel('SetConnection');
-
+		$this->LoadModel('UserContribution');
 		$_SESSION['page'] = 'set';
 		$_SESSION['title'] = 'Tsumego Hero - Collections';
 
-		$setsX = $this->Set->find('all', array(
+		$setTiles = array();
+		$difficultyTiles = array();
+		$tagTiles = array();
+		$utsMap = array();
+		$sets = array();
+		$ranksArray = array();
+		$tagList = array();
+		$setsWithPremium = array();
+		$overallCounter = 0;
+		$searchCounter = 0;
+		$searchPatameters = $this->processSearchParameters($_SESSION['loggedInUser']['User']['id']);
+		$query = $searchPatameters[0];
+		$collectionSize = $searchPatameters[1];
+		$search1 = $searchPatameters[2];
+		$search2 = $searchPatameters[3];
+		$search3 = $searchPatameters[4];
+
+		if(!isset($_SESSION['loggedInUser']['User']['id'])
+			|| isset($_SESSION['loggedInUser']['User']['id']) && $_SESSION['loggedInUser']['User']['premium']<1
+		)
+			$hasPremium = false;
+		else
+			$hasPremium = true;
+		$swp = $this->Set->find('all', array('conditions' => array('premium' => 1)));
+		for($i=0;$i<count($swp);$i++)
+			array_push($setsWithPremium, $swp[$i]['Set']['id']);
+
+		//setTiles
+		$setsRaw = $this->Set->find('all', array(
 			'order' => array('Set.order'),
 			'conditions' => array('public' => 1)
 		));
+		for($i=0; $i<count($setsRaw); $i++)
+			if($hasPremium==true || $setsRaw[$i]['Set']['premium']!=1)
+				array_push($setTiles, $setsRaw[$i]['Set']['title']);
+		
+		//difficultyTiles
+		$dt = $this->getExistingRanksArray();
+		for($i=0; $i<count($dt); $i++)
+			array_push($difficultyTiles, $dt[$i]['rank']);
 
-		$secretPoints = 0;
-		$removeMap = array();
-		$favorite = null;
-		$overallCounter = 0;
-		$achievementUpdate = 0;
-
-		$removeMap[6473] = 1;
+		//tagTiles
+		$tags = $this->Tag->find('all', array('conditions' => array('approved' => 1)));
+		$tagNames = $this->TagName->find('all', array('conditions' => array(
+			'approved' => 1,
+			'NOT' => array('name' => 'Tsumego')
+		)));
+		$json = json_decode(file_get_contents('json/popular_tags.json'));
+		$tn = $this->TagName->find('all');
+		$tnKeys = array();
+		$json2 = array();
+		for($i=0;$i<count($tn);$i++)
+			$tnKeys[$tn[$i]['TagName']['id']] = $tn[$i]['TagName']['name'];
+		for($i=0;$i<count($json);$i++)
+			if($tnKeys[$json[$i]->id] != 'Tsumego')
+				array_push($json2, $tnKeys[$json[$i]->id]);
+		for($i=0; $i<count($json2); $i++){
+			$json3 = $this->TagName->findByName($json2[$i]);
+			array_push($tagTiles, $json3['TagName']['name']);
+		}
 
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
-			if(isset($_COOKIE['sandbox']) && $_COOKIE['sandbox']!='0'){
-				$ux = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
-				$ux['User']['reuse1'] = $_COOKIE['sandbox'];
-				$_SESSION['loggedInUser']['User']['reuse1'] = $_COOKIE['sandbox'];
-				$this->User->save($ux);
-			}
-
 			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
-
-			if($_SESSION['loggedInUser']['User']['premium'] >= 1){
-				$_SESSION['loggedInUser']['User']['secretArea7']=1;
-				$_SESSION['loggedInUser']['User']['secretArea9']=1;
-				$u['User']['secretArea7']=1;
-				$u['User']['secretArea9']=1;
-				unset($removeMap[6473]);
-			}
-
-			//if($_SESSION['loggedInUser']['User']['level'] >= 70){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 65){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 60){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 55){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 50){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 45){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 40){ $secretPoints++; }
-			//$secretPoints += $_SESSION['loggedInUser']['User']['premium'];
-			//if($secretPoints>=7){ $u['User']['secretArea7'] = 1; $_SESSION['loggedInUser']['User']['secretArea7'] = 1; }
-			if($secretPoints>=6){ $u['User']['secretArea6'] = 1; $_SESSION['loggedInUser']['User']['secretArea6'] = 1; }
-			if($secretPoints>=5){ $u['User']['secretArea5'] = 1; $_SESSION['loggedInUser']['User']['secretArea5'] = 1; }
-			if($secretPoints>=4){ $u['User']['secretArea4'] = 1; $_SESSION['loggedInUser']['User']['secretArea4'] = 1; }
-			if($secretPoints>=3){ $u['User']['secretArea3'] = 1; $_SESSION['loggedInUser']['User']['secretArea3'] = 1; }
-			if($secretPoints>=2){ $u['User']['secretArea2'] = 1; $_SESSION['loggedInUser']['User']['secretArea2'] = 1; }
-			if($secretPoints>=1){ $u['User']['secretArea1'] = 1; $_SESSION['loggedInUser']['User']['secretArea1'] = 1; }
-
-			if($_SESSION['loggedInUser']['User']['secretArea10']==0) $removeMap[88156] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea7']==0) $removeMap[81578] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea6']==0) $removeMap[74761] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea5']==0) $removeMap[71790] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea4']==0) $removeMap[33007] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea3']==0) $removeMap[31813] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea2']==0) $removeMap[29156] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea1']==0) $removeMap[11969] = 1;
+			$utsMap = $_SESSION['loggedInUser']['uts'];
 		}else{
-			$removeMap[11969] = 1;
-			$removeMap[29156] = 1;
-			$removeMap[31813] = 1;
-			$removeMap[33007] = 1;
-			$removeMap[71790] = 1;
-			$removeMap[74761] = 1;
-			$removeMap[81578] = 1;
-			$removeMap[88156] = 1;
+			$noLoginUts = array();
+			for($i=0; $i<count($_SESSION['noLogin']); $i++)
+				$noLoginUts[$_SESSION['noLogin'][$i]] = $_SESSION['noLoginStatus'][$i];
+			$utsMap = $noLoginUts;
 		}
-		$removeMap[42] = 1;
-		$removeMap[72] = 1;
-		$removeMap[73] = 1;
-		$removeMap[74] = 1;
-		$removeMap[75] = 1;
-		$removeMap[76] = 1;
-		$removeMap[77] = 1;
-		$removeMap[78] = 1;
-		$removeMap[79] = 1;
-		$removeMap[80] = 1;
+		$search3ids = array();
+		for($i=0; $i<count($search3); $i++)
+			array_push($search3ids, $this->TagName->findByName($search3[$i])['TagName']['id']);
 
-		$sets = array();
-		for($i=0; $i<count($setsX); $i++){
-			if(!isset($removeMap[$setsX[$i]['Set']['id']])) array_push($sets, $setsX[$i]);
-		}
-		if(isset($_SESSION['loggedInUser'])){
-			$uts = $this->TsumegoStatus->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
-			$idMap = array();
-			$statusMap = array();
-			for($i=0; $i<count($uts); $i++){
-				array_push($idMap, $uts[$i]['TsumegoStatus']['tsumego_id']);
-				array_push($statusMap, $uts[$i]['TsumegoStatus']['status']);
-			}
-			$utsMap = array();
-			for($l=0; $l<count($uts); $l++){
-				$utsMap[$uts[$l]['TsumegoStatus']['tsumego_id']] = $uts[$l]['TsumegoStatus']['status'];
-			}
-		}
-		/*
-		$globalSolvedCounter = 0;
-		$globalCounter = count($this->Tsumego->find('all'));
-		$invisibleSets = $this->getInvisibleSets();
-		for($i=0; $i<count($invisibleSets); $i++){
-			$invisibleSet[$i] = count($this->Tsumego->find('all', array('conditions' => array('set_id' => $invisibleSets[$i]))));
-			$globalCounter-=$invisibleSet[$i];
-		}
-		*/
-		for($i=0; $i<count($sets); $i++){
-			$ts = $this->findTsumegoSet($sets[$i]['Set']['id']);
-			$sets[$i]['Set']['anz'] = count($ts);
-			$counter = 0;
-
-			if(isset($_SESSION['loggedInUser'])){
-				for($k=0; $k<count($ts); $k++){
-					if(isset($utsMap[$ts[$k]['Tsumego']['id']])){
-						if($utsMap[$ts[$k]['Tsumego']['id']] == 'S' || $utsMap[$ts[$k]['Tsumego']['id']] == 'W' || $utsMap[$ts[$k]['Tsumego']['id']] == 'C'){
-							$counter++;
-							if(isset($globalSolvedCounter))
-								$globalSolvedCounter++;
-						}
-					}
+		//sets
+		if($query == "topics"){
+			$setConditions = array('public' => 1);
+			if(count($search1) > 0){
+				$search1ids = array();
+				for($i=0; $i<count($search1); $i++){
+					$search1id = $this->Set->find('first', array('conditions' => array(
+						'title' => $search1[$i],
+						'public' => 1
+					)));
+					$search1ids[$i] = $search1id['Set']['id'];
 				}
-			}else{
-				if(isset($_SESSION['noLogin'])){
-					$noLogin = $_SESSION['noLogin'];
-					$noLoginStatus = $_SESSION['noLoginStatus'];
-					for($g=0; $g<count($noLogin); $g++){
-						for($f=0; $f<count($ts); $f++){
-							if($ts[$f]['Tsumego']['id']==$noLogin[$g]){
-								$ts[$f]['Tsumego']['status'] = $noLoginStatus[$g];
-								if($noLoginStatus[$g]=='S' || $noLoginStatus[$g]=='W' || $noLoginStatus[$g]=='C'){
-									$counter++;
-								}
-							}
-						}
-					}
+				$setConditions['id'] = $search1ids;
+			}
+			$rankConditions = array();
+			if(count($search2) > 0){
+				$fromTo = array();
+				for($i=0; $i<count($search2); $i++){
+					$ft = array();
+					$ft['elo_rating_mode >='] =  $this->getTsumegoElo($search2[$i]);
+					$ft['elo_rating_mode <'] =  $ft['elo_rating_mode >=']+100;
+					if($search2[$i]=='15k')
+						$ft['elo_rating_mode >='] = 50;
+					array_push($fromTo, $ft);
+				}
+				$rankConditions['OR'] = $fromTo;
+			}
+			$setsRaw = $this->Set->find('all', array('order' => 'order ASC', 'conditions' => $setConditions));
+
+			$achievementUpdate = 0;
+			for($i=0; $i<count($setsRaw); $i++){
+				if(count($rankConditions) > 0){
+					$ts = $this->Tsumego->find('all', array('order' => 'id ASC', 'conditions' => array(
+						'set_id' => $setsRaw[$i]['Set']['id'],
+						$rankConditions
+					)));
+				}else{
+					$ts = $this->findTsumegoSet($setsRaw[$i]['Set']['id']);
+				}
+				$currentIds = array();
+				for($j=0; $j<count($ts); $j++)
+					array_push($currentIds, $ts[$j]['Tsumego']['id']);
+				$setAmount = count($ts);
+				if(count($search3) > 0){
+					$idsTemp = array();
+					$tsTagsFiltered = $this->Tag->find('all', array('conditions' => array(
+						'tsumego_id' => $currentIds,
+						'tag_name_id' => $search3ids,
+					)));
+					for($j=0; $j<count($tsTagsFiltered); $j++)
+						array_push($idsTemp, $tsTagsFiltered[$j]['Tag']['tsumego_id']);
+					$currentIds = array_unique($idsTemp);
+					$setAmount = count($currentIds);
+				}
+				if(!in_array($setsRaw[$i]['Set']['id'], $setsWithPremium) || $hasPremium)
+					$searchCounter += $setAmount;
+				
+				$s = array();
+				$s['id'] = $setsRaw[$i]['Set']['id'];
+				$s['name'] = $setsRaw[$i]['Set']['title'];
+				$s['amount'] = $setAmount;
+				$s['color'] = $setsRaw[$i]['Set']['color'];
+				$s['premium'] = $setsRaw[$i]['Set']['premium'];
+				$s['currentIds'] = $currentIds;
+				if(count($currentIds)>0)
+					array_push($sets, $s);
+			}
+			$sets = $this->partitionCollections($sets, $collectionSize, $utsMap);
+			if($collectionSize>=200){
+				for($i=0; $i<count($sets); $i++){
+					if($sets[$i]['solved']>=100)
+						$overallCounter++;
 				}
 			}
-
-			$date = new DateTime($sets[$i]['Set']['created']);
-			$month = date("F", strtotime($sets[$i]['Set']['created']));
-			$setday = $date->format('d. ');
-			$setyear = $date->format('Y');
-			if($setday[0]==0) $setday = substr($setday, -3);
-			$sets[$i]['Set']['created'] = $date->format('Ymd');
-			$sets[$i]['Set']['createdDisplay'] = $setday.$month.' '.$setyear;
-
-			$percent = $counter/count($ts)*100;
-			$sets[$i]['Set']['solvedNum'] = $counter;
-			$sets[$i]['Set']['solved'] = round($percent, 1);
-			$sets[$i]['Set']['solvedColor'] = $this->getSolvedColor($sets[$i]['Set']['solved']);
-			$sets[$i]['Set']['topicColor'] = $sets[$i]['Set']['color'];
-			$sets[$i]['Set']['difficultyColor'] = $this->getDifficultyColor($sets[$i]['Set']['difficulty']);
-			$sets[$i]['Set']['difficultyRank'] = $this->getTsumegoRank($sets[$i]['Set']['difficulty']);
-			$sets[$i]['Set']['sizeColor'] = $this->getSizeColor($sets[$i]['Set']['anz']);
-			$sets[$i]['Set']['dateColor'] = $this->getDateColor($sets[$i]['Set']['created']);
-			
-			if($sets[$i]['Set']['solved']>=100) $overallCounter++;
+		}else{
+			for($i=0; $i<count($setsRaw); $i++){
+				$s = array();
+				$s['id'] = $setsRaw[$i]['Set']['id'];
+				$s['name'] = $setsRaw[$i]['Set']['title'];
+				array_push($sets, $s);
+			}
 		}
-		$sortOrder = 'null';
-		$sortColor = 'null';
-
-		if(isset($_SESSION['loggedInUser'])){
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			if($overallCounter>=10){
 				$aCondition = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array(
 					'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 'set'
@@ -602,80 +508,269 @@ class SetsController extends AppController{
 				$aCondition['AchievementCondition']['value'] = $overallCounter;
 				$this->AchievementCondition->save($aCondition);
 			}
-			
-			if(isset($_COOKIE['sortOrder']) && $_COOKIE['sortOrder']!= 'null'){
-				$u['User']['sortOrder'] = $_COOKIE['sortOrder'];
-				$sortOrder = $_COOKIE['sortOrder'];
-				$_COOKIE['sortOrder'] = 'null';
-				unset($_COOKIE['sortOrder']);
-			}
-			if(isset($_COOKIE['sortColor']) && $_COOKIE['sortColor']!= 'null'){
-				$u['User']['sortColor'] = $_COOKIE['sortColor'];
-				$sortColor = $_COOKIE['sortColor'];
-				$_COOKIE['sortColor'] = 'null';
-				unset($_COOKIE['sortColor']);
-				unset($_COOKIE['sortColor']);
-			}
 			$this->User->save($u);
-
-			$favorite = $this->Favorite->find('all', array('conditions' => array('user_id' => $u['User']['id'])));
-			
 			$achievementUpdate = $this->checkSetCompletedAchievements();
-			if(count($achievementUpdate)>0) $this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
+			if(count($achievementUpdate)>0)
+				$this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
 		}
-		
-		if($favorite!=null){
-			$difficultyCount = 0;
-			$solvedCount = 0;
-			$sizeCount = 0;
-			for($i=0; $i<count($favorite); $i++){
-				$tx = $this->Tsumego->findById($favorite[$i]['Favorite']['tsumego_id']);
-				$difficultyCount += $tx['Tsumego']['difficulty'];
-				//$utx = $this->TsumegoStatus->find('first', array('conditions' =>  array('tsumego_id' => $favorite[$i]['Favorite']['tsumego_id'], 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
-				$utx = $this->findUt($favorite[$i]['Favorite']['tsumego_id'], $uts, $idMap);
-				if($utx['TsumegoStatus']['status'] == 'S' || $utx['TsumegoStatus']['status'] == 'W' || $utx['TsumegoStatus']['status'] == 'C') $solvedCount++;
-				$sizeCount++;
+		//difficulty
+		if($query == "difficulty"){
+			$ranksArray = $this->getExistingRanksArray();
+			$newRanksArray = array();
+			$setConditions = array();
+			if(count($search1) > 0){
+				$search1ids = array();
+				for($i=0; $i<count($search1); $i++){
+					$search1id = $this->Set->find('first', array('conditions' => array('title' => $search1[$i])));
+					$search1ids[$i] = $search1id['Set']['id'];
+				}
+				$setConditions['set_id'] = $search1ids;
 			}
-			$difficultyCount /= $sizeCount;
-			if($difficultyCount<=2) $difficultyCount = 1;
-			else if($difficultyCount>2 && $difficultyCount<=3) $difficultyCount = 2;
-			else if($difficultyCount>3 && $difficultyCount<=4) $difficultyCount = 3;
-			else if($difficultyCount>4 && $difficultyCount<=6) $difficultyCount = 4;
-			else if($difficultyCount>6) $difficultyCount = 5;
+			if(count($search2) > 0){
+				$ranksArray2 = array();
+				$ranksCounter = 0;
+				for($i=0; $i<count($search2); $i++){
+					for($j=0; $j<count($ranksArray); $j++){
+						if($search2[$i]==$ranksArray[$j]['rank']){
+							$ranksArray2[$ranksCounter]['rank'] = $ranksArray[$j]['rank'];
+							$ranksArray2[$ranksCounter]['color'] = $ranksArray[$j]['color'];
+							$ranksCounter++;
+						}
+					}
+				}
+				$ranksArray = $ranksArray2;
+			}
+			for($i=0; $i<count($ranksArray); $i++){
+				$ftFrom['elo_rating_mode >='] =  $this->getTsumegoElo($ranksArray[$i]['rank']);
+				$ftTo['elo_rating_mode <'] =  $ftFrom['elo_rating_mode >=']+100;
+				if($ranksArray[$i]['rank']=='15k')
+					$ftFrom['elo_rating_mode >='] = 50;
+				$notPremiumArray = array();
+				if(!$hasPremium)
+					$notPremiumArray['NOT'] = array('set_id' => $setsWithPremium);
+				$ts1 = $this->Tsumego->find('all', array('order' => 'id ASC', 'conditions' => array(
+					'public' => 1,
+					$notPremiumArray,
+					$ftFrom,
+					$ftTo,
+					$setConditions
+				)));
+				$setAmount = count($ts1);
+				$currentIds = array();
+				for($j=0; $j<count($ts1); $j++)
+					array_push($currentIds, $ts1[$j]['Tsumego']['id']);
+						
+				if(count($search3) > 0){
+					$idsTemp = array();
+					$tsTagsFiltered = $this->Tag->find('all', array('conditions' => array(
+						'tsumego_id' => $currentIds,
+						'tag_name_id' => $search3ids,
+					)));
+					for($j=0; $j<count($tsTagsFiltered); $j++)
+						array_push($idsTemp, $tsTagsFiltered[$j]['Tag']['tsumego_id']);
+					
+					$currentIds = array_unique($idsTemp);
+					$setAmount = count($currentIds);
+				}
+				$searchCounter += $setAmount;
 
-
-			$percent = $solvedCount/$sizeCount*100;
-			$fav[0]['Set']['solvedNum'] = $sizeCount;
-			$fav[0]['Set']['solved'] = round($percent, 1);
-			$fav[0]['Set']['solvedColor'] = '#eee';
-			$fav[0]['Set']['difficultyColor'] = '#eee';
-			$fav[0]['Set']['sizeColor'] = $this->getSizeColor($sizeCount);
-
-			$fav[0]['Set']['id'] = 1;
-			$fav[0]['Set']['title'] = 'Favorites';
-			$fav[0]['Set']['title2'] = null;
-			$fav[0]['Set']['author'] = $_SESSION['loggedInUser']['User']['name'];
-			$fav[0]['Set']['description'] = '';
-			$fav[0]['Set']['folder'] = '';
-			$fav[0]['Set']['difficulty'] = '';
-			$fav[0]['Set']['image'] = 'fav';
-			$fav[0]['Set']['order'] = 0;
-			$fav[0]['Set']['public'] = 1;
-			$fav[0]['Set']['created'] = 20190507;
-			$fav[0]['Set']['t'] = '222';
-			$fav[0]['Set']['anz'] = $sizeCount;
-			$fav[0]['Set']['createdDisplay'] = '7. May 2019';
-			$fav[0]['Set']['topicColor'] = '#eee';
-			$fav[0]['Set']['dateColor'] = '#eee';
-
-			$sets = array_merge($fav, $sets);
+				$rTemp = array();
+				$rTemp['id'] = $ranksArray[$i]['rank'];
+				$rTemp['name'] = $ranksArray[$i]['rank'];
+				$rTemp['amount'] = $setAmount;
+				$rTemp['currentIds'] = $currentIds;
+				$rTemp['color'] = $ranksArray[$i]['color'];
+				if(count($currentIds)>0)
+					array_push($newRanksArray, $rTemp);
+			}
+			$ranksArray = $this->partitionCollections($newRanksArray, $collectionSize, $utsMap);
+		}else{
+			$ranksArray = $this->getExistingRanksArray();
+			for($i=0; $i<count($ranksArray); $i++){
+				$ranksArray[$i]['id'] = $ranksArray[$i]['rank'];
+				$ranksArray[$i]['name'] = $ranksArray[$i]['rank'];
+			}
 		}
+		//tags
+		if($query == "tags"){
+			$setConditions = array();
+			$search3Set = false;
+			if(count($search1) > 0){
+				$search1idxx = array();
+				for($i=0; $i<count($search1); $i++){
+					$search1id = $this->Set->find('first', array('conditions' => array('title' => $search1[$i])));
+					$search1idx = $this->findTsumegoSet($search1id['Set']['id']);
+					for($j=0; $j<count($search1idx); $j++)
+						array_push($search1idxx, $search1idx[$j]['Tsumego']['id']);
+				}
+				$setConditions['tsumego_id'] = $search1idxx;
+			}
+			if(count($search3) > 0){
+				$search3Set = true;
+			}
+			for($i=0; $i<count($json2); $i++){
+				if(in_array($json2[$i], $search3) || !$search3Set){
+					$json3 = $this->TagName->findByName($json2[$i]);
+					$tagsx = $this->Tag->find('all', array('order' => 'id ASC', 'conditions' => array(
+						'tag_name_id' => $json3['TagName']['id'], 
+						'approved' => 1,
+						$setConditions
+					)));
+					$currentIds = array();
+					for($j=0; $j<count($tagsx); $j++)
+						array_push($currentIds, $tagsx[$j]['Tag']['tsumego_id']);
+
+					if(!$hasPremium){
+						$currentIdsNew = array();
+						$pTest = $this->Tsumego->find('all', array('conditions' => array('id' => $currentIds)));
+						for($j=0; $j<count($pTest); $j++)
+							if(!in_array($pTest[$j]['Tsumego']['set_id'], $setsWithPremium))
+								array_push($currentIdsNew, $pTest[$j]['Tsumego']['id']);
+						$currentIds = $currentIdsNew;
+					}
+					$amountTags = count($currentIds);
+
+					if(count($search2) > 0){
+						$rankConditions = array();	
+						$fromTo = array();
+						$idsTemp = array();
+						for($j=0; $j<count($search2); $j++){
+							$ft = array();
+							$ft['elo_rating_mode >='] =  $this->getTsumegoElo($search2[$j]);
+							$ft['elo_rating_mode <'] =  $ft['elo_rating_mode >=']+100;
+							if($search2[$j]=='15k')
+								$ft['elo_rating_mode >='] = 50;
+							array_push($fromTo, $ft);
+						}
+						$rankConditions['OR'] = $fromTo;
+
+						$ts = $this->Tsumego->find('all', array('order' => 'id ASC', 'conditions' => array(
+							'id' => $currentIds,
+							'public' => 1,
+							$rankConditions
+						)));
+						for($j=0; $j<count($ts); $j++)
+							array_push($idsTemp, $ts[$j]['Tsumego']['id']);
+						$currentIds = array_unique($idsTemp);
+						$amountTags = count($currentIds);
+					}
+					$searchCounter += $amountTags;
+
+					$tl = array();
+					$tl['id'] = $json3['TagName']['id'];
+					$tl['name'] = $json3['TagName']['name'];
+					$tl['amount'] = $amountTags;
+					$tl['currentIds'] = $currentIds;
+					$tl['color'] = $json3['TagName']['color'];
+					if($amountTags>0)
+						array_push($tagList, $tl);
+				}
+			}
+			for($i=0; $i<count($tagList); $i++)
+				$tagList[$i]['color'] = $this->getTagColor($tagList[$i]['color']);
+			$tagList = $this->partitionCollections($tagList, $collectionSize, $utsMap);
+		}else{
+			for($i=0; $i<count($json2); $i++){
+				$json3 = $this->TagName->findByName($json2[$i]);
+				$tl = array();
+				$tl['id'] = $json3['TagName']['id'];
+				$tl['name'] = $json3['TagName']['name'];
+				array_push($tagList, $tl);
+			}
+		}
+		if($query=='topics' && count($search1)==0)
+			$queryRefresh = false;
+		else if($query=='difficulty' && count($search2)==0)
+			$queryRefresh = false;
+		else if($query=='tags' && count($search3)==0)
+			$queryRefresh = false;
+		else
+			$queryRefresh = true;
 		
-		$this->set('sortOrder', $sortOrder);
-		$this->set('sortColor', $sortColor);
-        $this->set('sets', $sets);
-        $this->set('achievementUpdate', $achievementUpdate);
-    }
+		$this->set('sets', $sets);
+		$this->set('ranksArray', $ranksArray);
+		$this->set('tagList', $tagList);
+		$this->set('setTiles', $setTiles);
+		$this->set('difficultyTiles', $difficultyTiles);
+		$this->set('tagTiles', $tagTiles);
+		$this->set('query', $query);
+		$this->set('collectionSize', $collectionSize);
+		$this->set('search1', $search1);
+		$this->set('search2', $search2);
+		$this->set('search3', $search3);
+		$this->set('achievementUpdate', $achievementUpdate);
+		$this->set('searchCounter', $searchCounter);
+		$this->set('hasPremium', $hasPremium);
+		$this->set('queryRefresh', $queryRefresh);
+	}
+
+	private function partitionCollections($list, $size, $utsMap){
+		$newList = array();
+		for($i=0; $i<count($list); $i++){
+			$amountTags = $list[$i]['amount'];
+			$amountCounter = 0;
+			$amountFrom = 0;
+			$amountTo = $size-1;
+			while($amountTags > $size){
+				$newList = $this->partitionCollection($newList, $list[$i], $size, $utsMap, $amountFrom, $amountTo+1, $amountCounter, true);
+				$amountTags -= $size;
+				$amountCounter++;
+				$amountFrom += $size;
+				$amountTo += $size;
+			}
+			$amountTo = $amountFrom + $amountTags;
+			$newList = $this->partitionCollection($newList, $list[$i], $amountTags, $utsMap, $amountFrom, $amountTo, $amountCounter, false);
+		}
+		return $newList;
+	}
+
+	private function partitionCollection($newList, $list, $size, $utsMap, $from, $to, $amountCounter, $inLoop){
+		$tl = array();
+		$tl['id'] = $list['id'];
+		$colorValue = 1;
+		if(!$inLoop && $amountCounter==0){
+			$tl['partition'] = -1;
+		}else{
+			$tl['partition'] = $amountCounter;
+			$step = 1.5;
+			$colorValue = 1 - ($amountCounter * 0.1 * $step );
+		}
+		$tl['name'] = $list['name'];
+		$tl['amount'] = $size;
+		$tl['color'] = str_replace('[o]',$colorValue,$list['color']);
+		if(isset($list['premium']))
+			$tl['premium'] = $list['premium'];
+		else
+			$tl['premium'] = 0;
+		$currentIds = array();
+		for($i=$from; $i<$to; $i++)
+			array_push($currentIds, $list['currentIds'][$i]);
+		$difficultyAndSolved = $this->getDifficultyAndSolved($currentIds, $utsMap);
+		$tl['difficulty'] = $difficultyAndSolved['difficulty'];
+		$tl['solved'] = $difficultyAndSolved['solved'];
+		array_push($newList, $tl);
+		
+		return $newList;
+	}
+
+	private function getDifficultyAndSolved($currentTagIds, $utsMap){
+		$tagTsumegoDifficulty = $this->Tsumego->find('all', array('conditions' => array('id' => $currentTagIds)));
+		$tagDifficultyResult = 0;
+		$statusCounter = 0;
+		for($j=0; $j<count($tagTsumegoDifficulty); $j++){
+			$tagDifficultyResult += $tagTsumegoDifficulty[$j]['Tsumego']['elo_rating_mode'];
+			if(isset($utsMap[$tagTsumegoDifficulty[$j]['Tsumego']['id']])){
+				if($utsMap[$tagTsumegoDifficulty[$j]['Tsumego']['id']]=='S' || $utsMap[$tagTsumegoDifficulty[$j]['Tsumego']['id']]=='W' || $utsMap[$tagTsumegoDifficulty[$j]['Tsumego']['id']]=='C')
+					$statusCounter++;
+			}
+		}
+		$tagDifficultyResult = $tagDifficultyResult / count($tagTsumegoDifficulty);
+		$tagDifficultyResult = $this->getTsumegoRank($tagDifficultyResult);
+		$return = array();
+		$return['difficulty'] = $tagDifficultyResult;
+		$return['solved'] = round($statusCounter / count($currentTagIds) * 100, 2);
+		return $return;
+	}
 	
 	public function ui($id=null){
 		$s = $this->Set->findById($id);
@@ -688,7 +783,6 @@ class SetsController extends AppController{
 				$randstring .= $characters[rand(0,strlen($characters))];
 			}
 			$filename = $randstring.'_'.$_FILES['adminUpload']['name'];
-			//echo '<pre>'; print_r($filename); echo '</pre>';
 
 			$errors= array();
 			$file_name = $_FILES['adminUpload']['name'];
@@ -704,8 +798,6 @@ class SetsController extends AppController{
 			if(empty($errors)==true){
 				$uploadfile = $_SERVER['DOCUMENT_ROOT'].'/app/webroot/img/'.$filename;
 				move_uploaded_file($file_tmp, $uploadfile);
-			}else{
-				print_r($errors);
 			}
 
 			$s['Set']['image'] = $filename;
@@ -734,8 +826,13 @@ class SetsController extends AppController{
 		$this->LoadModel('SetConnection');
 		$this->LoadModel('TagName');
 		$this->LoadModel('Tag');
-		$_SESSION['page'] = 'set';
-		
+		$this->LoadModel('User');
+		$this->LoadModel('UserContribution');
+
+		if($id != 1)
+			$_SESSION['page'] = 'set';
+		else
+			$_SESSION['page'] = 'favs';
 		$josekiOrder = 0;
 		$tsIds = array();
 		$refreshView = false;
@@ -743,18 +840,52 @@ class SetsController extends AppController{
 		$accuracy = 0;
 		$formChange = false;
 		$achievementUpdate = array();
+		$viewType = 'topics';
+		$partition = -1;
+		$hasPartition = false;
+		$utsMap = array();
+		$setsWithPremium = array();
 
-		if(isset($_SESSION['loggedInUser']['User']['id'])){if($_SESSION['loggedInUser']['User']['isAdmin']>0){
-			$aad = $this->AdminActivity->find('first', array('order' => 'id DESC'));
-			if($aad['AdminActivity']['file'] == '/delete'){
-				$scDelete = $this->SetConnection->find('first', array('order' => 'created DESC','conditions' => array('tsumego_id' => $aad['AdminActivity']['tsumego_id'])));
-				$this->SetConnection->delete($scDelete['SetConnection']['id']);
-				$this->Tsumego->delete($aad['AdminActivity']['tsumego_id']);
-				$aad['AdminActivity']['file'] = 'description';
-				$this->AdminActivity->save($aad);
+		if(!isset($_SESSION['loggedInUser']['User']['id'])
+			|| isset($_SESSION['loggedInUser']['User']['id']) && $_SESSION['loggedInUser']['User']['premium']<1
+		)
+			$hasPremium = false;
+		else
+			$hasPremium = true;
+		$swp = $this->Set->find('all', array('conditions' => array('premium' => 1)));
+		for($i=0;$i<count($swp);$i++)
+			array_push($setsWithPremium, $swp[$i]['Set']['id']);
+
+		if(isset($this->params['url']['partition'])){
+			$partition = $this->params['url']['partition'];
+			$hasPartition = true;
+		}
+		if($partition == -1)
+			$partition = 0;
+
+		$searchPatameters = $this->processSearchParameters($_SESSION['loggedInUser']['User']['id']);
+		$query = $searchPatameters[0];
+		$collectionSize = $searchPatameters[1];
+		$search1 = $searchPatameters[2];
+		$search2 = $searchPatameters[3];
+		$search3 = $searchPatameters[4];
+		$search3ids = array();
+
+		for($i=0; $i<count($search3); $i++)
+			array_push($search3ids, $this->TagName->findByName($search3[$i])['TagName']['id']);
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			$utsMap = $_SESSION['loggedInUser']['uts'];
+			if($_SESSION['loggedInUser']['User']['isAdmin']>0){
+				$aad = $this->AdminActivity->find('first', array('order' => 'id DESC'));
+				if($aad['AdminActivity']['file'] == '/delete'){
+					$scDelete = $this->SetConnection->find('first', array('order' => 'created DESC','conditions' => array('tsumego_id' => $aad['AdminActivity']['tsumego_id'])));
+					$this->SetConnection->delete($scDelete['SetConnection']['id']);
+					$this->Tsumego->delete($aad['AdminActivity']['tsumego_id']);
+					$aad['AdminActivity']['file'] = 'description';
+					$this->AdminActivity->save($aad);
+				}
 			}
-		}}
-
+		}
 		if(isset($this->params['url']['add'])){
 			$overallCount = $this->Tsumego->find('first', array('order' => 'id DESC'));
 			$scTcount = $this->SetConnection->find('first', array('conditions' => array('set_id' => $id, 'num' => 1)));
@@ -769,7 +900,6 @@ class SetsController extends AppController{
 			else $setCount['Tsumego']['author'] = $_SESSION['loggedInUser']['User']['name'];
 			$this->Tsumego->create();
 			$this->Tsumego->save($setCount);
-
 			$adminActivity = array();
 			$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
 			$adminActivity['AdminActivity']['tsumego_id'] = 0;
@@ -777,302 +907,508 @@ class SetsController extends AppController{
 			$adminActivity['AdminActivity']['answer'] = 'Added problem for '.$set['Set']['title'];
 			$this->AdminActivity->save($adminActivity);
 		}
-
 		if(isset($this->params['url']['show'])){
 			if($this->params['url']['show']=='order') $josekiOrder = 1;
 			if($this->params['url']['show']=='num') $josekiOrder = 0;
 		}
-
 		if($id!=1){
-			$set = $this->Set->find('first', array('conditions' =>  array('id' => $id)));
-			$ts = array();
-			$scTs = $this->SetConnection->find('all', array('conditions' => array('set_id' => $set['Set']['id'])));
-			
-			$set['Set']['difficultyRank'] = $this->getTsumegoRank($set['Set']['difficulty']);
-			
-			for($i=0; $i<count($scTs); $i++){
-				$scT = $this->Tsumego->findById($scTs[$i]['SetConnection']['tsumego_id']);
-				$scT['Tsumego']['set_id'] = $scTs[$i]['SetConnection']['set_id'];
-				$scT['Tsumego']['num'] = $scTs[$i]['SetConnection']['num'];
-				$scT['Tsumego']['duplicateLink'] = '';
-				$scTs2 = $this->SetConnection->find('all', array('conditions' => array('tsumego_id' => $scT['Tsumego']['id'])));
-				for($j=0;$j<count($scTs2);$j++)
-					if(count($scTs2)>1 && $scTs2[$j]['SetConnection']['set_id']==$set['Set']['id'])
-						$scT['Tsumego']['duplicateLink'] = '?sid='.$scT['Tsumego']['set_id'];
-				array_push($ts, $scT);
+			if(is_numeric($id)){
+				$viewType = 'topics';
+			}else{
+				$foundLetter = false;
+				$idSplit = str_split($id);
+				for($i=0; $i<count($idSplit)-1; $i++){
+					if(!is_numeric($idSplit[$i]))
+						$foundLetter = true;
+				}
+				if($foundLetter==false && ($idSplit[count($idSplit)-1]=='k' || $idSplit[count($idSplit)-1]=='d'))
+					$viewType = 'difficulty';
+				else
+					$viewType = 'tags';
 			}
-			$tsBuffer = array();
-			$tsBufferLowest=10000;
-			$tsBufferHighest=0;
-			for($i=0; $i<count($ts); $i++){
-				$tsBuffer[$ts[$i]['Tsumego']['num']] = $ts[$i];
-				if($ts[$i]['Tsumego']['num']<$tsBufferLowest)
-					$tsBufferLowest = $ts[$i]['Tsumego']['num'];
-				if($ts[$i]['Tsumego']['num']>$tsBufferHighest)
-					$tsBufferHighest = $ts[$i]['Tsumego']['num'];
-			}
-			$ts = array();
-			for($i=$tsBufferLowest; $i<=$tsBufferHighest; $i++)
-				if(isset($tsBuffer[$i]))
-					array_push($ts, $tsBuffer[$i]);
-			
-			$allVcActive = true;
-			$allVcInactive = true;
-			$allArActive = true;
-			$allArInactive = true;
-			$allPassActive = true;
-			$allPassInactive = true;
-			
-			for($i=0; $i<count($ts); $i++){
-				if($ts[$i]['Tsumego']['virtual_children']==0)
-					$allVcActive = false;
-				if($ts[$i]['Tsumego']['virtual_children']==1)
-					$allVcInactive = false;
-				if($ts[$i]['Tsumego']['alternative_response']==0)
-					$allArActive = false;
-				if($ts[$i]['Tsumego']['alternative_response']==1)
-					$allArInactive = false;
-				if($ts[$i]['Tsumego']['pass']==0)
-					$allPassActive = false;
-				if($ts[$i]['Tsumego']['pass']==1)
-					$allPassInactive = false;
-			}
-			
-			for($i=0; $i<count($ts); $i++) array_push($tsIds, $ts[$i]['Tsumego']['id']);
-			
-			if($set['Set']['public']==0) $_SESSION['page'] = 'sandbox';
-			$this->set('isFav', false);
+			$query = $viewType;
+			$_COOKIE['query'] = $query;
+			$searchPatameters = $this->processSearchParameters($_SESSION['loggedInUser']['User']['id']);
 
-			if(isset($this->params['url']['sort'])){
-				if($this->params['url']['sort']==1){
-					$tsId = array();
-					$tsNum = array();
-					$tsOrder = array();
-					for($i=0; $i<count($ts); $i++){
-						array_push($tsId, $ts[$i]['Tsumego']['id']);
-						array_push($tsNum, $ts[$i]['Tsumego']['num']);
-						array_push($tsOrder, $ts[$i]['Tsumego']['order']);
+			$_SESSION['lastSet'] = $id;
+			if($viewType == 'difficulty'){
+				$set = array();
+				$setConditions = array();
+				if(count($search1) > 0){
+					$search1ids = array();
+					for($i=0; $i<count($search1); $i++){
+						$search1id = $this->Set->find('first', array('conditions' => array('title' => $search1[$i])));
+						$search1ids[$i] = $search1id['Set']['id'];
 					}
-					array_multisort($tsOrder, $tsId, $tsNum);
+					$setConditions['set_id'] = $search1ids;
+				}
+				$set['Set']['id'] = $id;
+				if(!$hasPartition)
+					$set['Set']['title'] = $id;
+				else
+					$set['Set']['title'] = $id.' #'.($partition+1);
+				$set['Set']['image'] = $id.'Rank.png';
+				$set['Set']['multiplier'] = 1;
+				$set['Set']['public'] = 1;
+				$elo = $this->getTsumegoElo($id);
+				$ftFrom['elo_rating_mode >='] =  $elo;
+				$ftTo['elo_rating_mode <'] =  $elo+100;
+				if($id=='15k')
+					$ftFrom['elo_rating_mode >='] = 50;
+				$set['Set']['description'] = $id.' are problems that have a rating from '
+					.$ftFrom['elo_rating_mode >='].' to '.($ftTo['elo_rating_mode <']-1).'.';
+				$set['Set']['difficulty'] = $elo;
+				$notPremiumArray = array();
+				if(!$hasPremium)
+					$notPremiumArray['NOT'] = array('set_id' => $setsWithPremium);
+				$ts = $this->Tsumego->find('all', array('order' => 'id ASC', 'conditions' => array(
+					'public' => 1,
+					$notPremiumArray,
+					$ftFrom,
+					$ftTo,
+					$setConditions
+				)));
 
-					$nr = 1;
-					for($i=0; $i<count($tsId); $i++){
-						$tsu = $this->Tsumego->findById($tsId[$i]);
-						if($tsu['Tsumego']['num']!=$nr) rename('6473k339312/joseki/'.$tsu['Tsumego']['num'].'.sgf','6473k339312/joseki/'.$tsu['Tsumego']['num'].'x.sgf');
-						$nr++;
+				$ts1 = array();
+				$i2 = 1;
+				for($i=0; $i<count($ts); $i++){
+					$tagValid = false;
+					if(count($search3) > 0){
+						$tagForTsumego = $this->Tag->find('first', array('conditions' => array(
+							'tsumego_id' => $ts[$i]['Tsumego']['id'],
+							'tag_name_id' => $search3ids
+						)));
+						if($tagForTsumego!=null)
+							$tagValid = true;
+					}else
+						$tagValid = true;
+					if($tagValid){
+						$ts[$i]['Tsumego']['num'] = $i2;
+						array_push($ts1, $ts[$i]);
+						$i2++;
+					}	
+				}
+				$ts = $ts1;
+				$fromTo = $this->getPartitionRange(count($ts), $collectionSize, $partition);
+				$currentIds = array();
+				$ts1 = array();
+				for($i=$fromTo[0]; $i<=$fromTo[1]; $i++){
+					$ts[$i]['Tsumego']['status'] = $utsMap[$ts[$i]['Tsumego']['id']];
+					array_push($currentIds, $ts[$i]['Tsumego']['id']);
+					array_push($ts1, $ts[$i]);
+				}
+				$difficultyAndSolved = $this->getDifficultyAndSolved($currentIds, $utsMap);
+				$ts = $ts1;
+				$set['Set']['difficultyRank'] = $difficultyAndSolved['difficulty'];
+				$set['Set']['solved'] = $difficultyAndSolved['solved'];
+				$set['Set']['anz'] = count($ts);
+			}else if($viewType == 'tags'){
+				$set['Set']['id'] = $id;
+				if(!$hasPartition)
+					$set['Set']['title'] = $id;
+				else
+					$set['Set']['title'] = $id.' #'.($partition+1);
+				$set['Set']['image'] = '';
+				$set['Set']['multiplier'] = 1;
+				$set['Set']['public'] = 1;
+				$setConditions = array();
+				$rankConditions = array();
+				$tagIds = array();
+				$tagName = $this->TagName->findByName($id);
+				$set['Set']['description'] = $tagName['TagName']['description'];
+				if(count($search1) > 0){
+					$search1idxx = array();
+					for($i=0; $i<count($search1); $i++){
+						$search1id = $this->Set->find('first', array('conditions' => array('title' => $search1[$i])));
+						$search1idx = $this->findTsumegoSet($search1id['Set']['id']);
+						for($j=0; $j<count($search1idx); $j++)
+							array_push($search1idxx, $search1idx[$j]['Tsumego']['id']);
 					}
-					$nr = 1;
-					for($i=0; $i<count($tsId); $i++){
-						$tsu = $this->Tsumego->findById($tsId[$i]);
-						if($tsu['Tsumego']['num']!=$nr){
-							rename('6473k339312/joseki/'.$tsu['Tsumego']['num'].'x.sgf','6473k339312/joseki/'.$nr.'.sgf');
-							$tsu['Tsumego']['num'] = $nr;
-							$this->Tsumego->save($tsu);
+					$setConditions['tsumego_id'] = $search1idxx;
+				}
+				$tagsx = $this->Tag->find('all', array('order' => 'id ASC', 'conditions' => array(
+					'tag_name_id' => $tagName['TagName']['id'],
+					'approved' => 1,
+					$setConditions
+				)));
+				for($i=0; $i<count($tagsx); $i++)
+					array_push($tagIds, $tagsx[$i]['Tag']['tsumego_id']);
+
+				if(!$hasPremium){
+					$currentIdsNew = array();
+					$pTest = $this->Tsumego->find('all', array('conditions' => array('id' => $tagIds)));
+					for($j=0; $j<count($pTest); $j++)
+						if(!in_array($pTest[$j]['Tsumego']['set_id'], $setsWithPremium))
+							array_push($currentIdsNew, $pTest[$j]['Tsumego']['id']);
+					$tagIds = $currentIdsNew;
+				}
+
+				if(count($search2) > 0){
+					$fromTo = array();
+					$idsTemp = array();
+					for($j=0; $j<count($search2); $j++){
+						$ft = array();
+						$ft['elo_rating_mode >='] =  $this->getTsumegoElo($search2[$j]);
+						$ft['elo_rating_mode <'] =  $ft['elo_rating_mode >=']+100;
+						if($search2[$j]=='15k')
+							$ft['elo_rating_mode >='] = 50;
+						array_push($fromTo, $ft);
+					}
+					$rankConditions['OR'] = $fromTo;
+				}
+				$ts = $this->Tsumego->find('all', array('order' => 'id ASC', 'conditions' => array(
+					'id' => $tagIds,
+					'public' => 1,
+					$rankConditions
+				)));
+				for($i=0; $i<count($ts); $i++){
+					$ts[$i]['Tsumego']['num'] = $i+1;
+					if(in_array($ts[$i]['Tsumego']['set_id'], $setsWithPremium) && !$hasPremium)
+						$ts[$i]['Tsumego']['locked'] = true;
+					else
+						$ts[$i]['Tsumego']['locked'] = false;
+				}
+				$fromTo = $this->getPartitionRange(count($ts), $collectionSize, $partition);
+				$currentIds = array();
+				$ts1 = array();
+				for($i=$fromTo[0]; $i<=$fromTo[1]; $i++){
+					$ts[$i]['Tsumego']['status'] = $utsMap[$ts[$i]['Tsumego']['id']];
+					array_push($currentIds, $ts[$i]['Tsumego']['id']);
+					array_push($ts1, $ts[$i]);
+				}
+				$difficultyAndSolved = $this->getDifficultyAndSolved($currentIds, $utsMap);
+				$ts = $ts1;
+				$set['Set']['difficultyRank'] = $difficultyAndSolved['difficulty'];
+				$set['Set']['solved'] = $difficultyAndSolved['solved'];
+				$set['Set']['anz'] = count($ts);
+			//set
+			}else if($viewType == 'topics'){
+				$set = $this->Set->find('first', array('conditions' => array('id' => $id)));
+				$ts = array();
+				$scTs = $this->SetConnection->find('all', array('order' => 'num ASC', 'conditions' => array('set_id' => $set['Set']['id'])));
+				
+				$rankConditions = array();
+				if(count($search2) > 0){
+					$fromTo = array();
+					for($i=0; $i<count($search2); $i++){
+						$ft = array();
+						$ft['elo_rating_mode >='] =  $this->getTsumegoElo($search2[$i]);
+						$ft['elo_rating_mode <'] =  $ft['elo_rating_mode >=']+100;
+						if($search2[$i]=='15k')
+							$ft['elo_rating_mode >='] = 50;
+						array_push($fromTo, $ft);
+					}
+					$rankConditions['OR'] = $fromTo;
+				}
+				for($i=0; $i<count($scTs); $i++){
+					$scT = $this->Tsumego->find('first', array('conditions' => array(
+						'id' => $scTs[$i]['SetConnection']['tsumego_id'],
+						$rankConditions
+					)));
+					$tagValid = false;
+					if(count($search3) > 0){
+						$tagForTsumego = $this->Tag->find('first', array('conditions' => array(
+							'tsumego_id' => $scTs[$i]['SetConnection']['tsumego_id'],
+							'tag_name_id' => $search3ids,
+						)));
+						if($tagForTsumego!=null)
+							$tagValid = true;
+					}else
+						$tagValid = true;
+					if($scT!=null && $tagValid){
+						$scT['Tsumego']['set_id'] = $scTs[$i]['SetConnection']['set_id'];
+						$scT['Tsumego']['num'] = $scTs[$i]['SetConnection']['num'];
+						$scT['Tsumego']['duplicateLink'] = '';
+						$scTs2 = $this->SetConnection->find('all', array('conditions' => array('tsumego_id' => $scT['Tsumego']['id'])));
+						for($j=0;$j<count($scTs2);$j++)
+							if(count($scTs2)>1 && $scTs2[$j]['SetConnection']['set_id']==$set['Set']['id'])
+								$scT['Tsumego']['duplicateLink'] = '?sid='.$scT['Tsumego']['set_id'];
+						array_push($ts, $scT);
+					}
+				}
+				$fromTo = $this->getPartitionRange(count($ts), $collectionSize, $partition);
+				$currentIds = array();
+				$ts1 = array();
+				for($i=$fromTo[0]; $i<=$fromTo[1]; $i++){
+					if(isset($utsMap[$ts[$i]['Tsumego']['id']]))
+						$ts[$i]['Tsumego']['status'] = $utsMap[$ts[$i]['Tsumego']['id']];
+					else
+						$ts[$i]['Tsumego']['status'] = 'N';
+					array_push($currentIds, $ts[$i]['Tsumego']['id']);
+					array_push($ts1, $ts[$i]);
+				}
+				$difficultyAndSolved = $this->getDifficultyAndSolved($currentIds, $utsMap);
+				$ts = $ts1;
+				$set['Set']['difficultyRank'] = $difficultyAndSolved['difficulty'];
+				$set['Set']['solved'] = $difficultyAndSolved['solved'];
+				$set['Set']['anz'] = count($ts);
+				if($hasPartition)
+					$set['Set']['title'] = $set['Set']['title'].' #'.($partition+1);
+				$tsBuffer = array();
+				$tsBufferLowest=10000;
+				$tsBufferHighest=0;
+				for($i=0; $i<count($ts); $i++){
+					$tsBuffer[$ts[$i]['Tsumego']['num']] = $ts[$i];
+					if($ts[$i]['Tsumego']['num']<$tsBufferLowest)
+						$tsBufferLowest = $ts[$i]['Tsumego']['num'];
+					if($ts[$i]['Tsumego']['num']>$tsBufferHighest)
+						$tsBufferHighest = $ts[$i]['Tsumego']['num'];
+				}
+				$ts = array();
+				for($i=$tsBufferLowest; $i<=$tsBufferHighest; $i++)
+					if(isset($tsBuffer[$i]))
+						array_push($ts, $tsBuffer[$i]);
+				$allVcActive = true;
+				$allVcInactive = true;
+				$allArActive = true;
+				$allArInactive = true;
+				$allPassActive = true;
+				$allPassInactive = true;
+				for($i=0; $i<count($ts); $i++){
+					if($ts[$i]['Tsumego']['virtual_children']==0)
+						$allVcActive = false;
+					if($ts[$i]['Tsumego']['virtual_children']==1)
+						$allVcInactive = false;
+					if($ts[$i]['Tsumego']['alternative_response']==0)
+						$allArActive = false;
+					if($ts[$i]['Tsumego']['alternative_response']==1)
+						$allArInactive = false;
+					if($ts[$i]['Tsumego']['pass']==0)
+						$allPassActive = false;
+					if($ts[$i]['Tsumego']['pass']==1)
+						$allPassInactive = false;
+				}
+				for($i=0; $i<count($ts); $i++)
+					array_push($tsIds, $ts[$i]['Tsumego']['id']);
+				if($set['Set']['public']==0)
+					$_SESSION['page'] = 'sandbox';
+				$this->set('isFav', false);
+				if(isset($this->params['url']['sort'])){
+					if($this->params['url']['sort']==1){
+						$tsId = array();
+						$tsNum = array();
+						$tsOrder = array();
+						for($i=0; $i<count($ts); $i++){
+							array_push($tsId, $ts[$i]['Tsumego']['id']);
+							array_push($tsNum, $ts[$i]['Tsumego']['num']);
+							array_push($tsOrder, $ts[$i]['Tsumego']['order']);
 						}
-						$nr++;
-					}
-				}
-			}
-			if(isset($this->params['url']['rename'])){
-				if($this->params['url']['rename']==1){
-					$tsId = array();
-					$tsNum = array();
-					$tsOrder = array();
-					for($i=0; $i<count($ts); $i++){
-						array_push($tsId, $ts[$i]['Tsumego']['id']);
-						array_push($tsNum, $ts[$i]['Tsumego']['num']);
-						array_push($tsOrder, $ts[$i]['Tsumego']['order']);
-					}
-					array_multisort($tsOrder, $tsId, $tsNum);
-					$nr = 1;
-					for($i=0; $i<count($tsId); $i++){
-						$j = $this->Joseki->find('first', array('conditions' =>  array('tsumego_id' => $tsId[$i])));
-						$j['Joseki']['order'] = $nr;
-						$this->Joseki->save($j);
-						$nr++;
-					}
-				}
-			}
-			if(isset($this->params['url']['b'])){
-				if($this->params['url']['b']==1){
-
-				}
-			}
-			if(isset($this->data['Set']['title'])){
-				if($set['Set']['title']!=$this->data['Set']['title']) $formChange = true;
-				if($set['Set']['title2']!=$this->data['Set']['title2']) $formChange = true;
-				$this->Set->create();
-				$changeSet = $set;
-				$changeSet['Set']['title'] = $this->data['Set']['title'];
-				$changeSet['Set']['title2'] = $this->data['Set']['title2'];
-				$this->set('data', $changeSet['Set']['title']);
-				$this->Set->save($changeSet, true);
-				$set = $this->Set->findById($id);
-				$adminActivity = array();
-				$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-				$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
-				$adminActivity['AdminActivity']['file'] = 'settings';
-				$adminActivity['AdminActivity']['answer'] = 'Edited meta data for set '.$set['Set']['title'];
-			}
-			if(isset($this->data['Set']['description'])){
-				if($set['Set']['description']!=$this->data['Set']['description']) $formChange = true;
-				$this->Set->create();
-				$changeSet = $set;
-				$changeSet['Set']['description'] = $this->data['Set']['description'];
-				$this->set('data', $changeSet['Set']['description']);
-				$this->Set->save($changeSet, true);
-				$set = $this->Set->findById($id);
-				$adminActivity = array();
-				$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-				$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
-				$adminActivity['AdminActivity']['file'] = 'settings';
-				$adminActivity['AdminActivity']['answer'] = 'Edited meta data for set '.$set['Set']['title'];
-			}
-			if(isset($this->data['Set']['color'])){
-				if($set['Set']['color']!=$this->data['Set']['color']) $formChange = true;
-				$this->Set->create();
-				$changeSet = $set;
-				$changeSet['Set']['color'] = $this->data['Set']['color'];
-				$this->set('data', $changeSet['Set']['color']);
-				$this->Set->save($changeSet, true);
-				$set = $this->Set->findById($id);
-				$adminActivity = array();
-				$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-				$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
-				$adminActivity['AdminActivity']['file'] = 'settings';
-				$adminActivity['AdminActivity']['answer'] = 'Edited meta data for set '.$set['Set']['title'];
-				$this->AdminActivity->save($adminActivity);
-			}
-			if(isset($this->data['Set']['order'])){
-				if($set['Set']['order']!=$this->data['Set']['order']) $formChange = true;
-				$this->Set->create();
-				$changeSet = $set;
-				$changeSet['Set']['order'] = $this->data['Set']['order'];
-				$this->set('data', $changeSet['Set']['order']);
-				$this->Set->save($changeSet, true);
-				$set = $this->Set->findById($id);
-				$adminActivity = array();
-				$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-				$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
-				$adminActivity['AdminActivity']['file'] = 'settings';
-				$adminActivity['AdminActivity']['answer'] = 'Edited meta data for set '.$set['Set']['title'];
-				$this->AdminActivity->save($adminActivity);
-			}
-			if(isset($this->data['Settings'])){
-				if($this->data['Settings']['r38'] == 'on'){
-					for($i=0; $i<count($ts); $i++){
-						$ts[$i]['Tsumego']['virtual_children'] = 1;
-						$this->Tsumego->save($ts[$i]);
-					}
-					$allVcActive = true;
-					$adminActivity = array();
-					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
-					$adminActivity['AdminActivity']['file'] = 'settings';
-					$adminActivity['AdminActivity']['answer'] = 'Turned on merge recurring positions for set '.$set['Set']['title'];
-					$this->AdminActivity->save($adminActivity);
-					
-				}
-				if($this->data['Settings']['r38'] == 'off'){
-					for($i=0; $i<count($ts); $i++){
-						$ts[$i]['Tsumego']['virtual_children'] = 0;
-						$this->Tsumego->save($ts[$i]);
-					}
-					$allVcInactive = true;
-					$adminActivity = array();
-					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
-					$adminActivity['AdminActivity']['file'] = 'settings';
-					$adminActivity['AdminActivity']['answer'] = 'Turned off merge recurring positions for set '.$set['Set']['title'];
-					$this->AdminActivity->save($adminActivity);
-				}
-				if($this->data['Settings']['r39'] == 'on'){
-					for($i=0; $i<count($ts); $i++){
-						$ts[$i]['Tsumego']['alternative_response'] = 1;
-						$this->Tsumego->save($ts[$i]);
-					}
-					$allArActive = true;
-					$adminActivity = array();
-					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
-					$adminActivity['AdminActivity']['file'] = 'settings';
-					$adminActivity['AdminActivity']['answer'] = 'Turned on alternative response mode for set '.$set['Set']['title'];
-					$this->AdminActivity->save($adminActivity);
-				}
-				if($this->data['Settings']['r39'] == 'off'){
-					for($i=0; $i<count($ts); $i++){
-						$ts[$i]['Tsumego']['alternative_response'] = 0;
-						$this->Tsumego->save($ts[$i]);
-					}
-					$allArInactive = true;
-					$adminActivity = array();
-					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
-					$adminActivity['AdminActivity']['file'] = 'settings';
-					$adminActivity['AdminActivity']['answer'] = 'Turned off alternative response mode for set '.$set['Set']['title'];
-					$this->AdminActivity->save($adminActivity);
-				}
-				if($this->data['Settings']['r43'] == 'yes'){
-					for($i=0; $i<count($ts); $i++){
-						$ts[$i]['Tsumego']['pass'] = 1;
-						$this->Tsumego->save($ts[$i]);
-					}
-					$allPassActive = true;
-					$adminActivity = array();
-					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
-					$adminActivity['AdminActivity']['file'] = 'settings';
-					$adminActivity['AdminActivity']['answer'] = 'Enabled passing for set '.$set['Set']['title'];
-					$this->AdminActivity->save($adminActivity);
-				}
-				if($this->data['Settings']['r43'] == 'no'){
-					for($i=0; $i<count($ts); $i++){
-						$ts[$i]['Tsumego']['pass'] = 0;
-						$this->Tsumego->save($ts[$i]);
-					}
-					$allPassInactive = true;
-					$adminActivity = array();
-					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
-					$adminActivity['AdminActivity']['file'] = 'settings';
-					$adminActivity['AdminActivity']['answer'] = 'Disabled passing for set '.$set['Set']['title'];
-					$this->AdminActivity->save($adminActivity);
-				}
-				$this->set('formRedirect', true);
-			}
-			if(isset($this->data['Tsumego'])){
-				if(!$formChange){
-					$scFormChange = $this->SetConnection->find('first', array('order' => 'num DESC', 'conditions' => array('set_id' => $id)));
-					$tFormChange = $this->Tsumego->findById($scFormChange['SetConnection']['tsumego_id']);
-					$tf = array();
-					$tf['Tsumego']['num'] = $this->data['Tsumego']['num'];
-					$tf['Tsumego']['difficulty'] = 40;
-					$tf['Tsumego']['set_id'] =  $id;
-					$tf['Tsumego']['variance'] =  $this->data['Tsumego']['variance'];
-					$tf['Tsumego']['description'] =  $this->data['Tsumego']['description'];
-					$tf['Tsumego']['hint'] =  $this->data['Tsumego']['hint'];
-					$tf['Tsumego']['author'] =  $this->data['Tsumego']['author'];
-					$tf['Tsumego']['elo_rating_mode'] = $tFormChange['Tsumego']['elo_rating_mode'];
-					if(is_numeric($this->data['Tsumego']['num'])){
-						if($this->data['Tsumego']['num']>=0){
-							$this->Tsumego->create();
-							$this->Tsumego->save($tf);
-							$tfSetHighestId = $this->Tsumego->find('first', array('order' => 'id DESC'));
-							$tfSetConnection = array();
-							$tfSetConnection['SetConnection']['set_id'] = $id;
-							$tfSetConnection['SetConnection']['tsumego_id'] = $tfSetHighestId['Tsumego']['id'];
-							$tfSetConnection['SetConnection']['num'] = $this->data['Tsumego']['num'];
-							$this->SetConnection->create();
-							$this->SetConnection->save($tfSetConnection);
+						array_multisort($tsOrder, $tsId, $tsNum);
+						$nr = 1;
+						for($i=0; $i<count($tsId); $i++){
+							$tsu = $this->Tsumego->findById($tsId[$i]);
+							if($tsu['Tsumego']['num']!=$nr) rename('6473k339312/joseki/'.$tsu['Tsumego']['num'].'.sgf','6473k339312/joseki/'.$tsu['Tsumego']['num'].'x.sgf');
+							$nr++;
+						}
+						$nr = 1;
+						for($i=0; $i<count($tsId); $i++){
+							$tsu = $this->Tsumego->findById($tsId[$i]);
+							if($tsu['Tsumego']['num']!=$nr){
+								rename('6473k339312/joseki/'.$tsu['Tsumego']['num'].'x.sgf','6473k339312/joseki/'.$nr.'.sgf');
+								$tsu['Tsumego']['num'] = $nr;
+								$this->Tsumego->save($tsu);
+							}
+							$nr++;
 						}
 					}
-					$tsIds = array();
-					//$ts = $this->Tsumego->find('all', array('order' => 'num', 'direction' => 'DESC', 'conditions' => array('set_id' => $id)));
-					$ts = $this->findTsumegoSet($id);
-					for($i=0; $i<count($ts); $i++) 
-						array_push($tsIds, $ts[$i]['Tsumego']['id']);
+				}
+				if(isset($this->params['url']['rename'])){
+					if($this->params['url']['rename']==1){
+						$tsId = array();
+						$tsNum = array();
+						$tsOrder = array();
+						for($i=0; $i<count($ts); $i++){
+							array_push($tsId, $ts[$i]['Tsumego']['id']);
+							array_push($tsNum, $ts[$i]['Tsumego']['num']);
+							array_push($tsOrder, $ts[$i]['Tsumego']['order']);
+						}
+						array_multisort($tsOrder, $tsId, $tsNum);
+						$nr = 1;
+						for($i=0; $i<count($tsId); $i++){
+							$j = $this->Joseki->find('first', array('conditions' =>  array('tsumego_id' => $tsId[$i])));
+							$j['Joseki']['order'] = $nr;
+							$this->Joseki->save($j);
+							$nr++;
+						}
+					}
+				}
+				if(isset($this->data['Set']['title'])){
+					if($set['Set']['title']!=$this->data['Set']['title']) $formChange = true;
+					if($set['Set']['title2']!=$this->data['Set']['title2']) $formChange = true;
+					$this->Set->create();
+					$changeSet = $set;
+					$changeSet['Set']['title'] = $this->data['Set']['title'];
+					$changeSet['Set']['title2'] = $this->data['Set']['title2'];
+					$this->set('data', $changeSet['Set']['title']);
+					$this->Set->save($changeSet, true);
+					$set = $this->Set->findById($id);
+					$adminActivity = array();
+					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+					$adminActivity['AdminActivity']['file'] = 'settings';
+					$adminActivity['AdminActivity']['answer'] = 'Edited meta data for set '.$set['Set']['title'];
+				}
+				if(isset($this->data['Set']['description'])){
+					if($set['Set']['description']!=$this->data['Set']['description']) $formChange = true;
+					$this->Set->create();
+					$changeSet = $set;
+					$changeSet['Set']['description'] = $this->data['Set']['description'];
+					$this->set('data', $changeSet['Set']['description']);
+					$this->Set->save($changeSet, true);
+					$set = $this->Set->findById($id);
+					$adminActivity = array();
+					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+					$adminActivity['AdminActivity']['file'] = 'settings';
+					$adminActivity['AdminActivity']['answer'] = 'Edited meta data for set '.$set['Set']['title'];
+				}
+				if(isset($this->data['Set']['color'])){
+					if($set['Set']['color']!=$this->data['Set']['color']) $formChange = true;
+					$this->Set->create();
+					$changeSet = $set;
+					$changeSet['Set']['color'] = $this->data['Set']['color'];
+					$this->set('data', $changeSet['Set']['color']);
+					$this->Set->save($changeSet, true);
+					$set = $this->Set->findById($id);
+					$adminActivity = array();
+					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+					$adminActivity['AdminActivity']['file'] = 'settings';
+					$adminActivity['AdminActivity']['answer'] = 'Edited meta data for set '.$set['Set']['title'];
+					$this->AdminActivity->save($adminActivity);
+				}
+				if(isset($this->data['Set']['order'])){
+					if($set['Set']['order']!=$this->data['Set']['order']) $formChange = true;
+					$this->Set->create();
+					$changeSet = $set;
+					$changeSet['Set']['order'] = $this->data['Set']['order'];
+					$this->set('data', $changeSet['Set']['order']);
+					$this->Set->save($changeSet, true);
+					$set = $this->Set->findById($id);
+					$adminActivity = array();
+					$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+					$adminActivity['AdminActivity']['file'] = 'settings';
+					$adminActivity['AdminActivity']['answer'] = 'Edited meta data for set '.$set['Set']['title'];
+					$this->AdminActivity->save($adminActivity);
+				}
+				if(isset($this->data['Settings'])){
+					if($this->data['Settings']['r38'] == 'on'){
+						for($i=0; $i<count($ts); $i++){
+							$ts[$i]['Tsumego']['virtual_children'] = 1;
+							$this->Tsumego->save($ts[$i]);
+						}
+						$allVcActive = true;
+						$adminActivity = array();
+						$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+						$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+						$adminActivity['AdminActivity']['file'] = 'settings';
+						$adminActivity['AdminActivity']['answer'] = 'Turned on merge recurring positions for set '.$set['Set']['title'];
+						$this->AdminActivity->save($adminActivity);
+						
+					}
+					if($this->data['Settings']['r38'] == 'off'){
+						for($i=0; $i<count($ts); $i++){
+							$ts[$i]['Tsumego']['virtual_children'] = 0;
+							$this->Tsumego->save($ts[$i]);
+						}
+						$allVcInactive = true;
+						$adminActivity = array();
+						$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+						$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+						$adminActivity['AdminActivity']['file'] = 'settings';
+						$adminActivity['AdminActivity']['answer'] = 'Turned off merge recurring positions for set '.$set['Set']['title'];
+						$this->AdminActivity->save($adminActivity);
+					}
+					if($this->data['Settings']['r39'] == 'on'){
+						for($i=0; $i<count($ts); $i++){
+							$ts[$i]['Tsumego']['alternative_response'] = 1;
+							$this->Tsumego->save($ts[$i]);
+						}
+						$allArActive = true;
+						$adminActivity = array();
+						$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+						$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+						$adminActivity['AdminActivity']['file'] = 'settings';
+						$adminActivity['AdminActivity']['answer'] = 'Turned on alternative response mode for set '.$set['Set']['title'];
+						$this->AdminActivity->save($adminActivity);
+					}
+					if($this->data['Settings']['r39'] == 'off'){
+						for($i=0; $i<count($ts); $i++){
+							$ts[$i]['Tsumego']['alternative_response'] = 0;
+							$this->Tsumego->save($ts[$i]);
+						}
+						$allArInactive = true;
+						$adminActivity = array();
+						$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+						$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+						$adminActivity['AdminActivity']['file'] = 'settings';
+						$adminActivity['AdminActivity']['answer'] = 'Turned off alternative response mode for set '.$set['Set']['title'];
+						$this->AdminActivity->save($adminActivity);
+					}
+					if($this->data['Settings']['r43'] == 'yes'){
+						for($i=0; $i<count($ts); $i++){
+							$ts[$i]['Tsumego']['pass'] = 1;
+							$this->Tsumego->save($ts[$i]);
+						}
+						$allPassActive = true;
+						$adminActivity = array();
+						$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+						$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+						$adminActivity['AdminActivity']['file'] = 'settings';
+						$adminActivity['AdminActivity']['answer'] = 'Enabled passing for set '.$set['Set']['title'];
+						$this->AdminActivity->save($adminActivity);
+					}
+					if($this->data['Settings']['r43'] == 'no'){
+						for($i=0; $i<count($ts); $i++){
+							$ts[$i]['Tsumego']['pass'] = 0;
+							$this->Tsumego->save($ts[$i]);
+						}
+						$allPassInactive = true;
+						$adminActivity = array();
+						$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+						$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+						$adminActivity['AdminActivity']['file'] = 'settings';
+						$adminActivity['AdminActivity']['answer'] = 'Disabled passing for set '.$set['Set']['title'];
+						$this->AdminActivity->save($adminActivity);
+					}
+					$this->set('formRedirect', true);
+				}
+				if(isset($this->data['Tsumego'])){
+					if(!$formChange){
+						$scFormChange = $this->SetConnection->find('first', array('order' => 'num DESC', 'conditions' => array('set_id' => $id)));
+						$tFormChange = $this->Tsumego->findById($scFormChange['SetConnection']['tsumego_id']);
+						$tf = array();
+						$tf['Tsumego']['num'] = $this->data['Tsumego']['num'];
+						$tf['Tsumego']['difficulty'] = 40;
+						$tf['Tsumego']['set_id'] =  $id;
+						$tf['Tsumego']['variance'] =  $this->data['Tsumego']['variance'];
+						$tf['Tsumego']['description'] =  $this->data['Tsumego']['description'];
+						$tf['Tsumego']['hint'] =  $this->data['Tsumego']['hint'];
+						$tf['Tsumego']['author'] =  $this->data['Tsumego']['author'];
+						$tf['Tsumego']['elo_rating_mode'] = $tFormChange['Tsumego']['elo_rating_mode'];
+						if(is_numeric($this->data['Tsumego']['num'])){
+							if($this->data['Tsumego']['num']>=0){
+								$this->Tsumego->create();
+								$this->Tsumego->save($tf);
+								$tfSetHighestId = $this->Tsumego->find('first', array('order' => 'id DESC'));
+								$tfSetConnection = array();
+								$tfSetConnection['SetConnection']['set_id'] = $id;
+								$tfSetConnection['SetConnection']['tsumego_id'] = $tfSetHighestId['Tsumego']['id'];
+								$tfSetConnection['SetConnection']['num'] = $this->data['Tsumego']['num'];
+								$this->SetConnection->create();
+								$this->SetConnection->save($tfSetConnection);
+							}
+						}
+						$tsIds = array();
+						$ts = $this->findTsumegoSet($id);
+						for($i=0; $i<count($ts); $i++) 
+							array_push($tsIds, $ts[$i]['Tsumego']['id']);
+					}
 				}
 			}
+			//end set
+		//favs
 		}else{
 			$allUts = $this->TsumegoStatus->find('all', array('conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
 			$idMap = array();
@@ -1082,10 +1418,8 @@ class SetsController extends AppController{
 				array_push($statusMap, $allUts[$i]['TsumegoStatus']['status']);
 			}
 			$fav = $this->Favorite->find('all', array('order' => 'created',	'direction' => 'DESC', 'conditions' =>  array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
-			
 			if(count($fav)>0)
 				$achievementUpdate = $this->checkSetAchievements(-1);
-			
 			$ts = array();
 			$difficultyCount = 0;
 			$solvedCount = 0;
@@ -1105,16 +1439,13 @@ class SetsController extends AppController{
 					}
 				}
 			}
-
 			$difficultyCount /= $sizeCount;
 			if($difficultyCount<=2) $difficultyCount = 1;
 			else if($difficultyCount>2 && $difficultyCount<=3) $difficultyCount = 2;
 			else if($difficultyCount>3 && $difficultyCount<=4) $difficultyCount = 3;
 			else if($difficultyCount>4 && $difficultyCount<=6) $difficultyCount = 4;
 			else if($difficultyCount>6) $difficultyCount = 5;
-
 			$percent = $solvedCount/$sizeCount*100;
-
 			$set = array();
 			$set['Set']['id'] = 1;
 			$set['Set']['title'] = 'Favorites';
@@ -1137,27 +1468,18 @@ class SetsController extends AppController{
 			$set['Set']['difficultyColor'] = '#eee';
 			$set['Set']['sizeColor'] = '#eee';
 			$set['Set']['dateColor'] = '#eee';
-
 			$this->set('isFav', true);
 		}
 		$_SESSION['title'] = $set['Set']['title'].' on Tsumego Hero';
 		$set['Set']['anz'] = count($ts);
 
-		if(isset($_SESSION['loggedInUser']['User']['id'])){
-			$uts = $this->TsumegoStatus->find('all', array('conditions' =>  array(
-				'user_id' => $_SESSION['loggedInUser']['User']['id'],
-				'tsumego_id' => $tsIds
-			)));
-			$ur = $this->TsumegoAttempt->find('all', array('order' => 'created DESC', 'conditions' => array(
-				'user_id' => $_SESSION['loggedInUser']['User']['id'],
-				'tsumego_id' => $tsIds
-			)));
-			for($i=0; $i<count($uts); $i++){
-				for($j=0; $j<count($ts); $j++){
-					if($uts[$i]['TsumegoStatus']['tsumego_id'] == $ts[$j]['Tsumego']['id']){
-						$ts[$j]['Tsumego']['status'] = $uts[$i]['TsumegoStatus']['status'];
-					}
-				}
+		if(isset($_SESSION['loggedInUser']['User']['id']) && $viewType == 'topics'){
+			$ur = array();
+			if($viewType == 'topics'){
+				$ur = $this->TsumegoAttempt->find('all', array('order' => 'created DESC', 'conditions' => array(
+					'user_id' => $_SESSION['loggedInUser']['User']['id'],
+					'tsumego_id' => $tsIds
+				)));
 			}
 			for($i=0; $i<count($ts); $i++){
 				$urTemp = array();
@@ -1166,13 +1488,11 @@ class SetsController extends AppController{
 				for($j=0; $j<count($ur); $j++){
 					if($ts[$i]['Tsumego']['id'] == $ur[$j]['TsumegoAttempt']['tsumego_id']){
 						array_push($urTemp, $ur[$j]);
-
 						if($ur[$j]['TsumegoAttempt']['solved']==1){
 							$ts[$i]['Tsumego']['seconds'] = $ur[$j]['TsumegoAttempt']['seconds'];
 						}
 						if($ur[$j]['TsumegoAttempt']['solved']==0){
 							$mis = $ur[$j]['TsumegoAttempt']['misplays'];
-
 							if($mis==0) $mis=1;
 							while($mis>0){
 								$urSum.='F';
@@ -1182,23 +1502,11 @@ class SetsController extends AppController{
 							$urSum.=$ur[$j]['TsumegoAttempt']['solved'];
 						}
 					}
-					
 				}
 				$ts[$i]['Tsumego']['performance'] = $urSum;
 			}
-			$counter = 0;
-			for($j=0; $j<count($uts); $j++){
-				for($k=0; $k<count($ts); $k++){
-					if($uts[$j]['TsumegoStatus']['tsumego_id']==$ts[$k]['Tsumego']['id'] && ($uts[$j]['TsumegoStatus']['status']=='S' || $uts[$j]['TsumegoStatus']['status']=='W' || $uts[$j]['TsumegoStatus']['status']=='C')){
-						$counter++;
-					}
-				}
-			}
-			$percent = $counter/count($ts)*100;
-			$set['Set']['solved'] = round($percent, 1);
 		}
-
-		if(!isset($_SESSION['loggedInUser'])){
+		if(!isset($_SESSION['loggedInUser']['User']['id'])){
 			$counter = 0;
 			if(isset($_SESSION['noLogin'])){
 				$noLogin = $_SESSION['noLogin'];
@@ -1217,7 +1525,6 @@ class SetsController extends AppController{
 			$percent = $counter/count($ts)*100;
 			$set['Set']['solved'] = round($percent, 1);
 		}
-
 		$scTt = $this->SetConnection->find('first', array('conditions' => array('set_id' => $set['Set']['id'], 'num' => 1)));
 		if($scTt!=null)
 			$t = $this->Tsumego->findById($scTt['SetConnection']['tsumego_id']);
@@ -1225,10 +1532,12 @@ class SetsController extends AppController{
 			$t = null;
 		if($t==null) $t = $ts[0];
 		$set['Set']['t'] = $t['Tsumego']['id'];
-		
-		$tfs = $this->findTsumegoSet($id);
+
+		$tfs = array();
+		if($viewType == 'topics')
+			$tfs = $this->findTsumegoSet($id);
 		$scoring = true;
-		if(isset($_SESSION['loggedInUser'])){
+		if(isset($_SESSION['loggedInUser']['User']['id']) && $viewType == 'topics'){
 			if(isset($this->data['Comment']['reset'])){
 				if($this->data['Comment']['reset']=='reset'){
 					for($i=0; $i<count($ur); $i++){
@@ -1255,7 +1564,6 @@ class SetsController extends AppController{
 				$pd[$i]['ProgressDeletion']['d'] = $date->format('Y').'-'.$date->format('m');
 				if(date('Y-m')==$pd[$i]['ProgressDeletion']['d']) $pdCounter++;
 			}
-
 			$urSecCounter = 0;
 			$urSecAvg = 0;
 			$pSsum = 0;
@@ -1287,7 +1595,6 @@ class SetsController extends AppController{
 				$pSsum += $pS;
 				$pFsum += $pF;
 			}
-			
 			if($urSecCounter==0)
 				$avgTime = 60;
 			else
@@ -1296,9 +1603,7 @@ class SetsController extends AppController{
 				$accuracy = 0;
 			else
 				$accuracy = round($pSsum/($pSsum+$pFsum)*100, 2);
-			
 			$avgTime2 = $avgTime; 
-			
 			$achievementUpdate2 = array();
 			if($set['Set']['solved']>=100){
 				if($set['Set']['id']!=210){
@@ -1329,7 +1634,6 @@ class SetsController extends AppController{
 		}else{
 			$scoring = false;
 		}
-		
 		$tooltipSgfs = array();
 		$tooltipInfo = array();
 		$tooltipBoardSize = array();
@@ -1361,9 +1665,7 @@ class SetsController extends AppController{
 					$newAddTag = explode("-", $_COOKIE['addTag']);
 					$tagSetId = $newAddTag[0];
 					$newTagName = $this->TagName->find('first', array('conditions' => array('name' => str_replace($tagSetId.'-', '', $_COOKIE['addTag']))));
-					
 					$tagSc = $this->findTsumegoSet($tagSetId);
-					
 					for($i=0; $i<count($tagSc); $i++){
 						$tagAlreadyThere = $this->Tag->find('first', array('conditions' => array(
 							'tsumego_id' => $tagSc[$i]['Tsumego']['id'], 'tag_name_id' => $newTagName['TagName']['id']
@@ -1383,8 +1685,25 @@ class SetsController extends AppController{
 			}
 		}
 		
+		if($viewType == 'topics'){
+			$this->set('tfs', $tfs[count($tfs)-1]);
+			$this->set('allVcActive', $allVcActive);
+			$this->set('allVcInactive', $allVcInactive);
+			$this->set('allArActive', $allArActive);
+			$this->set('allArInactive', $allArInactive);
+			$this->set('allPassActive', $allPassActive);
+			$this->set('allPassInactive', $allPassInactive);
+			$this->set('pdCounter', $pdCounter);
+			$this->set('acS', $acS);
+			$this->set('acA', $acA);
+		}
+
+		$this->set('search1', $search1);
+		$this->set('search2', $search2);
+		$this->set('search3', $search3);
+		$this->set('query', $query);
+		$this->set('viewType', $viewType);
 		$this->set('allTags', $allTags);
-		$this->set('tfs', $tfs[count($tfs)-1]);
 		$this->set('ts', $ts);
 		$this->set('set', $set);
 		$this->set('josekiOrder', $josekiOrder);
@@ -1392,15 +1711,6 @@ class SetsController extends AppController{
 		$this->set('avgTime', $avgTime);
 		$this->set('accuracy', $accuracy);
 		$this->set('scoring', $scoring);
-		$this->set('allVcActive', $allVcActive);
-		$this->set('allVcInactive', $allVcInactive);
-		$this->set('allArActive', $allArActive);
-		$this->set('allArInactive', $allArInactive);
-		$this->set('allPassActive', $allPassActive);
-		$this->set('allPassInactive', $allPassInactive);
-		$this->set('pdCounter', $pdCounter);
-		$this->set('acS', $acS);
-		$this->set('acA', $acA);
 		$this->set('achievementUpdate', $achievementUpdate);
 		$this->set('tooltipSgfs', $tooltipSgfs);
 		$this->set('tooltipInfo', $tooltipInfo);
@@ -1408,7 +1718,6 @@ class SetsController extends AppController{
   }
 	
 	public function download_archive(){
-		
 		$s = $this->Set->find('all', array('order' => 'id ASC', 'conditions' => array(
 			'OR' => array(
 				array('public' => 1),
@@ -1418,9 +1727,6 @@ class SetsController extends AppController{
 		
 		$text = file_get_contents('download_archive.txt');
 		
-		echo '<pre>'; print_r($text); echo '</pre>';
-		echo '<pre>'; print_r($s[$text]['Set']['id']); echo '</pre>';
-		echo '<pre>'; print_r(count($s)); echo '</pre>';
 		
 		$text2 = $text+1;
 		file_put_contents('download_archive.txt', $text2);
@@ -1785,6 +2091,94 @@ class SetsController extends AppController{
 			$steps += 2.5;
 		}
 		return '#333333';
+	}
+
+	private function getExistingRanksArray(){
+		$this->loadModel('Tsumego');
+		$ranksArray = array();
+		$ranksArray[0]['rank'] = '15k';
+		$ranksArray[1]['rank'] = '14k';
+		$ranksArray[2]['rank'] = '13k';
+		$ranksArray[3]['rank'] = '12k';
+		$ranksArray[4]['rank'] = '11k';
+		$ranksArray[5]['rank'] = '10k';
+		$ranksArray[6]['rank'] = '9k';
+		$ranksArray[7]['rank'] = '8k';
+		$ranksArray[8]['rank'] = '7k';
+		$ranksArray[9]['rank'] = '6k';
+		$ranksArray[10]['rank'] = '5k';
+		$ranksArray[11]['rank'] = '4k';
+		$ranksArray[12]['rank'] = '3k';
+		$ranksArray[13]['rank'] = '2k';
+		$ranksArray[14]['rank'] = '1k';
+		$ranksArray[15]['rank'] = '1d';
+		$ranksArray[16]['rank'] = '2d';
+		$ranksArray[17]['rank'] = '3d';
+		$ranksArray[18]['rank'] = '4d';
+		$ranksArray[19]['rank'] = '5d';
+		$ranksArray[20]['rank'] = '6d';
+		$ranksArray[21]['rank'] = '7d';
+		$ranksArray[22]['rank'] = '8d';
+		$ranksArray[0]['color'] = 'rgba(63,  201, 196, [o])';
+		$ranksArray[1]['color'] = 'rgba(63, 190, 201, [o])';
+		$ranksArray[2]['color'] = 'rgba(63, 173, 201, [o])';
+		$ranksArray[3]['color'] = 'rgba(63, 157, 201, [o])';
+		$ranksArray[4]['color'] = 'rgba(63, 141, 201, [o])';
+		$ranksArray[5]['color'] = 'rgba(88, 158, 244, [o])';
+		$ranksArray[6]['color'] = 'rgba(88, 140, 244, [o])';
+		$ranksArray[7]['color'] = 'rgba(88, 122, 244, [o])';
+		$ranksArray[8]['color'] = 'rgba(88, 103, 244, [o])';
+		$ranksArray[9]['color'] = 'rgba(90, 88, 244, [o])';
+		$ranksArray[10]['color'] = 'rgba(109, 88, 244, [o])';
+		$ranksArray[11]['color'] = 'rgba(127, 88, 244, [o])';
+		$ranksArray[12]['color'] = 'rgba(145, 88, 244, [o])';
+		$ranksArray[13]['color'] = 'rgba(163, 88, 244, [o])';
+		$ranksArray[14]['color'] = 'rgba(182, 88, 244, [o])';
+		$ranksArray[15]['color'] = 'rgba(200, 88, 244, [o])';
+		$ranksArray[16]['color'] = 'rgba(218, 88, 244, [o])';
+		$ranksArray[17]['color'] = 'rgba(236, 88, 244, [o])';
+		$ranksArray[18]['color'] = 'rgba(244, 88, 234, [o])';
+		$ranksArray[19]['color'] = 'rgba(244, 88, 187, [o])';
+		$ranksArray[20]['color'] = 'rgba(244, 88, 145, [o])';
+		$ranksArray[21]['color'] = 'rgba(244, 88, 127, [o])';
+		$ranksArray[22]['color'] = 'rgba(244, 88, 101, [o])';
+		$nine = $this->Tsumego->find('first', array('conditions' => array(
+			'elo_rating_mode >=' => $this->getTsumegoElo('9d'),
+		)));
+		if($nine!=null){
+			$ranksArray[23]['rank'] = '9d';
+			$ranksArray[23]['color'] = 'rgba(244, 88, 88, [o])';
+		}
+		return $ranksArray;
+	}
+	private function getTagColor($pos){
+		$c = array();
+		$c[0] = 'rgba(217, 135, 135, [o])';
+		$c[1] = 'rgba(135, 149, 101, [o])';
+		$c[2] = 'rgba(190, 151, 131, [o])';
+		$c[3] = 'rgba(188, 116, 45, [o])';
+		$c[4] = 'rgba(153, 111, 31, [o])';
+		$c[5] = 'rgba(159, 54, 0, [o])';
+		$c[6] = 'rgba(153, 151, 31, [o])';
+		$c[7] = 'rgba(114, 9, 183, [o])';
+		$c[8] = 'rgba(149, 77, 63, [o])';
+		$c[9] = 'rgba(179, 181, 37, [o])';
+		$c[10] = 'rgba(137, 153, 31, [o])';
+		$c[11] = 'rgba(145, 61, 91, [o])';
+		$c[12] = 'rgba(79, 68, 68, [o])';
+		$c[13] = 'rgba(182, 137, 199, [o])';
+		$c[14] = 'rgba(166, 88, 125, [o])';
+		$c[15] = 'rgba(45, 37, 79, [o])';
+		$c[16] = 'rgba(154, 50, 138, [o])';
+		$c[17] = 'rgba(102, 51, 122, [o])';
+		$c[18] = 'rgba(184, 46, 126, [o])';
+		$c[19] = 'rgba(119, 50, 154, [o])';
+		$c[20] = 'rgba(187, 70, 196, [o])';
+		$c[21] = 'rgba(125, 8, 8, [o])';
+		$c[22] = 'rgba(136, 67, 56, [o])';
+		$c[23] = 'rgba(190, 165, 136, [o])';
+		$c[24] = 'rgba(128, 118, 123, [o])';
+		return $c[$pos];
 	}
 }
 

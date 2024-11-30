@@ -199,7 +199,6 @@ class TagNamesController extends AppController{
 			$tn['TagName']['description'] = $this->data['TagName']['description'];
 			$tn['TagName']['hint'] = $this->data['TagName']['hint'];
 			$tn['TagName']['link'] = $this->data['TagName']['link'];
-			$tn['TagName']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
 			$this->TagName->save($tn);
 			$this->set('saved', $tn['TagName']['id']);
 		}

@@ -31,10 +31,10 @@
 	<meta name="keywords" content="tsumego, problems, puzzles, baduk, weiqi, tesuji, life and death, solve, solving, hero, go, in-seong, level" >
 	<meta name="Author" content="Joschka Zimdars">
 	<meta property="og:title" content="Tsumego Hero">
-	<link rel="stylesheet" type="text/css" href="/css/default.css?v=3.5">
+	<link rel="stylesheet" type="text/css" href="/css/default.css?v=3.6">
 	<?php
 		if($lightDark=='dark')
-			echo '<link rel="stylesheet" type="text/css" href="/css/dark.css?v=1.3">';
+			echo '<link rel="stylesheet" type="text/css" href="/css/dark.css?v=3.6">';
 		
 		echo $this->Html->meta('icon');
 		echo $this->fetch('meta');
@@ -135,6 +135,7 @@
 				$refreshLinkToHighscore = '';
 				$refreshLinkToLeaderboard = '';
 				$refreshLinkToSandbox = '';
+				$refreshLinkToFavs = '';
 				$refreshLinkToDiscuss = '';
 				$refreshLinkToLeaderboardBackup = '';
 				$refreshLinkToSandboxBackup = '';
@@ -176,6 +177,7 @@
 				else if($_SESSION['page'] == 'achievementHighscore') $achievementHighscoreA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'timeHighscore') $timeHighscoreA = 'style="color:#74d14c;"';
 				else if($_SESSION['page'] == 'dailyHighscore') $dailyHighscoreA = 'style="color:#74d14c;"';
+				else if($_SESSION['page'] == 'favs') $refreshLinkToFavs = 'style="color:#74d14c;"';
 
 				if(isset($nextMode['Tsumego']['id'])){
 					if($nextMode['Tsumego']['id']==null) $nextMode['Tsumego']['id'] = 15352;
@@ -209,21 +211,23 @@
 					echo '</ul>';
 					echo '</li>';
 					echo '<li><a '.$refreshLinkToSets.' '.$collectionsA.' href="/sets">Collections</a>';
-					if(isset($_SESSION['loggedInUser'])){
-						if($_SESSION['loggedInUser']['User']['premium']>=1 || $_SESSION['loggedInUser']['User']['level']>=60){
+					if(isset($_SESSION['loggedInUser']['User']['id'])){
+						if($_SESSION['loggedInUser']['User']['premium']>=1 || $_SESSION['loggedInUser']['User']['isAdmin']>=1 || $hasFavs){
 							echo '<ul class="newMenuLi2">';
+							if($_SESSION['loggedInUser']['User']['premium']>=1 || $_SESSION['loggedInUser']['User']['isAdmin']>=1)
 								echo '<li><a '.$refreshLinkToSandbox.' '.$sandboxA.' href="/sets/beta">Sandbox</a></li>';
-								if($_SESSION['loggedInUser']['User']['isAdmin']>=1){
-									echo '<li><a class="adminLink" href="/users/adminstats">Activities</a></li>';
-									echo '<li class="additional-adminLink2"><a id="adminLink-more" class="adminLink adminLink3"><i>more</i></a></li>';
-									echo '<li class="additional-adminLink"><a class="adminLink" href="/users/uploads">Uploads</a></li>';
-									echo '<li class="additional-adminLink"><a class="adminLink" href="/users/duplicates">Merge Duplicates</a></li>';
-									echo '<li class="additional-adminLink"><a class="adminLink" href="/sets/duplicatesearch">Duplicate Search Results</a></li>';
-									echo '<li class="additional-adminLink"><a class="adminLink" href="/users/publish">Publish Schedule</a></li>';
-									echo '<li class="additional-adminLink"><a class="adminLink" href="/app/webroot/editor">Editor</a></li>';
-									echo '<li class="additional-adminLink"><a class="adminLink" href="/users/userstats">User Activities</a></li>';
-									echo '<li class="additional-adminLink"><a class="adminLink" href="/users/uservisits">Users Per Day</a></li>';
-								}
+							echo '<li><a '.$refreshLinkToFavs.' href="/sets/view/1">Favorites</a></li>';
+							if($_SESSION['loggedInUser']['User']['isAdmin']>=1){
+								echo '<li><a class="adminLink" href="/users/adminstats">Activities</a></li>';
+								echo '<li class="additional-adminLink2"><a id="adminLink-more" class="adminLink adminLink3"><i>more</i></a></li>';
+								echo '<li class="additional-adminLink"><a class="adminLink" href="/users/uploads">Uploads</a></li>';
+								echo '<li class="additional-adminLink"><a class="adminLink" href="/users/duplicates">Merge Duplicates</a></li>';
+								echo '<li class="additional-adminLink"><a class="adminLink" href="/sets/duplicatesearch">Duplicate Search Results</a></li>';
+								echo '<li class="additional-adminLink"><a class="adminLink" href="/users/publish">Publish Schedule</a></li>';
+								echo '<li class="additional-adminLink"><a class="adminLink" href="/app/webroot/editor">Editor</a></li>';
+								echo '<li class="additional-adminLink"><a class="adminLink" href="/users/userstats">User Activities</a></li>';
+								echo '<li class="additional-adminLink"><a class="adminLink" href="/users/uservisits">Users Per Day</a></li>';
+							}
 							echo '</ul>';
 						}
 					}
@@ -246,7 +250,7 @@
 						echo '<li><a id="tutorialLink" href="/users/added_tags" '.$timeHighscoreA.'>Tag Highscore</a></li>';
 						echo '<li><a id="tutorialLink" href="/users/leaderboard" '.$dailyHighscoreA.'>Daily Highscore</a></li>';
 					echo '</ul>';
-					if(isset($_SESSION['loggedInUser'])) echo '<li><a  '.$refreshLinkToDiscuss.'  '.$discussA.'href="/comments'.$discussFilter.'">Discuss</a></li>';
+					if(isset($_SESSION['loggedInUser']['User']['id'])) echo '<li><a  '.$refreshLinkToDiscuss.'  '.$discussA.'href="/comments'.$discussFilter.'">Discuss</a></li>';
 					else echo '<li><a style="color:#aaa;">Discuss</a></li>';
 					echo '<li class="menuIcons1">
 						<a href="#" id="soundButton" onclick="changeSound(); return false;"><img id="soundButtonImage" src="/img/sound-icon1.png" width="25px"></a>
@@ -299,9 +303,9 @@
 					if($lightDark=='dark')
 						$lightDarkImage = 'dark-icon1';
 					else
-						$lightDarkImage = 'light-icon1';
+						$lightDarkImage = 'light-icon1x';
 					echo '<li class="menuIcons1">
-						<a class="menuIcons2" id="darkButton" onclick="darkAndLight();"><img id="darkButtonImage" src="/img/'.$lightDarkImage.'.png" width="30px"></a>
+						<a class="menuIcons2" id="darkButton" onclick="darkAndLight();"><img id="darkButtonImage" src="/img/'.$lightDarkImage.'.png?v=3.6" width="30px"></a>
 					</li>';
 					?>
 				</ul>
@@ -321,7 +325,7 @@
 
 	</div>
 	<?php
-		if(isset($_SESSION['loggedInUser']) && isset($_SESSION['loggedInUser']['User']['id'])){
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			if($levelBar==1) $textBarInMenu = "Rating Bar";
 			else $textBarInMenu = "Level Bar";
 			echo '<div id="account-bar-wrapper" onmouseover="xpHover()" onmouseout="xpNoHover()">
@@ -380,13 +384,25 @@
 	</div>
 	</div>
 	<div id="footer" class="footerLinks"><br>
-	<?php if(isset($_SESSION['loggedInUser'])){ ?>
-	<?php if($_SESSION['loggedInUser']['User']['premium']==0 && $user['User']['id']!=1165){ ?>
-		<div align="center"><a href="/users/donate"><img id="donateH2" onmouseover="donateHover2()" onmouseout="donateNoHover2()" width="180px" src="/img/donateButton1.png"></a><br></div><br>
-	<?php } ?>
+	<?php if(
+		!isset($_SESSION['loggedInUser']['User']['id'])
+		|| isset($_SESSION['loggedInUser']['User']['id']) && $_SESSION['loggedInUser']['User']['premium']<1
+	){ ?>
+		<div align="center">
+			<a href="/users/donate">
+				<img id="donateH2" onmouseover="upgradeHover2()" onmouseout="upgradeNoHover2()" width="180px" src="/img/upgradeButton1.png">
+			</a>
+			<br>
+		</div>
 	<?php }else{ ?>
-		<div align="center"><a href="/users/donate"><img id="donateH2" onmouseover="donateHover2()" onmouseout="donateNoHover2()" width="180px" src="/img/donateButton1.png"></a><br></div><br>
+		<div align="center">
+			<a href="/users/donate">
+				<img id="donateH2" onmouseover="donateHover2()" onmouseout="donateNoHover2()" width="180px" src="/img/donateButton1.png">
+			</a>
+			<br>
+		</div>
 	<?php } ?>
+	<br>
 	Tsumego Hero © <?php echo date('Y'); ?>
 	<br>
 		<a href="mailto:joschka.zimdars@googlemail.com">joschka.zimdars@googlemail.com</a><br><br>
@@ -447,33 +463,31 @@
 		}}else{
 			if(!isset($_COOKIE['z_sess'])){
 	?>
-				if(localStorage.hasOwnProperty('z_sess') && localStorage.hasOwnProperty('z_user_hash')){
-					let zSess = localStorage.getItem("z_sess");
-					let zUserHash = localStorage.getItem("z_user_hash");
-					setCookie("z_sess", zSess);
-					setCookie("z_user_hash", zUserHash);
-					setCookie("z_hash", "0");
-					localStorage.removeItem("z_sess");
-					localStorage.removeItem("z_user_hash");
-					window.location.href = "/";
-				}
+		if(localStorage.hasOwnProperty('z_sess') && localStorage.hasOwnProperty('z_user_hash')){
+			let zSess = localStorage.getItem("z_sess");
+			let zUserHash = localStorage.getItem("z_user_hash");
+			setCookie("z_sess", zSess);
+			setCookie("z_user_hash", zUserHash);
+			setCookie("z_hash", "0");
+			localStorage.removeItem("z_sess");
+			localStorage.removeItem("z_user_hash");
+			window.location.href = "/";
+		}
 	<?php
 			}
 		}
-	?>
-	
-	<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
-	var barPercent1 = <?php echo $user['User']['xp']/$user['User']['nextlvl']*100; ?>;
-	var barPercent2 = <?php echo substr(round($user['User']['elo_rating_mode']), -2); ?>;
-	var barLevelNum = "<?php echo 'Level '.$user['User']['level']; ?>";
-	var barRatingNum = "<?php echo $td; ?>";
-	var levelToRatingHover = <?php echo $levelBar; ?>;
-	
-	<?php if($_SESSION['loggedInUser']['User']['id']==72){ ?>
-	<?php } ?>
+		if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
+		var barPercent1 = <?php echo $user['User']['xp']/$user['User']['nextlvl']*100; ?>;
+		var barPercent2 = <?php echo substr(round($user['User']['elo_rating_mode']), -2); ?>;
+		var barLevelNum = "<?php echo 'Level '.$user['User']['level']; ?>";
+		var barRatingNum = "<?php echo $td; ?>";
+		var levelToRatingHover = <?php echo $levelBar; ?>;
+		
+		<?php if($_SESSION['loggedInUser']['User']['id']==72){ ?>
+		<?php } ?>
 	<?php } ?>
 	<?php
-	if($_SESSION['page']!='level mode'&&$_SESSION['page']!='rating mode'&&$_SESSION['page']!='time mode')
+	if($_SESSION['page']!='level mode' && $_SESSION['page']!='rating mode' && $_SESSION['page']!='time mode')
 		echo 'setCookie("mode", 1);';
 	
 	for($i=0;$i<count($achievementUpdate);$i++){
@@ -540,6 +554,13 @@
 
 		if(getCookie("z_hash"!=="1"))
 			setCookie("z_hash", "0");
+
+		setCookie("query", "");
+		setCookie("collectionSize", "");
+		setCookie("search1", "");
+		setCookie("search2", "");
+		setCookie("search3", "");
+
 		<?php
 			if(isset($textureCookies)){
 				for($i=0;$i<count($textureCookies);$i++){
@@ -931,6 +952,12 @@
 			if(document.getElementById("leaderboardLink")) document.getElementById("leaderboardLink").style.display = "none";
 			if(document.getElementById("highscoreInMenu")) document.getElementById("highscoreInMenu").style.backgroundColor = "rgba(0,0,0,0)";
 			if(document.getElementById("highscoreInMenu")) document.getElementById("highscoreInMenu").style.color = "#d19fe4";
+		}
+		function upgradeHover2(){
+			document.getElementById("donateH2").src = '/img/upgradeButton1h.png';
+		}
+		function upgradeNoHover2(){
+			document.getElementById("donateH2").src = "/img/upgradeButton1.png";
 		}
 		function donateHover2(){
 			document.getElementById("donateH2").src = '/img/donateButton1h.png';

@@ -41,6 +41,12 @@
 	<br><br>
 	<table class="dailyHighscoreTable">
 	<?php
+		$showLinks = false;
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			if($_SESSION['loggedInUser']['User']['id']==72){
+				$showLinks = true;
+			}
+		}
 		for($i=0; $i<count($a); $i++){
 			if(true){
 				$bgColor = '#fff';
@@ -77,15 +83,17 @@
 				if($i>=30) $bgColor = '#b6f998';
 				if($i>=40) $bgColor = '#d3f9c2';
 				if($i>=50) $bgColor = '#e8f9e0';
-				
 				echo '
 					<tr style="background-color:'.$bgColor.';">
 						<td align="right" style="padding:10px;">
 							<b>'.($i+1).'</b>
 						</td>
-						<td style="padding:10px;" width="200px">
-							<b>'.$a[$i]['name'].'</b>
-						</td>
+						<td style="padding:10px;" width="200px">';
+						if(!$showLinks)
+							echo '<b>'.$a[$i]['name'].'</b>';
+						else
+							echo '<a href="/tag_names/user/'.$a[$i]['id'].'" style="color:black"><b>'.$a[$i]['name'].'</b></a>';
+						echo '</td>
 						<td align="right" style="padding:10px;">
 							<b>'.$a[$i]['score'].'</b>
 						</td>
@@ -96,13 +104,10 @@
 	?>
 	</table>
 	<br><br>
-		
-	
 	</div>
 	<div align="center">
 	<div class="accessList" style="font-weight:400;">
 	<br><br>
-	
 	</div>
 	</div>
 		<script>

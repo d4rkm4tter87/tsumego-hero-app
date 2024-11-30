@@ -52,7 +52,7 @@
     <div class="reward-element"></div>
     <div class="reward-element" style="border: 1px solid <?php echo $goalsColor[0] ?>;">
       <div align="center">
-        <div class="reward-element-points">35 points</div>
+        <div class="reward-element-points">30 points</div>
         <div class="reward-element-description">Level up</div>
         <?php if($goals[0]){ ?>
           <?php if($uc['UserContribution']['reward1']==0){ ?>
@@ -70,7 +70,7 @@
     </div>
     <div class="reward-element" style="border: 1px solid <?php echo $goalsColor[1] ?>;">
       <div align="center">
-        <div class="reward-element-points">70 points</div>
+        <div class="reward-element-points">60 points</div>
         <div class="reward-element-description">Rank up</div>
         <?php if($goals[1]){ ?>
           <?php if($uc['UserContribution']['reward2']==0){ ?>
@@ -88,7 +88,7 @@
     </div>
     <div class="reward-element" style="border: 1px solid <?php echo $goalsColor[2] ?>;">
       <div align="center">
-        <div class="reward-element-points">105 points</div>
+        <div class="reward-element-points">90 points</div>
         <div class="reward-element-description">
           <?php 
             if($uc['UserContribution']['reward3']==0)
@@ -113,7 +113,7 @@
     </div>
     <div class="reward-element" style="border: 1px solid <?php echo $goalsColor[3] ?>;">
       <div align="center">
-        <div class="reward-element-points">140 points</div>
+        <div class="reward-element-points">120 points</div>
         <div class="reward-element-description">Premium account</div>
           <?php if($_SESSION['loggedInUser']['User']['premium']==0){ ?>
             <?php if($goals[3]){ ?>
@@ -138,7 +138,7 @@
   let nr3Enabled = true;
   let nr4Enabled = true;
   <?php
-    $max = 140;
+    $max = 120;
     $percent = 0;
     if($uc['UserContribution']['score'] >= $max){
       $percent = 100;
@@ -291,7 +291,7 @@
   display:none;
 }
 .xp-bar-fill-c4 {
-  background-image: linear-gradient(#e5fc66, #e9cc2c);
+  background-image: linear-gradient(to right, #e9cc2c, #e5fc66);
   height:5px;
 }
 #account-bar-xp-wrapper2 {
