@@ -394,14 +394,24 @@ class SetsController extends AppController{
 		$json2 = array();
 		for($i=0;$i<count($tn);$i++)
 			$tnKeys[$tn[$i]['TagName']['id']] = $tn[$i]['TagName']['name'];
-		for($i=0;$i<count($json);$i++)
+		$hybrid = array();
+		for($i=0; $i<count($json); $i++){
+			if($tnKeys[$json[$i]->id] != 'Tsumego'){
+				if($i==count($json)-1)
+				 $ic = 0;
+				else
+					$ic = $i+1;
+				$hybrid[$tnKeys[$json[$ic]->id]] = $i;
+			}
+		}
+		$hybrid['Tsumego'] = 0;
+		for($i=0; $i<count($json); $i++)
 			if($tnKeys[$json[$i]->id] != 'Tsumego')
 				array_push($json2, $tnKeys[$json[$i]->id]);
 		for($i=0; $i<count($json2); $i++){
 			$json3 = $this->TagName->findByName($json2[$i]);
 			array_push($tagTiles, $json3['TagName']['name']);
 		}
-
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
 			$utsMap = $_SESSION['loggedInUser']['uts'];
@@ -1137,6 +1147,7 @@ class SetsController extends AppController{
 					array_push($currentIds, $ts[$i]['Tsumego']['id']);
 					array_push($ts1, $ts[$i]);
 				}
+
 				$difficultyAndSolved = $this->getDifficultyAndSolved($currentIds, $utsMap);
 				$ts = $ts1;
 				$set['Set']['difficultyRank'] = $difficultyAndSolved['difficulty'];
@@ -1540,11 +1551,20 @@ class SetsController extends AppController{
 		if(isset($_SESSION['loggedInUser']['User']['id']) && $viewType == 'topics'){
 			if(isset($this->data['Comment']['reset'])){
 				if($this->data['Comment']['reset']=='reset'){
+					$uts = $this->TsumegoStatus->find('all', array('conditions' => array(
+						'user_id' => $_SESSION['loggedInUser']['User']['id'],
+						'tsumego_id' => $currentIds
+					)));
+					$ur = $this->TsumegoAttempt->find('all', array('conditions' => array(
+						'user_id' => $_SESSION['loggedInUser']['User']['id'],
+						'tsumego_id' => $currentIds
+					)));
 					for($i=0; $i<count($ur); $i++){
 						$this->TsumegoAttempt->delete($ur[$i]['TsumegoAttempt']['id']);
 					}
 					for($i=0; $i<count($uts); $i++){
 						$this->TsumegoStatus->delete($uts[$i]['TsumegoStatus']['id']);
+						unset($_SESSION['loggedInUser']['uts'][$uts[$i]['TsumegoStatus']['tsumego_id']]);
 					}
 					$pr = array();
 					$pr['ProgressDeletion']['user_id'] = $_SESSION['loggedInUser']['User']['id'];

@@ -165,6 +165,13 @@ class TsumegosController extends AppController{
 		$search2 = $searchPatameters[3];
 		$search3 = $searchPatameters[4];
 
+		if(isset($this->params['url']['search'])){
+			if($this->params['url']['search']=='topics'){
+				$query = $this->params['url']['search'];
+				$_COOKIE['query'] = $this->params['url']['search'];
+				$this->processSearchParameters($_SESSION['loggedInUser']['User']['id']);
+			}
+		}
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			$_SESSION['loggedInUser']['User']['mode'] = 1;
 			$u =  $this->User->findById($_SESSION['loggedInUser']['User']['id']);
@@ -1600,6 +1607,7 @@ class TsumegosController extends AppController{
 				}
 			}
 		}
+		
 		if($query == 'difficulty'){
 			$t['Tsumego']['actualNum'] = $t['Tsumego']['num'];
 			$setConditions = array();
@@ -2423,6 +2431,7 @@ class TsumegosController extends AppController{
 
 		$u['User']['name'] = $this->checkPicture($u);
 		$tags = $this->getTags($id);
+		$tags = $this->checkTagDuplicates($tags);
 		$allTags = $this->getAllTags($tags);
 		$popularTags = $this->getPopularTags($tags);
 		$uc = $this->UserContribution->find('first', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
@@ -2446,6 +2455,11 @@ class TsumegosController extends AppController{
 		$checkFav = $favorite!=null;
 		if($checkFav)
 			$query = 'topics';
+
+		if(count($navi)==3 && !isset($navi[0]['Tsumego']['id']) && !isset($navi[count($navi)-1]['Tsumego']['id']))
+			$checkNotInSearch = true;
+		else
+			$checkNotInSearch = false;
 
 		$this->set('isAllowedToContribute', $isAllowedToContribute);
 		$this->set('hasSgfProposal', $sgfProposal!=null);
@@ -2549,6 +2563,7 @@ class TsumegosController extends AppController{
 		$this->set('search3', $search3);
 		$this->set('amountOfOtherCollection', $amountOfOtherCollection);
 		$this->set('partition', $partition);
+		$this->set('checkNotInSearch', $checkNotInSearch);
   }
 
 	private function getPopularTags($tags){
@@ -2585,6 +2600,43 @@ class TsumegosController extends AppController{
 			$tags[$i]['Tag']['hint'] = $tn['TagName']['hint'];
 		}
 		return $tags;
+	}
+
+	private function checkTagDuplicates($array){
+		$tagIds = array();
+		$foundDuplicate = 0;
+		for($i=0; $i<count($array); $i++)
+				array_push($tagIds, $array[$i]['Tag']['tag_name_id']);
+		$tagIds = array_count_values($tagIds);
+
+		foreach ($tagIds as $key => $value){
+			if($value > 1)
+				$foundDuplicate = $key;
+		}
+		$counter = 0;
+		$hasDeleted = false;
+		$positionDeletedTag = 0;
+		while($foundDuplicate != 0){
+			if($array[$counter]['Tag']['tag_name_id']==$foundDuplicate){
+				$this->Tag->delete($array[$counter]['Tag']['id']);
+				$foundDuplicate = 0;
+				$positionDeletedTag = $counter;
+				$hasDeleted = true;
+			}
+			$counter++;
+			$positionDeletedTag++;
+			if($counter>count($array))
+				break;
+		}
+		if($hasDeleted){
+			$tags = array();
+			for($i=0; $i<count($array); $i++)
+				if($i != $positionDeletedTag)
+					array_push($tags, $array[$i]);
+			return $tags;
+		}else{
+			return $array;
+		}
 	}
 
 	public function open($id=null, $sgf1=null, $sgf2=null){

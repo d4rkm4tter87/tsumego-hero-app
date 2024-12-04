@@ -2793,6 +2793,7 @@ class AppController extends Controller{
 				$search3 = $this->removeEmptyFields(explode("@", $_COOKIE['search3']));
 			}
 		}
+		
 		$r = array();
 		array_push($r, $query);
 		array_push($r, $collectionSize);
@@ -3141,7 +3142,7 @@ class AppController extends Controller{
 								//$_SESSION['loggedInUser']['User']['reuse5'] = 1;
 								//$u['User']['reuse5'] = 1;
 							}
-							if($u['User']['reuse3']>10000){
+							if($u['User']['reuse3']>12000){
 								$_SESSION['loggedInUser']['User']['reuse4'] = 1;
 								$u['User']['reuse4'] = 1;
 							}

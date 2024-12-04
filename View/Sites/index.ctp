@@ -50,14 +50,14 @@
 				echo '<a class="scheduleTsumego" href="/sets/view/'.$newT['Tsumego']['set_id'].'"><b>
 				'.$newT['Tsumego']['set'].' '.$newT['Tsumego']['set2'].' - '.$newT['Tsumego']['num'].'</b></a><br>
 					<li class="set'.$newT['Tsumego']['status'].'1" style="margin-top:4px;">
-						<a href="/tsumegos/play/'.$newT['Tsumego']['id'].'">'.$newT['Tsumego']['num'].'</a>
+						<a href="/tsumegos/play/'.$newT['Tsumego']['id'].'">'.$newT['Tsumego']['num'].'?search=topics</a>
 					</li>';
 			}else{
 				echo '<a class="scheduleTsumego" href="/sets/view/'.$newT['Tsumego']['set_id'].'"><b>
 				'.$newT['Tsumego']['set'].' '.$newT['Tsumego']['set2'].' - '.count($scheduleTsumego).' problems</b></a><br>';
 				for($i=0; $i<count($scheduleTsumego); $i++){
 					echo '<li class="set'.$scheduleTsumego[$i]['Tsumego']['status'].'1" style="margin-top:4px;">
-						<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$scheduleTsumego[$i]['Tsumego']['id'].'">'
+						<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$scheduleTsumego[$i]['Tsumego']['id'].'?search=topics">'
 						.$scheduleTsumego[$i]['Tsumego']['num'].'<span><div id="tooltipSvg'.$i.'"></div></span></a>
 					</li>';
 				}
@@ -71,7 +71,7 @@
 		<font color="#444">Most popular today:</font><br>
 		<a id="mostPopularToday" href="/sets/view/<?php echo $totd['Tsumego']['set_id']; ?>"><b><?php echo $totd['Tsumego']['set'].' '.$totd['Tsumego']['set2']; ?></b> - <?php echo $totd['Tsumego']['num']; ?></a><br>
 			<li class="set<?php echo $totd['Tsumego']['status']; ?>1" style="margin-top:4px;">
-				<a id="tooltip-hover99" class="tooltip" href="/tsumegos/play/<?php echo $totd['Tsumego']['id']; ?>">
+				<a id="tooltip-hover99" class="tooltip" href="/tsumegos/play/<?php echo $totd['Tsumego']['id'].'?search=topics'; ?>">
 				<?php echo $totd['Tsumego']['num']; ?><span><div id="tooltipSvg99"></div></span></a>
 			</li>
 			<br><br>

@@ -23,6 +23,7 @@ class UsersController extends AppController{
 		$this->loadModel('PublishDate');
 		$this->loadModel('TagName');
 	
+		/*
 		$t = $this->Tsumego->find('all', array('conditions' => array(
 			'set_id' => 210,
 			'num <=' => 20
@@ -32,14 +33,14 @@ class UsersController extends AppController{
 			$tag = array();
 			$tag['Tag']['tsumego_id'] = $t[$i]['Tsumego']['id'];
 			$tag['Tag']['user_id'] = 72;
-			$tag['Tag']['tag_name_id'] = 135;
+			$tag['Tag']['tag_name_id'] = 10;
 			$tag['Tag']['approved'] = 1;
 			$this->Tag->create();
 			$this->Tag->save($tag);
 		}
 
 		echo '<pre>'; print_r(count($t)); echo '</pre>';
-		/*
+		
 		$tn = $this->TagName->find('all');
 		for($i=0;$i<count($tn);$i++){
 			$tn[$i]['TagName']['color'] = rand(0,24);

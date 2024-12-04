@@ -512,6 +512,7 @@
 	}
 	?>
 
+	<?php if(!$checkNotInSearch){ ?>
 	<?php if($firstRanks==0){ ?>
 	<div class="tsumegoNavi1">
 		<div class="tsumegoNavi2">
@@ -537,7 +538,9 @@
 	</div>
 	<?php }else{
 		echo '<div id="currentElement"></div>';
-	}		?>
+	}		
+	}
+?>
 	<div align="center">
 	<?php 
 	

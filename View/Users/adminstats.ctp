@@ -9,7 +9,7 @@
 		for($i=count($ca['tsumego_id'])-1; $i>=0; $i--){
 			echo '<tr>
 				<td>'.($iCounter).'</td>
-				<td><a href="/tsumegos/play/'.$ca['tsumego_id'][$i].'">'.$ca['tsumego'][$i].'</a></td>
+				<td><a href="/tsumegos/play/'.$ca['tsumego_id'][$i].'?search=topics">'.$ca['tsumego'][$i].'</a></td>
 				<td>'.$ca['created'][$i].'</td>
 			</tr>';
 			echo '<tr>
@@ -31,14 +31,14 @@
 			for($i=0; $i<count($approveSgfs); $i++){
 				echo '<tr>';
 					echo '<td class="adminpanel-table-text">'.$approveSgfs[$i]['Sgf']['user'].' made a proposal for <a class="adminpanel-link" href="/tsumegos/play/'
-					.$approveSgfs[$i]['Sgf']['tsumego_id'].'">'.$approveSgfs[$i]['Sgf']['tsumego'].'</a>:</td>';
+					.$approveSgfs[$i]['Sgf']['tsumego_id'].'?search=topics">'.$approveSgfs[$i]['Sgf']['tsumego'].'</a>:</td>';
 					echo '<td>
 					<a href="/tsumegos/open/'.$approveSgfs[$i]['Sgf']['tsumego_id'].'/'.$latestVersionTsumegos[$i]['Sgf']['id'].'">current</a> | 
 					<a href="/tsumegos/open/'.$approveSgfs[$i]['Sgf']['tsumego_id'].'/'.$approveSgfs[$i]['Sgf']['id'].'">proposal</a> | 
 					<a href="/tsumegos/open/'.$approveSgfs[$i]['Sgf']['tsumego_id'].'/'.$approveSgfs[$i]['Sgf']['id'].'/'.$latestVersionTsumegos[$i]['Sgf']['id'].'">diff</a>
 					</td>';
 					echo '<td><li class="set'.$sgfTsumegos[$i]['Tsumego']['status'].'1">
-						<a id="tooltip-hover999'.$i.'" class="tooltip" href="/tsumegos/play/'.$sgfTsumegos[$i]['Tsumego']['id'].'">'.$sgfTsumegos[$i]['Tsumego']['num'].'
+						<a id="tooltip-hover999'.$i.'" class="tooltip" href="/tsumegos/play/'.$sgfTsumegos[$i]['Tsumego']['id'].'?search=topics">'.$sgfTsumegos[$i]['Tsumego']['num'].'
 						<span><div id="tooltipSvg999'.$i.'"></div></span></a>
 					</li></td>';
 					echo '<td><a class="new-button-default2" id="proposal-accept'.$i.'">Accept</a>
@@ -84,10 +84,10 @@
 			for($i=0; $i<count($tags); $i++){
 				echo '<tr>';
 					echo '<td>'.$i.'</td><td class="adminpanel-table-text">'.$tags[$i]['Tag']['user'].' added a tag for <a class="adminpanel-link" href="/tsumegos/play/'
-					.$tags[$i]['Tag']['tsumego_id'].'">'.$tags[$i]['Tag']['tsumego'].'</a>: <a class="adminpanel-link" href="/tag_names/view/'
+					.$tags[$i]['Tag']['tsumego_id'].'?search=topics">'.$tags[$i]['Tag']['tsumego'].'</a>: <a class="adminpanel-link" href="/tag_names/view/'
 					.$tags[$i]['Tag']['tag_name_id'].'">'.$tags[$i]['Tag']['name'].'</a></td>';
 					echo '<td><li class="set'.$tagTsumegos[$i]['Tsumego']['status'].'1">
-						<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$tagTsumegos[$i]['Tsumego']['id'].'">'.$tagTsumegos[$i]['Tsumego']['num'].'
+						<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$tagTsumegos[$i]['Tsumego']['id'].'?search=topics">'.$tagTsumegos[$i]['Tsumego']['num'].'
 						<span><div id="tooltipSvg'.$i.'"></div></span></a>
 					</li></td>';
 					echo '<td>';
