@@ -1292,7 +1292,7 @@ class AppController extends Controller{
 			$gemValue3 = '';
 			$condition1 = 500;
 			$condition2 = 200;
-			$condition3 = 50;
+			$condition3 = 5;
 			$found1 = false;
 			$found2 = false;
 			$found3 = false;
@@ -1327,19 +1327,19 @@ class AppController extends Controller{
 					if($dateGem['DayRecord']['gemCounter2']==$condition2)
 						$found2= true;
 				}
-			}else if($r=='1d'||$r=='2d'||$r=='3d'||$r=='4d'||$r=='5d'){
+			}else if($r=='1d'||$r=='2d'||$r=='3d'||$r=='4d'||$r=='5d'||$r=='6d'||$r=='7d'){
 				if($gems[2]==0){
 					$gemValue = '1d';
-					$gemValue2 = 'x';
-					$gemValue3 = 'y';
+					$gemValue2 = '2d';
+					$gemValue3 = '3d';
 				}else if($gems[2]==1){
 					$gemValue = '2d';
 					$gemValue2 = '3d';
 					$gemValue3 = '4d';
 				}else if($gems[2]==2){
 					$gemValue = '5d';
-					$gemValue2 = 'x';
-					$gemValue3 = 'y';
+					$gemValue2 = '6d';
+					$gemValue3 = '7d';
 				}
 				if($r==$gemValue || $r==$gemValue2 || $r==$gemValue3){
 					$dateGem['DayRecord']['gemCounter3']++;

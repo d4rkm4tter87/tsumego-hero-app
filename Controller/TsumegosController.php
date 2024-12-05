@@ -2431,7 +2431,7 @@ class TsumegosController extends AppController{
 
 		$u['User']['name'] = $this->checkPicture($u);
 		$tags = $this->getTags($id);
-		$tags = $this->checkTagDuplicates($tags);
+		//$tags = $this->checkTagDuplicates($tags);
 		$allTags = $this->getAllTags($tags);
 		$popularTags = $this->getPopularTags($tags);
 		$uc = $this->UserContribution->find('first', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));

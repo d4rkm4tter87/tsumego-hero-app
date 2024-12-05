@@ -116,16 +116,19 @@
 						for($a=0; $a<count($admins); $a++)
 							if($comments[$j]['Comment']['user_name']==$admins[$a]['User']['name'])
 								$commentColor = 'commentBox2';
-						if($comments[$j]['Comment']['set_id']!=null)
+						if($comments[$j]['Comment']['set_id']!=null){
 							$sid = '?sid='.$comments[$j]['Comment']['set_id'];
-						else
+							$QorA = '&';
+						}else{
 							$sid = '';
+							$QorA = '?';
+						}
 						echo '<table class="sandboxTable2" width="100%" border="0">';
 							echo '
 								<tr>
 								<td width="73%">		
 								<div style="padding-bottom:7px;"><b>#'.$comments[$j]['Comment']['counter'].'</b> | 
-								<a href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].$sid.'?search=topics">
+								<a href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].$sid.$QorA.'search=topics">
 									'.$comments[$j]['Comment']['set'].' '.$comments[$j]['Comment']['set2'].' - '.$comments[$j]['Comment']['num'].'
 								</a><br>
 								
@@ -164,8 +167,8 @@
 										<div width="100%">
 											<div align="center">
 												<li id="naviElement0" class="set'.$comments[$j]['Comment']['user_tsumego'].'1" style="float:left;margin-top:14px;">
-													<a id="tooltip-hover'.$j.'" class="tooltip" href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].$sid
-													.'?search=topics">'.$comments[$j]['Comment']['num']
+													<a id="tooltip-hover'.$j.'" class="tooltip" href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].$sid.$QorA
+													.'search=topics">'.$comments[$j]['Comment']['num']
 													.'<span><div id="tooltipSvg'.$j.'"></div></span></a>
 													
 												</li>
@@ -176,16 +179,19 @@
 							';
 						echo '</table>';
 					}else{
-						if($comments[$j]['Comment']['set_id']!=null)
+						if($comments[$j]['Comment']['set_id']!=null){
 							$sid = '?sid='.$comments[$j]['Comment']['set_id'];
-						else
+							$QorA = '&';
+						}else{
 							$sid = '';
+							$QorA = '?';
+						}
 						echo '<table class="sandboxTable2" width="100%" border="0">';
 							echo '
 								<tr>
 								<td width="73%">		
 								<div><b>#'.$comments[$j]['Comment']['counter'].'</b> | 
-								<a href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].$sid.'?search=topics">
+								<a href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].$sid.$QorA.'search=topics">
 									'.$comments[$j]['Comment']['set'].' '.$comments[$j]['Comment']['set2'].' - '.$comments[$j]['Comment']['num'].'
 								</a><br>
 								<div class="commentAnswer" style="color:#5e5e5e;"><div style="padding-top:14px;"></div>[You need to solve this problem to see the comment]</div>
@@ -200,7 +206,7 @@
 										<div width="100%">
 											<div align="center">
 												<li id="naviElement0" class="set'.$comments[$j]['Comment']['user_tsumego'].'1" style="float:left;margin-top:14px;">
-													<a href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].$sid.'?search=topics">'.$comments[$j]['Comment']['num'].'</a>
+													<a href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].$sid.$QorA.'search=topics">'.$comments[$j]['Comment']['num'].'</a>
 													
 												</li>
 											</div>
@@ -298,16 +304,19 @@
 					for($a=0; $a<count($admins); $a++){
 						if($yourComments[$j]['Comment']['user_name']==$admins[$a]['User']['name']) $commentColor = 'commentBox2';
 					}
-					if($yourComments[$j]['Comment']['set_id']!=null)
+					if($yourComments[$j]['Comment']['set_id']!=null){
 						$sid = '?sid='.$yourComments[$j]['Comment']['set_id'];
-					else
+						$QorA = '&';
+					}else{
 						$sid = '';
+						$QorA = '?';
+					}
 					echo '<div class="sandboxComment" id="comment'.$j.'" '.$yourdisplay.'>
 						<table class="sandboxTable2" width="100%" border="0">';
 							echo '<tr>
 								<td width="73%">		
 								<div style="padding-bottom:7px;"><b>#'.$yourComments[$j]['Comment']['counter'].'</b> | 
-								<a href="/tsumegos/play/'.$yourComments[$j]['Comment']['tsumego_id'].$sid.'?search=topics">
+								<a href="/tsumegos/play/'.$yourComments[$j]['Comment']['tsumego_id'].$sid.$QorA.'search=topics">
 									'.$yourComments[$j]['Comment']['set'].' '.$yourComments[$j]['Comment']['set2'].' - '.$yourComments[$j]['Comment']['num'].'
 								</a><br>
 								
@@ -347,7 +356,7 @@
 										<div width="100%">
 											<div align="center">
 												<li id="naviElement0" class="set'.$yourComments[$j]['Comment']['user_tsumego'].'1" style="float:left;margin-top:14px;">
-													<a id="tooltip-hover'.(99+$j).'" class="tooltip" href="/tsumegos/play/'.$yourComments[$j]['Comment']['tsumego_id'].$sid.'?search=topics">'.$yourComments[$j]['Comment']['num']
+													<a id="tooltip-hover'.(99+$j).'" class="tooltip" href="/tsumegos/play/'.$yourComments[$j]['Comment']['tsumego_id'].$sid.$QorA.'search=topics">'.$yourComments[$j]['Comment']['num']
 													.'<span><div id="tooltipSvg'.(99+$j).'"></div></span></a>
 												</li>
 											</div>

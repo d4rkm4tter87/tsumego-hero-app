@@ -536,9 +536,12 @@
 			?>
 		</div>
 	</div>
-	<?php }else{
+	<?php 
+		}else{
+			echo '<div id="currentElement"></div>';
+		}		
+	}else{
 		echo '<div id="currentElement"></div>';
-	}		
 	}
 ?>
 	<div align="center">
@@ -1798,7 +1801,7 @@
 				isNewTag = 'tag-gives-hint '+isNewTag;
 			}
 			let tagLink = 'href="/tag_names/view/'+idTags[i]+'"';
-			let tagLinkId = 'id="tag-'+tags[i].replaceAll(' ', '-')+'"';
+			let tagLinkId = 'id="'+makeIdValidName(tags[i])+'"';
 			if(typeof idTags[i] === "undefined"){
 				tagLink = '';
 				tagLinkId = '';
@@ -1823,8 +1826,7 @@
 
 		$(".add-tag-list-popular").append("Add tag: ");
 		for(let i=0;i<popularTags.length;i++){
-			$(".add-tag-list-popular").append('<a class="add-tag-list-anchor" id="tag-'
-			+popularTags[i].replaceAll(' ', '-')+'">'
+			$(".add-tag-list-popular").append('<a class="add-tag-list-anchor" id="'+makeIdValidName(popularTags[i])+'">'
 			+popularTags[i]+'</a>');	
 			if(i<popularTags.length-1)
 				$(".add-tag-list-popular").append(', ');
@@ -1833,8 +1835,7 @@
 
 		$(".add-tag-list").append("Add tag: ");
 		for(let i=0;i<allTags.length;i++){
-			$(".add-tag-list").append('<a class="add-tag-list-anchor" id="tag-'
-			+allTags[i].replaceAll(' ', '-')+'">'
+			$(".add-tag-list").append('<a class="add-tag-list-anchor" id="'+makeIdValidName(allTags[i])+'">'
 			+allTags[i]+'</a>');	
 			if(i<allTags.length-1)
 				$(".add-tag-list").append(', ');
@@ -1844,6 +1845,14 @@
 			if($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2')
 				echo '$(".tag-gives-hint").css("display", "inline");';
 		?>
+	}
+
+	function makeIdValidName(name){
+		let str = name.split("");
+		for(let i=0;i<str.length; i++)
+			if(!str[i].match(/[a-z]/i) && !str[i].match(/[0-9]/i))
+				str[i] = "-";
+		return "tag-"+str.join("");
 	}
 
 	function isLastComma(index, hints, tags){
@@ -1861,7 +1870,7 @@
 	}
 
 	for(let i=0;i<allTags.length;i++){
-		let currentIdValue = "#tag-"+allTags[i].replaceAll(' ', '-');
+		let currentIdValue = "#tag-"+makeIdValidName(allTags[i]);
 		$('.tag-container').on('click', currentIdValue, function(e) {
 			e.preventDefault();
 			setCookie("addTag", "<?php echo $t['Tsumego']['id']; ?>-"+allTags[i]);

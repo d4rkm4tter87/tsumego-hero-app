@@ -165,6 +165,7 @@
 					</div>
 				</a>';
 			}else{
+				echo '<a href="/users/donate" class="box1link">';
 				echo '<div class="box1 box1topic '.$box1unlocked.' topic-box'.$sets[$i]['id'].'" 
 					style="background-color:'.$sets[$i]['color'].';background-image: '.$backgroundImage.'">';
 				if($sets[$i]['solved']>=100)
@@ -178,7 +179,8 @@
 							</div>
 						</div>
 					</div>
-				</div>';
+				</div>
+			</a>';
 			}
 		}
 		?>
