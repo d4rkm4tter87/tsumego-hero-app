@@ -406,9 +406,9 @@
 				}
 				if($hasRevelation){
 					echo '
-							<a href="#"><img id="revelation" title="Revelation: Solves a problem, but you don\'t get any reward." src="/img/hp6.png"
+							<a href="#" class="revelation-anchor"><img id="revelation" title="Revelation ('.$user['User']['revelation'].'): Solves a problem, but you don\'t get any reward." src="/img/hp6x.png"
 							onmouseover="revelationHover()" onmouseout="revelationNoHover()" onclick="revelation(); return false;"></a>
-					';	
+					';
 				}
 				if($user['User']['premium']>0){
 					if($potionActive){
@@ -1155,7 +1155,7 @@
 	*/
 	?>
 
-	<script type="text/javascript">
+<script type="text/javascript">
 	var jrecordValue = 19;
 	<?php if($checkBSize!=19) echo 'jrecordValue = '.$checkBSize.';'; ?>
 	var jrecord = new JGO.Record(jrecordValue, jrecordValue);
@@ -1176,7 +1176,7 @@
 	var intuitionEnabled = true;
 	var rejuvenationEnabled = true;
 	var refinementEnabled = true;
-	var revelationEnabled = true;
+	var revelationEnabled = false;
 	var multipleChoiceSelected = false;
 	var safetyLock = false;
 	var msg2selected = false;
@@ -1227,6 +1227,7 @@
 	var userXP = <?php echo $user['User']['xp']; ?>;
 	var prevButtonLink = "<?php echo $prev; ?>";
 	var nextButtonLink = "<?php echo $next; ?>";
+	var lastInFav = "<?php echo $lastInFav; ?>";
 	var nextButtonLinkSet = <?php echo $t['Tsumego']['set_id']; ?>;
 	var nextButtonLinkLv = <?php echo $lv; ?>;
 	var isMutable = true;
@@ -1264,11 +1265,17 @@
 	let passEnabled = <?php echo $t['Tsumego']['pass']; ?>+"";
 	let besogoRotation = -1;
 	let msgFilterSelected = false;
+	let revelationCounter = <?php echo $user['User']['revelation']; ?>+"";
 	const activeTopicTiles = [];
 	const activeDifficultyTiles = [];
 	const activeTagTiles = [];
 
 	<?php
+		if($hasRevelation)
+			echo 'let hasRevelation = true;';
+		else
+			echo 'let hasRevelation = false;';
+
 		$hasPartition = '';
 		if($partition>0)
 			$hasPartition = '?partition='.$partition;
@@ -1277,9 +1284,23 @@
 		}else if($query=='topics'){
 			$nextButtonLinkSet = $set['Set']['id'].$hasPartition;
 		}
-		if($favorite)
-			$nextButtonLinkSet = $set['Set']['id'];
 		echo 'nextButtonLinkSet="'.$nextButtonLinkSet.'";';
+		?>
+		if(inFavorite!==''){
+			prevButtonLink += inFavorite;
+			nextButtonLink += inFavorite;
+		}
+		<?php
+		if($favorite){
+			echo 'if(lastInFav==="1"){
+				nextButtonLink = 0;
+				nextButtonLinkSet = 1;
+			}
+			if(lastInFav==="-1"){
+				prevButtonLink = 0;
+				nextButtonLinkSet = 1;
+			}';
+		}
 	?>
 
 	$("#showFilters").click(function(){
@@ -1335,13 +1356,6 @@
 		echo 'mText = "'.$tv['TsumegoVariant']['explanation'].'";';
 	}}
 	
-	?>
-	
-	if(inFavorite!==''){
-		prevButtonLink += inFavorite;
-		nextButtonLink += inFavorite;
-	}
-	<?php
 	if(isset($_SESSION['loggedInUser']['User']['id'])){
 		echo 'var besogoUserId = '.$_SESSION['loggedInUser']['User']['id'].';';
 	}else{
@@ -1870,8 +1884,8 @@
 	}
 
 	for(let i=0;i<allTags.length;i++){
-		let currentIdValue = "#tag-"+makeIdValidName(allTags[i]);
-		$('.tag-container').on('click', currentIdValue, function(e) {
+		let currentIdValue = "#"+makeIdValidName(allTags[i]);
+		$('.tag-container').on('click', currentIdValue, function(e){
 			e.preventDefault();
 			setCookie("addTag", "<?php echo $t['Tsumego']['id']; ?>-"+allTags[i]);
 			newTag = $(currentIdValue).text();
@@ -2608,15 +2622,18 @@
 					$(".besogo-board").css("box-shadow","0 2px 14px 0 rgba(67, 255, 40, 0.7), 0 6px 20px 0 rgba(80, 255, 0, 0.2)");
 				besogo.editor.setReviewEnabled(true);
 				besogo.editor.setControlButtonLock(false);
+				toggleBoardLock(true);
 				$("#besogo-review-button-inactive").attr("id","besogo-review-button");
 				$("#commentSpace").show();
 				document.getElementById("currentElement").style.backgroundColor = "<?php echo $playGreenColor ?>";
 				displaySettings();
 				setCookie("noScore", "<?php echo $score1; ?>");
 				setCookie("noPreId", "<?php echo $t['Tsumego']['id']; ?>");
+				setCookie("revelation", "1");
 			<?php } ?>
 			document.getElementById("revelation").src = "/img/hp6x.png";
 			document.getElementById("revelation").style = "cursor: context-menu;";
+			$("#revelation").attr("title","Revelation (<?php echo $user['User']['revelation']-1; ?>): Solves a problem, but you don\'t get any reward.");
 			revelationEnabled = false;
 		}
 	}
@@ -2726,7 +2743,7 @@
 					if(nextButtonLink!=0)
 						window.location.href = '/tsumegos/play/'+nextButtonLink;
 					else
-						window.location.href = '/tsumegos/play/'+nextButtonLinkLv+'?refresh=3';
+						window.location.href = '/sets/view/'+nextButtonLinkSet;
 				}
 			}
 		}
@@ -2870,6 +2887,11 @@
 
 	function displayResult(result){
 		setCookie("av", <?php echo $activityValue[0]; ?>);
+		if(hasRevelation && revelationCounter>0){
+			revelationEnabled = true;
+			$(".revelation-anchor").css("cursor", "pointer");
+			$("#revelation").attr("src", "/img/hp6.png");
+		}
 		if(result=='S'){
 			$(".tag-gives-hint").css("display", "inline");
 			elo2 = <?php echo $user['User']['elo_rating_mode']; ?>+eloScore;

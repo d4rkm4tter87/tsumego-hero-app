@@ -60,7 +60,7 @@
 						<img src="/img/hp6.png" alt="Hero Power: Revelation" title="Hero Power: Revelation"><br>
 					</td>
 					<td>
-						<b>Hero Power: Revelation</b><br> Solves a problem, but you don't get any reward.<br>
+						<b>Hero Power: Revelation (Level 100)</b><br> Solves a problem, but you don't get any reward.<br>
 					</td>
 				</tr>
 				<tr>

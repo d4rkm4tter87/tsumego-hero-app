@@ -40,6 +40,7 @@ class TsumegosController extends AppController{
 		$refinementUT = null;
 		$half = '';
 		$inFavorite = false;
+		$lastInFav = 0;
 		$isSandbox = false;
 		$goldenTsumego = false;
 		$refresh = null;
@@ -2156,12 +2157,15 @@ class TsumegosController extends AppController{
 				unset($tsBack[$isInArray]);
 				$tsBack = array_values($tsBack);
 			}
+			if($t['Tsumego']['id'] == $tsFirst['Tsumego']['id'])
+				$lastInFav = -1;
 			$newUT = $this->findUt($fav[0]['Favorite']['tsumego_id'], $utsMap);
 			if(!isset($newUT['TsumegoStatus']['status']))
 				$newUT['TsumegoStatus']['status'] = 'N';
 			$tsFirst['Tsumego']['status'] = 'set'.$newUT['TsumegoStatus']['status'].'1';	
 			if($t['Tsumego']['id'] == $tsFirst['Tsumego']['id'])
 				$tsFirst = null;
+			
 			//tsLast
 			$tsLast = $this->Tsumego->findById($fav[count($fav)-1]['Favorite']['tsumego_id']);
 			$tsLast['Tsumego']['duplicateLink'] = '';
@@ -2173,6 +2177,8 @@ class TsumegosController extends AppController{
 				unset($tsNext[$isInArray]);
 				$tsNext = array_values($tsNext);
 			}
+			if($t['Tsumego']['id'] == $tsLast['Tsumego']['id'])
+				$lastInFav = 1;
 			$newUT = $this->findUt($fav[count($fav)-1]['Favorite']['tsumego_id'], $utsMap);
 		}
 
@@ -2438,6 +2444,8 @@ class TsumegosController extends AppController{
 		$hasRevelation = false;
 		if($uc!=null)
 			$hasRevelation = $uc['UserContribution']['reward3'];
+		if($_SESSION['loggedInUser']['User']['premium']>0 && $_SESSION['loggedInUser']['User']['level']>=100)
+			$hasRevelation = true;
 		
 		$sgfProposal = $this->Sgf->find('first', array('conditions' => array('tsumego_id' => $id, 'version' => 0, 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
 		$isAllowedToContribute = false;
@@ -2490,6 +2498,7 @@ class TsumegosController extends AppController{
 		$this->set('favorite', $checkFav);
 		$this->set('hasAnyFavorite', $hasAnyFavorite!=null);
 		$this->set('inFavorite', $inFavorite);
+		$this->set('lastInFav', $lastInFav);
 		$this->set('dailyMaximum', $dailyMaximum);
 		$this->set('suspiciousBehavior', $suspiciousBehavior);
 		$this->set('isSandbox', $isSandbox);

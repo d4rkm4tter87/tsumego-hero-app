@@ -143,14 +143,13 @@ class AppController extends Controller{
 		$this->LoadModel('AchievementStatus');
 		$str = '';
 		$latest = $this->AchievementStatus->find('all', array('limit' => 6, 'order' => 'created DESC'));
-
 		for($i=0; $i<count($latest); $i++){
 			$a = $this->Achievement->findById($latest[$i]['AchievementStatus']['achievement_id']);
 			$u = $this->User->findById($latest[$i]['AchievementStatus']['user_id']);
 			if(substr($u['User']['name'],0,3)=='g__' && $u['User']['external_id']!=null){
 				$startPageUser = $this->checkPicture($u);
-				if(strlen(substr($startPageUser, strpos($startPageUser, '">')+2))>17){
-					$startPageUser = substr($startPageUser,0,(strpos($startPageUser, '">')+2+17)).'...';
+				if(strlen(substr($startPageUser, strpos($startPageUser, '">')+2))>15){
+					$startPageUser = substr($startPageUser,0,(strpos($startPageUser, '">')+2+15)).'...';
 					$uStartPageUser = array();
 					$uStartPageUser['User']['name'] = $startPageUser;
 					$uStartPageUser['User']['picture'] = $u['User']['picture'];
@@ -169,7 +168,6 @@ class AppController extends Controller{
 			$str.='<div class="quote1"><div class="quote1a"><a href="/achievements/view/'.$a['Achievement']['id'].'"><img src="/img/'.$a['Achievement']['image'].'.png" width="40px"></a></div>';
 			$str.='<div class="quote1b">Achievement gained by '.$startPageUser.':<br><div class=""><b>'.$a['Achievement']['name'].'</b></div></div></div>';
 		}
-		
 		file_put_contents('mainPageAjax.txt', $str);
 	}
 	
@@ -725,6 +723,8 @@ class AppController extends Controller{
 			$u[$i]['User']['potion'] = 0;
 			$u[$i]['User']['promoted'] += 1;
 			$u[$i]['User']['lastRefresh'] = date('Y-m-d');
+			if($u[$i]['User']['isAdmin']>0)
+				$u[$i]['User']['revelation'] = 20;
 			$this->User->save($u[$i]);
 		}
 		$uts = $this->TsumegoStatus->find('all', array('conditions' =>  array('status' => 'F')));
@@ -3015,24 +3015,9 @@ class AppController extends Controller{
 		$correctSolveAttempt = false;
 		
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
-		if(isset($_COOKIE['noScore']) && isset($_COOKIE['noPreId'])){
-			if($_COOKIE['noScore'] != '0' && $_COOKIE['noPreId'] != '0'){
-				$preTsumegoX = $this->Tsumego->findById($_COOKIE['noPreId']);
-				$scoreArrX = explode('-', $this->decrypt($_COOKIE['noScore']));
-				if($preTsumegoX['Tsumego']['num']==$scoreArrX[0]){
-					$utPreX = $this->TsumegoStatus->find('first', array('conditions' => array('tsumego_id' => $_COOKIE['noPreId'], 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
-					if($utPreX==null){
-						$utPreX['TsumegoStatus'] = array();
-						$utPreX['TsumegoStatus']['user_id'] = $u['User']['id'];
-						$utPreX['TsumegoStatus']['tsumego_id'] = $_COOKIE['noPreId'];
-					}
-					if($utPreX['TsumegoStatus']['status'] == 'W') $utPreX['TsumegoStatus']['status'] = 'C';
-					else $utPreX['TsumegoStatus']['status'] = 'S';
-					$utPreX['TsumegoStatus']['created'] = date('Y-m-d H:i:s');
-					$this->TsumegoStatus->save($utPreX);
-					$_SESSION['loggedInUser']['uts'][$utPreX['TsumegoStatus']['tsumego_id']] = $utPreX['TsumegoStatus']['status'];
-				}
-			}
+		if(isset($_COOKIE['revelation']) && $_COOKIE['revelation']!=0){
+			$u['User']['revelation'] -= 1;
+			$_SESSION['loggedInUser']['User']['revelation'] -= 1;
 		}
 		
 		//Incorrect
@@ -3250,6 +3235,29 @@ class AppController extends Controller{
 			}
 		}
 		}
+
+		if(isset($_COOKIE['noScore']) && isset($_COOKIE['noPreId'])){
+			if($_COOKIE['noScore'] != '0' && $_COOKIE['noPreId'] != '0'){
+				$preTsumegoX = $this->Tsumego->findById($_COOKIE['noPreId']);
+				//$preTsumegoXsc = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $_COOKIE['noPreId'])));
+				$scoreArrX = explode('-', $this->decrypt($_COOKIE['noScore']));
+				//if($preTsumegoX['Tsumego']['num']==$scoreArrX[0]){
+				if(true){
+					$utPreX = $this->TsumegoStatus->find('first', array('conditions' => array('tsumego_id' => $_COOKIE['noPreId'], 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
+					if($utPreX==null){
+						$utPreX['TsumegoStatus'] = array();
+						$utPreX['TsumegoStatus']['user_id'] = $u['User']['id'];
+						$utPreX['TsumegoStatus']['tsumego_id'] = $_COOKIE['noPreId'];
+					}
+					if($utPreX['TsumegoStatus']['status'] == 'W') $utPreX['TsumegoStatus']['status'] = 'C';
+					else $utPreX['TsumegoStatus']['status'] = 'S';
+					$utPreX['TsumegoStatus']['created'] = date('Y-m-d H:i:s');
+					$this->TsumegoStatus->save($utPreX);
+					$_SESSION['loggedInUser']['uts'][$utPreX['TsumegoStatus']['tsumego_id']] = $utPreX['TsumegoStatus']['status'];
+				}
+			}
+		}
+
 		}
 		$boardNames = array();
 		$boardNames[1] =  'Pine';

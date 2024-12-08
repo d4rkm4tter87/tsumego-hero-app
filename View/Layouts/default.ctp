@@ -31,10 +31,10 @@
 	<meta name="keywords" content="tsumego, problems, puzzles, baduk, weiqi, tesuji, life and death, solve, solving, hero, go, in-seong, level" >
 	<meta name="Author" content="Joschka Zimdars">
 	<meta property="og:title" content="Tsumego Hero">
-	<link rel="stylesheet" type="text/css" href="/css/default.css?v=3.6">
+	<link rel="stylesheet" type="text/css" href="/css/default.css?v=3.7">
 	<?php
 		if($lightDark=='dark')
-			echo '<link rel="stylesheet" type="text/css" href="/css/dark.css?v=3.6">';
+			echo '<link rel="stylesheet" type="text/css" href="/css/dark.css?v=3.7">';
 		
 		echo $this->Html->meta('icon');
 		echo $this->fetch('meta');
@@ -383,34 +383,48 @@
 		</div>
 	</div>
 	</div>
-	<div id="footer" class="footerLinks"><br>
-	<?php if(
-		!isset($_SESSION['loggedInUser']['User']['id'])
-		|| isset($_SESSION['loggedInUser']['User']['id']) && $_SESSION['loggedInUser']['User']['premium']<1
-	){ ?>
-		<div align="center">
-			<a href="/users/donate">
-				<img id="donateH2" onmouseover="upgradeHover2()" onmouseout="upgradeNoHover2()" width="180px" src="/img/upgradeButton1.png">
-			</a>
-			<br>
+	<div id="footer" class="footerLinks">
+		<?php if(
+			!isset($_SESSION['loggedInUser']['User']['id'])
+			|| isset($_SESSION['loggedInUser']['User']['id']) && $_SESSION['loggedInUser']['User']['premium']<1
+		){ ?>
+			<div class="footer-element">
+				<a href="/users/donate">
+					<img id="donateH2" onmouseover="upgradeHover2()" onmouseout="upgradeNoHover2()" width="180px" src="/img/upgradeButton1.png">
+				</a>
+			</div>
+		<?php }else{ ?>
+			<div class="footer-element">
+				<a href="/users/donate">
+					<img id="donateH2" onmouseover="donateHover2()" onmouseout="donateNoHover2()" width="180px" src="/img/donateButton1.png">
+				</a>
+			</div>
+		<?php } ?>
+		<div class="footer-space"></div>
+		<div class="footer-element">
+			Supported by Wube Software 
 		</div>
-	<?php }else{ ?>
-		<div align="center">
-			<a href="/users/donate">
-				<img id="donateH2" onmouseover="donateHover2()" onmouseout="donateNoHover2()" width="180px" src="/img/donateButton1.png">
+		<div class="footer-element">
+			<a href="https://www.factorio.com">
+				<img src="/img/wube-software-logo.png" title="Wube Software" alt="Wube Software">
 			</a>
-			<br>
 		</div>
-	<?php } ?>
-	<br>
-	Tsumego Hero © <?php echo date('Y'); ?>
-	<br>
-		<a href="mailto:joschka.zimdars@googlemail.com">joschka.zimdars@googlemail.com</a><br><br>
-		<a href="/sites/impressum">Legal notice</a><br>
-		<a href="/users/authors">About</a><br><br><br>
+		<div class="footer-space"></div>
+		<div class="footer-element"> 
+			Tsumego Hero © <?php echo date('Y'); ?>
+		</div>
+		<div class="footer-element"> 
+			<a href="mailto:joschka.zimdars@googlemail.com">joschka.zimdars@googlemail.com</a>
+		</div>
+		<div class="footer-element"> 
+			<a href="/sites/impressum">Legal notice</a>
+		</div>
+		<div class="footer-element"> 
+			<a href="/users/authors">About</a>
+		</div>
+		<br><br><br>
 	</div>
 	<?php
-
 	if(isset($_SESSION['loggedInUser']['User']['id'])){
 		$xpBonus = 0;
 		for($i=0;$i<count($achievementUpdate);$i++){
@@ -437,7 +451,6 @@
 	}
 	?>
 	<script type="text/javascript">
-	
 	var lifetime = new Date();
 	lifetime.setTime(lifetime.getTime()+8*24*60*60*1000);
 	lifetime = lifetime.toUTCString()+"";
@@ -560,6 +573,7 @@
 		setCookie("search1", "");
 		setCookie("search2", "");
 		setCookie("search3", "");
+		setCookie("revelation", "");
 
 		<?php
 			if(isset($textureCookies)){

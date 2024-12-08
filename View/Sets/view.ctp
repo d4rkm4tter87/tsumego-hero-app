@@ -96,7 +96,6 @@
 		<tr>
 			<td style="vertical-align:top;">
 				<?php 
-				
 				$saNum;
 				$tierReward = array();
 				$tierReward[11] = '';
@@ -149,9 +148,16 @@
 								</a></div></td>';
 						}
 					}else if($viewType == 'difficulty'){
-						echo '<td width="195px" style="vertical-align:top;"><div align="center">
+						if($lightDark == 'light'){
+							$lightDarkImageBackground = 'style="background-color:gray;"';
+							$lightDarkBorder = '';
+						}else{
+							$lightDarkImageBackground = '';
+							$lightDarkBorder = 'style="border:1px solid black"';
+						}
+						echo '<td width="195px" style="vertical-align:top;"><div '.$lightDarkImageBackground.' align="center">
 							<a href="/tsumegos/play/'.$set['Set']['t'].'">
-							<img width="182" style="border:1px solid black" src="/img/'. $set['Set']['image'].'" 
+							<img width="182" '.$lightDarkBorder.' src="/img/'. $set['Set']['image'].'" 
 							alt="Tsumego Collection: '.$set['Set']['title'].'" title="Tsumego Collection: '.$set['Set']['title'].'">
 							</a></div></td>';
 					}else{
@@ -202,7 +208,7 @@
 			<td style="vertical-align:top;">
 				<div align="center"> 
 				<br><br>
-					<?php		
+					<?php	
 					echo '<a class="new-button new-buttonx" style="top:-16px;position:relative;" href="/tsumegos/play/'.$set['Set']['t'].'">Start</a>';
 					?>
 				</div>

@@ -17,7 +17,7 @@
 		if(isset($_SESSION['loggedInUser'])){if($_SESSION['loggedInUser']['User']['isAdmin']>0){
 		?>
 			There are 4 tasks for admins: Accept activities, answer comments, modify problems and create new problems.
-			Here is compact guide how to do it (1 page): <a class="historyLink2" href="/files/Admin-Guide.pdf" target="_blank">Admin-Guide.pdf</a>
+			Here is a compact guide how to do it (1 page): <a class="historyLink2" href="/files/Admin-Guide.pdf" target="_blank">Admin-Guide.pdf</a>
 			<br><br>
 			And here is the detailed older version (9 pages): <a class="historyLink2" href="/files/Admin-Guide-Details.pdf" target="_blank">Admin-Guide-Details.pdf</a>
 			<br><br>

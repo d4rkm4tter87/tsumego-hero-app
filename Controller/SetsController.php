@@ -162,8 +162,11 @@ class SetsController extends AppController{
 			$ts = $this->findTsumegoSet($sets[$i]['Set']['id']);
 			$sets[$i]['Set']['anz'] = count($ts);
 			$counter = 0;
-			if(isset($_SESSION['loggedInUser']['User']['id'])){
-				for($k=0; $k<count($ts); $k++){
+			$elo = 0;
+			for($k=0; $k<count($ts); $k++){
+				
+				$elo += $ts[$k]['Tsumego']['elo_rating_mode'];
+				if(isset($_SESSION['loggedInUser']['User']['id'])){
 					if(isset($utsMap[$ts[$k]['Tsumego']['id']])){
 						if($utsMap[$ts[$k]['Tsumego']['id']] == 'S' || $utsMap[$ts[$k]['Tsumego']['id']] == 'W' || $utsMap[$ts[$k]['Tsumego']['id']] == 'C'){
 							$counter++;
@@ -171,6 +174,7 @@ class SetsController extends AppController{
 					}
 				}
 			}
+			$elo = $elo / count($ts);
 			$date = new DateTime($sets[$i]['Set']['created']);
 			$month = date("F", strtotime($sets[$i]['Set']['created']));
 			$setday = $date->format('d. ');
@@ -194,7 +198,7 @@ class SetsController extends AppController{
 			$sn['name'] = $sets[$i]['Set']['title'];
 			$sn['amount'] = count($ts);
 			$sn['color'] = $sets[$i]['Set']['color'];
-			$sn['difficulty'] = '10k';
+			$sn['difficulty'] = $this->getTsumegoRank($elo);
 			$sn['solved'] = round($percent, 1);
 			array_push($setsNew, $sn);
 		}
@@ -218,7 +222,7 @@ class SetsController extends AppController{
 		$this->set('sets', $sets);
 		$this->set('setsNew', $setsNew);
 		$this->set('overallCounter', $overallCounter);
-    }
+  }
 
 	public function create($tid=null){
 		$this->LoadModel('Tsumego');
@@ -391,23 +395,39 @@ class SetsController extends AppController{
 		$json = json_decode(file_get_contents('json/popular_tags.json'));
 		$tn = $this->TagName->find('all');
 		$tnKeys = array();
+		$tnKeysAmount = array();
 		$json2 = array();
-		for($i=0;$i<count($tn);$i++)
-			$tnKeys[$tn[$i]['TagName']['id']] = $tn[$i]['TagName']['name'];
+		$json2amount = array();
 		$hybrid = array();
-		for($i=0; $i<count($json); $i++){
-			if($tnKeys[$json[$i]->id] != 'Tsumego'){
-				if($i==count($json)-1)
-				 $ic = 0;
-				else
-					$ic = $i+1;
-				$hybrid[$tnKeys[$json[$ic]->id]] = $i;
-			}
+		$group100 = array();
+		$group10 = array();
+		$group1 = array();
+		for($i=0;$i<count($tn);$i++){
+			$tnKeys[$tn[$i]['TagName']['id']] = $tn[$i]['TagName']['name'];
+			$tnKeysAmount[$tn[$i]['TagName']['id']] = $tn[$i]['TagName']['name'];
 		}
-		$hybrid['Tsumego'] = 0;
 		for($i=0; $i<count($json); $i++)
-			if($tnKeys[$json[$i]->id] != 'Tsumego')
+			if($tnKeys[$json[$i]->id] != 'Tsumego'){
 				array_push($json2, $tnKeys[$json[$i]->id]);
+				array_push($json2amount, $json[$i]->num);
+			}
+		for($i=0; $i<count($json2); $i++)
+			if($json2amount[$i]>=100)
+				array_push($group100, $json2[$i]);
+			else if($json2amount[$i]>=10)
+				array_push($group10, $json2[$i]);
+			else
+				array_push($group1, $json2[$i]);
+		array_multisort($group100);
+		array_multisort($group10);
+		array_multisort($group1);
+		for($i=0; $i<count($group100); $i++)
+			array_push($hybrid, $group100[$i]);
+		for($i=0; $i<count($group10); $i++)
+			array_push($hybrid, $group10[$i]);
+		for($i=0; $i<count($group1); $i++)
+			array_push($hybrid, $group1[$i]);
+		$json2 = $hybrid;
 		for($i=0; $i<count($json2); $i++){
 			$json3 = $this->TagName->findByName($json2[$i]);
 			array_push($tagTiles, $json3['TagName']['name']);
@@ -963,10 +983,15 @@ class SetsController extends AppController{
 				$elo = $this->getTsumegoElo($id);
 				$ftFrom['elo_rating_mode >='] =  $elo;
 				$ftTo['elo_rating_mode <'] =  $elo+100;
-				if($id=='15k')
+				if($id=='15k'){
 					$ftFrom['elo_rating_mode >='] = 50;
-				$set['Set']['description'] = $id.' are problems that have a rating from '
-					.$ftFrom['elo_rating_mode >='].' to '.($ftTo['elo_rating_mode <']-1).'.';
+					$set['Set']['description'] = $id.' are problems that have a rating from 600 to '.($ftTo['elo_rating_mode <']-1).'. This collection also contains problems with weaker rating.';
+				}else{
+					$set['Set']['description'] = $id.' are problems that have a rating from '.$ftFrom['elo_rating_mode >='].' to '.($ftTo['elo_rating_mode <']-1).'.';
+				}
+					
+				
+					
 				$set['Set']['difficulty'] = $elo;
 				$notPremiumArray = array();
 				if(!$hasPremium)
@@ -1150,6 +1175,7 @@ class SetsController extends AppController{
 
 				$difficultyAndSolved = $this->getDifficultyAndSolved($currentIds, $utsMap);
 				$ts = $ts1;
+				
 				$set['Set']['difficultyRank'] = $difficultyAndSolved['difficulty'];
 				$set['Set']['solved'] = $difficultyAndSolved['solved'];
 				$set['Set']['anz'] = count($ts);
@@ -1413,6 +1439,12 @@ class SetsController extends AppController{
 						}
 						$tsIds = array();
 						$ts = $this->findTsumegoSet($id);
+						for($i=$fromTo[0]; $i<=$fromTo[1]; $i++){
+							if(isset($utsMap[$ts[$i]['Tsumego']['id']]))
+								$ts[$i]['Tsumego']['status'] = $utsMap[$ts[$i]['Tsumego']['id']];
+							else
+								$ts[$i]['Tsumego']['status'] = 'N';;
+						}
 						for($i=0; $i<count($ts); $i++) 
 							array_push($tsIds, $ts[$i]['Tsumego']['id']);
 					}

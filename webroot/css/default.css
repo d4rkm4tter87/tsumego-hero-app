@@ -1641,13 +1641,7 @@ li a.menuLi {
 .titleFooter {
   font-size: 14px;
 }
-.footerLinks a {
-  color: white;
-  text-decoration: none;
-}
-.footerLinks a:hover {
-  text-decoration: underline;
-}
+
 #playTitle {
   font-size: 20px;
   font-weight: 800;
@@ -1662,16 +1656,28 @@ li a.menuLi {
   background-color: #87cefa;
 }
 #footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   margin-top: 5px;
   padding: 10px;
-  text-align: center;
   font-size: 13px;
   color: #fff;
 }
-/*
-	green:  #74d14c
-	purple: #d19fe4
-	*/
+.footer-element {
+  margin: 2px;
+}
+.footer-space {
+  margin: 6px;
+}
+.footerLinks a {
+  color: white;
+  text-decoration: none;
+}
+.footerLinks a:hover {
+  text-decoration: underline;
+}
 .titleDescription1 {
   font-size: 17px;
 }
@@ -4542,6 +4548,9 @@ select.flat-select:hover {
 }
 .apexcharts-active {
   color: black;
+}
+.revelation-anchor {
+  cursor: context-menu;
 }
 #modeSelector {
   width: 9px;
