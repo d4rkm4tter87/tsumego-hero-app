@@ -458,7 +458,7 @@ class TsumegosController extends AppController{
 				$t['Tsumego']['description'] = $this->data['Comment']['modifyDescription'];
 				$t['Tsumego']['hint'] = $this->data['Comment']['modifyHint'];
 				$t['Tsumego']['author'] = $this->data['Comment']['modifyAuthor'];
-				if($this->data['Comment']['modifyElo']<2400)
+				if($this->data['Comment']['modifyElo']<2900)
 					$t['Tsumego']['elo_rating_mode'] = $this->data['Comment']['modifyElo'];
 				if($t['Tsumego']['elo_rating_mode']>100)
 					$this->Tsumego->save($t, true);

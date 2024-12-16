@@ -79,6 +79,15 @@
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
+		<p class="title4">New Collection: Igo Hatsuyoron | 13.12.2024</p>
+		<div class="new1">	
+		Igo Hatsuyoron (literally: Production of Yang in the Game of Go) is a collection of 183 go problems mostly 
+		life and death problems, compiled in 1713 by the Japanese go master Inoue Dosetsu Inseki. The problems in this collection 
+		have a very high difficulty, so discussion of solutions might not always be possible.<br><br>
+			<div align="center"><img width="95%" src="/img/igo-hatzuyoron.png" alt="New Collection: Direction of the Play" title="New Collection: Direction of the Play">
+			
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/242">Play</a><br><br></div>
+		</div>
 		<p class="title4">Update 29.11.2024</p>
 		<div class="new1">
 			<b>Customizable collection index page</b><br><br>

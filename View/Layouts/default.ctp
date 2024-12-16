@@ -31,10 +31,10 @@
 	<meta name="keywords" content="tsumego, problems, puzzles, baduk, weiqi, tesuji, life and death, solve, solving, hero, go, in-seong, level" >
 	<meta name="Author" content="Joschka Zimdars">
 	<meta property="og:title" content="Tsumego Hero">
-	<link rel="stylesheet" type="text/css" href="/css/default.css?v=3.7">
+	<link rel="stylesheet" type="text/css" href="/css/default.css?v=3.8">
 	<?php
 		if($lightDark=='dark')
-			echo '<link rel="stylesheet" type="text/css" href="/css/dark.css?v=3.7">';
+			echo '<link rel="stylesheet" type="text/css" href="/css/dark.css?v=3.8">';
 		
 		echo $this->Html->meta('icon');
 		echo $this->fetch('meta');
@@ -384,6 +384,7 @@
 	</div>
 	</div>
 	<div id="footer" class="footerLinks">
+		<div class="footer-space"></div>
 		<?php if(
 			!isset($_SESSION['loggedInUser']['User']['id'])
 			|| isset($_SESSION['loggedInUser']['User']['id']) && $_SESSION['loggedInUser']['User']['premium']<1

@@ -4215,6 +4215,19 @@ nav ul ul ul li {
   background: #6c6c6c;
   cursor: context-menu;
 }
+.donate-paypal-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 90%;
+}
+.donate-paypal-right-inner {
+  color: black;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 5px;
+  font-size: 14px;
+}
 #author-notice {
   position: absolute;
   font-family: Georgia;

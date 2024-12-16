@@ -1368,7 +1368,10 @@
 	echo 'besogoPlayerColor = "black";';
 	
 	if($authorx==$_SESSION['loggedInUser']['User']['name']) echo 'authorProblem = true;';
-	//if($_SESSION['loggedInUser']['User']['id']==72) echo 'authorProblem = true;';
+	if($_SESSION['loggedInUser']['User']['id']==72){
+		echo 'authorProblem = true;';
+		echo 'revelationEnabled = true;';
+	} 
 	if($requestSolution)
 		echo 'authorProblem = true;';
 	if($firstRanks!=0) echo 'document.cookie = "mode=3;path=/tsumegos/play;SameSite=none;Secure=false";';
