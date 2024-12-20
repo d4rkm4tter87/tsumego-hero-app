@@ -909,7 +909,7 @@ class TsumegosController extends AppController{
 		
 		$favorite = $this->Favorite->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'tsumego_id' => $id)));
 		if(isset($_COOKIE['favorite']) && $_COOKIE['favorite'] != '0'){
-			if(isset($_SESSION['loggedInUser'])){
+			if(isset($_SESSION['loggedInUser']['User']['id'])){
 				if($_COOKIE['favorite']>0){
 					$fav = $this->Favorite->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'tsumego_id' => $_COOKIE['favorite'])));
 					if($fav==null){
@@ -2460,8 +2460,8 @@ class TsumegosController extends AppController{
 		else
 			$t['Tsumego']['premium'] = 0;
 
-		$checkFav = $favorite!=null;
-		if($checkFav)
+		$checkFav = $inFavorite;
+		if($inFavorite)
 			$query = 'topics';
 
 		if(count($navi)==3 && !isset($navi[0]['Tsumego']['id']) && !isset($navi[count($navi)-1]['Tsumego']['id']))

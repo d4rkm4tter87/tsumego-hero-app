@@ -305,7 +305,23 @@
 					<tr>
 					<td>';
 					if($set['Set']['public']==0){
-						echo '<a id="show">Edit Title<img id="greyArrow2" src="/img/greyArrow1.png"></a><br>
+						echo '<h1>Add Problem</h1>';
+						echo $this->Form->create('Tsumego');
+						echo $this->Form->input('num', array('value' => $tfs['Tsumego']['num']+1, 'label' => 'Number: ', 'type' => 'text', 'placeholder' => 'number'));
+						echo $this->Form->input('set_id', array('type' => 'hidden', 'value' => $tfs['Tsumego']['set_id']));
+						echo $this->Form->input('variance', array('type' => 'hidden', 'value' => 100));
+						echo $this->Form->input('description', array('type' => 'hidden', 'value' => $tfs['Tsumego']['description']));
+						echo $this->Form->input('hint', array('type' => 'hidden', 'value' => $tfs['Tsumego']['hint']));
+						echo $this->Form->input('author', array('type' => 'hidden', 'value' => $tfs['Tsumego']['author']));
+						if($set['Set']['id']==161){
+							echo $this->Form->input('order', array('value' => $tfs['Tsumego']['num']+1, 'label' => 'Order: ', 'type' => 'text', 'placeholder' => 'order'));
+							echo $this->Form->input('type', array('value' => 1, 'label' => 'Type: ', 'type' => 'text', 'placeholder' => 'type'));
+							echo $this->Form->input('thumb', array('value' => $tfs['Tsumego']['num']+1, 'label' => 'Thumb: ', 'type' => 'text', 'placeholder' => 'thumb'));
+						}
+						echo $this->Form->end('Submit');
+					}
+					if($set['Set']['public']==0){
+						echo '<br><a id="show">Edit Title<img id="greyArrow2" src="/img/greyArrow1.png"></a><br>
 						<div id="msg1">';
 							echo $this->Form->create('Set');
 							echo $this->Form->input('title', array('label' => '', 'type' => 'text', 'placeholder' => 'Title', 'value' => $set['Set']['title']));
@@ -318,6 +334,14 @@
 							echo $this->Form->input('description', array('label' => '', 'type' => 'textarea', 'placeholder' => 'Description', 'value' => $set['Set']['description']));
 							echo '<div class="submit"><input style="margin:0px;" value="Submit" type="submit"></div><br>';
 						echo '</div>';
+
+						echo '<a id="show7">Edit Difficulty<img id="greyArrow7" src="/img/greyArrow1.png"></a><br>
+						<div id="msg7">';
+							echo $this->Form->create('Set');
+							echo $this->Form->input('setDifficulty', array('label' => '', 'type' => 'text', 'placeholder' => 'Rating', 'value' => $setDifficulty));
+							echo '<div class="submit"><input style="margin:0px;" value="Submit" type="submit"></div><br>';
+						echo '</div>';
+
 						echo '<a id="show3">Edit Color<img id="greyArrow4" src="/img/greyArrow1.png"></a><br>
 						<div id="msg3">';
 							echo $this->Form->create('Set');
@@ -394,31 +418,13 @@
 									<br>
 									<input value="Submit" type="submit"/>
 								</form>
-								<br>
+								<br><br>
 								<div class="tag-container" align="left">
 									<div class="tag-list"></div>
 									<div class="add-tag-list-button"><a class="add-tag-list-anchor" id="open-add-tag-menu" >Add tag</a></div>
 									<div class="add-tag-list"></div>
 								</div>
-							</div>
-							<br><br>
-						';
-					if($set['Set']['public']==0){
-						echo '<h1>Add Problem</h1>';
-						echo $this->Form->create('Tsumego');
-						echo $this->Form->input('num', array('value' => $tfs['Tsumego']['num']+1, 'label' => 'Number: ', 'type' => 'text', 'placeholder' => 'number'));
-						echo $this->Form->input('set_id', array('type' => 'hidden', 'value' => $tfs['Tsumego']['set_id']));
-						echo $this->Form->input('variance', array('type' => 'hidden', 'value' => 100));
-						echo $this->Form->input('description', array('type' => 'hidden', 'value' => $tfs['Tsumego']['description']));
-						echo $this->Form->input('hint', array('type' => 'hidden', 'value' => $tfs['Tsumego']['hint']));
-						echo $this->Form->input('author', array('type' => 'hidden', 'value' => $tfs['Tsumego']['author']));
-						if($set['Set']['id']==161){
-							echo $this->Form->input('order', array('value' => $tfs['Tsumego']['num']+1, 'label' => 'Order: ', 'type' => 'text', 'placeholder' => 'order'));
-							echo $this->Form->input('type', array('value' => 1, 'label' => 'Type: ', 'type' => 'text', 'placeholder' => 'type'));
-							echo $this->Form->input('thumb', array('value' => $tfs['Tsumego']['num']+1, 'label' => 'Thumb: ', 'type' => 'text', 'placeholder' => 'thumb'));
-						}
-						echo $this->Form->end('Submit');
-					}
+							</div>';
 					echo '</td>';
 					echo '<td>';
 					if($set['Set']['public']==0){
@@ -449,11 +455,13 @@
 	<script>
 	var t1 = false;
 	var t2 = false;
+	var t7 = false;
 	var t3 = false;
 	var msg5selected = false;
 	var msg6selected = false;
 	$("#msg1").hide();
 	$("#msg2").hide();
+	$("#msg7").hide();
 	$("#msg3").hide();
 	$("#msg5").hide();
 	$("#msg6").hide();
@@ -477,6 +485,16 @@
 			document.getElementById("greyArrow3").src = "/img/greyArrow1.png";
 		}
 		t2=!t2;
+	});
+	$("#show7").click(function(){
+		if(!t7){
+			$("#msg7").show();
+			document.getElementById("greyArrow7").src = "/img/greyArrow2.png";
+		}else{
+			$("#msg7").hide();
+			document.getElementById("greyArrow7").src = "/img/greyArrow1.png";
+		}
+		t7=!t7;
 	});
 	$("#show3").click(function(){
 		if(!t3){

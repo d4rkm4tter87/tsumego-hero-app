@@ -148,7 +148,7 @@
 		$pl = rand(0,1);
 		$plRand = true;
 	}
-	if($checkBSize!=19 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161 || $t['Tsumego']['set_id']==239)
+	if($checkBSize!=19 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161 || $t['Tsumego']['set_id']==239 || $t['Tsumego']['set_id']==243)
 		$pl=0;
 	if($pl==0){
 		$playerColor[0] = 'BLACK';

@@ -295,6 +295,11 @@ body {
   text-decoration: underline;
   cursor: pointer;
 }
+#show7 {
+  font-size: 16px;
+  text-decoration: underline;
+  cursor: pointer;
+}
 
 .commentAnswer {
   color: #113cd4;

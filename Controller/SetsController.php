@@ -875,6 +875,7 @@ class SetsController extends AppController{
 		$hasPartition = false;
 		$utsMap = array();
 		$setsWithPremium = array();
+		$setDifficulty = 1200;
 
 		if(!isset($_SESSION['loggedInUser']['User']['id'])
 			|| isset($_SESSION['loggedInUser']['User']['id']) && $_SESSION['loggedInUser']['User']['premium']<1
@@ -1298,6 +1299,21 @@ class SetsController extends AppController{
 					$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
 					$adminActivity['AdminActivity']['file'] = 'settings';
 					$adminActivity['AdminActivity']['answer'] = 'Edited meta data for set '.$set['Set']['title'];
+				}
+				if(isset($this->data['Set']['setDifficulty'])){
+					if($this->data['Set']['setDifficulty']!=1200 && $this->data['Set']['setDifficulty']>=900 && $this->data['Set']['setDifficulty']<=2900){
+						$setDifficultyTsumegoSet = $this->findTsumegoSet($set['Set']['id']);
+						$setDifficulty = $this->data['Set']['setDifficulty'];
+						for($i=0;$i<count($setDifficultyTsumegoSet);$i++){
+							$setDifficultyTsumegoSet[$i]['Tsumego']['elo_rating_mode'] = $this->data['Set']['setDifficulty'];
+							$this->Tsumego->save($setDifficultyTsumegoSet[$i]);
+						}
+						$adminActivity = array();
+						$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+						$adminActivity['AdminActivity']['tsumego_id'] = $ts[0]['Tsumego']['id'];
+						$adminActivity['AdminActivity']['file'] = 'settings';
+						$adminActivity['AdminActivity']['answer'] = 'Edited rating data for set '.$set['Set']['title'];
+					}
 				}
 				if(isset($this->data['Set']['color'])){
 					if($set['Set']['color']!=$this->data['Set']['color']) $formChange = true;
@@ -1767,6 +1783,7 @@ class SetsController extends AppController{
 		$this->set('tooltipSgfs', $tooltipSgfs);
 		$this->set('tooltipInfo', $tooltipInfo);
 		$this->set('tooltipBoardSize', $tooltipBoardSize);
+		$this->set('setDifficulty', $setDifficulty);
   }
 	
 	public function download_archive(){
