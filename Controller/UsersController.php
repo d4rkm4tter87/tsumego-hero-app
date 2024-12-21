@@ -2790,6 +2790,13 @@ Joschka Zimdars';
 		$_SESSION['page'] = 'home';
 		$_SESSION['title'] = 'Tsumego Hero - Donate';
 
+		$overallCounter = 0;
+		$sandboxSets = $this->Set->find('all', array('conditions' => array('public' => 0)));
+		for($i=0; $i<count($sandboxSets); $i++){
+			$ts = $this->findTsumegoSet($sandboxSets[$i]['Set']['id']);
+			$overallCounter += count($ts);
+		}
+
 		$setsWithPremium = array();
 		$tsumegosWithPremium = array();
 		$swp = $this->Set->find('all', array('conditions' => array('premium' => 1)));
@@ -2801,6 +2808,7 @@ Joschka Zimdars';
 		}
 
 		$this->set('id', $id);
+		$this->set('overallCounter', $overallCounter);
 		$this->set('premiumSets', $swp);
 		$this->set('premiumTsumegos', count($tsumegosWithPremium));
 	}
@@ -2885,28 +2893,25 @@ Joschka Zimdars';
 		$Email = new CakeEmail();
 		$Email->from(array('me@joschkazimdars.com' => 'https://tsumego-hero.com'));
 		$Email->to('joschka.zimdars@googlemail.com');
-		$Email->subject('Donation');
-		if(isset($_SESSION['loggedInUser'])) $ans = $_SESSION['loggedInUser']['User']['name'].' '.$_SESSION['loggedInUser']['User']['email'];
+		$Email->subject('Upgrade');
+		if(isset($_SESSION['loggedInUser']['User']['id'])) $ans = $_SESSION['loggedInUser']['User']['name'].' '.$_SESSION['loggedInUser']['User']['email'];
 		else $ans = 'no login';
 		$Email->send($ans);
-		if(isset($_SESSION['loggedInUser'])){
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			$Email = new CakeEmail();
 			$Email->from(array('me@joschkazimdars.com' => 'https://tsumego-hero.com'));
 			$Email->to($_SESSION['loggedInUser']['User']['email']);
 			$Email->subject('Tsumego Hero');
-			
 			$ans = '
 Hello '.$_SESSION['loggedInUser']['User']['name'].',
 			
-thanks for your donation. Your account should be upgraded automatically. 
+Thank you!. Your account should be upgraded automatically. 
 
 -- 
 Best Regards
 Joschka Zimdars';
 			$Email->send($ans);
 		}
-		
-		
 		$this->set('id', $id);
 	}
 	

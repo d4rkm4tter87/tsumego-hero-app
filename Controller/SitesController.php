@@ -49,9 +49,12 @@ class SitesController extends AppController{
 				$setDates[$tSum[$i]['Tsumego']['set_id']] = $tSum[$i]['Tsumego']['created'];
 			}
 		}*/
+		$uReward = $this->User->find('all', array('limit' => 5, 'order' => 'reward DESC'));
+		$urNames = array();
+		for($i=0;$i<count($uReward);$i++)
+			array_push($urNames, $this->checkPicture($uReward[$i]));
 		
 		$today = date('Y-m-d');
-		
 		$dateUser = $this->DayRecord->find('first', array('conditions' =>  array('date' => $today)));
 		if(count($dateUser)==0) $dateUser = $this->DayRecord->find('first', array('conditions' =>  array('date' => date('Y-m-d', strtotime('yesterday')))));
 		
@@ -229,12 +232,18 @@ class SitesController extends AppController{
 		*/
 		$tsumegoDates = array();
 		$pd = $this->PublishDate->find('all', array('order' => 'date ASC'));
-		for($j=0; $j<count($pd); $j++){
+		for($j=0; $j<count($pd); $j++)
 			array_push($tsumegoDates, $pd[$j]['PublishDate']['date']);
-		}
-		
-		
 		$deletedS = $this->getDeletedSets();
+		
+		$setsWithPremium = array();
+		$swp = $this->Set->find('all', array('conditions' => array('premium' => 1)));
+		for($i=0;$i<count($swp);$i++)
+			array_push($setsWithPremium, $swp[$i]['Set']['id']);
+		$totd = $this->checkForLocked($totd, $setsWithPremium);
+		
+		for($i=0;$i<count($scheduleTsumego);$i++)
+			$scheduleTsumego[$i] = $this->checkForLocked($scheduleTsumego[$i], $setsWithPremium);
 		
 		$this->set('tsumegos', $tsumegoDates);
 		$this->set('quote', $currentQuote);
@@ -251,6 +260,7 @@ class SitesController extends AppController{
 		$this->set('popularTooltip', $popularTooltip);
 		$this->set('popularTooltipInfo', $popularTooltipInfo);
 		$this->set('popularTooltipBoardSize', $popularTooltipBoardSize);
+		$this->set('urNames', $urNames);
     }
 	
 	public function view($id=null){

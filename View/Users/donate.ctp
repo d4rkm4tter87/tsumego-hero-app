@@ -44,7 +44,7 @@
 						<img src="/img/hero power sandbox.png" alt="Sandbox" title="Sandbox"><br>
 					</td>
 					<td>
-						<b>Sandbox</b><br>Contains hundreds of unpublished problems.<br>
+						<b>Sandbox</b><br>Contains <?php echo $overallCounter; ?> unpublished problems.<br>
 					</td>
 				</tr>
 				<tr>

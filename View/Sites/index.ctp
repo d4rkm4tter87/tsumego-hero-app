@@ -46,19 +46,24 @@
 		<?php
 		if(count($scheduleTsumego)!=0){
 			echo '<font color="#444">Added today:</font><br>';
-			if(count($scheduleTsumego)<=1){
-				echo '<a class="scheduleTsumego" href="/sets/view/'.$newT['Tsumego']['set_id'].'"><b>
-				'.$newT['Tsumego']['set'].' '.$newT['Tsumego']['set2'].' - '.$newT['Tsumego']['num'].'</b></a><br>
-					<li class="set'.$newT['Tsumego']['status'].'1" style="margin-top:4px;">
-						<a href="/tsumegos/play/'.$newT['Tsumego']['id'].'">'.$newT['Tsumego']['num'].'?search=topics</a>
-					</li>';
-			}else{
-				echo '<a class="scheduleTsumego" href="/sets/view/'.$newT['Tsumego']['set_id'].'"><b>
-				'.$newT['Tsumego']['set'].' '.$newT['Tsumego']['set2'].' - '.count($scheduleTsumego).' problems</b></a><br>';
-				for($i=0; $i<count($scheduleTsumego); $i++){
+			if(count($scheduleTsumego)>1){
+				if(!$scheduleTsumego[0]['Tsumego']['locked']){ 
+					echo '<a class="scheduleTsumego" href="/sets/view/'.$newT['Tsumego']['set_id'].'"><b>
+					'.$newT['Tsumego']['set'].' '.$newT['Tsumego']['set2'].' - '.count($scheduleTsumego).' problems</b></a><br>';
+				}else{
+					echo '<a class="scheduleTsumego" href="/users/donate"><b>
+					'.$newT['Tsumego']['set'].' '.$newT['Tsumego']['set2'].' - '.count($scheduleTsumego).' problems</b></a><br>';
+				}
+			}
+			for($i=0; $i<count($scheduleTsumego); $i++){
+				if(!$scheduleTsumego[$i]['Tsumego']['locked']){ 
 					echo '<li class="set'.$scheduleTsumego[$i]['Tsumego']['status'].'1" style="margin-top:4px;">
 						<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$scheduleTsumego[$i]['Tsumego']['id'].'?search=topics">'
 						.$scheduleTsumego[$i]['Tsumego']['num'].'<span><div id="tooltipSvg'.$i.'"></div></span></a>
+					</li>';
+				}else{
+					echo '<li class="set'.$scheduleTsumego[$i]['Tsumego']['status'].'1" style="margin-top:4px;background-image: url(\'/img/viewButtonLocked.png\'">
+						<a class="tooltip" href="/users/donate">&nbsp;</a>
 					</li>';
 				}
 			}
@@ -69,11 +74,24 @@
 		else echo ''; 
 		?>
 		<font color="#444">Most popular today:</font><br>
-		<a id="mostPopularToday" href="/sets/view/<?php echo $totd['Tsumego']['set_id']; ?>"><b><?php echo $totd['Tsumego']['set'].' '.$totd['Tsumego']['set2']; ?></b> - <?php echo $totd['Tsumego']['num']; ?></a><br>
-			<li class="set<?php echo $totd['Tsumego']['status']; ?>1" style="margin-top:4px;">
-				<a id="tooltip-hover99" class="tooltip" href="/tsumegos/play/<?php echo $totd['Tsumego']['id'].'?search=topics'; ?>">
-				<?php echo $totd['Tsumego']['num']; ?><span><div id="tooltipSvg99"></div></span></a>
-			</li>
+			<?php if(!$totd['Tsumego']['locked']){ ?>
+				<a id="mostPopularToday" href="/sets/view/<?php echo $totd['Tsumego']['set_id']; ?>"><b>
+					<?php echo $totd['Tsumego']['set'].' '.$totd['Tsumego']['set2']; ?></b> - <?php echo $totd['Tsumego']['num']; ?></a><br>
+				<li class="set<?php echo $totd['Tsumego']['status']; ?>1" style="margin-top:4px;">
+					<a id="tooltip-hover99" class="tooltip" href="/tsumegos/play/<?php echo $totd['Tsumego']['id'].'?search=topics'; ?>">
+						<?php echo $totd['Tsumego']['num']; ?>
+						<span><div id="tooltipSvg99"></div></span>
+					</a>
+				</li>
+			<?php }else{ ?>
+				<a id="mostPopularToday" href="/users/donate"><b>
+					<?php echo $totd['Tsumego']['set'].' '.$totd['Tsumego']['set2']; ?></b> - <?php echo $totd['Tsumego']['num']; ?></a><br>
+				<li class="set<?php echo $totd['Tsumego']['status']; ?>1" style="margin-top:4px;background-image: url('/img/viewButtonLocked.png');">
+					<a class="tooltip" href="/users/donate">
+						&nbsp;
+					</a>
+				</li>
+			<?php } ?>
 			<br><br>
 		</div>
 		<!-- RIGHT NEWS -->
@@ -117,12 +135,9 @@
 			</div>
 			It is now also possible to make proposals for improving the problem files. You select "Make Proposal", modify the move tree and save. An
 			admin is going to check and approve the changes. For getting rewards, a point system has been implemented: <b>Add tag (1 pt)</b>, <b>create new tag (3 pts)</b>, 
-			<b>make proposal (5 pts)</b>. Any contribution has to be accepted by an admin to become public. 
+			<b>make proposal (5 pts)</b>. Any contribution has to be accepted by an admin to become public. <i>Rewards have been deactivated as they were meant for the early 
+			phase of tags to get it running.</i>
 			<br><br>
-			<div align="center">
-				<a href="/users/rewards" class="new-button-time">Rewards</a>
-			</div>
-			<br>
 		</div>
 		<p class="title4">Update 13.10.2024</p>
 		<div class="new1">
@@ -356,7 +371,7 @@
 			!isset($_SESSION['loggedInUser']['User']['id'])
 			|| isset($_SESSION['loggedInUser']['User']['id']) && $_SESSION['loggedInUser']['User']['premium']==0
 		){ ?>
-			<p class="title4">Upgrades and Donations</p>
+			<p class="title4">Upgrade to Premium</p>
 			<div class="new1">
 			<div align="center">
 				<br>
@@ -366,7 +381,15 @@
 			</div>
 			</div>
 		<?php } ?>
-		
+		<p class="title4">Recent Upgrades</p>
+		<div class="new1">
+			<table class="newx" border="0">
+				<?php 
+					for($i=0;$i<count($urNames);$i++)
+						echo '<tr><td><img width="40px" src="/img/hpP.png"></td><td><h1 style="margin:2px">'.$urNames[$i].'</h1></td></tr>';
+				?>
+			</table>	
+		</div>
 		<p class="title4">Problem Database Size </p>
 		<div class="new1">
 		<?php

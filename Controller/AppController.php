@@ -1692,6 +1692,20 @@ class AppController extends Controller{
 		}
 	}
 	
+	public function checkForLocked($t, $setsWithPremium){
+		if(!isset($_SESSION['loggedInUser']['User']['id'])
+			|| isset($_SESSION['loggedInUser']['User']['id']) && $_SESSION['loggedInUser']['User']['premium']<1
+		)
+			$hasPremium = false;
+		else
+			$hasPremium = true;
+		$scCheck = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $t['Tsumego']['id'])));
+		if(in_array($scCheck['SetConnection']['set_id'], $setsWithPremium) && !$hasPremium)
+			$t['Tsumego']['locked'] = true;
+		else
+			$t['Tsumego']['locked'] = false;
+		return $t;
+	}	
 	public function checkNoErrorAchievements(){
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			$this->loadModel('Set');
@@ -2824,12 +2838,14 @@ class AppController extends Controller{
 				array_push($dFound, $uts[$l]['TsumegoStatus']['tsumego_id']);
 			$d[$uts[$l]['TsumegoStatus']['tsumego_id']] = $uts[$l]['TsumegoStatus']['status'];
 		}
+		/*
 		for($l=0; $l<count($dFound); $l++){
 			$delUt = $this->TsumegoStatus->find('first', array('conditions' => array(
 				'tsumego_id' => $dFound[$l]
 			)));
 			$this->TsumegoStatus->delete($delUt['TsumegoStatus']['id']);
 		}
+		*/
 		$_SESSION['loggedInUser']['_utsDate'] = date('Y-m-d');
 	}
 	

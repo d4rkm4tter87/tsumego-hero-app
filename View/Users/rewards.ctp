@@ -1,4 +1,5 @@
 <?php if(isset($refresh)) echo '<script>window.location.href = "/users/rewards";</script>'; ?>
+<script>window.location.href = "/";</script>
 <?php
   $color1 = 'black';
   $color2 = '#e5fc66';
