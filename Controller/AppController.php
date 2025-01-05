@@ -330,13 +330,19 @@ class AppController extends Controller{
 		$this->LoadModel('Tsumego');
 		$this->LoadModel('SetConnection');
 		$scIds = array();
+		$scMap = array();
+		$tsx = array();
 		$sc = $this->SetConnection->find('all', array('order' => 'num ASC', 'conditions' => array('set_id' => $id)));
-		for($i=0; $i<count($sc); $i++)
+		for($i=0; $i<count($sc); $i++){
 			array_push($scIds, $sc[$i]['SetConnection']['tsumego_id']);
+			$scMap[$sc[$i]['SetConnection']['tsumego_id']] = $i;
+		}
 		$ts = $this->Tsumego->find('all', array('conditions' => array('id' => $scIds)));
-		for($i=0; $i<count($ts); $i++)
+		for($i=0; $i<count($ts); $i++){
 			$ts[$i]['Tsumego']['set_id'] = $id;
-		return $ts;
+			$tsx[$scMap[$ts[$i]['Tsumego']['id']]] = $ts[$i];
+		}
+		return $tsx;
 	}
 
 	public function deleteUnusedStatuses($uid){

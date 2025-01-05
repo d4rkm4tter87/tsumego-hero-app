@@ -477,7 +477,7 @@ class SetsController extends AppController{
 			$achievementUpdate = 0;
 			for($i=0; $i<count($setsRaw); $i++){
 				if(count($rankConditions) > 0){
-					$ts = $this->Tsumego->find('all', array('order' => 'id ASC', 'conditions' => array(
+					$ts = $this->Tsumego->find('all', array('order' => 'num ASC', 'conditions' => array(
 						'set_id' => $setsRaw[$i]['Set']['id'],
 						$rankConditions
 					)));
@@ -512,6 +512,7 @@ class SetsController extends AppController{
 				if(count($currentIds)>0)
 					array_push($sets, $s);
 			}
+			
 			$sets = $this->partitionCollections($sets, $collectionSize, $utsMap);
 			if($collectionSize>=200){
 				for($i=0; $i<count($sets); $i++){
@@ -991,8 +992,6 @@ class SetsController extends AppController{
 					$set['Set']['description'] = $id.' are problems that have a rating from '.$ftFrom['elo_rating_mode >='].' to '.($ftTo['elo_rating_mode <']-1).'.';
 				}
 					
-				
-					
 				$set['Set']['difficulty'] = $elo;
 				$notPremiumArray = array();
 				if(!$hasPremium)
@@ -1155,7 +1154,7 @@ class SetsController extends AppController{
 						$scT['Tsumego']['set_id'] = $scTs[$i]['SetConnection']['set_id'];
 						$scT['Tsumego']['num'] = $scTs[$i]['SetConnection']['num'];
 						$scT['Tsumego']['duplicateLink'] = '';
-						$scTs2 = $this->SetConnection->find('all', array('conditions' => array('tsumego_id' => $scT['Tsumego']['id'])));
+						$scTs2 = $this->SetConnection->find('all', array('order' => 'num ASC', 'conditions' => array('tsumego_id' => $scT['Tsumego']['id'])));
 						for($j=0;$j<count($scTs2);$j++)
 							if(count($scTs2)>1 && $scTs2[$j]['SetConnection']['set_id']==$set['Set']['id'])
 								$scT['Tsumego']['duplicateLink'] = '?sid='.$scT['Tsumego']['set_id'];
@@ -1173,6 +1172,12 @@ class SetsController extends AppController{
 					array_push($currentIds, $ts[$i]['Tsumego']['id']);
 					array_push($ts1, $ts[$i]);
 				}
+
+				/*echo '<pre>'; print_r($currentIds); echo '</pre>';
+				for($i=0;$i<count($currentIds);$i++){
+					$dsfgdfgfdg = $this->Tsumego->findById($currentIds[$i]);
+					echo '<pre>'; print_r($dsfgdfgfdg['Tsumego']['num'].' '.$dsfgdfgfdg['Tsumego']['id'].' '.$dsfgdfgfdg['Tsumego']['set_id'].' '.$i); echo '</pre>';
+				}*/
 
 				$difficultyAndSolved = $this->getDifficultyAndSolved($currentIds, $utsMap);
 				$ts = $ts1;

@@ -148,7 +148,8 @@
 		$pl = rand(0,1);
 		$plRand = true;
 	}
-	if($checkBSize!=19 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161 || $t['Tsumego']['set_id']==239 || $t['Tsumego']['set_id']==243 || $t['Tsumego']['set_id']==244)
+	if($checkBSize!=19 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161 || $t['Tsumego']['set_id']==239 
+	|| $t['Tsumego']['set_id']==243 || $t['Tsumego']['set_id']==244 || $t['Tsumego']['set_id']==246)
 		$pl=0;
 	if($pl==0){
 		$playerColor[0] = 'BLACK';
@@ -1242,7 +1243,7 @@
 	var author = "<?php echo $t['Tsumego']['author']; ?>";
 	var inFavorite = "<?php echo $inFavorite; ?>";
 	var besogoPlayerColor = "black";
-	var favorite = "<?php echo $favorite; ?>";
+	var favorite = "<?php echo $isTSUMEGOinFAVORITE; ?>";
 	var besogoMode2Solved = false;
 	var disableAutoplay = false;
 	var besogoNoLogin = false;

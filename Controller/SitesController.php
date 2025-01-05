@@ -244,7 +244,15 @@ class SitesController extends AppController{
 		
 		for($i=0;$i<count($scheduleTsumego);$i++)
 			$scheduleTsumego[$i] = $this->checkForLocked($scheduleTsumego[$i], $setsWithPremium);
+
+		if(!isset($_SESSION['loggedInUser']['User']['id'])
+			|| isset($_SESSION['loggedInUser']['User']['id']) && $_SESSION['loggedInUser']['User']['premium']<1
+		)
+			$hasPremium = false;
+		else
+			$hasPremium = true;
 		
+		$this->set('hasPremium', $hasPremium);
 		$this->set('tsumegos', $tsumegoDates);
 		$this->set('quote', $currentQuote);
 		$this->set('d1', $d1);

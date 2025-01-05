@@ -2469,6 +2469,8 @@ class TsumegosController extends AppController{
 		else
 			$checkNotInSearch = false;
 
+		$isTSUMEGOinFAVORITE = $this->Favorite->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'tsumego_id' => $id)));
+
 		$this->set('isAllowedToContribute', $isAllowedToContribute);
 		$this->set('hasSgfProposal', $sgfProposal!=null);
 		$this->set('hasRevelation', $hasRevelation);
@@ -2496,6 +2498,7 @@ class TsumegosController extends AppController{
 		$this->set('colorOrientation', $colorOrientation);
 		$this->set('g', $refinementT[$refinementPublicCounter]);
 		$this->set('favorite', $checkFav);
+		$this->set('isTSUMEGOinFAVORITE', $isTSUMEGOinFAVORITE!=null);
 		$this->set('hasAnyFavorite', $hasAnyFavorite!=null);
 		$this->set('inFavorite', $inFavorite);
 		$this->set('lastInFav', $lastInFav);

@@ -97,14 +97,27 @@
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
+		<p class="title4">New Collection: Attack Hero | 30.12.2024</p>
+		<div class="new1">	
+		In the game of Go, attacks can be used to get an advantage on the board. When attacking a group, killing is not the first objective. 
+		Instead of that a group can be attacked to gain influence, gain territory, stabilize their own group, create thickness or many other reasons. 
+		This collection teaches the best ways to attack groups to get an advantage on the board.<br><br>
+		<div align="center"><img width="60%" src="/img/attack-hero-promo.png" alt="New Collection: Attack Hero" title="New Collection: Attack Hero"><br><br>
+		<?php if($hasPremium){ ?>
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/246">Play</a><br><br>
+		<?php }else{ ?>
+			<a class="new-button-inactive main-page" style="font-size:14px;">Play</a><br><br>
+		<?php } ?>
+		</div>
+		</div>
 		<p class="title4">New Collection: Igo Hatsuyoron | 13.12.2024</p>
 		<div class="new1">	
 		Igo Hatsuyoron (literally: Production of Yang in the Game of Go) is a collection of 183 go problems mostly 
 		life and death problems, compiled in 1713 by the Japanese go master Inoue Dosetsu Inseki. The problems in this collection 
 		have a very high difficulty, so discussion of solutions might not always be possible.<br><br>
-			<div align="center"><img width="95%" src="/img/igo-hatzuyoron.png" alt="New Collection: Direction of the Play" title="New Collection: Direction of the Play">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/242">Play</a><br><br></div>
+		<div align="center"><img width="95%" src="/img/igo-hatzuyoron.png" alt="New Collection: Igo Hatsuyoron" title="New Collection: Igo Hatsuyoron">
+		
+		<a class="new-button main-page" style="font-size:14px;" href="/sets/view/242">Play</a><br><br></div>
 		</div>
 		<p class="title4">Update 29.11.2024</p>
 		<div class="new1">
@@ -381,15 +394,7 @@
 			</div>
 			</div>
 		<?php } ?>
-		<p class="title4">Recent Upgrades</p>
-		<div class="new1">
-			<table class="newx" border="0">
-				<?php 
-					for($i=0;$i<count($urNames);$i++)
-						echo '<tr><td><img width="40px" src="/img/hpP.png"></td><td><h1 style="margin:2px">'.$urNames[$i].'</h1></td></tr>';
-				?>
-			</table>	
-		</div>
+		
 		<p class="title4">Problem Database Size </p>
 		<div class="new1">
 		<?php
@@ -504,6 +509,15 @@
 		<div id="chartContainer" style="height: 400px; width: 100%;"></div>
 		<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 		<br>
+		</div>
+		<p class="title4">Recent Upgrades</p>
+		<div class="new1">
+			<table class="newx" border="0">
+				<?php 
+					for($i=0;$i<count($urNames);$i++)
+						echo '<tr><td><img width="40px" src="/img/hpP.png"></td><td><h1 style="margin:2px">'.$urNames[$i].'</h1></td></tr>';
+				?>
+			</table>	
 		</div>
 		
 		<!-- LEFT NEWS -->

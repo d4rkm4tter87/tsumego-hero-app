@@ -78,7 +78,7 @@
 			Problems found: <?php echo $searchCounter; ?>
 		</div>	
 		<div class="set-buttons-right">
-			<div class="set-buttons">Size:
+			<div class="set-buttons">Collection size:
 				<input id="set-size-input" type="number" value="<?php echo $collectionSize; ?>" step="10">
 			</div>
 			<div class="set-buttons">
