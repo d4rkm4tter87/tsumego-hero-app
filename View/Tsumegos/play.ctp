@@ -124,8 +124,6 @@
 	else if($t['Tsumego']['set_id']==74761) $choice[0] = $boardPositions[49]; //Giants
 	else if($t['Tsumego']['set_id']==81578) $choice[0] = $boardPositions[50]; //Moves of Resistance
 	else if($t['Tsumego']['set_id']==88156) $choice[0] = $boardPositions[50]; //Hand of God
-	
-	else if($t['Tsumego']['set_id']==6473) $choice[0] = $boardPositions[51]; //Tsumego Grandmaster
 	else echo '<script type="text/javascript" src="/'.$boardSize.'/board'.$choice[0][0].'.js"></script>'; // Regular
 	if(isset($_SESSION['lastVisit'])) $lv = $_SESSION['lastVisit'];
 	else $lv = '15352';
@@ -570,7 +568,7 @@
 			<div class="tag-list"></div>
 			<div class="add-tag-list-button"><a class="add-tag-list-anchor" id="open-add-tag-menu">
 			<?php if($isAllowedToContribute){ ?>
-			<?php if($firstRanks==0){ ?>
+			<?php if($firstRanks==0 && $t['Tsumego']['set_id']!=181 && $t['Tsumego']['set_id']!=191){ ?>
 				Add tag
 			<?php } ?>
 			<?php } ?>

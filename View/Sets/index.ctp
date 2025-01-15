@@ -1182,21 +1182,5 @@
 			drawActiveTiles();
 			drawActiveCollections();
 		});
-		
-		function check1(){
-			if(document.getElementById("dropdown-1").checked == true){
-				document.getElementById("dropdowntable").style.display = "inline-block"; 
-				document.getElementById("dropdowntable2").style.display = "inline-block"; 
-				document.getElementById("boardsInMenu").style.color = "#74D14C"; 
-				document.getElementById("boardsInMenu").style.backgroundColor = "grey"; 
-			}
-			if(document.getElementById("dropdown-1").checked == false){
-				document.getElementById("dropdowntable").style.display = "none"; 
-				document.getElementById("dropdowntable2").style.display = "none";
-				document.getElementById("boardsInMenu").style.color = "#d19fe4"; 
-				document.getElementById("boardsInMenu").style.backgroundColor = "transparent";
-			}
-		}
-		
 	</script>
 

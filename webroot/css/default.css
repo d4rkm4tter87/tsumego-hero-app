@@ -1515,6 +1515,21 @@ li a.menuLi {
   width: 600px;
   font-size: 16px;
 }
+.boards-tile {
+  background-color: #ffffff1a;
+  color: #74d14c;
+  border-radius: 50px;
+  padding: 4px 8px;
+  margin: 4px;
+  float: left;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+  background-image: linear-gradient(
+    rgba(200, 200, 200, 0.15),
+    rgba(33, 33, 33, 0.2)
+  ) !important;
+}
 .dropdown-tile {
   background-color: #ffffff1a;
   color: #fff;
@@ -3045,6 +3060,9 @@ input.newCheck {
   color: #74d14c;
   padding: 5px;
   display: none;
+}
+#dropdown-inner-propagation {
+  cursor: context-menu;
 }
 #heroProfile {
   color: #74d14c;

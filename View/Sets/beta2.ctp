@@ -1,16 +1,5 @@
-	<script src="/dist/shuffle.js"></script>
+
 	<?php
-	if(isset($sortOrder) && $sortOrder!= 'null'){
-		if($sortOrder=='00') echo '<script src="/js/demos/adding-removing00.js"></script>';
-		if($sortOrder=='10') echo '<script src="/js/demos/adding-removing11.js"></script>';
-		if($sortOrder=='20') echo '<script src="/js/demos/adding-removing21.js"></script>';
-		if($sortOrder=='30') echo '<script src="/js/demos/adding-removing30.js"></script>';
-		if($sortOrder=='40') echo '<script src="/js/demos/adding-removing40.js"></script>';
-		if($sortOrder=='11') echo '<script src="/js/demos/adding-removing10.js"></script>';
-		if($sortOrder=='21') echo '<script src="/js/demos/adding-removing20.js"></script>';
-		if($sortOrder=='31') echo '<script src="/js/demos/adding-removing31.js"></script>';
-		if($sortOrder=='41') echo '<script src="/js/demos/adding-removing41.js"></script>';
-	}else echo '<script src="/js/demos/adding-removing00.js"></script>';
 	
 	
 		if(isset($_SESSION['loggedInUser'])){
@@ -28,37 +17,6 @@
 		$active3 = '';
 		$active4 = '';
 		
-		if(isset($sortOrder) && $sortOrder!= 'null'){
-			if($sortOrder=='00'){
-				$active0 = 'active';
-			}
-			if($sortOrder=='10'){
-				$active1 = 'active';
-			}
-			if($sortOrder=='20'){
-				$active2 = 'active';
-			}
-			if($sortOrder=='30'){
-				$active3 = 'active';
-			}
-			if($sortOrder=='40'){
-				$active4 = 'active';
-			}
-			if($sortOrder=='11'){
-				$active1 = 'active';
-			}
-			if($sortOrder=='21'){
-				$active2 = 'active';
-			}
-			if($sortOrder=='31'){
-				$active3 = 'active';
-			}
-			if($sortOrder=='41'){
-				$active4 = 'active';
-			}
-		}else{
-			$active0 = 'active';
-		}
 		
 		if(isset($_SESSION['loggedInUser'])){
 			if($_SESSION['loggedInUser']['User']['id']==72){
@@ -185,44 +143,6 @@
 	</div>
 	
 	<script>
-		function check1(){
-			if(document.getElementById("dropdown-1").checked == true){
-				document.getElementById("dropdowntable").style.display = "inline-block"; 
-				document.getElementById("dropdowntable2").style.display = "inline-block"; 
-				document.getElementById("boardsInMenu").style.color = "#74D14C"; 
-				document.getElementById("boardsInMenu").style.backgroundColor = "grey"; 
-			}
-			if(document.getElementById("dropdown-1").checked == false){
-				document.getElementById("dropdowntable").style.display = "none"; 
-				document.getElementById("dropdowntable2").style.display = "none";
-				document.getElementById("boardsInMenu").style.color = "#d19fe4"; 
-				document.getElementById("boardsInMenu").style.backgroundColor = "transparent";
-			}
-		}
-		/*
-		function check2(){
-			if(document.getElementById("newCheck1").checked) document.cookie = "texture1=checked"; else document.cookie = "texture1= ";
-			if(document.getElementById("newCheck2").checked) document.cookie = "texture2=checked"; else document.cookie = "texture2= ";
-			if(document.getElementById("newCheck3").checked) document.cookie = "texture3=checked"; else document.cookie = "texture3= ";
-			if(document.getElementById("newCheck4").checked) document.cookie = "texture4=checked"; else document.cookie = "texture4= ";
-			if(document.getElementById("newCheck5").checked) document.cookie = "texture5=checked"; else document.cookie = "texture5= ";
-			if(document.getElementById("newCheck6").checked) document.cookie = "texture6=checked"; else document.cookie = "texture6= ";
-			if(document.getElementById("newCheck7").checked) document.cookie = "texture7=checked"; else document.cookie = "texture7= ";
-			if(document.getElementById("newCheck8").checked) document.cookie = "texture8=checked"; else document.cookie = "texture8= ";
-			if(document.getElementById("newCheck9").checked) document.cookie = "texture9=checked"; else document.cookie = "texture9= ";
-			if(document.getElementById("newCheck10").checked) document.cookie = "texture10=checked"; else document.cookie = "texture10= ";
-			if(document.getElementById("newCheck11").checked) document.cookie = "texture11=checked"; else document.cookie = "texture11= ";
-			if(document.getElementById("newCheck12").checked) document.cookie = "texture12=checked"; else document.cookie = "texture12= ";
-			if(document.getElementById("newCheck13").checked) document.cookie = "texture13=checked"; else document.cookie = "texture13= ";
-			if(document.getElementById("newCheck14").checked) document.cookie = "texture14=checked"; else document.cookie = "texture14= ";
-			if(document.getElementById("newCheck15").checked) document.cookie = "texture15=checked"; else document.cookie = "texture15= ";
-			if(document.getElementById("newCheck16").checked) document.cookie = "texture16=checked"; else document.cookie = "texture16= ";
-			if(document.getElementById("newCheck17").checked) document.cookie = "texture17=checked"; else document.cookie = "texture17= ";
-			if(document.getElementById("newCheck18").checked) document.cookie = "texture18=checked"; else document.cookie = "texture18= ";
-			if(document.getElementById("newCheck19").checked) document.cookie = "texture19=checked"; else document.cookie = "texture19= ";
-			if(document.getElementById("newCheck20").checked) document.cookie = "texture20=checked"; else document.cookie = "texture20= ";
-		}
-		*/
 		function topicColor() {
 			<?php
 				for($i=0; $i<count($sets); $i++) {
@@ -233,7 +153,6 @@
 				}
 			?>
 			
-			document.cookie = "sortColor=0";
 			var btnContainer = document.getElementById("sorter2");
 			var btns = btnContainer.getElementsByClassName("btn");
 			for (var i = 0; i < btns.length; i++){
@@ -251,7 +170,6 @@
 				}
 			?>
 			
-			document.cookie = "sortColor=1";
 			
 			var btnContainer = document.getElementById("sorter2");
 			var btns = btnContainer.getElementsByClassName("btn");
@@ -272,7 +190,6 @@
 				}
 			?>
 			
-			document.cookie = "sortColor=2";
 			var btnContainer = document.getElementById("sorter2");
 			var btns = btnContainer.getElementsByClassName("btn");
 			for (var i = 0; i < btns.length; i++){
@@ -290,7 +207,6 @@
 				}
 			?>
 			
-			document.cookie = "sortColor=3";
 			var btnContainer = document.getElementById("sorter2");
 			var btns = btnContainer.getElementsByClassName("btn");
 			for (var i = 0; i < btns.length; i++){
@@ -308,48 +224,12 @@
 				}
 			?>
 			
-			document.cookie = "sortColor=4";
 			var btnContainer = document.getElementById("sorter2");
 			var btns = btnContainer.getElementsByClassName("btn");
 			for (var i = 0; i < btns.length; i++){
 				btns[i].className = btns[i].className.replace("btn active","btn");
 			}
 			btns[4].className = btns[4].className.replace("btn","btn active");
-		}
-		function topicButton2() {
-			document.cookie = "sortOrder=00";
-		}
-		function progressButton2() {
-			document.getElementById("progressButton2").innerHTML = '<input type="radio" name="sort-value" value="most-solved" onclick="progressButton1()" /> Progress -&nbsp;';
-			document.cookie = "sortOrder=11";
-		}
-		function progressButton1() {
-			document.getElementById("progressButton2").innerHTML = '<input type="radio" name="sort-value" value="most-solved" onclick="progressButton2()" /> Progress +';
-			document.cookie = "sortOrder=10";
-		}
-		function difficultyButton2() {
-			document.getElementById("difficultyButton2").innerHTML = '<input type="radio" name="sort-value" value="most-difficulty" onclick="difficultyButton1()" /> Difficulty +';
-			document.cookie = "sortOrder=20";
-		}
-		function difficultyButton1() {
-			document.getElementById("difficultyButton2").innerHTML = '<input type="radio" name="sort-value" value="most-difficulty" onclick="difficultyButton2()" /> Difficulty -&nbsp;';
-			document.cookie = "sortOrder=21";
-		}
-		function sizeButton2() {
-			document.getElementById("sizeButton2").innerHTML = '<input type="radio" name="sort-value" value="most-problems" onclick="sizeButton1()" /> Size -&nbsp;';
-			document.cookie = "sortOrder=31";
-		}
-		function sizeButton1() {
-			document.getElementById("sizeButton2").innerHTML = '<input type="radio" name="sort-value" value="most-problems" onclick="sizeButton2()" /> Size +';
-			document.cookie = "sortOrder=30";
-		}
-		function dateButton2() {
-			document.getElementById("dateButton2").innerHTML = '<input type="radio" name="sort-value" value="most-reviews" onclick="dateButton1()" /> Date -&nbsp;';
-			document.cookie = "sortOrder=41";
-		}
-		function dateButton1() {
-			document.getElementById("dateButton2").innerHTML = '<input type="radio" name="sort-value" value="most-reviews" onclick="dateButton2()" /> Date +';
-			document.cookie = "sortOrder=40";
 		}
 	</script>
 

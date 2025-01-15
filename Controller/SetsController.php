@@ -215,8 +215,6 @@ class SetsController extends AppController{
 			array_push($admins, $adminsList[$i]['User']['name']);
 		}
 
-		$this->set('sortOrder', $sortOrder);
-		$this->set('sortColor', $sortColor);
 		$this->set('admins', $admins);
 		$this->set('access', $access);
 		$this->set('sets', $sets);
@@ -1935,45 +1933,6 @@ class SetsController extends AppController{
 		$secretPoints = 0;
 		$removeMap = array();
 
-		if(isset($_SESSION['loggedInUser'])){
-			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
-			if($_SESSION['loggedInUser']['User']['level'] >= 70){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 65){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 60){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 55){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 50){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 45){ $secretPoints++; }
-			if($_SESSION['loggedInUser']['User']['level'] >= 40){ $secretPoints++; }
-
-			//$secretPoints += $_SESSION['loggedInUser']['User']['premium'];
-
-			if($secretPoints>=7){ $u['User']['secretArea7'] = 1; $_SESSION['loggedInUser']['User']['secretArea7'] = 1; }
-			if($secretPoints>=6){ $u['User']['secretArea6'] = 1; $_SESSION['loggedInUser']['User']['secretArea6'] = 1; }
-			if($secretPoints>=5){ $u['User']['secretArea5'] = 1; $_SESSION['loggedInUser']['User']['secretArea5'] = 1; }
-			if($secretPoints>=4){ $u['User']['secretArea4'] = 1; $_SESSION['loggedInUser']['User']['secretArea4'] = 1; }
-			if($secretPoints>=3){ $u['User']['secretArea3'] = 1; $_SESSION['loggedInUser']['User']['secretArea3'] = 1; }
-			if($secretPoints>=2){ $u['User']['secretArea2'] = 1; $_SESSION['loggedInUser']['User']['secretArea2'] = 1; }
-			if($secretPoints>=1){ $u['User']['secretArea1'] = 1; $_SESSION['loggedInUser']['User']['secretArea1'] = 1; }
-
-			if($_SESSION['loggedInUser']['User']['secretArea10']==0) $removeMap[88156] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea7']==0) $removeMap[81578] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea6']==0) $removeMap[74761] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea5']==0) $removeMap[71790] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea4']==0) $removeMap[33007] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea3']==0) $removeMap[31813] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea2']==0) $removeMap[29156] = 1;
-			if($_SESSION['loggedInUser']['User']['secretArea1']==0) $removeMap[11969] = 1;
-		}else{
-			$removeMap[11969] = 1;
-			$removeMap[29156] = 1;
-			$removeMap[31813] = 1;
-			$removeMap[33007] = 1;
-			$removeMap[71790] = 1;
-			$removeMap[74761] = 1;
-			$removeMap[81578] = 1;
-			$removeMap[88156] = 1;
-		}
-
 		$sets = array();
 		for($i=0; $i<count($setsX); $i++){
 			if(!isset($removeMap[$setsX[$i]['Set']['id']])) array_push($sets, $setsX[$i]);
@@ -2034,39 +1993,8 @@ class SetsController extends AppController{
 			$sets[$i]['Set']['difficultyColor'] = $this->getDifficultyColor($sets[$i]['Set']['difficulty']);
 			$sets[$i]['Set']['sizeColor'] = $this->getSizeColor($sets[$i]['Set']['anz']);
 			$sets[$i]['Set']['dateColor'] = $this->getDateColor($sets[$i]['Set']['created']);
-
 		}
-
-		$sortOrder = 'null';
-		$sortColor = 'null';
-
-		if(isset($_SESSION['loggedInUser'])){
-			if($globalCounter==$globalSolvedCounter){
-				$u['User']['secretArea10'] = 1;
-				$_SESSION['loggedInUser']['User']['secretArea10'] = 1;
-				$firstGod = $this->User->findById($u['User']['id']);
-				$firstGod['User']['secretArea10'] = 1;
-				$this->User->save($firstGod);
-			}
-
-			if(isset($_COOKIE['sortOrder']) && $_COOKIE['sortOrder']!= 'null'){
-				$u['User']['sortOrder'] = $_COOKIE['sortOrder'];
-				$sortOrder = $_COOKIE['sortOrder'];
-				$_COOKIE['sortOrder'] = 'null';
-				unset($_COOKIE['sortOrder']);
-			}
-			if(isset($_COOKIE['sortColor']) && $_COOKIE['sortColor']!= 'null'){
-				$u['User']['sortColor'] = $_COOKIE['sortColor'];
-				$sortColor = $_COOKIE['sortColor'];
-				$_COOKIE['sortColor'] = 'null';
-				unset($_COOKIE['sortColor']);
-			}
-			$this->User->save($u);
-		}
-		
 		$this->set('sets', $setsX);
-		$this->set('sortOrder', $sortOrder);
-		$this->set('sortColor', $sortColor);
   }
 
 	private function findUt($id=null, $allUts=null, $map=null){

@@ -31,10 +31,10 @@
 	<meta name="keywords" content="tsumego, problems, puzzles, baduk, weiqi, tesuji, life and death, solve, solving, hero, go, in-seong, level" >
 	<meta name="Author" content="Joschka Zimdars">
 	<meta property="og:title" content="Tsumego Hero">
-	<link rel="stylesheet" type="text/css" href="/css/default.css?v=3.9">
+	<link rel="stylesheet" type="text/css" href="/css/default.css?v=4.0">
 	<?php
 		if($lightDark=='dark')
-			echo '<link rel="stylesheet" type="text/css" href="/css/dark.css?v=3.9">';
+			echo '<link rel="stylesheet" type="text/css" href="/css/dark.css?v=4.0">';
 		
 		echo $this->Html->meta('icon');
 		echo $this->fetch('meta');
@@ -250,50 +250,59 @@
 						echo '<li><a id="tutorialLink" href="/users/added_tags" '.$timeHighscoreA.'>Tag Highscore</a></li>';
 						echo '<li><a id="tutorialLink" href="/users/leaderboard" '.$dailyHighscoreA.'>Daily Highscore</a></li>';
 					echo '</ul>';
-					if(isset($_SESSION['loggedInUser']['User']['id'])) echo '<li><a  '.$refreshLinkToDiscuss.'  '.$discussA.'href="/comments'.$discussFilter.'">Discuss</a></li>';
-					else echo '<li><a style="color:#aaa;">Discuss</a></li>';
+					if(isset($_SESSION['loggedInUser']['User']['id']))
+						echo '<li><a  '.$refreshLinkToDiscuss.'  '.$discussA.'href="/comments'.$discussFilter.'">Discuss</a></li>';
+					else
+						echo '<li><a style="color:#aaa;">Discuss</a></li>';
+					if($_SESSION['loggedInUser']['User']['sound'] == 'off')
+						$soundButtonImageValue = 'sound-icon2.png';
+					else if($_SESSION['loggedInUser']['User']['sound'] == 'on')
+						$soundButtonImageValue = 'sound-icon1.png';
+					else
+						$soundButtonImageValue = 'sound-icon1.png';
 					echo '<li class="menuIcons1">
-						<a href="#" id="soundButton" onclick="changeSound(); return false;"><img id="soundButtonImage" src="/img/sound-icon1.png" width="25px"></a>
+						<a href="#" id="soundButton" onclick="changeSound(); return false;"><img id="soundButtonImage" src="/img/'.$soundButtonImageValue.'" width="25px"></a>
 					</li>';
 					?>
 					<li class="menuIcons1">
-							<div class="dropdown">
+							<div class="dropdown" id="check3">
 								<label for="dropdown-1" id="boardsInMenu" class="dropdown-button">
 									<img id="boardsButtonImage" src="/img/boards-icon1.png" width="25px">
 								</label>
-								<input class="dropdown-open" type="checkbox" id="dropdown-1" style="display:none;" onchange="check1(); return false;">
+								<input class="dropdown-open" type="checkbox" id="dropdown-1" style="display:none;" onchange="check1()">
 								<label for="dropdown-1" class="dropdown-overlay"></label>
-								<div class="dropdown-inner">
+								<div class="dropdown-inner" id="dropdown-inner-propagation">
 									<table id="dropdowntable" border="0">
 										<tr>
 										<?php
 											$tr = 1;
-											for($i=1;$i<=54;$i++){
+											for($i=1;$i<=51;$i++){
 												if(isset($boardNames[$i])){
-												echo '
-													<td width="19px" align="right" style="position:relative;top:1px;padding:4px;">
-														<input type="checkbox" class="newCheck" id="newCheck'.$i.'" onchange="check2();" '.$enabledBoards[$i].'>
-													</td>
-													<td width="19px" align="center" style="position:relative;top:3px;padding:2px;">
+													echo '
+														<td width="19px" align="right" style="position:relative;top:1px;padding:4px;">
+															<input type="checkbox" class="newCheck" id="newCheck'.$i.'" '.$enabledBoards[$i].'>
+														</td>
+														<td width="19px" align="center" style="position:relative;top:3px;padding:2px;">
 
-														<div class="img-'.$boardPositions[$i][0].'small"></div>
-													</td>
-													<td width="115px" style="padding:0px;text-align:left;">
-														'.$boardNames[$i].'
-													</td>
-												';
+															<div class="img-'.$boardPositions[$i][0].'small"></div>
+														</td>
+														<td width="115px" style="padding:0px;text-align:left;">
+															'.$boardNames[$i].'
+														</td>
+													';
 												}
 												if($tr%4==0 && $tr>0) echo '</tr><tr>';
 												$tr++;
 											}
 										?>
+											<td colspan="3">
+												<div class="boards-tile tiles-submit-inner-select" id="boards-unselect-all">Unselect all</div>
+											</td>
 										</tr>
 									</table>
 									<br>
 									<div id="dropdowntable2" align="center">
-										<?php
-											echo '<a class="new-button" href="'.$_SERVER['REQUEST_URI'].'">Save</a>';
-										?>
+										<a class="new-button" href="<?php echo $_SERVER['REQUEST_URI']; ?>">Save</a>
 										<br><br>
 									</div>
 								</div>
@@ -453,6 +462,18 @@
 	?>
 	<script type="text/javascript">
 	var lifetime = new Date();
+	let boardsUnselectAll = false;
+	let boardsUnselectAllCounter = 0;
+	<?php
+		for($i=1;$i<=51;$i++)
+			if($enabledBoards[$i]=='checked')
+				echo 'boardsUnselectAllCounter++;';
+	?>
+	if(boardsUnselectAllCounter==0){
+		boardsUnselectAll = true;
+		$("#boards-unselect-all").html("Select all");
+	}
+
 	lifetime.setTime(lifetime.getTime()+8*24*60*60*1000);
 	lifetime = lifetime.toUTCString()+"";
 	<?php 
@@ -575,13 +596,11 @@
 		setCookie("search2", "");
 		setCookie("search3", "");
 		setCookie("revelation", "");
-
+		setCookie("texture", "0");
 		<?php
-			if(isset($textureCookies)){
-				for($i=0;$i<count($textureCookies);$i++){
-					echo 'document.cookie = "'.$textureCookies[$i].'=0;SameSite=none;expires="+lifetime+";Secure=false";';
-				}
-			}
+			if(isset($textureCookies))
+				echo 'document.cookie = "texture="+"'.$textureCookies.'"+";SameSite=none;expires="+lifetime+";Secure=false";';
+				//echo 'setCookie("texture", '.$textureCookies.');';
 		?>
 		var soundsEnabled = true;
 		var notMode3 = true;
@@ -637,47 +656,6 @@
 					}
 				<?php	
 				}
-				if(isset($sortColor) && $sortColor!= 'null'){
-					if($sortColor=='1'){
-						echo 'solvedColor();';
-					}
-					if($sortColor=='2'){
-						echo 'difficultyColor();';
-					}
-					if($sortColor=='3'){
-						echo 'sizeColor();';
-					}
-					if($sortColor=='4'){
-						echo 'dateColor();';
-					}
-				}
-				if(isset($sortOrder) && $sortOrder!= 'null'){
-					if($sortOrder=='10'){
-						echo 'progressButton1();';
-					}
-					if($sortOrder=='20'){
-						echo 'difficultyButton2();';
-					}
-					if($sortOrder=='30'){
-						echo 'sizeButton1();';
-					}
-					if($sortOrder=='40'){
-						echo 'dateButton1();';
-					}
-					if($sortOrder=='11'){
-						echo 'progressButton2();';
-					}
-					if($sortOrder=='21'){
-						echo 'difficultyButton1();';
-					}
-					if($sortOrder=='31'){
-						echo 'sizeButton2();';
-					}
-					if($sortOrder=='41'){
-						echo 'dateButton2();';
-					}
-				}
-
 			if(isset($loggedInUser)){
 				echo 'var end = new Date("'.$nextDay.' 00:00 AM");';
 				?>
@@ -744,15 +722,20 @@
 		function setCookie2(cookie, value=""){
 			document.cookie = cookie+"="+value+";SameSite=none;Secure=false;expires="+lifetime+";"
 		}
-
 		function logoHover(img){
 			img.src = '/img/<?php echo $logoH ?>.png';
 		}
-
 		function logoNoHover(img){
 			img.src = "/img/<?php echo $logo ?>.png";
 		}
-
+		function boardsHover(){
+			document.getElementById("boardsInMenu").style.color = "#74D14C";
+			document.getElementById("boardsInMenu").style.backgroundColor = "grey";
+		}
+		function boardsNoHover(){
+			document.getElementById("boardsInMenu").style.color = "#d19fe4";
+			document.getElementById("boardsInMenu").style.backgroundColor = "transparent";
+		}
 		function check1(){
 			if(document.getElementById("dropdown-1").checked == true){
 				document.getElementById("dropdowntable").style.display = "inline-block";
@@ -767,73 +750,53 @@
 				$(".dropdown-inner").css("display", "none");
 			}
 		}
-		function test1(){
-			alert("test");
-		}
-		function boardsHover(){
-			document.getElementById("boardsInMenu").style.color = "#74D14C";
-			document.getElementById("boardsInMenu").style.backgroundColor = "grey";
-		}
-		function boardsNoHover(){
-			document.getElementById("boardsInMenu").style.color = "#d19fe4";
-			document.getElementById("boardsInMenu").style.backgroundColor = "transparent";
-		}
-		function check2(){
-			if(document.getElementById("newCheck1").checked) document.cookie = "texture1=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture1= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck2").checked) document.cookie = "texture2=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture2= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck3").checked) document.cookie = "texture3=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture3= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck4").checked) document.cookie = "texture4=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture4= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck5").checked) document.cookie = "texture5=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture5= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck6").checked) document.cookie = "texture6=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture6= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck7").checked) document.cookie = "texture7=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture7= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck8").checked) document.cookie = "texture8=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture8= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck9").checked) document.cookie = "texture9=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture9= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck10").checked) document.cookie = "texture10=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture10= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck11").checked) document.cookie = "texture11=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture11= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck12").checked) document.cookie = "texture12=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture12= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck13").checked) document.cookie = "texture13=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture13= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck14").checked) document.cookie = "texture14=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture14= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck15").checked) document.cookie = "texture15=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture15= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck16").checked) document.cookie = "texture16=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture16= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck17").checked) document.cookie = "texture17=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture17= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck18").checked) document.cookie = "texture18=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture18= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck19").checked) document.cookie = "texture19=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture19= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck20").checked) document.cookie = "texture20=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture20= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck21").checked) document.cookie = "texture21=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture21= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck22").checked) document.cookie = "texture22=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture22= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck23").checked) document.cookie = "texture23=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture23= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck24").checked) document.cookie = "texture24=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture24= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck25").checked) document.cookie = "texture25=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture25= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck26").checked) document.cookie = "texture26=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture26= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck27").checked) document.cookie = "texture27=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture27= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck28").checked) document.cookie = "texture28=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture28= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck29").checked) document.cookie = "texture29=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture29= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck30").checked) document.cookie = "texture30=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture30= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck31").checked) document.cookie = "texture31=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture31= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck32").checked) document.cookie = "texture32=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture32= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck33").checked) document.cookie = "texture33=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture33= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck34").checked) document.cookie = "texture34=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture34= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck35").checked) document.cookie = "texture35=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture35= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck36").checked) document.cookie = "texture36=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture36= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck37").checked) document.cookie = "texture37=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture37= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck38").checked) document.cookie = "texture38=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture38= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck39").checked) document.cookie = "texture39=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture39= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck40").checked) document.cookie = "texture40=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture40= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck41").checked) document.cookie = "texture41=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture41= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck42").checked) document.cookie = "texture42=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture42= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck43").checked) document.cookie = "texture43=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture43= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck44").checked) document.cookie = "texture44=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture44= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck45").checked) document.cookie = "texture45=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture45= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck46").checked) document.cookie = "texture46=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture46= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck47").checked) document.cookie = "texture47=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture47= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck48").checked) document.cookie = "texture48=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture48= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck49").checked) document.cookie = "texture49=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture49= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck50").checked) document.cookie = "texture50=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture50= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck51").checked) document.cookie = "texture51=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture51= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck52").checked) document.cookie = "texture52=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture52= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck53").checked) document.cookie = "texture53=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture53= ;SameSite=none;expires="+lifetime+";Secure=false";
-			if(document.getElementById("newCheck54").checked) document.cookie = "texture54=checked;SameSite=none;expires="+lifetime+";Secure=false"; else document.cookie = "texture54= ;SameSite=none;expires="+lifetime+";Secure=false";
-		}
+		$("#check3").click(function(e){
+			if(document.getElementById("dropdown-1").checked == true){
+				document.getElementById("dropdown-1").checked = false;
+			}else{
+				document.getElementById("dropdown-1").checked = true;
+			}
+			check1();
+			e.stopPropagation();
+		});
+
+		$("#dropdown-inner-propagation").click(function(e){
+			e.stopPropagation();
+		});
+
+		<?php for($i=1;$i<=51;$i++){ ?>
+			$("#newCheck<?php echo $i; ?>").click(function(e){
+				let boardSettings = [];
+				let boardSettingsString = "";
+				for(let i=1;i<=51;i++){
+					if(document.getElementById("newCheck"+i).checked)
+						boardSettingsString += "2";
+					else
+						boardSettingsString += "1";
+				}
+				//setCookie("texture", boardSettingsString);
+				document.cookie = "texture="+boardSettingsString+";SameSite=none;expires="+lifetime+";Secure=false";
+				e.stopPropagation();
+			});
+		<?php } ?>
+
+		$("#boards-unselect-all").click(function(e){
+			if(!boardsUnselectAll){
+				for(let i=1;i<=51;i++)
+					document.getElementById("newCheck"+i).checked = false;
+				//setCookie("texture", "111111111111111111111111111111111111111111111111111");
+				document.cookie = "texture=111111111111111111111111111111111111111111111111111;SameSite=none;expires="+lifetime+";Secure=false";
+				$("#boards-unselect-all").html("Select all");
+			}else{
+				for(let i=1;i<=51;i++)
+					document.getElementById("newCheck"+i).checked = true;
+				//setCookie("texture", "222222222222222222222222222222222222222222222222222");
+				document.cookie = "texture=222222222222222222222222222222222222222222222222222;SameSite=none;expires="+lifetime+";Secure=false";
+				$("#boards-unselect-all").html("Unselect all");
+			}
+			boardsUnselectAll = !boardsUnselectAll;
+			e.stopPropagation();
+		});
 
 		function changeSound(){
 			if(getCookie("sound")=="off"){

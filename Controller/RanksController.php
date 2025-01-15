@@ -34,15 +34,6 @@ class RanksController extends AppController {
 		if($rs==null){
 			for($i=0;$i<count($sets);$i++){
 				$unlocked = true;
-				if($sets[$i]['Set']['id']==11969 && $_SESSION['loggedInUser']['User']['secretArea1']==0) $unlocked = false;
-				elseif($sets[$i]['Set']['id']==29156 && $_SESSION['loggedInUser']['User']['secretArea2']==0) $unlocked = false;
-				elseif($sets[$i]['Set']['id']==31813 && $_SESSION['loggedInUser']['User']['secretArea3']==0) $unlocked = false;
-				elseif($sets[$i]['Set']['id']==33007 && $_SESSION['loggedInUser']['User']['secretArea4']==0) $unlocked = false;
-				elseif($sets[$i]['Set']['id']==71790 && $_SESSION['loggedInUser']['User']['secretArea5']==0) $unlocked = false;
-				elseif($sets[$i]['Set']['id']==74761 && $_SESSION['loggedInUser']['User']['secretArea6']==0) $unlocked = false;
-				elseif($sets[$i]['Set']['id']==81578 && $_SESSION['loggedInUser']['User']['secretArea7']==0) $unlocked = false;
-				elseif($sets[$i]['Set']['id']==6473 && $_SESSION['loggedInUser']['User']['secretArea9']==0) $unlocked = false;
-				elseif($sets[$i]['Set']['id']==88156 && $_SESSION['loggedInUser']['User']['secretArea10']==0) $unlocked = false;
 				if($unlocked){
 					$this->RankSetting->create();
 					$rsNew = array();
@@ -80,15 +71,6 @@ class RanksController extends AppController {
 		}
 		for($i=0;$i<count($sets);$i++){
 			$unlocked = true;
-			if($sets[$i]['Set']['id']==11969 && $_SESSION['loggedInUser']['User']['secretArea1']==0) $unlocked = false;
-			elseif($sets[$i]['Set']['id']==29156 && $_SESSION['loggedInUser']['User']['secretArea2']==0) $unlocked = false;
-			elseif($sets[$i]['Set']['id']==31813 && $_SESSION['loggedInUser']['User']['secretArea3']==0) $unlocked = false;
-			elseif($sets[$i]['Set']['id']==33007 && $_SESSION['loggedInUser']['User']['secretArea4']==0) $unlocked = false;
-			elseif($sets[$i]['Set']['id']==71790 && $_SESSION['loggedInUser']['User']['secretArea5']==0) $unlocked = false;
-			elseif($sets[$i]['Set']['id']==74761 && $_SESSION['loggedInUser']['User']['secretArea6']==0) $unlocked = false;
-			elseif($sets[$i]['Set']['id']==81578 && $_SESSION['loggedInUser']['User']['secretArea7']==0) $unlocked = false;
-			elseif($sets[$i]['Set']['id']==6473 && $_SESSION['loggedInUser']['User']['secretArea9']==0) $unlocked = false;
-			elseif($sets[$i]['Set']['id']==88156 && $_SESSION['loggedInUser']['User']['secretArea10']==0) $unlocked = false;
 			if($unlocked){
 				array_push($settings['title'], $sets[$i]['Set']['title'].' '.$sets[$i]['Set']['title2']);
 				array_push($settings['id'], $sets[$i]['Set']['id']);

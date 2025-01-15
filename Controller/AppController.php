@@ -2826,11 +2826,9 @@ class AppController extends Controller{
 	public function signIn($u){
 		$_SESSION['loggedInUser'] = $u;
 		$vs = $this->TsumegoStatus->find('first', array('order' => 'created DESC', 'conditions' => array('user_id' => $u['User']['id'])));
-		if($vs!=null) $_SESSION['lastVisit'] = $vs['TsumegoStatus']['tsumego_id'];
-		for($i=1;$i<=54;$i++){
-			if($u['User']['texture'.$i] == '1') $u['User']['texture'.$i] = 'checked';
-			$_SESSION['texture'.$i] = $u['User']['texture'.$i];
-		}
+		if($vs!=null)
+			$_SESSION['lastVisit'] = $vs['TsumegoStatus']['tsumego_id'];
+		$_SESSION['texture'] = $u['User']['texture'];
 		$_SESSION['check1'] = $u['User']['id'];
 	}
 
@@ -3037,225 +3035,225 @@ class AppController extends Controller{
 		$correctSolveAttempt = false;
 		
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
-		if(isset($_COOKIE['revelation']) && $_COOKIE['revelation']!=0){
-			$u['User']['revelation'] -= 1;
-			$_SESSION['loggedInUser']['User']['revelation'] -= 1;
-		}
-		
-		//Incorrect
-		if(isset($_COOKIE['misplay']) && $_COOKIE['misplay']!=0 && $_COOKIE['preId'] != '0'){
-			$eloDifference = abs($_SESSION['loggedInUser']['User']['elo_rating_mode'] - $preTsumego['Tsumego']['elo_rating_mode']);
-			if($_SESSION['loggedInUser']['User']['elo_rating_mode'] > $preTsumego['Tsumego']['elo_rating_mode'])
-				$eloBigger = 'u';
-			else
-				$eloBigger = 't';
-			$activityValue = 1;
-			if(isset($_COOKIE['av']))
-				$activityValue = $_COOKIE['av'];
-			$newUserEloL = $this->getNewElo($eloDifference, $eloBigger, $activityValue, $preTsumego['Tsumego']['id'], 'l');
-			$_SESSION['loggedInUser']['User']['elo_rating_mode'] += $newUserEloL['user'];
-			$u['User']['elo_rating_mode'] = $_SESSION['loggedInUser']['User']['elo_rating_mode'];
-			$this->User->save($u);
-			$preTsumego['Tsumego']['elo_rating_mode'] += $newUserEloL['tsumego'];
-			$preTsumego['Tsumego']['activity_value']++;
-			$preTsumego['Tsumego']['difficulty'] = $this->convertEloToXp($preTsumego['Tsumego']['elo_rating_mode']);
-			if($preTsumego['Tsumego']['elo_rating_mode']>100)
-				$this->Tsumego->save($preTsumego);
-			if($mode =! 3){
-				//not used
-				if($u['User']['damage']>$u['User']['health']){
-					if($preTsumego==null){
-						$preTsumego['TsumegoStatus'] = array();
-						$preTsumego['TsumegoStatus']['user_id'] = $u['User']['id'];
-						$preTsumego['TsumegoStatus']['tsumego_id'] = $_COOKIE['preId'];
-					}
-					if($preTsumego['TsumegoStatus']['status']=='W')
-						$preTsumego['TsumegoStatus']['status'] = 'X';//W => X
-					else if($preTsumego['TsumegoStatus']['status']=='V')
-						$preTsumego['TsumegoStatus']['status'] = 'F';// V => F
-					else if($preTsumego['TsumegoStatus']['status']=='G')
-						$preTsumego['TsumegoStatus']['status'] = 'F';// G => F
-					else if($preTsumego['TsumegoStatus']['status']=='S')
-						$preTsumego['TsumegoStatus']['status'] = 'S';//S => S
-					$preTsumego['TsumegoStatus']['created'] = date('Y-m-d H:i:s');
-					if(!isset($preTsumego['TsumegoStatus']['status']))
-						$preTsumego['TsumegoStatus']['status'] = 'V';
-					$_SESSION['loggedInUser']['uts'][$preTsumego['TsumegoStatus']['tsumego_id']] = $preTsumego['TsumegoStatus']['status'];
-				}
+			if(isset($_COOKIE['revelation']) && $_COOKIE['revelation']!=0){
+				$u['User']['revelation'] -= 1;
+				$_SESSION['loggedInUser']['User']['revelation'] -= 1;
 			}
-		}	
-		//Correct!
-		if(isset($_COOKIE['mode']) && isset($_COOKIE['score']) && isset($_COOKIE['preId'])){
-		if($_COOKIE['score'] != '0' && $_COOKIE['preId'] != '0'){
-			$eloDifference = abs($_SESSION['loggedInUser']['User']['elo_rating_mode'] - $preTsumego['Tsumego']['elo_rating_mode']);
-			if($_SESSION['loggedInUser']['User']['elo_rating_mode'] > $preTsumego['Tsumego']['elo_rating_mode'])
-				$eloBigger = 'u';
-			else
-				$eloBigger = 't';
-			$activityValue = 1;
-			if(isset($_COOKIE['av']))
-				$activityValue = $_COOKIE['av'];
-			$newUserEloW = $this->getNewElo($eloDifference, $eloBigger, $activityValue, $preTsumego['Tsumego']['id'], 'w');
-			$_SESSION['loggedInUser']['User']['elo_rating_mode'] += $newUserEloW['user'];
-			$u['User']['elo_rating_mode'] = $_SESSION['loggedInUser']['User']['elo_rating_mode'];
-			$this->User->save($u);
-			$preTsumego['Tsumego']['elo_rating_mode'] += $newUserEloW['tsumego'];
-			$preTsumego['Tsumego']['activity_value']++;
-			$preTsumego['Tsumego']['difficulty'] = $this->convertEloToXp($preTsumego['Tsumego']['elo_rating_mode']);
-			if($preTsumego['Tsumego']['elo_rating_mode']>100)
-				$this->Tsumego->save($preTsumego);
-		}
-		
-		if(($_COOKIE['mode']=='1' || $_COOKIE['mode']=='2') && $_COOKIE['score'] != '0' && $_COOKIE['preId'] != '0'){
-			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
-			$suspiciousBehavior=false;
-			$exploit=null;
-			$_COOKIE['score'] = $this->decrypt($_COOKIE['score']);
-			$scoreArr = explode('-', $_COOKIE['score']);
-			$isNum = $preTsumego['Tsumego']['num']==$scoreArr[0];
-			//$isSet = $preTsumego['Tsumego']['set_id']==$scoreArr[2];
-			$isSet = true;
-			$isNumSc = false;
-			$isSetSc = false;
-			for($i=0;$i<count($preSc);$i++){
-				if($preSc[$i]['SetConnection']['set_id']==$preTsumego['Tsumego']['set_id'])
-					$isSetSc = true;
-				if($preSc[$i]['SetConnection']['num']==$preTsumego['Tsumego']['num'])
-					$isNumSc = true;
-			}
-			$isNum = $isNumSc;
-			$isSet = $isSetSc;
-			$_COOKIE['score'] = $scoreArr[1];
-			$solvedTsumegoRank = $this->getTsumegoRank($preTsumego['Tsumego']['elo_rating_mode']);
 			
-			if($isNum && $isSet){
-				if(isset($_COOKIE['preId'])){
-					$tPre = $this->Tsumego->findById($_COOKIE['preId']);
-					$resetCookies = true;
-				}
-				if($mode==1||$mode==2){
-					if($mode==1){
-						if(isset($_SESSION['loggedInUser']['User']['id']) && !isset($_SESSION['noLogin'])){
-							//$exploit = $this->UserBoard->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'b1' => $_COOKIE['preId'])));
-							$ub = array();
-							$ub['UserBoard']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-							$ub['UserBoard']['b1'] = $_COOKIE['preId'];
-							$this->UserBoard->create();
-							$this->UserBoard->save($ub);
-							if($_COOKIE['score']<3000) ;
-							else $_COOKIE['score'] = 0;
-							if($_COOKIE['score']>=3000){
-								$suspiciousBehavior = true;
-								//$_SESSION['loggedInUser']['User']['reuse5'] = 1;
-								//$u['User']['reuse5'] = 1;
-							}
-							if($u['User']['reuse3']>12000){
-								$_SESSION['loggedInUser']['User']['reuse4'] = 1;
-								$u['User']['reuse4'] = 1;
-							}
+			//Incorrect
+			if(isset($_COOKIE['misplay']) && $_COOKIE['misplay']!=0 && $_COOKIE['preId'] != '0'){
+				$eloDifference = abs($_SESSION['loggedInUser']['User']['elo_rating_mode'] - $preTsumego['Tsumego']['elo_rating_mode']);
+				if($_SESSION['loggedInUser']['User']['elo_rating_mode'] > $preTsumego['Tsumego']['elo_rating_mode'])
+					$eloBigger = 'u';
+				else
+					$eloBigger = 't';
+				$activityValue = 1;
+				if(isset($_COOKIE['av']))
+					$activityValue = $_COOKIE['av'];
+				$newUserEloL = $this->getNewElo($eloDifference, $eloBigger, $activityValue, $preTsumego['Tsumego']['id'], 'l');
+				$_SESSION['loggedInUser']['User']['elo_rating_mode'] += $newUserEloL['user'];
+				$u['User']['elo_rating_mode'] = $_SESSION['loggedInUser']['User']['elo_rating_mode'];
+				$this->User->save($u);
+				$preTsumego['Tsumego']['elo_rating_mode'] += $newUserEloL['tsumego'];
+				$preTsumego['Tsumego']['activity_value']++;
+				$preTsumego['Tsumego']['difficulty'] = $this->convertEloToXp($preTsumego['Tsumego']['elo_rating_mode']);
+				if($preTsumego['Tsumego']['elo_rating_mode']>100)
+					$this->Tsumego->save($preTsumego);
+				if($mode =! 3){
+					//not used
+					if($u['User']['damage']>$u['User']['health']){
+						if($preTsumego==null){
+							$preTsumego['TsumegoStatus'] = array();
+							$preTsumego['TsumegoStatus']['user_id'] = $u['User']['id'];
+							$preTsumego['TsumegoStatus']['tsumego_id'] = $_COOKIE['preId'];
 						}
-						if($exploit==null && $suspiciousBehavior==false){
-							if($mode==1){
-								$xpOld = $u['User']['xp'] + (intval($_COOKIE['score']));
-								$u['User']['reuse2']++;
-								$u['User']['reuse3'] += intval($_COOKIE['score']);
-								if($xpOld >= $u['User']['nextlvl']){
-									$xpOnNewLvl = -1 * ($u['User']['nextlvl'] - $xpOld);
-									$u['User']['xp'] = $xpOnNewLvl;
-									$u['User']['level'] += 1;
-									$u['User']['nextlvl'] += $this->getXPJump($u['User']['level']);
-									$u['User']['health'] = $this->getHealth($u['User']['level']);
-									$_SESSION['loggedInUser']['User']['level'] = $u['User']['level'];
-								}else{
-									$u['User']['xp'] = $xpOld;
-									$u['User']['ip'] = $_SERVER['REMOTE_ADDR'];
+						if($preTsumego['TsumegoStatus']['status']=='W')
+							$preTsumego['TsumegoStatus']['status'] = 'X';//W => X
+						else if($preTsumego['TsumegoStatus']['status']=='V')
+							$preTsumego['TsumegoStatus']['status'] = 'F';// V => F
+						else if($preTsumego['TsumegoStatus']['status']=='G')
+							$preTsumego['TsumegoStatus']['status'] = 'F';// G => F
+						else if($preTsumego['TsumegoStatus']['status']=='S')
+							$preTsumego['TsumegoStatus']['status'] = 'S';//S => S
+						$preTsumego['TsumegoStatus']['created'] = date('Y-m-d H:i:s');
+						if(!isset($preTsumego['TsumegoStatus']['status']))
+							$preTsumego['TsumegoStatus']['status'] = 'V';
+						$_SESSION['loggedInUser']['uts'][$preTsumego['TsumegoStatus']['tsumego_id']] = $preTsumego['TsumegoStatus']['status'];
+					}
+				}
+			}	
+			//Correct!
+			if(isset($_COOKIE['mode']) && isset($_COOKIE['score']) && isset($_COOKIE['preId'])){
+			if($_COOKIE['score'] != '0' && $_COOKIE['preId'] != '0'){
+				$eloDifference = abs($_SESSION['loggedInUser']['User']['elo_rating_mode'] - $preTsumego['Tsumego']['elo_rating_mode']);
+				if($_SESSION['loggedInUser']['User']['elo_rating_mode'] > $preTsumego['Tsumego']['elo_rating_mode'])
+					$eloBigger = 'u';
+				else
+					$eloBigger = 't';
+				$activityValue = 1;
+				if(isset($_COOKIE['av']))
+					$activityValue = $_COOKIE['av'];
+				$newUserEloW = $this->getNewElo($eloDifference, $eloBigger, $activityValue, $preTsumego['Tsumego']['id'], 'w');
+				$_SESSION['loggedInUser']['User']['elo_rating_mode'] += $newUserEloW['user'];
+				$u['User']['elo_rating_mode'] = $_SESSION['loggedInUser']['User']['elo_rating_mode'];
+				$this->User->save($u);
+				$preTsumego['Tsumego']['elo_rating_mode'] += $newUserEloW['tsumego'];
+				$preTsumego['Tsumego']['activity_value']++;
+				$preTsumego['Tsumego']['difficulty'] = $this->convertEloToXp($preTsumego['Tsumego']['elo_rating_mode']);
+				if($preTsumego['Tsumego']['elo_rating_mode']>100)
+					$this->Tsumego->save($preTsumego);
+			}
+			
+			if(($_COOKIE['mode']=='1' || $_COOKIE['mode']=='2') && $_COOKIE['score'] != '0' && $_COOKIE['preId'] != '0'){
+				$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
+				$suspiciousBehavior=false;
+				$exploit=null;
+				$_COOKIE['score'] = $this->decrypt($_COOKIE['score']);
+				$scoreArr = explode('-', $_COOKIE['score']);
+				$isNum = $preTsumego['Tsumego']['num']==$scoreArr[0];
+				//$isSet = $preTsumego['Tsumego']['set_id']==$scoreArr[2];
+				$isSet = true;
+				$isNumSc = false;
+				$isSetSc = false;
+				for($i=0;$i<count($preSc);$i++){
+					if($preSc[$i]['SetConnection']['set_id']==$preTsumego['Tsumego']['set_id'])
+						$isSetSc = true;
+					if($preSc[$i]['SetConnection']['num']==$preTsumego['Tsumego']['num'])
+						$isNumSc = true;
+				}
+				$isNum = $isNumSc;
+				$isSet = $isSetSc;
+				$_COOKIE['score'] = $scoreArr[1];
+				$solvedTsumegoRank = $this->getTsumegoRank($preTsumego['Tsumego']['elo_rating_mode']);
+				
+				if($isNum && $isSet){
+					if(isset($_COOKIE['preId'])){
+						$tPre = $this->Tsumego->findById($_COOKIE['preId']);
+						$resetCookies = true;
+					}
+					if($mode==1||$mode==2){
+						if($mode==1){
+							if(isset($_SESSION['loggedInUser']['User']['id']) && !isset($_SESSION['noLogin'])){
+								//$exploit = $this->UserBoard->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'b1' => $_COOKIE['preId'])));
+								$ub = array();
+								$ub['UserBoard']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+								$ub['UserBoard']['b1'] = $_COOKIE['preId'];
+								$this->UserBoard->create();
+								$this->UserBoard->save($ub);
+								if($_COOKIE['score']<3000) ;
+								else $_COOKIE['score'] = 0;
+								if($_COOKIE['score']>=3000){
+									$suspiciousBehavior = true;
+									//$_SESSION['loggedInUser']['User']['reuse5'] = 1;
+									//$u['User']['reuse5'] = 1;
+								}
+								if($u['User']['reuse3']>12000){
+									$_SESSION['loggedInUser']['User']['reuse4'] = 1;
+									$u['User']['reuse4'] = 1;
 								}
 							}
-							if($mode==1 && $u['User']['id']!=33){
-								if(isset($_SESSION['loggedInUser']['User']['id'])){
-									if(isset($_COOKIE['preId']) && $_COOKIE['preId']!=0){
-										if(!isset($_COOKIE['seconds']))
-											$cookieSeconds = 0;
-										else
-											$cookieSeconds = $_COOKIE['seconds'];
-										$this->TsumegoAttempt->create();
-										$ur = array();
-										$ur['TsumegoAttempt']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-										$ur['TsumegoAttempt']['elo'] = $_SESSION['loggedInUser']['User']['elo_rating_mode'];
-										$ur['TsumegoAttempt']['tsumego_id'] = $_COOKIE['preId'];
-										$ur['TsumegoAttempt']['gain'] = $_COOKIE['score'];
-										$ur['TsumegoAttempt']['seconds'] = $cookieSeconds;
-										$ur['TsumegoAttempt']['solved'] = '1';
-										$ur['TsumegoAttempt']['mode'] = 1;
-										$ur['TsumegoAttempt']['tsumego_elo'] = $preTsumego['Tsumego']['elo_rating_mode'];
-										$this->TsumegoAttempt->save($ur);
-										$correctSolveAttempt = true;
-										
-										$this->saveDanSolveCondition($solvedTsumegoRank, $preTsumego['Tsumego']['id']);
-										$this->updateGems($solvedTsumegoRank);
-										if($_COOKIE['sprint']==1)
-											$this->updateSprintCondition(true);
-										else
-											$this->updateSprintCondition(false);
-										if($_COOKIE['type']=='g')
-											$this->updateGoldenCondition(true);
-										$aCondition = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array(
-											'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 'err'
-										)));
-										if($aCondition==null) $aCondition = array();
-										$aCondition['AchievementCondition']['category'] = 'err';
-										$aCondition['AchievementCondition']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-										$aCondition['AchievementCondition']['value']++;
-										$this->AchievementCondition->save($aCondition);
+							if($exploit==null && $suspiciousBehavior==false){
+								if($mode==1){
+									$xpOld = $u['User']['xp'] + (intval($_COOKIE['score']));
+									$u['User']['reuse2']++;
+									$u['User']['reuse3'] += intval($_COOKIE['score']);
+									if($xpOld >= $u['User']['nextlvl']){
+										$xpOnNewLvl = -1 * ($u['User']['nextlvl'] - $xpOld);
+										$u['User']['xp'] = $xpOnNewLvl;
+										$u['User']['level'] += 1;
+										$u['User']['nextlvl'] += $this->getXPJump($u['User']['level']);
+										$u['User']['health'] = $this->getHealth($u['User']['level']);
+										$_SESSION['loggedInUser']['User']['level'] = $u['User']['level'];
+									}else{
+										$u['User']['xp'] = $xpOld;
+										$u['User']['ip'] = $_SERVER['REMOTE_ADDR'];
 									}
 								}
-							}
-							if(isset($_COOKIE['rank']) && $_COOKIE['rank'] != '0'){
-								$ranks = $this->Rank->find('all', array('conditions' =>  array('session' => $_SESSION['loggedInUser']['User']['activeRank'])));
-								$currentNum = $ranks[0]['Rank']['currentNum'];
-								for($i=0; $i<count($ranks); $i++){
-									if($ranks[$i]['Rank']['num'] == $currentNum-1){
-										if($_COOKIE['rank']!='solved' && $_COOKIE['rank']!='failed' && $_COOKIE['rank']!='skipped' && $_COOKIE['rank']!='timeout'){
-											$_COOKIE['rank']='failed';
+								if($mode==1 && $u['User']['id']!=33){
+									if(isset($_SESSION['loggedInUser']['User']['id'])){
+										if(isset($_COOKIE['preId']) && $_COOKIE['preId']!=0){
+											if(!isset($_COOKIE['seconds']))
+												$cookieSeconds = 0;
+											else
+												$cookieSeconds = $_COOKIE['seconds'];
+											$this->TsumegoAttempt->create();
+											$ur = array();
+											$ur['TsumegoAttempt']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+											$ur['TsumegoAttempt']['elo'] = $_SESSION['loggedInUser']['User']['elo_rating_mode'];
+											$ur['TsumegoAttempt']['tsumego_id'] = $_COOKIE['preId'];
+											$ur['TsumegoAttempt']['gain'] = $_COOKIE['score'];
+											$ur['TsumegoAttempt']['seconds'] = $cookieSeconds;
+											$ur['TsumegoAttempt']['solved'] = '1';
+											$ur['TsumegoAttempt']['mode'] = 1;
+											$ur['TsumegoAttempt']['tsumego_elo'] = $preTsumego['Tsumego']['elo_rating_mode'];
+											$this->TsumegoAttempt->save($ur);
+											$correctSolveAttempt = true;
+											
+											$this->saveDanSolveCondition($solvedTsumegoRank, $preTsumego['Tsumego']['id']);
+											$this->updateGems($solvedTsumegoRank);
+											if($_COOKIE['sprint']==1)
+												$this->updateSprintCondition(true);
+											else
+												$this->updateSprintCondition(false);
+											if($_COOKIE['type']=='g')
+												$this->updateGoldenCondition(true);
+											$aCondition = $this->AchievementCondition->find('first', array('order' => 'value DESC', 'conditions' => array(
+												'user_id' => $_SESSION['loggedInUser']['User']['id'], 'category' => 'err'
+											)));
+											if($aCondition==null) $aCondition = array();
+											$aCondition['AchievementCondition']['category'] = 'err';
+											$aCondition['AchievementCondition']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
+											$aCondition['AchievementCondition']['value']++;
+											$this->AchievementCondition->save($aCondition);
 										}
-										$ranks[$i]['Rank']['result'] = $_COOKIE['rank'];
-										$ranks[$i]['Rank']['seconds'] = $_COOKIE['seconds']/10/$_COOKIE['preId'];
-										$this->Rank->save($ranks[$i]);
+									}
+								}
+								if(isset($_COOKIE['rank']) && $_COOKIE['rank'] != '0'){
+									$ranks = $this->Rank->find('all', array('conditions' =>  array('session' => $_SESSION['loggedInUser']['User']['activeRank'])));
+									$currentNum = $ranks[0]['Rank']['currentNum'];
+									for($i=0; $i<count($ranks); $i++){
+										if($ranks[$i]['Rank']['num'] == $currentNum-1){
+											if($_COOKIE['rank']!='solved' && $_COOKIE['rank']!='failed' && $_COOKIE['rank']!='skipped' && $_COOKIE['rank']!='timeout'){
+												$_COOKIE['rank']='failed';
+											}
+											$ranks[$i]['Rank']['result'] = $_COOKIE['rank'];
+											$ranks[$i]['Rank']['seconds'] = $_COOKIE['seconds']/10/$_COOKIE['preId'];
+											$this->Rank->save($ranks[$i]);
+										}
 									}
 								}
 							}
 						}
 					}
+				}else{
+					$u['User']['penalty'] += 1;
 				}
-			}else{
-				$u['User']['penalty'] += 1;
+				if($mode==1){
+					unset($_COOKIE['score']);
+					unset($_COOKIE['transition']);
+				}
+				unset($_COOKIE['sequence']);
+				unset($_COOKIE['type']);
 			}
-			if($mode==1){
-				unset($_COOKIE['score']);
-				unset($_COOKIE['transition']);
-			}
-			unset($_COOKIE['sequence']);
-			unset($_COOKIE['type']);
-		}
-		if($_COOKIE['score'] != '0' && $_COOKIE['preId'] != '0'){
-			if($utPre==null){
-				$utPre['TsumegoStatus'] = array();
-				$utPre['TsumegoStatus']['user_id'] = $u['User']['id'];
-				$utPre['TsumegoStatus']['tsumego_id'] = $_COOKIE['preId'];
-				$utPre['TsumegoStatus']['status'] = 'V';
-			}
-			$_COOKIE['preTsumegoBuffer'] = $utPre['TsumegoStatus']['status'];
-			if($utPre['TsumegoStatus']['status'] == 'W') $utPre['TsumegoStatus']['status'] = 'C';
-			else $utPre['TsumegoStatus']['status'] = 'S';
-		
-			$utPre['TsumegoStatus']['created'] = date('Y-m-d H:i:s');
-			if(isset($_SESSION['loggedInUser']) && !isset($_SESSION['noLogin'])){
-				if(!isset($utPre['TsumegoStatus']['status'])) 
+			if($_COOKIE['score'] != '0' && $_COOKIE['preId'] != '0'){
+				if($utPre==null){
+					$utPre['TsumegoStatus'] = array();
+					$utPre['TsumegoStatus']['user_id'] = $u['User']['id'];
+					$utPre['TsumegoStatus']['tsumego_id'] = $_COOKIE['preId'];
 					$utPre['TsumegoStatus']['status'] = 'V';
-				$this->TsumegoStatus->save($utPre);
-				$_SESSION['loggedInUser']['uts'][$utPre['TsumegoStatus']['tsumego_id']] = $utPre['TsumegoStatus']['status'];
+				}
+				$_COOKIE['preTsumegoBuffer'] = $utPre['TsumegoStatus']['status'];
+				if($utPre['TsumegoStatus']['status'] == 'W') $utPre['TsumegoStatus']['status'] = 'C';
+				else $utPre['TsumegoStatus']['status'] = 'S';
+			
+				$utPre['TsumegoStatus']['created'] = date('Y-m-d H:i:s');
+				if(isset($_SESSION['loggedInUser']) && !isset($_SESSION['noLogin'])){
+					if(!isset($utPre['TsumegoStatus']['status'])) 
+						$utPre['TsumegoStatus']['status'] = 'V';
+					$this->TsumegoStatus->save($utPre);
+					$_SESSION['loggedInUser']['uts'][$utPre['TsumegoStatus']['tsumego_id']] = $utPre['TsumegoStatus']['status'];
+				}
 			}
-		}
 		}
 
 		if(isset($_COOKIE['noScore']) && isset($_COOKIE['noPreId'])){
@@ -3279,9 +3277,11 @@ class AppController extends Controller{
 				}
 			}
 		}
-
 		}
 		$boardNames = array();
+		$enabledBoards = array();
+		$boardPositions = array();
+
 		$boardNames[1] =  'Pine';
 		$boardNames[2] =  'Ash';
 		$boardNames[3] =  'Maple';
@@ -3305,122 +3305,119 @@ class AppController extends Controller{
 		$boardNames[21] = 'Apex';
 		$boardNames[22] = 'Gold 1';
 		$boardNames[23] = 'Amber';
-		$count = 24;
-		
-		if(isset($_SESSION['loggedInUser']['User']['id'])){
-			if($_SESSION['loggedInUser']['User']['premium']>=1){
-				$boardNames[24] = 'Marble 6';
-				$boardNames[25] = 'Marble 7';
-				$boardNames[26] = 'Marble 8';
-				$boardNames[27] = 'Marble 9';
-				$boardNames[28] = 'Marble 10';
-				$boardNames[29] = 'Jade';
-				$boardNames[30] = 'Quarry 2';
-				$boardNames[31] = 'Black Bricks';
-				$boardNames[32] = 'Wallpaper 1';
-				$boardNames[33] = 'Wallpaper 2';
-				$boardNames[34] = 'Gold & Gray';
-				$boardNames[35] = 'Gold & Pink';
-				$boardNames[36] = 'Veil';
-				$boardNames[37] = 'Tiles';
-				$boardNames[38] = 'Mars';
-				$boardNames[39] = 'Pink Cloud';
-				$boardNames[40] = 'Reptile';
-				$boardNames[41] = 'Mezmerizing';
-				$boardNames[42] = 'Magenta Sky';
-				$boardNames[43] = 'Tsumego Hero';
-				$count = 44;
-				$boardNames[$count] = 'Pretty';
-				$boardNames[$count+1] = 'Hunting';
-				$boardNames[$count+2] = 'Haunted';
-				$boardNames[$count+3] = 'Carnage';
-				$boardNames[$count+4] = 'Blind Spot';
-				$boardNames[$count+5] = 'Giants';
-				$boardNames[$count+6] = 'Gems';
-				$boardNames[$count+7] = 'Grandmaster';
-			}
-		}
-		$enabledBoards = array();
-		$boardPositions = array();
-		if(isset($_SESSION['texture1']) || (isset($_COOKIE['texture1']) && $_COOKIE['texture1']!='0')){
-			if(isset($_COOKIE['texture1']) && $_COOKIE['texture1']!='0'){
-				$textureCookies = array();
-				for($i=1;$i<=54;$i++){
-					$_SESSION['texture'.$i] = $_COOKIE['texture'.$i];
-					array_push($textureCookies, 'texture'.$i);
-				}
+		$boardNames[24] = 'Marble 6';
+		$boardNames[25] = 'Marble 7';
+		$boardNames[26] = 'Marble 8';
+		$boardNames[27] = 'Marble 9';
+		$boardNames[28] = 'Marble 10';
+		$boardNames[29] = 'Jade';
+		$boardNames[30] = 'Quarry 2';
+		$boardNames[31] = 'Black Bricks';
+		$boardNames[32] = 'Wallpaper 1';
+		$boardNames[33] = 'Wallpaper 2';
+		$boardNames[34] = 'Gold & Gray';
+		$boardNames[35] = 'Gold & Pink';
+		$boardNames[36] = 'Veil';
+		$boardNames[37] = 'Tiles';
+		$boardNames[38] = 'Mars';
+		$boardNames[39] = 'Pink Cloud';
+		$boardNames[40] = 'Reptile';
+		$boardNames[41] = 'Mezmerizing';
+		$boardNames[42] = 'Magenta Sky';
+		$boardNames[43] = 'Tsumego Hero';
+		$boardNames[44] = 'Pretty';
+		$boardNames[45] = 'Hunting';
+		$boardNames[46] = 'Haunted';
+		$boardNames[47] = 'Carnage';
+		$boardNames[48] = 'Blind Spot';
+		$boardNames[49] = 'Giants';
+		$boardNames[50] = 'Gems';
+		$boardNames[51] = 'Grandmaster';
+		$boardPositions[1] = array(1,'texture1','black34.png','white34.png');
+		$boardPositions[2] = array(2,'texture2','black34.png','white34.png');
+		$boardPositions[3] = array(3,'texture3','black34.png','white34.png');
+		$boardPositions[4] = array(4,'texture4','black.png','white.png');
+		$boardPositions[5] = array(5,'texture5','black34.png','white34.png');
+		$boardPositions[6] = array(6,'texture6','black.png','white.png');
+		$boardPositions[7] = array(7,'texture7','black34.png','white34.png');
+		$boardPositions[8] = array(8,'texture8','black.png','white.png');
+		$boardPositions[9] = array(9,'texture9','black.png','white.png');
+		$boardPositions[10] = array(10,'texture10','black34.png','white34.png');
+		$boardPositions[11] = array(11,'texture11','black34.png','white34.png');
+		$boardPositions[12] = array(12,'texture12','black34.png','white34.png');
+		$boardPositions[13] = array(13,'texture13','black34.png','white34.png');
+		$boardPositions[14] = array(14,'texture14','black34.png','white34.png');
+		$boardPositions[15] = array(15,'texture15','black.png','white.png');
+		$boardPositions[16] = array(16,'texture16','black34.png','white34.png');
+		$boardPositions[17] = array(17,'texture17','black34.png','white34.png');
+		$boardPositions[18] = array(18,'texture18','black.png','white.png');
+		$boardPositions[19] = array(19,'texture19','black34.png','white34.png');
+		$boardPositions[20] = array(20,'texture20','black34.png','white34.png');
+		$boardPositions[21] = array(33,'texture33','black34.png','white34.png');
+		$boardPositions[22] = array(21,'texture21','black.png','whiteKo.png');
+		$boardPositions[23] = array(22,'texture22','black34.png','white34.png');
+		$boardPositions[24] = array(34,'texture34','black.png','white.png');
+		$boardPositions[25] = array(35,'texture35','black34.png','white34.png');
+		$boardPositions[26] = array(36,'texture36','black.png','white.png');
+		$boardPositions[27] = array(37,'texture37','black34.png','white34.png');
+		$boardPositions[28] = array(38,'texture38','black38.png','white34.png');
+		$boardPositions[29] = array(39,'texture39','black.png','white.png');
+		$boardPositions[30] = array(40,'texture40','black34.png','white34.png');
+		$boardPositions[31] = array(41,'texture41','black34.png','white34.png');
+		$boardPositions[32] = array(42,'texture42','black34.png','white42.png');
+		$boardPositions[33] = array(43,'texture43','black34.png','white42.png');
+		$boardPositions[34] = array(44,'texture44','black34.png','white34.png');
+		$boardPositions[35] = array(45,'texture45','black34.png','white42.png');
+		$boardPositions[36] = array(47,'texture47','black34.png','white34.png');
+		$boardPositions[37] = array(48,'texture48','black34.png','white34.png');
+		$boardPositions[38] = array(49,'texture49','black.png','white.png');
+		$boardPositions[39] = array(50,'texture50','black34.png','white34.png');
+		$boardPositions[40] = array(51,'texture51','black34.png','white34.png');
+		$boardPositions[41] = array(52,'texture52','black34.png','white34.png');
+		$boardPositions[42] = array(53,'texture53','black34.png','white34.png');
+		$boardPositions[43] = array(54,'texture54','black54.png','white54.png');
+		$boardPositions[44] = array(23,'texture23','black.png','whiteFlower.png');
+		$boardPositions[45] = array(24,'texture24','black24.png','white24.png');
+		$boardPositions[46] = array(25,'texture25','blackGhost.png','white.png');
+		$boardPositions[47] = array(26,'texture26','blackInvis.png','whiteCarnage.png');
+		$boardPositions[48] = array(27,'texture27','black27.png','white27.png');
+		$boardPositions[49] = array(28,'texture28','blackGiant.png','whiteKo.png');
+		$boardPositions[50] = array(29,'texture29','blackKo.png','whiteKo.png');
+		$boardPositions[51] = array(30,'texture55','blackGalaxy.png','whiteGalaxy.png');
+
+		$boardCount = 51;
+
+		if(isset($_SESSION['texture']) || (isset($_COOKIE['texture']) && $_COOKIE['texture']!='0')){
+			$splitCookie = null;
+			if(isset($_COOKIE['texture']) && $_COOKIE['texture']!='0'){
+				$splitCookie = str_split($_COOKIE['texture']);
+				$textureCookies = $_COOKIE['texture'];
+				$u['User']['texture'] = $_SESSION['texture'];
+				$_SESSION['texture'] = $_COOKIE['texture'];
 				$this->set('textureCookies', $textureCookies);
-			}
-			for($i=1;$i<=54;$i++){
-				$enabledBoards[$i] = $_SESSION['texture'.$i];
-			}
-			if($u!=null){
-				for($i=1;$i<=54;$i++){
-					if($_SESSION['texture'.$i] == 'checked') $u['User']['texture'.$i] = '1';
-					else $u['User']['texture'.$i] = '0';
-				}
-				$this->User->save($u);
+			}else{
+				if($u!=null)
+					$_SESSION['texture'] = $u['User']['texture'];
+				$textureCookies = $_SESSION['texture'];
+				$splitTextureCookies = str_split($textureCookies);
+				for($i=0;$i<count($splitTextureCookies);$i++)
+					if($splitTextureCookies[$i]==2)
+						$enabledBoards[$i+1] = 'checked';
+					else
+						$enabledBoards[$i+1] = '';
 			}
 			
-			$boardPositions[1] = array(1,'texture1','black34.png','white34.png');
-			$boardPositions[2] = array(2,'texture2','black34.png','white34.png');
-			$boardPositions[3] = array(3,'texture3','black34.png','white34.png');
-			$boardPositions[4] = array(4,'texture4','black.png','white.png');
-			$boardPositions[5] = array(5,'texture5','black34.png','white34.png');
-			$boardPositions[6] = array(6,'texture6','black.png','white.png');
-			$boardPositions[7] = array(7,'texture7','black34.png','white34.png');
-			$boardPositions[8] = array(8,'texture8','black.png','white.png');
-			$boardPositions[9] = array(9,'texture9','black.png','white.png');
-			$boardPositions[10] = array(10,'texture10','black34.png','white34.png');
-			$boardPositions[11] = array(11,'texture11','black34.png','white34.png');
-			$boardPositions[12] = array(12,'texture12','black34.png','white34.png');
-			$boardPositions[13] = array(13,'texture13','black34.png','white34.png');
-			$boardPositions[14] = array(14,'texture14','black34.png','white34.png');
-			$boardPositions[15] = array(15,'texture15','black.png','white.png');
-			$boardPositions[16] = array(16,'texture16','black34.png','white34.png');
-			$boardPositions[17] = array(17,'texture17','black34.png','white34.png');
-			$boardPositions[18] = array(18,'texture18','black.png','white.png');
-			$boardPositions[19] = array(19,'texture19','black34.png','white34.png');
-			$boardPositions[20] = array(20,'texture20','black34.png','white34.png');
-			$boardPositions[21] = array(33,'texture33','black34.png','white34.png');
-			$boardPositions[22] = array(21,'texture21','black.png','whiteKo.png');
-			$boardPositions[23] = array(22,'texture22','black34.png','white34.png');
-			$count = 24;
-			if(isset($_SESSION['loggedInUser'])){
-				if($_SESSION['loggedInUser']['User']['premium']>=1){
-					$boardPositions[24] = array(34,'texture34','black.png','white.png');
-					$boardPositions[25] = array(35,'texture35','black34.png','white34.png');
-					$boardPositions[26] = array(36,'texture36','black.png','white.png');
-					$boardPositions[27] = array(37,'texture37','black34.png','white34.png');
-					$boardPositions[28] = array(38,'texture38','black38.png','white34.png');
-					$boardPositions[29] = array(39,'texture39','black.png','white.png');
-					$boardPositions[30] = array(40,'texture40','black34.png','white34.png');
-					$boardPositions[31] = array(41,'texture41','black34.png','white34.png');
-					$boardPositions[32] = array(42,'texture42','black34.png','white42.png');
-					$boardPositions[33] = array(43,'texture43','black34.png','white42.png');
-					$boardPositions[34] = array(44,'texture44','black34.png','white34.png');
-					$boardPositions[35] = array(45,'texture45','black34.png','white42.png');
-					
-					$boardPositions[36] = array(47,'texture47','black34.png','white34.png');
-					$boardPositions[37] = array(48,'texture48','black34.png','white34.png');
-					$boardPositions[38] = array(49,'texture49','black.png','white.png');
-					$boardPositions[39] = array(50,'texture50','black34.png','white34.png');
-					$boardPositions[40] = array(51,'texture51','black34.png','white34.png');
-					$boardPositions[41] = array(52,'texture52','black34.png','white34.png');
-					$boardPositions[42] = array(53,'texture53','black34.png','white34.png');
-					$boardPositions[43] = array(54,'texture54','black54.png','white54.png');
-					$count = 44;
-					$boardPositions[$count] = array(23,'texture23','black.png','whiteFlower.png');
-					$boardPositions[$count+1] = array(24,'texture24','black24.png','white24.png');
-					$boardPositions[$count+2] = array(25,'texture25','blackGhost.png','white.png');
-					$boardPositions[$count+3] = array(26,'texture26','blackInvis.png','whiteCarnage.png');
-					$boardPositions[$count+4] = array(27,'texture27','black27.png','white27.png');
-					$boardPositions[$count+5] = array(28,'texture28','blackGiant.png','whiteKo.png');
-					$boardPositions[$count+6] = array(29,'texture29','blackKo.png','whiteKo.png');
-					$boardPositions[$count+7] = array(30,'texture55','blackGalaxy.png','whiteGalaxy.png');
-				}
-			}
-		}else{
+			for($i=0;$i<count($splitCookie);$i++)
+				if($splitCookie[$i]==2)
+					$enabledBoards[$i+1] = 'checked';
+				else
+					$enabledBoards[$i+1] = '';
+			if($u!=null)
+				$this->User->save($u);
+		}
+		
+		if(!isset($_SESSION['texture'])){
+			$_SESSION['texture'] = '222222221111111111111111111111111111111111111111111';
 			$enabledBoards[1] = 'checked';
 			$enabledBoards[2] = 'checked';
 			$enabledBoards[3] = 'checked';
@@ -3444,30 +3441,34 @@ class AppController extends Controller{
 			$enabledBoards[21] = '';
 			$enabledBoards[22] = '';
 			$enabledBoards[23] = '';
-
-			$boardPositions[1] = array(1,'texture1','black34.png','white34.png');
-			$boardPositions[2] = array(2,'texture2','black34.png','white34.png');
-			$boardPositions[3] = array(3,'texture3','black34.png','white34.png');
-			$boardPositions[4] = array(4,'texture4','black.png','white.png');
-			$boardPositions[5] = array(5,'texture5','black34.png','white34.png');
-			$boardPositions[6] = array(6,'texture6','black.png','white.png');
-			$boardPositions[7] = array(7,'texture7','black34.png','white34.png');
-			$boardPositions[8] = array(8,'texture8','black.png','white.png');
-			$boardPositions[9] = array(9,'texture9','black.png','white.png');
-			$boardPositions[10] = array(10,'texture10','black34.png','white34.png');
-			$boardPositions[11] = array(11,'texture11','black34.png','white34.png');
-			$boardPositions[12] = array(12,'texture12','black34.png','white34.png');
-			$boardPositions[13] = array(13,'texture13','black34.png','white34.png');
-			$boardPositions[14] = array(14,'texture14','black34.png','white34.png');
-			$boardPositions[15] = array(15,'texture15','black.png','white.png');
-			$boardPositions[16] = array(16,'texture16','black34.png','white34.png');
-			$boardPositions[17] = array(17,'texture17','black34.png','white34.png');
-			$boardPositions[18] = array(18,'texture18','black.png','white.png');
-			$boardPositions[19] = array(19,'texture19','black34.png','white34.png');
-			$boardPositions[20] = array(20,'texture20','black34.png','white34.png');
-			$boardPositions[21] = array(33,'texture33','black34.png','white34.png');
-			$boardPositions[22] = array(21,'texture21','black.png','whiteKo.png');
-			$boardPositions[23] = array(22,'texture22','black34.png','white34.png');
+			$enabledBoards[24] = '';
+			$enabledBoards[25] = '';
+			$enabledBoards[26] = '';
+			$enabledBoards[27] = '';
+			$enabledBoards[28] = '';
+			$enabledBoards[29] = '';
+			$enabledBoards[30] = '';
+			$enabledBoards[31] = '';
+			$enabledBoards[32] = '';
+			$enabledBoards[33] = '';
+			$enabledBoards[34] = '';
+			$enabledBoards[35] = '';
+			$enabledBoards[36] = '';
+			$enabledBoards[37] = '';
+			$enabledBoards[38] = '';
+			$enabledBoards[39] = '';
+			$enabledBoards[40] = '';
+			$enabledBoards[41] = '';
+			$enabledBoards[42] = '';
+			$enabledBoards[43] = '';
+			$enabledBoards[44] = '';
+			$enabledBoards[45] = '';
+			$enabledBoards[46] = '';
+			$enabledBoards[47] = '';
+			$enabledBoards[48] = '';
+			$enabledBoards[49] = '';
+			$enabledBoards[50] = '';
+			$enabledBoards[51] = '';
 		}
 		$achievementUpdate = array();
 		if(isset($_SESSION['initialLoading'])){
@@ -3485,6 +3486,8 @@ class AppController extends Controller{
 		
 		$nextDay = new DateTime('tomorrow');
 		$u['User']['name'] = $this->checkPicture($u);
+
+		//echo '<pre>'; print_r($enabledBoards); echo '</pre>';
 
 		$this->set('user', $u);
 		$this->set('mode', $mode);
@@ -3514,10 +3517,6 @@ class AppController extends Controller{
 				$_SESSION['loggedInUser']['User']['mode'] = 1;
 			}
 		}
-		unset($_COOKIE['sortColor']);
-		unset($_COOKIE['sortColor']);
-		unset($_COOKIE['sortOrder']);
-		unset($_COOKIE['sortOrder']);
 	}
 	
 }

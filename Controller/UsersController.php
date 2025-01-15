@@ -1935,11 +1935,11 @@ Joschka Zimdars';
 			$au = $this->User->findById($tags[$i]['Tag']['user_id']);
 			$tags[$i]['Tag']['name'] = $tKeys[$tags[$i]['Tag']['tag_name_id']];
 			$tags[$i]['Tag']['tsumego'] = $as['Set']['title'].' - '.$at['Tsumego']['num'];
-			$tags[$i]['Tag']['user'] = $au['User']['name'];
+			$tags[$i]['Tag']['user'] = $this->checkPicture($au);
 		}
 		for($i=0; $i<count($tagNames); $i++){
 			$au = $this->User->findById($tagNames[$i]['TagName']['user_id']);
-			$tagNames[$i]['TagName']['user'] = $au['User']['name'];
+			$tagNames[$i]['TagName']['user'] = $this->checkPicture($au);
 		}
 
 		$approveSgfs = $this->Sgf->find('all', array('conditions' => array('version' => 0)));
@@ -1954,7 +1954,7 @@ Joschka Zimdars';
 			$as = $this->Set->find('first', array('conditions' => array('id' => $scT['SetConnection']['set_id'])));
 			$au = $this->User->findById($approveSgfs[$i]['Sgf']['user_id']);
 			$approveSgfs[$i]['Sgf']['tsumego'] = $as['Set']['title'].' - '.$at['Tsumego']['num'];
-			$approveSgfs[$i]['Sgf']['user'] = $au['User']['name'];
+			$approveSgfs[$i]['Sgf']['user'] = $this->checkPicture($au);
 		}
 		$uts = $this->TsumegoStatus->find('all', array('conditions' =>  array(
 			'user_id' => $_SESSION['loggedInUser']['User']['id'],

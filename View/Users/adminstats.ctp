@@ -37,6 +37,8 @@
 					<a href="/tsumegos/open/'.$approveSgfs[$i]['Sgf']['tsumego_id'].'/'.$approveSgfs[$i]['Sgf']['id'].'">proposal</a> | 
 					<a href="/tsumegos/open/'.$approveSgfs[$i]['Sgf']['tsumego_id'].'/'.$approveSgfs[$i]['Sgf']['id'].'/'.$latestVersionTsumegos[$i]['Sgf']['id'].'">diff</a>
 					</td>';
+					if($sgfTsumegos[$i]['Tsumego']['status']=='')
+						$sgfTsumegos[$i]['Tsumego']['status'] = 'N';
 					echo '<td><li class="set'.$sgfTsumegos[$i]['Tsumego']['status'].'1">
 						<a id="tooltip-hover999'.$i.'" class="tooltip" href="/tsumegos/play/'.$sgfTsumegos[$i]['Tsumego']['id'].'?search=topics">'.$sgfTsumegos[$i]['Tsumego']['num'].'
 						<span><div id="tooltipSvg999'.$i.'"></div></span></a>
@@ -86,6 +88,8 @@
 					echo '<td>'.$i.'</td><td class="adminpanel-table-text">'.$tags[$i]['Tag']['user'].' added a tag for <a class="adminpanel-link" href="/tsumegos/play/'
 					.$tags[$i]['Tag']['tsumego_id'].'?search=topics">'.$tags[$i]['Tag']['tsumego'].'</a>: <a class="adminpanel-link" href="/tag_names/view/'
 					.$tags[$i]['Tag']['tag_name_id'].'">'.$tags[$i]['Tag']['name'].'</a></td>';
+					if($tagTsumegos[$i]['Tsumego']['status']=='')
+						$tagTsumegos[$i]['Tsumego']['status'] = 'N';
 					echo '<td><li class="set'.$tagTsumegos[$i]['Tsumego']['status'].'1">
 						<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$tagTsumegos[$i]['Tsumego']['id'].'?search=topics">'.$tagTsumegos[$i]['Tsumego']['num'].'
 						<span><div id="tooltipSvg'.$i.'"></div></span></a>
