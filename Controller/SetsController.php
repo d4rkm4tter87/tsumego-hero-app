@@ -858,7 +858,7 @@ class SetsController extends AppController{
 		$this->LoadModel('User');
 		$this->LoadModel('UserContribution');
 
-		if($id != 1)
+		if($id != '1')
 			$_SESSION['page'] = 'set';
 		else
 			$_SESSION['page'] = 'favs';
@@ -941,7 +941,7 @@ class SetsController extends AppController{
 			if($this->params['url']['show']=='order') $josekiOrder = 1;
 			if($this->params['url']['show']=='num') $josekiOrder = 0;
 		}
-		if($id!=1){
+		if($id!='1'){
 			if(is_numeric($id)){
 				$viewType = 'topics';
 			}else{
@@ -1170,13 +1170,6 @@ class SetsController extends AppController{
 					array_push($currentIds, $ts[$i]['Tsumego']['id']);
 					array_push($ts1, $ts[$i]);
 				}
-
-				/*echo '<pre>'; print_r($currentIds); echo '</pre>';
-				for($i=0;$i<count($currentIds);$i++){
-					$dsfgdfgfdg = $this->Tsumego->findById($currentIds[$i]);
-					echo '<pre>'; print_r($dsfgdfgfdg['Tsumego']['num'].' '.$dsfgdfgfdg['Tsumego']['id'].' '.$dsfgdfgfdg['Tsumego']['set_id'].' '.$i); echo '</pre>';
-				}*/
-
 				$difficultyAndSolved = $this->getDifficultyAndSolved($currentIds, $utsMap);
 				$ts = $ts1;
 				

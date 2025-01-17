@@ -1409,7 +1409,6 @@
 		var secondsx = setInterval(incrementSeconds, 100);
 	<?php } ?>
 	$(".adminCommentPanel").hide();
-	$(".modify-description-panel").hide();
 	$(".tsumegoNavi-middle2").hide();
 	$(".tsumegoNavi-middle2").hide();
 	$(".reviewNavi").hide();
@@ -2086,7 +2085,6 @@
 		});
 
 		if(!showCommentSpace) $("#commentSpace").hide();
-		$("#msg2").hide();
 		$("#show").click(function(){
 			if(!msg2selected){
 				$("#msg2").fadeIn(250);
@@ -2119,7 +2117,7 @@
 			}
 			msg3selected = !msg3selected;
 		});
-		$("#msg4").hide();
+		
 		$("#show4").click(function(){
 			if(!msg4selected){
 				$("#msg4").fadeIn(250);
@@ -2130,7 +2128,7 @@
 			}
 			msg4selected = !msg4selected;
 		});
-		$("#msg5").hide();
+		
 		<?php
 			if(isset($_SESSION['loggedInUser']['User']['id'])){
 				//if($_SESSION['loggedInUser']['User']['id']==72) echo '$("#msg5").show();';

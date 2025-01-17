@@ -43,7 +43,7 @@ As the Adobe Flash Player was in 2017 already an outdated technology, I had to s
 In 2023, the website took a big step forward in terms of quality, content and features. This was made possible by <b>Michal Kovářík</b>, 
 who financially supports the website. He was also part of the development in many updates and he creates new problems. 
 <b>Michal Kovářík</b> is known for being the director and lead developer of the game <a href="https://www.factorio.com/" target="_blank">Factorio</a>,
-which is a very popular construction and management simulation game. 
+which is a very popular factory game. 
 <br><br>
 
 

@@ -977,6 +977,11 @@ li a.menuLi {
   top: 10px;
   left: 57px;
 }
+#msg2,
+#msg4,
+#msg5 {
+  display: none;
+}
 #msg2x {
   margin: 2px 14px;
   position: relative;
@@ -3963,6 +3968,9 @@ pre {
     rgb(69.412% 69.412% 69.412%) 100%
   );
   border: 1px solid black;
+}
+.modify-description-panel {
+  display: none;
 }
 #plus2 {
   display: none;
