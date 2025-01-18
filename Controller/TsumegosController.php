@@ -614,8 +614,9 @@ class TsumegosController extends AppController{
 			}else{
 				if($this->data['Comment']['user_id']!=33){
 					$this->Comment->create();
-					if($this->checkCommentValid($_SESSION['loggedInUser']['User']['id']))
+					if($this->checkCommentValid($_SESSION['loggedInUser']['User']['id'])){
 						$this->Comment->save($this->data, true);
+					}
 				}
 			}
 			$this->set('formRedirect', true);
@@ -2941,7 +2942,7 @@ class TsumegosController extends AppController{
 			if($d == date('Y-m-d'))
 				$limitReachedCounter++;
 		}
-		if($limitReachedCounter>=5) return false;
+		if($limitReachedCounter>=50) return false;
 		return true;
 	}
 	

@@ -195,7 +195,7 @@
 		</tr>
 		<tr>
 			<td>Achievements:</td>
-			<td><?php echo $aNum.'/114'; ?></td>
+			<td><?php echo $aNum.'/'.count($aCount); ?></td>
 		</tr>
 		</table>
 		</div>

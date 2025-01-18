@@ -69,7 +69,7 @@
 			<br>
 			<?php
 				if(isset($_SESSION['loggedInUser']['User']['id'])){
-					echo 'You completed '.$unlockedCounter.' of '.count($a).' achievements.';
+					echo 'You completed '.($unlockedCounter+$unlockedCounter2).' of '.count($a).' achievements.';
 				}
 			?>
 			<br>

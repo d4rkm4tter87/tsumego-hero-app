@@ -6,6 +6,7 @@ class AchievementsController extends AppController {
 		$_SESSION['title'] = 'Tsumego Hero - Achievements';
 		$this->LoadModel('AchievementStatus');
 		$existingAs = array();
+		$unlockedCounter2 = 0;
 		
 		$a = $this->Achievement->find('all', array('order' => 'order ASC'));
 		
@@ -20,8 +21,10 @@ class AchievementsController extends AppController {
 			$a[$i]['Achievement']['unlocked'] = false;
 			$a[$i]['Achievement']['created'] = '';
 			if(isset($existingAs[$a[$i]['Achievement']['id']])){
-				if($a[$i]['Achievement']['id']==46)
+				if($a[$i]['Achievement']['id']==46){
 					$a[$i]['Achievement']['a46value'] = $existingAs[$a[$i]['Achievement']['id']]['AchievementStatus']['value'];
+					$unlockedCounter2 = $existingAs[$a[$i]['Achievement']['id']]['AchievementStatus']['value'] - 1;
+				}
 				$a[$i]['Achievement']['unlocked'] = true;
 				$a[$i]['Achievement']['created'] = $existingAs[$a[$i]['Achievement']['id']]['AchievementStatus']['created'];
 				$date=date_create($a[$i]['Achievement']['created']);
@@ -29,7 +32,8 @@ class AchievementsController extends AppController {
 			}
 		}
 		$this->set('a', $a);
-    }
+		$this->set('unlockedCounter2', $unlockedCounter2);
+  }
 	
 	public function view($id=null){
 		$_SESSION['page'] = 'user';

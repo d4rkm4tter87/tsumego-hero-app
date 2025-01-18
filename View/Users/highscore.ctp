@@ -36,7 +36,7 @@
 		<th width="220px" colspan="2" align="left">&nbsp;Name</th>
 		<th width="150px">Level</th>
 		<th width="150px">XP</th>
-		<th width="150px" align="left">Solved</th>
+		<th width="90px" align="left">Solved</th>
 	</tr>
 	<?php
 		$statsLink1 = '';
@@ -71,10 +71,9 @@
 			else if($i>199) $tableRowColor = 'color11';
 			else if($i>99) $tableRowColor = 'color12x';
 			else $tableRowColor = 'color13';
+
 			echo '
 				<tr class="'.$tableRowColor.'">
-					<!--<td align="center"></td>-->
-					
 					<td align="center">
 						#'.$place.'
 					</td>

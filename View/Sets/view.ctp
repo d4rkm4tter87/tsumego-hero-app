@@ -30,7 +30,7 @@
 		</div>
 		<div class="set-view-main">
 		<?php
-		if($set['Set']['id']!=1) $fav = '';
+		if($set['Set']['id']!='1') $fav = '';
 		else $fav = '?favorite=1';
 		if($set['Set']['id']!=58 && $set['Set']['id']!=62 && $set['Set']['id']!=91 && $set['Set']['id']!=72 && $set['Set']['id']!=73 && $set['Set']['id']!=74 
 		&& $set['Set']['id']!=75 && $set['Set']['id']!=76 && $set['Set']['id']!=77 && $set['Set']['id']!=78 && $set['Set']['id']!=79 && $set['Set']['id']!=80

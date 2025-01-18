@@ -962,6 +962,7 @@ Joschka Zimdars';
 		$aNum = count($this->Achievement->find('all'));
 		$as = $this->AchievementStatus->find('all');
 		$as2 = array();
+
 		for($i=0; $i<count($as); $i++){
 			if($as[$i]['AchievementStatus']['achievement_id']!=46){
 				array_push($as2, $as[$i]['AchievementStatus']['user_id']);
@@ -988,7 +989,7 @@ Joschka Zimdars';
 		$toJson['uaNum'] = $uaNum;
 		$toJson['uaId'] = $uaId;
 		$toJson['aNum'] = $aNum;
-
+	
 		file_put_contents('json/achievement_highscore.json', json_encode($toJson));
 	}
 
@@ -2682,6 +2683,10 @@ Joschka Zimdars';
 		
 		if(count($achievementUpdate)>0) $this->updateXP($_SESSION['loggedInUser']['User']['id'], $achievementUpdate);
 		$aNum = $this->AchievementStatus->find('all', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+		$asx = $this->AchievementStatus->find('first', array('conditions' => array('user_id' => $id, 'achievement_id' => 46)));
+		$aNumx = count($aNum);
+		if($asx!=null)
+			$aNumx = $aNumx + $asx['AchievementStatus']['value'] - 1;
 		
 		$countGraph = 160+count($graph)*25;
 		$countTimeGraph = 160+count($timeGraph)*25;
@@ -2690,6 +2695,8 @@ Joschka Zimdars';
 
 		if(substr($_SESSION['loggedInUser']['User']['email'],0,3)=='g__' && $_SESSION['loggedInUser']['User']['external_id']!=null)
 			$user['User']['email'] = substr($_SESSION['loggedInUser']['User']['email'],3);
+
+		$aCount = $this->Achievement->find('all');
 
 		$this->set('ta2', $ta2);
 		$this->set('xpSum', $sumx);
@@ -2713,7 +2720,8 @@ Joschka Zimdars';
 		$this->set('highestEloRank', $highestEloRank);
 		$this->set('eloRank', $eloRank);
 		$this->set('highestRo', $highestRo);
-		$this->set('aNum', count($aNum));
+		$this->set('aNum', $aNumx);
+		$this->set('aCount', $aCount);
 	}
 	
 	private function formatTimegraph($graph){
