@@ -3311,6 +3311,11 @@
 	</script>
 	<?php } ?>
 	<style>
+		#msg2,
+		#msg4,
+		#msg5 {
+			display: none;
+		}
 		.besogo-panels{display: none;flex-basis: 50%;}
 		#msgFilters{
 			display:inline-block;

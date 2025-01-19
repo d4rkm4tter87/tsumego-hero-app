@@ -2921,9 +2921,11 @@ class AppController extends Controller{
 			unset($_SESSION['loggedInUser']);
 		$u = null;
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
-			$u =  $this->User->findById($_SESSION['loggedInUser']['User']['id']);
-			if(!isset($_SESSION['loggedInUser']['uts']) || date('Y-m-d')!=$_SESSION['loggedInUser']['_utsDate'])/////////////////////////////////
+			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
+
+			if(!isset($_SESSION['loggedInUser']['uts']) || date('Y-m-d')!=$_SESSION['loggedInUser']['_utsDate'])
 				$this->storeUts($_SESSION['loggedInUser']['User']['id']);
+
 			if(isset($_COOKIE['addTag']) && $_COOKIE['addTag'] != 0 && $_SESSION['page']!='set'){
 				$newAddTag = explode("-", $_COOKIE['addTag']);
 				$tagId = $newAddTag[0];
@@ -3025,10 +3027,18 @@ class AppController extends Controller{
 		}
 		
 		if(isset($_COOKIE['preId']) && $_COOKIE['preId'] != '0'){
+			if(isset($_SESSION['loggedInUser']['User']['id'])){
+				$utsx = $this->TsumegoStatus->find('all', array('order' => 'created DESC', 'conditions' => array(
+					'user_id' => $_SESSION['loggedInUser']['User']['id'], 'tsumego_id' => $_COOKIE['preId']
+				)));
+				if(count($utsx) > 1)
+					for($i=1;$i<count($utsx);$i++)
+						$this->TsumegoStatus->delete($utsx[$i]['TsumegoStatus']['id']);
+			}
 			$preTsumego = $this->Tsumego->findById($_COOKIE['preId']);
 			$preSc = $this->SetConnection->find('all', array('conditions' => array('tsumego_id' => $_COOKIE['preId'])));
 			$preTsumego['Tsumego']['set_id'] = $preSc[0]['SetConnection']['set_id'];
-			$utPre = $this->TsumegoStatus->find('first', array('conditions' => array('tsumego_id' => $_COOKIE['preId'], 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
+			$utPre = $this->TsumegoStatus->find('first', array('order' => 'created DESC', 'conditions' => array('tsumego_id' => $_COOKIE['preId'], 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
 		}
 		if($_COOKIE['sprint']!=1)
 			$this->updateSprintCondition(false);
@@ -3236,6 +3246,7 @@ class AppController extends Controller{
 				unset($_COOKIE['type']);
 			}
 			if($_COOKIE['score'] != '0' && $_COOKIE['preId'] != '0'){
+				
 				if($utPre==null){
 					$utPre['TsumegoStatus'] = array();
 					$utPre['TsumegoStatus']['user_id'] = $u['User']['id'];

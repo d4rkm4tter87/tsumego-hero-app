@@ -20,3 +20,10 @@
 	
 	if($redirect) echo '<script type="text/javascript">window.location.href = "/sets/view/'.$id.'";</script>';
 	?>
+	<style>
+		#msg2,
+#msg4,
+#msg5 {
+  display: inline-block;
+}
+	</style>

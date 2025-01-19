@@ -384,7 +384,10 @@ class TsumegosController extends AppController{
 		
 		$t = $this->Tsumego->findById($id);//the tsumego
 		$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
-		
+
+		if($t['Tsumego']['elo_rating_mode'] < 1000)
+			$t = $this->checkEloAdjust($t);
+
 		$activityValue = $this->getActivityValue($_SESSION['loggedInUser']['User']['id'], $t['Tsumego']['id']);
 		$eloDifference = abs($_SESSION['loggedInUser']['User']['elo_rating_mode'] - $t['Tsumego']['elo_rating_mode']);
 		
@@ -2933,6 +2936,38 @@ class TsumegosController extends AppController{
 		return $t[$num];
 	}
 	
+	private function checkEloAdjust($t){
+		$ta = $this->TsumegoAttempt->find('all', array('limit' => 10, 'order' => 'created DESC', 'conditions' => array(
+			'tsumego_id' => $t['Tsumego']['id'],
+			'NOT' => array(
+				'tsumego_elo' => 0
+			)
+		)));
+		$taPre = 3000;
+		$jumpBack = $ta[0]['TsumegoAttempt']['tsumego_elo'];
+		$jumpBackAmount = 0;
+		$jumpI = 99;
+		for($i=0;$i<count($ta);$i++){
+			$taPreSum = $ta[$i]['TsumegoAttempt']['tsumego_elo'] - $taPre;
+			$taPre = $ta[$i]['TsumegoAttempt']['tsumego_elo'];
+			if($taPreSum > 500){
+				$jumpBack = $taPre;
+				$jumpBackAmount = $taPreSum;
+				$jumpI = $i;
+			}
+		}
+
+		if($jumpBackAmount!=0){
+			for($i=0;$i<count($ta);$i++){
+				if($i<$jumpI)
+					$this->TsumegoAttempt->delete($ta[$i]['TsumegoAttempt']['id']);
+				if($i==$jumpI)
+					$t['Tsumego']['elo_rating_mode'] = $ta[$i]['TsumegoAttempt']['tsumego_elo'];
+			}
+		}
+		return $t;
+	}
+
 	private function checkCommentValid($uid){
 		$comments = $this->Comment->find('all', array('limit' => 5, 'order' => 'created DESC', 'conditions' => array('user_id' => $uid)));
 		$limitReachedCounter = 0;
