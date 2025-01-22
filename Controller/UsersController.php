@@ -23,12 +23,38 @@ class UsersController extends AppController{
 		$this->loadModel('PublishDate');
 		$this->loadModel('TagName');
 	
-		$ts = $this->Tsumego->find('all', array('limit' => 100, 'order' => 'elo_rating_mode', 'conditions' => array('public' => 1)));
-		for($i=0; $i<count($ts); $i++){
-			echo '<pre>'; print_r('<a href="/tsumegos/play/'.$ts[$i]['Tsumego']['id'].'">'.$ts[$i]['Tsumego']['id'].'</a> '.$ts[$i]['Tsumego']['elo_rating_mode']); echo '</pre>';
+		/*
+		$setFrom = 241;
+		$setTo = 248;
+		$step = 5;
+		$endDay = 4;
+		
+		$numFrom = 51;
+		$numTo = 55;
+		$day = 1;
+		
+		while($day <= $endDay){
+			$sc = $this->SetConnection->find('all', array('order' => 'num ASC', 'conditions' => array(
+				'set_id' => $setFrom,
+				'num >=' => $numFrom,
+				'num <=' => $numTo
+			)));
+			for($i=0; $i<count($sc); $i++){
+				$s = array();
+				$s['Schedule']['published'] = '0';
+				$s['Schedule']['date'] = '2025-02-0'.$day;
+				$s['Schedule']['set_id'] = $setTo;
+				$s['Schedule']['tsumego_id'] = $sc[$i]['SetConnection']['tsumego_id'];
+				$this->Schedule->create();
+				$this->Schedule->save($s);
+			}
+			echo '<pre>'; print_r($day); echo '</pre>';
+			
+			$numFrom += $step;
+			$numTo += $step;
+			$day += 1;
 		}
 
-		/*
 		$t = $this->Tsumego->find('all', array('conditions' => array(
 			'set_id' => 210,
 			'num <=' => 20

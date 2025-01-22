@@ -1044,8 +1044,7 @@ besogo.makeToolPanel = function (container, editor) {
         editor.edited = true;
       }
     );
-
-    makeSaveForm();
+    if (besogo.isEmbedded) makeSaveForm();
   }
 
   function makeEditorToolButtons2(container, editor) {

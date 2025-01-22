@@ -97,18 +97,27 @@
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
+		<p class="title4">New Collection: Segoe Tesuji Dictionary | 22.01.2025</p>
+		<div class="new1">	
+		Segoe Tesuji Dictionary is a three volume tesuji problem book-set, written by Segoe Kensaku and Go Seigen. 
+		It is divided into sections according to the kind of move needed for the tesuji (e.g., tsuke or geta).<br><br>
+		<div align="center"><img width="95%" src="/img/segoe1-promo.png" alt="New Collection: Segoe Tesuji Dictionary" title="New Collection: Segoe Tesuji Dictionary">
+		
+		<a class="new-button main-page" style="font-size:14px;" href="/sets/view/248">Play</a><br><br></div>
+		</div>
+
 		<p class="title4">New Collection: Attack Hero | 30.12.2024</p>
 		<div class="new1">	
-		In the game of Go, attacks can be used to get an advantage on the board. When attacking a group, killing is not the first objective. 
-		Instead of that a group can be attacked to gain influence, gain territory, stabilize their own group, create thickness or many other reasons. 
-		This collection teaches the best ways to attack groups to get an advantage on the board.<br><br>
-		<div align="center"><img width="60%" src="/img/attack-hero-promo.png" alt="New Collection: Attack Hero" title="New Collection: Attack Hero"><br><br>
-		<?php if($hasPremium){ ?>
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/246">Play</a><br><br>
-		<?php }else{ ?>
-			<a class="new-button-inactive main-page" style="font-size:14px;">Play</a><br><br>
-		<?php } ?>
-		</div>
+			In the game of Go, attacks can be used to get an advantage on the board. When attacking a group, killing is not the first objective. 
+			Instead of that a group can be attacked to gain influence, gain territory, stabilize their own group, create thickness or many other reasons. 
+			This collection teaches the best ways to attack groups to get an advantage on the board.<br><br>
+			<div align="center"><img width="60%" src="/img/attack-hero-promo.png" alt="New Collection: Attack Hero" title="New Collection: Attack Hero"><br><br>
+				<?php if($hasPremium){ ?>
+					<a class="new-button main-page" style="font-size:14px;" href="/sets/view/246">Play</a><br><br>
+				<?php }else{ ?>
+					<a class="new-button-inactive main-page" style="font-size:14px;">Play</a><br><br>
+				<?php } ?>
+			</div>
 		</div>
 		<p class="title4">New Collection: Igo Hatsuyoron | 13.12.2024</p>
 		<div class="new1">	
