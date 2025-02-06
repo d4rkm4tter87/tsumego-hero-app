@@ -410,21 +410,25 @@ class SetsController extends AppController{
 				array_push($json2amount, $json[$i]->num);
 			}
 		for($i=0; $i<count($json2); $i++)
-			if($json2amount[$i]>=100)
+			//if($json2amount[$i]>=100)
+			if(true)
 				array_push($group100, $json2[$i]);
 			else if($json2amount[$i]>=10)
 				array_push($group10, $json2[$i]);
 			else
 				array_push($group1, $json2[$i]);
+			
 		array_multisort($group100);
 		array_multisort($group10);
 		array_multisort($group1);
 		for($i=0; $i<count($group100); $i++)
 			array_push($hybrid, $group100[$i]);
+		/*	
 		for($i=0; $i<count($group10); $i++)
 			array_push($hybrid, $group10[$i]);
 		for($i=0; $i<count($group1); $i++)
 			array_push($hybrid, $group1[$i]);
+		*/
 		$json2 = $hybrid;
 		for($i=0; $i<count($json2); $i++){
 			$json3 = $this->TagName->findByName($json2[$i]);
@@ -1862,7 +1866,17 @@ class SetsController extends AppController{
 				file_put_contents('download_archive/'.$title.'/'.$t[$i]['Tsumego']['title'].'.sgf', $t[$i]['Tsumego']['sgf']);
 			}
 		}
+		$text = file_get_contents('download_archive.txt');
 		
+		$sAll = $this->Set->find('all', array('order' => 'id ASC', 'conditions' => array(
+			'OR' => array(
+				array('public' => 1),
+				array('public' => 0)
+			)
+		)));
+
+		$this->set('s', $sAll);
+		$this->set('text', $text);
 		$this->set('title', $title);
 		$this->set('t', $t);
 	}

@@ -1400,8 +1400,9 @@ class TsumegosController extends AppController{
 		if(isset($_COOKIE['doublexp']) && $_COOKIE['doublexp'] != '0'){
 			if($u['User']['usedSprint']==0){
 				$doublexp = $_COOKIE['doublexp'];
+			}else{
+				unset($_COOKIE['doublexp']);
 			}
-			unset($_COOKIE['doublexp']);
 		}
 		if(isset($_COOKIE['sprint']) && $_COOKIE['sprint'] != '0'){
 			$u['User']['sprint'] = 0;
@@ -2453,11 +2454,28 @@ class TsumegosController extends AppController{
 		
 		$sgfProposal = $this->Sgf->find('first', array('conditions' => array('tsumego_id' => $id, 'version' => 0, 'user_id' => $_SESSION['loggedInUser']['User']['id'])));
 		$isAllowedToContribute = false;
+		$isAllowedToContribute2 = false;
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			if($_SESSION['loggedInUser']['User']['level'] >= 40)
 				$isAllowedToContribute = true;
 			else if($_SESSION['loggedInUser']['User']['elo_rating_mode'] >= 1500)
 				$isAllowedToContribute = true;
+			
+			if($_SESSION['loggedInUser']['User']['isAdmin']>0){
+				$isAllowedToContribute2 = true;
+			}else{
+				$tagsToCheck = $this->Tag->find('all', array('limit' => 20,'order' => 'created DESC', 'conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
+				$datex = date('Y-m-d', strtotime('today'));
+				for($i=0; $i<count($tagsToCheck); $i++){
+					$datexx = new DateTime($tagsToCheck[$i]['Tag']['created']);
+					$datexx = $datexx->format('Y-m-d');
+					if($datex!==$datexx){
+						$isAllowedToContribute2 = true;
+					}
+				}
+				if(count($tagsToCheck)<20)
+					$isAllowedToContribute2 = true;
+			}
 		}
 		if(in_array($t['Tsumego']['set_id'], $setsWithPremium))
 			$t['Tsumego']['premium'] = 1;
@@ -2476,6 +2494,7 @@ class TsumegosController extends AppController{
 		$isTSUMEGOinFAVORITE = $this->Favorite->find('first', array('conditions' => array('user_id' => $u['User']['id'], 'tsumego_id' => $id)));
 
 		$this->set('isAllowedToContribute', $isAllowedToContribute);
+		$this->set('isAllowedToContribute2', $isAllowedToContribute2);
 		$this->set('hasSgfProposal', $sgfProposal!=null);
 		$this->set('hasRevelation', $hasRevelation);
 		$this->set('allTags', $allTags);

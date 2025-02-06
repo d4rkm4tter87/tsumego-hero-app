@@ -1044,7 +1044,7 @@ besogo.makeToolPanel = function (container, editor) {
         editor.edited = true;
       }
     );
-    if (besogo.isEmbedded) makeSaveForm();
+    makeSaveForm();
   }
 
   function makeEditorToolButtons2(container, editor) {
@@ -1278,11 +1278,13 @@ besogo.makeToolPanel = function (container, editor) {
     formNode.id = "sgfForm";
     formNode.method = "post";
     formNode.style.display = "none";
-    formNode.action =
-      "/tsumegos/play/" +
-      besogo.onSite[1] / 1337 +
-      "?requestProblem=" +
-      besogo.onSite[1];
+    if (besogo.onSite !== null) {
+      formNode.action =
+        "/tsumegos/play/" +
+        besogo.onSite[1] / 1337 +
+        "?requestProblem=" +
+        besogo.onSite[1];
+    }
     const inputNode = document.createElement("input");
     inputNode.id = "sgfInput";
     inputNode.type = "text";

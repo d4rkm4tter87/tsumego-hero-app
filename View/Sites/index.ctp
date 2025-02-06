@@ -1,29 +1,11 @@
-<?php 
-	$donations = array();
-	$donations[0]['date'] = '12.10.2024';
-	$donations[0]['user'] = 'Timurlan ';
-	$donations[0]['amount'] = '10,00 €';
 
-	$donations[1]['date'] = '10.10.2024';
-	$donations[1]['user'] = 'Arjan ';
-	$donations[1]['amount'] = '10,00 €';
-
-	$donations[2]['date'] = '10.10.2024';
-	$donations[2]['user'] = 'Gonuzul ';
-	$donations[2]['amount'] = '10,00 €';
-
-	$donations[3]['date'] = '05.10.2024';
-	$donations[3]['user'] = 'Andre83 ';
-	$donations[3]['amount'] = '10,00 €';
-
-	$donations[4]['date'] = '02.10.2024';
-	$donations[4]['user'] = 'Jean-Fred Moulin ';
-	$donations[4]['amount'] = '10,00 €';
-	//$donations[4]['amount'] = '10,00 € <font size="2px">subscription</font>';
+<?php
+	$highestLeft = 18;
+	$highestRight = 11;
 ?>
+	
 	<script src ="/js/previewBoard.js"></script>
 	<script src="https://accounts.google.com/gsi/client" async defer></script>
-	
 	<?php if($_SESSION['loggedInUser']['User']['isAdmin'] > 0){ ?>
 	<div class="admin-panel-main-page">
 		<ul>
@@ -97,166 +79,141 @@
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
-		<p class="title4">New Collection: Segoe Tesuji Dictionary | 22.01.2025</p>
-		<div class="new1">	
-		Segoe Tesuji Dictionary is a three volume tesuji problem book-set, written by Segoe Kensaku and Go Seigen. 
-		It is divided into sections according to the kind of move needed for the tesuji (e.g., tsuke or geta).<br><br>
-		<div align="center"><img width="95%" src="/img/segoe1-promo.png" alt="New Collection: Segoe Tesuji Dictionary" title="New Collection: Segoe Tesuji Dictionary">
-		
-		<a class="new-button main-page" style="font-size:14px;" href="/sets/view/248">Play</a><br><br></div>
+		<div id="news-right-11">
+			<p class="title4">New Collection: Weiqi Life&Death Drills | 05.02.2025</p>
+			<div class="new1">
+			A game of go is a life-and-death struggle, with attacking and defending from beginning to end. The ability to kill and make life is the most fundamental manifestation 
+			of a go player's strength. The training questions provided in this collection are designed to help go enthusiasts learn how to kill their opponents with techniques such 
+			as enclosing, surrounding, placement, under the stones, as well as survival skills like increasing eyespace, connecting and sacrificing. <br><br>
+			<div align="center"><img width="80%" src="/img/wldpromo.png" alt="New Collection: Weiqi Life&Death Drills" title="New Collection: Weiqi Life&Death Drills">
+			<br><br>
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/250">Play</a><br><br></div>
+			</div>
 		</div>
 
-		<p class="title4">New Collection: Attack Hero | 30.12.2024</p>
-		<div class="new1">	
-			In the game of Go, attacks can be used to get an advantage on the board. When attacking a group, killing is not the first objective. 
-			Instead of that a group can be attacked to gain influence, gain territory, stabilize their own group, create thickness or many other reasons. 
-			This collection teaches the best ways to attack groups to get an advantage on the board.<br><br>
-			<div align="center"><img width="60%" src="/img/attack-hero-promo.png" alt="New Collection: Attack Hero" title="New Collection: Attack Hero"><br><br>
-				<?php if($hasPremium){ ?>
-					<a class="new-button main-page" style="font-size:14px;" href="/sets/view/246">Play</a><br><br>
-				<?php }else{ ?>
-					<a class="new-button-inactive main-page" style="font-size:14px;">Play</a><br><br>
-				<?php } ?>
+		<div id="news-right-10">
+			<p class="title4">New Collection: Segoe Tesuji Dictionary | 22.01.2025</p>
+			<div class="new1">
+			Segoe Tesuji Dictionary is a three volume tesuji problem book-set, written by Segoe Kensaku and Go Seigen. 
+			It is divided into sections according to the kind of move needed for the tesuji (e.g., tsuke or geta).<br><br>
+			<div align="center"><img width="95%" src="/img/segoe1-promo.png" alt="New Collection: Segoe Tesuji Dictionary" title="New Collection: Segoe Tesuji Dictionary">
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/248">Play</a><br><br></div>
 			</div>
 		</div>
-		<p class="title4">New Collection: Igo Hatsuyoron | 13.12.2024</p>
-		<div class="new1">	
-		Igo Hatsuyoron (literally: Production of Yang in the Game of Go) is a collection of 183 go problems mostly 
-		life and death problems, compiled in 1713 by the Japanese go master Inoue Dosetsu Inseki. The problems in this collection 
-		have a very high difficulty, so discussion of solutions might not always be possible.<br><br>
-		<div align="center"><img width="95%" src="/img/igo-hatzuyoron.png" alt="New Collection: Igo Hatsuyoron" title="New Collection: Igo Hatsuyoron">
-		
-		<a class="new-button main-page" style="font-size:14px;" href="/sets/view/242">Play</a><br><br></div>
-		</div>
-		<p class="title4">Update 29.11.2024</p>
-		<div class="new1">
-			<b>Customizable collection index page</b><br><br>
-			The collection index page got a makeover, which makes use of the newly introduced tags. You can set filters for three categories: 
-				<b style="color:#77c14a">Topics</b>, <b style="color:#be6cdd">Difficulty</b> and <b style="color:#d5795a">Tags</b>. 
-			<br>
-			<div align="center">
-				<img style="margin:5px" src="/img/customizable-collections-example.PNG" title="Customizable Collections Example" width="85%">
-			</div>
-			Further, there are two grouping parameters: Collection types and collection sizes. The type is set to one of the three filters.
-			In this example, the type is difficulty, which groups the problems in collections for the rank. 
-			The applied filters remain set on the problem pages until they are changed or removed.
-			<br><br>
-		</div>
-		<p class="title4">Update 26.10.2024</p>
-		<div class="new1">
-			<b>Tags, proposals and rewards</b><br><br>
-			We need your help! The problems on this website are currently uncategorized, which we should change. 
-			The goal is to assign matching tags to every problem. All users that have passed level 40 or 6k 
-			are welcome to help with this meaningful task. There are amazing <a href="/users/rewards">rewards</a> for those who 
-			help with adding and creating tags and/or proposals. So the next time you see a problem, for example, 
-			with a <a href="/tag_names/view/8">Seki</a>, a <a href="/tag_names/view/6">Snapback</a> or an 
-			<a href="/tag_names/view/7">Under the Stones</a> tesuji, leave a tag.
-			<br>
-			<div align="center">
-				<img style="margin:5px" src="/img/example-tags-proposals.PNG" title="Example for tags and proposals" width="72%">
-			</div>
-			It is now also possible to make proposals for improving the problem files. You select "Make Proposal", modify the move tree and save. An
-			admin is going to check and approve the changes. For getting rewards, a point system has been implemented: <b>Add tag (1 pt)</b>, <b>create new tag (3 pts)</b>, 
-			<b>make proposal (5 pts)</b>. Any contribution has to be accepted by an admin to become public. <i>Rewards have been deactivated as they were meant for the early 
-			phase of tags to get it running.</i>
-			<br><br>
-		</div>
-		<p class="title4">Update 13.10.2024</p>
-		<div class="new1">
-			<b>Account management</b><br><br>
-			• Longer sessions.<br>
-			• Sign in with Google account.<br>
-			• Option to delete all account related data.<br>
-			<div align="center">
-				<div class="g-signin">
-					<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
-					<img src="/img/google-logo.png" title="google-logo" alt="google-logo" width="40px" style="border-radius:25%">
+	
+
+		<div id="news-right-9">
+			<p class="title4">New Collection: Attack Hero | 30.12.2024</p>
+			<div class="new1">	
+				In the game of Go, attacks can be used to get an advantage on the board. When attacking a group, killing is not the first objective. 
+				Instead of that a group can be attacked to gain influence, gain territory, stabilize their own group, create thickness or many other reasons. 
+				This collection teaches the best ways to attack groups to get an advantage on the board.<br><br>
+				<div align="center"><img width="60%" src="/img/attack-hero-promo.png" alt="New Collection: Attack Hero" title="New Collection: Attack Hero"><br><br>
+					<?php if($hasPremium){ ?>
+						<a class="new-button main-page" style="font-size:14px;" href="/sets/view/246">Play</a><br><br>
 					<?php }else{ ?>
-					<div
-						id="g_id_onload"
-						data-client_id="842499094931-nt12l2fehajo4k7f39bb44fsjl0l4h6u.apps.googleusercontent.com"
-						data-context="signin"
-						data-ux_mode="popup"
-						data-login_uri="/users/googlesignin"
-						data-auto_prompt="false"
-					></div>
-					<div
-						class="g_id_signin"
-						data-type="standard"
-						data-shape="rectangular"
-						data-theme="outline"
-						data-text="sign_in_with"
-						data-size="large"
-					></div>
+						<a class="new-button-inactive main-page" style="font-size:14px;">Play</a><br><br>
 					<?php } ?>
 				</div>
 			</div>
 		</div>
-		<p class="title4">New: Diabolical - the whole book | 19.08.2024</p>
-		<div class="new1">
-			Today we start publishing all problems from the Diabolical Vol. 1 book. That is 100 boards with each containing 4 or more problems.
-			Props to posetcay for adding the missing solutions and greetings to David Mitchell, who is the author and also a friend of the website
-			for several years.
-			PDFs and more books by him and his association can be found here: 
-			<a href="https://australiango.asn.au/aga-books" target="_blank">australiango.asn.au/aga-books</a>
+		
 
-			<br><br>
-			<div align="center"><img width="95%" src="/img/diabolical-new-promo.png" alt="New: Diabolical - the whole book" title="New: Diabolical - the whole book">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/237">Play</a><br><br></div>
-		</div>
-		<p class="title4">New Collection: Direction of the Play  | 28.07.2024</p>
-		<div class="new1">	
-			This collection covers full board positions, mostly from professional games. 
-			The task is to choose the best move from the given options. The problems were checked with AI for correctness. <br><br>
-			<div align="center"><img width="95%" src="/img/directionofplay-info.png" alt="New Collection: Direction of the Play" title="New Collection: Direction of the Play">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/236">Play</a><br><br></div>
-		</div>
-		<p class="title4">New Collection: Techniques of TsumeGo  | 04.07.2024</p>
-		<div class="new1">	
-			In the game of Go, to solve crucial situations, one has to master the different techniques that the game presents. Those techniques, 
-			also known as Tesuji, are presented in this collection.
-			The first topics and the first Tesuji techniques to master are ladders (Shicho) and nets (Geta).<br><br>
-			<i>Kageyama says "If you want to capture stones, hold up two fingers and say to yourself: 'Can I capture with the net?' and 'Can I capture with the ladder?'"</i><br><br>
-			<div align="center"><img width="95%" src="/img/techniques.PNG" alt="New Collection: Techniques of TsumeGo" title="New Collection: Techniques of TsumeGo">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/235">Play</a><br><br></div>
-		</div>
-		<p class="title4">New Collection: Kano Yoshinori | 31.12.2023</p>
-		<div class="new1">	
-					This series written by Kano Yoshinori in 1985 covers a large range of fundamental topics. 
-			Volume 1 contains problems about recognizing atari, ladders, snapbacks and basic life and death problems. Created for Tsumego Hero by Stepan Trubitsin.
-			<div align="center"><img width="95%" src="/img/kano-yoshinori-promo.png" alt="New Collection: Kano Yoshinori" title="New Collection: Kano Yoshinori">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/214">Play</a><br><br></div>
-		
-		</div>
-		<p class="title4">New Collection: 9x9 Endgame Problems</p>
-		<div class="new1">
-			There's a saying in Go that your overall strength is limited by your endgame strength. Even if you are leading a lot in the opening and middle game, mistakes in endgame can still lose you the game. This collection allows you to practice and level-up your endgame in a small 9x9 board with real-game examples.   
-			<div align="center"><img width="95%" src="/img/9x9-startpage.png">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/207">Play</a><br><br></div>
-		</div>
-		<p class="title4">New Collection: Sacrifical Tsumego</p>
-		<div class="new1">
-			Sometimes sacrifices are necessary in order to kill, but how many stones can you sacrifice before killing? 
-			That's the question this collection aims to answer. 
-			<div align="center"><img width="95%" src="/img/sacrifical-tsumego-home.png">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/197">Play</a><br><br></div>
-		</div>
-		<p class="title4">New Collection: Yi Kuo</p>
-		<div class="new1">
-			Yi Kuo is a classical kifu and tsumego book written by Huang Longshi (1651-1700). It was posthumously published in 1710. 
-			Go Seigen once commented that Longshi's fighting skill 
-			was of 13-dan strength. The problems in this collection are focused mainly on endgame tesujis. 
-			<div align="center"><img width="95%" src="/img/yi-kuo-home.png">
-			
-			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/195">Play</a><br><br></div>
+		<div id="news-right-8">
+			<p class="title4">New Collection: Igo Hatsuyoron | 13.12.2024</p>
+			<div class="new1">	
+			Igo Hatsuyoron (literally: Production of Yang in the Game of Go) is a collection of 183 go problems mostly 
+			life and death problems, compiled in 1713 by the Japanese go master Inoue Dosetsu Inseki. The problems in this collection 
+			have a very high difficulty, so discussion of solutions might not always be possible.<br><br>
+			<div align="center"><img width="95%" src="/img/igo-hatzuyoron.png" alt="New Collection: Igo Hatsuyoron" title="New Collection: Igo Hatsuyoron">
+			<a class="new-button main-page" style="font-size:14px;" href="/sets/view/242">Play</a><br><br></div>
+			</div>
 		</div>
 		
+		
+		<div id="news-right-7">
+			<p class="title4">New: Diabolical - the whole book | 19.08.2024</p>
+			<div class="new1">
+				Today we start publishing all problems from the Diabolical Vol. 1 book. That is 100 boards with each containing 4 or more problems.
+				Props to posetcay for adding the missing solutions and greetings to David Mitchell, who is the author and also a friend of the website
+				for several years.
+				PDFs and more books by him and his association can be found here: 
+				<a href="https://australiango.asn.au/aga-books" target="_blank">australiango.asn.au/aga-books</a>
+				<br><br>
+				<div align="center"><img width="95%" src="/img/diabolical-new-promo.png" alt="New: Diabolical - the whole book" title="New: Diabolical - the whole book">
+				<a class="new-button main-page" style="font-size:14px;" href="/sets/view/237">Play</a><br><br></div>
+			</div>
+		</div>
+		
+		<div id="news-right-6">
+			<p class="title4">New Collection: Direction of the Play  | 28.07.2024</p>
+			<div class="new1">	
+				This collection covers full board positions, mostly from professional games. 
+				The task is to choose the best move from the given options. The problems were checked with AI for correctness. <br><br>
+				<div align="center"><img width="95%" src="/img/directionofplay-info.png" alt="New Collection: Direction of the Play" title="New Collection: Direction of the Play">
+				
+				<a class="new-button main-page" style="font-size:14px;" href="/sets/view/236">Play</a><br><br></div>
+			</div>
+		</div>
+		
+		<div id="news-right-5">
+			<p class="title4">New Collection: Techniques of TsumeGo | 04.07.2024</p>
+			<div class="new1">	
+				In the game of Go, to solve crucial situations, one has to master the different techniques that the game presents. Those techniques, 
+				also known as Tesuji, are presented in this collection.
+				The first topics and the first Tesuji techniques to master are ladders (Shicho) and nets (Geta).<br><br>
+				<i>Kageyama says "If you want to capture stones, hold up two fingers and say to yourself: 'Can I capture with the net?' and 'Can I capture with the ladder?'"</i><br><br>
+				<div align="center"><img width="95%" src="/img/techniques.PNG" alt="New Collection: Techniques of TsumeGo" title="New Collection: Techniques of TsumeGo">
+				<a class="new-button main-page" style="font-size:14px;" href="/sets/view/235">Play</a><br><br></div>
+			</div>
+		</div>
+
+		<div id="news-right-4">
+			<p class="title4">New Collection: Kano Yoshinori | 31.12.2023</p>
+			<div class="new1">	
+						This series written by Kano Yoshinori in 1985 covers a large range of fundamental topics. 
+				Volume 1 contains problems about recognizing atari, ladders, snapbacks and basic life and death problems. Created for Tsumego Hero by Stepan Trubitsin.
+				<div align="center"><img width="95%" src="/img/kano-yoshinori-promo.png" alt="New Collection: Kano Yoshinori" title="New Collection: Kano Yoshinori">
+				<a class="new-button main-page" style="font-size:14px;" href="/sets/view/214">Play</a><br><br></div>
+			</div>
+		</div>
+		
+		<div id="news-right-3">
+			<p class="title4">New Collection: 9x9 Endgame Problems</p>
+			<div class="new1">
+				There's a saying in Go that your overall strength is limited by your endgame strength. Even if you are leading a lot in the opening and middle game, mistakes in endgame can still lose you the game. This collection allows you to practice and level-up your endgame in a small 9x9 board with real-game examples.   
+				<div align="center"><img width="95%" src="/img/9x9-startpage.png">
+				
+				<a class="new-button main-page" style="font-size:14px;" href="/sets/view/207">Play</a><br><br></div>
+			</div>
+		</div>
+
+		<div id="news-right-2">
+			<p class="title4">New Collection: Sacrifical Tsumego</p>
+			<div class="new1">
+				Sometimes sacrifices are necessary in order to kill, but how many stones can you sacrifice before killing? 
+				That's the question this collection aims to answer. 
+				<div align="center"><img width="95%" src="/img/sacrifical-tsumego-home.png">
+				
+				<a class="new-button main-page" style="font-size:14px;" href="/sets/view/197">Play</a><br><br></div>
+			</div>
+		</div>
+
+		<div id="news-right-1">
+			<p class="title4">New Collection: Yi Kuo</p>
+			<div class="new1">
+				Yi Kuo is a classical kifu and tsumego book written by Huang Longshi (1651-1700). It was posthumously published in 1710. 
+				Go Seigen once commented that Longshi's fighting skill 
+				was of 13-dan strength. The problems in this collection are focused mainly on endgame tesujis. 
+				<div align="center"><img width="95%" src="/img/yi-kuo-home.png">
+				<a class="new-button main-page" style="font-size:14px;" href="/sets/view/195">Play</a><br><br></div>
+			</div>
+		</div>
+		
+		<div id="show-more-right" class="show-more" align="center">
+			<a>Show more</a>
+		</div>
+
 			<?php
 			if(isset($_SESSION['loggedInUser'])){
 			if(false){
@@ -528,23 +485,100 @@
 				?>
 			</table>	
 		</div>
+		<!-- LEFT NEWS -->
+		<!-- LEFT NEWS -->
+		<!-- LEFT NEWS -->
+		<div id="news-left-18">
+			<p class="title4">Update 29.11.2024</p>
+			<div class="new1">
+				<b>Customizable collection index page</b><br><br>
+				The collection index page got a makeover, which makes use of the newly introduced tags. You can set filters for three categories: 
+					<b style="color:#77c14a">Topics</b>, <b style="color:#be6cdd">Difficulty</b> and <b style="color:#d5795a">Tags</b>. 
+				<br>
+				<div align="center">
+					<img style="margin:5px" src="/img/customizable-collections-example.PNG" title="Customizable Collections Example" width="85%">
+				</div>
+				Further, there are two grouping parameters: Collection types and collection sizes. The type is set to one of the three filters.
+				In this example, the type is difficulty, which groups the problems in collections for the rank. 
+				The applied filters remain set on the problem pages until they are changed or removed.
+				<br><br>
+			</div>
+		</div>
 		
-		<!-- LEFT NEWS -->
-		<!-- LEFT NEWS -->
-		<!-- LEFT NEWS -->
+		<div id="news-left-17">
+		<p class="title4">Update 26.10.2024</p>
+		<div class="new1">
+			<b>Tags, proposals and rewards</b><br><br>
+			We need your help! The problems on this website are currently uncategorized, which we should change. 
+			The goal is to assign matching tags to every problem. All users that have passed level 40 or 6k 
+			are welcome to help with this meaningful task. There are amazing <a href="/users/rewards">rewards</a> for those who 
+			help with adding and creating tags and/or proposals. So the next time you see a problem, for example, 
+			with a <a href="/tag_names/view/8">Seki</a>, a <a href="/tag_names/view/6">Snapback</a> or an 
+			<a href="/tag_names/view/7">Under the Stones</a> tesuji, leave a tag.
+			<br>
+			<div align="center">
+				<img style="margin:5px" src="/img/example-tags-proposals.PNG" title="Example for tags and proposals" width="72%">
+			</div>
+			It is now also possible to make proposals for improving the problem files. You select "Make Proposal", modify the move tree and save. An
+			admin is going to check and approve the changes. For getting rewards, a point system has been implemented: <b>Add tag (1 pt)</b>, <b>create new tag (3 pts)</b>, 
+			<b>make proposal (5 pts)</b>. Any contribution has to be accepted by an admin to become public. <i>Rewards have been deactivated as they were meant for the early 
+			phase of tags to get it running.</i>
+			<br><br>
+		</div>
+		</div>
+		
+
+		<div id="news-left-16">
+		<p class="title4">Update 13.10.2024</p>
+		<div class="new1">
+			<b>Account management</b><br><br>
+			• Longer sessions.<br>
+			• Sign in with Google account.<br>
+			• Option to delete all account related data.<br>
+			<div align="center">
+				<div class="g-signin">
+					<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
+					<img src="/img/google-logo.png" title="google-logo" alt="google-logo" width="40px" style="border-radius:25%">
+					<?php }else{ ?>
+					<div
+						id="g_id_onload"
+						data-client_id="842499094931-nt12l2fehajo4k7f39bb44fsjl0l4h6u.apps.googleusercontent.com"
+						data-context="signin"
+						data-ux_mode="popup"
+						data-login_uri="/users/googlesignin"
+						data-auto_prompt="false"
+					></div>
+					<div
+						class="g_id_signin"
+						data-type="standard"
+						data-shape="rectangular"
+						data-theme="outline"
+						data-text="sign_in_with"
+						data-size="large"
+					></div>
+					<?php } ?>
+				</div>
+			</div>
+		</div>
+		</div>
+		
+
+		<div id="news-left-15">
 		<p class="title4">Bugfix 01.05.2024</p>
 		<div class="new1">
 		Longer sessions were not working properly, so this feature is reverted. If there are still any issues, such as log-outs, try to delete the cookies.<br><br>
 		</div>
+		</div>
+		
+
+		<div id="news-left-14">
 		<p class="title4">Update 30.04.2024</p>
 		<div class="new1">
-		
 		<b>Improved search, ratings and board views</b><br><br>
 		<b>• Boards can be roatated.</b> <br>
 		<b>• Broader rank system:</b> While the last update enabled ranks from 21k to 9d, this update scales the existing problems into the new range.<br>
 		<b>• Improved raitng calculation:</b> The Tsumego rating calculation added an activity value that is meant to have a higher variance
 		with fresh problems.<br>
-		
 		<b>• Improved similar problem search:</b> The search has been improved by storing solution types in the database.
 		It always finds many similar problems in any search now and is very fast. <br>
 		<div align="center">
@@ -553,10 +587,13 @@
 		<i>In this example, it finds 30 similar problems almost instantly.</i><br><br>
 		</div>
 		</div>
+		</div>
+		
+
+		<div id="news-left-13">
 		<p class="title4">Update 03.04.2024</p>
 		<div class="new1">
 		<b>Improvements of rank display and score mechanics</b><br><br>
-		
 		<b>• Broader rank system:</b> Player and Tsumego ranks range from 21k to 9d.<br>
 		<b>• Collection difficulty:</b> Instead of a difficulty value from 1 to 9, the average kyu/dan rank is shown.<br>
 		<b>• Mode-indepentent scores:</b> Problems in rating- and time mode give also xp and they change the problem's status to solved on succeeding. 
@@ -566,29 +603,41 @@
 		selecting the lower left corner.<br><br>
 		<div align="center">
 		<img src="/img/thumbs/1.PNG" title="bar-example" alt="bar-example" width="140px">
-		
 		<br>
 		</div>
 		</div>
+		</div>
+		
+
+		<div id="news-left-12">
 		<p class="title4">17.03.2024</p>
 		<div class="new1">
 		<b>Prizes</b><br><br>
-		
 		<b>Madec</b>, <b>Kimok</b> and <b>YuriyStepanovich</b> win a premium account as they have the highest non-premium ratings.<br><br>
 		</div>
+		</div>
+		
+
+		<div id="news-left-11">
 		<p class="title4">10.03.2024</p>
 		<div class="new1">
 		<b>Prizes</b><br><br>
-		
 		<b>GoTalk</b>, <b>Futsal</b> and <b>Imaim</b> win a premium account. One more time we upgrade 3 accounts on 17.03.2024.<br><br>
 		</div>
+		</div>
+		
+
+		<div id="news-left-10">
 		<p class="title4">03.03.2024</p>
 		<div class="new1">
 		<b>Prizes</b><br><br>
-		
 		<b>Rippa</b>, <b>au61413080900</b> and <b>franp9am</b> win a premium account as they have the highest non-premium ratings. On
 		10.03.2024 we give away 3 more.<br><br>
 		</div>
+		</div>
+		
+
+		<div id="news-left-9">
 		<p class="title4">Update 25.02.2024</p>
 		<div class="new1">
 		<b>Overall rating</b><br><br>
@@ -637,6 +686,10 @@
 		<br>
 		</div>
 		</div>
+		</div>
+		
+
+		<div id="news-left-8">
 		<p class="title4">Update 01.02.2024</p>
 		<div class="new1">
 		<b>Explanation for the duplicate update on 01.02.2024</b><br><br>
@@ -649,6 +702,10 @@
 		<br>
 		</div>
 		</div>
+		</div>
+		
+
+		<div id="news-left-7">
 		<p class="title4">Update 11.01.2024</p>
 		<div class="new1">
 		<b>Similar problem search</b><br><br>
@@ -662,95 +719,141 @@
 		<br>
 		</div>
 		</div>
-		<p class="title4">Update 28.12.2023</p>
-		<div class="new1">
-		<b>Board previews and more achievements</b><br><br>
-		
-		It is now possible to see previews of the problems. A preview is shown when you move your mouse over a problem.
-		There are also 23 new <a href="/achievements">achievements.</a><br><br>
-		<div align="center">
-		<img src="/img/boardPreviewExample.PNG" title="Board preview example" alt="Board preview example">
-		
-		<br>
-		</div>
-		</div>
-		<p class="title4">Update 23.11.2023</p>
-		<div class="new1">
-		<br>
-		<div align="center">
-		<a class="menuIcons2" id="darkButton2" onclick="darkAndLight();"><img id="darkButtonImage2" src="/img/light-icon1x.png" width="30px"></a>
-		<h1 class="darkButton2">Dark Theme</h1>
-		<a class="menuIcons2" id="darkButton3" onclick="darkAndLight();"><img id="darkButtonImage3" src="/img/light-icon1x.png" width="30px"></a>
-		</div>
-		<br>
-		<br>
-		<br>
-		</div>
-		<p class="title4">Update 06.11.2023</p>
-		<div class="new1">
-			<b>More achievements</b><br><br>
-			
-			The achievements have been stocked up to 91 and there is now an achievement highscore.<br><br>
-			<table width="90%"><tr>
-			<td><a href="/achievements">View Achievements</a></td>
-			<td><a href="/users/achievements">Achievement Highscore</a></td>
-			</tr></table>
-			<br>
-		</div>
-		<p class="title4">Update 27.10.2023</p>
-		<div class="new1">
-			<b>Achievements!</b><br><br>
-			
-			With today's update, you can hunt for achievements. Achievements give additional XP. There will be a user ranking
-			and possibly other rewards. This update contains the first 46 achievements of many more.
-			<br><br>
-			<a href="/achievements">View Achievements</a>
-			<br><br>
-			<div align="center"><img width="90%" src="/img/achievementExample.png"></div>
-			<br>
-			
-		</div>
-		<p class="title4">Update 14.10.2023</p>
-		<div class="new1">
-			<b>Improved comments</b><br><br>
-			• <b>Link position in comments</b>: It is now possible to link board positions by clicking "Link current position".
-			<br>
-			<div align="center"><img width="90%" src="/img/commentPositionExample1.JPG"></div>
-			<br>
-			The position can be accessed by selecting the icon in the comment.
-			<br>
-			<div align="center"><img width="50%" src="/img/commentPositionExample2.png"></div>
-			<br>
-			• <b>Dynamic coordinates</b>: The coordinates written in the comments adjust according to the visible board area.
-			<br>
-			<div align="center"><img width="90%" src="/img/dynCommentsExample.png"></div>
-			<br>
-			Example: <a href="/tsumegos/play/25881">1000 Weiqi problems - 58</a>
-			
 		</div>
 		
-		
-		<p class="title4">Update 20.07.2023</p>
-		<div class="new1">
-			<b>New board viewer: BesoGo</b><br><br>
-			We changed the technology that is used to display the problems from jGoBoard to BesoGo. There are various advantages, such as 
-			a tree display in the review, changing views without refresh, editing and saving problems on the website and more. It also opens
-			possibilities to merge recurring board positions and to make a better result distinction. Instead of correct and incorrect,
-			a future update is going to include more details.
-			<br><br>
-			<div align="center"><img width="60%" src="/img/besoGoExample.png"></div>
+
+		<div id="news-left-6">
+			<p class="title4">Update 28.12.2023</p>
+			<div class="new1">
+			<b>Board previews and more achievements</b><br><br>
+			
+			It is now possible to see previews of the problems. A preview is shown when you move your mouse over a problem.
+			There are also 23 new <a href="/achievements">achievements.</a><br><br>
+			<div align="center">
+			<img src="/img/boardPreviewExample.PNG" title="Board preview example" alt="Board preview example">
+			
 			<br>
-			It comes
-			with a separate editor which was the starting point to make this possible. <a href="https://kovarex.github.io/besogo/testing.html" target="_blank">Editor</a>
-			<br><br>
+			</div>
+			</div>
 		</div>
+		
+
+		<div id="news-left-5">
+			<p class="title4">Update 23.11.2023</p>
+			<div class="new1">
+			<br>
+			<div align="center">
+			<a class="menuIcons2" id="darkButton2" onclick="darkAndLight();"><img id="darkButtonImage2" src="/img/light-icon1x.png" width="30px"></a>
+			<h1 class="darkButton2">Dark Theme</h1>
+			<a class="menuIcons2" id="darkButton3" onclick="darkAndLight();"><img id="darkButtonImage3" src="/img/light-icon1x.png" width="30px"></a>
+			</div>
+			<br>
+			<br>
+			<br>
+			</div>
 		</div>
+		
+
+		<div id="news-left-4">
+			<p class="title4">Update 06.11.2023</p>
+			<div class="new1">
+				<b>More achievements</b><br><br>
+				The achievements have been stocked up to 91 and there is now an achievement highscore.<br><br>
+				<table width="90%"><tr>
+				<td><a href="/achievements">View Achievements</a></td>
+				<td><a href="/users/achievements">Achievement Highscore</a></td>
+				</tr></table>
+				<br>
+			</div>
+		</div>
+		
+		<div id="news-left-3">
+			<p class="title4">Update 27.10.2023</p>
+			<div class="new1">
+				<b>Achievements!</b><br><br>
+				With today's update, you can hunt for achievements. Achievements give additional XP. There will be a user ranking
+				and possibly other rewards. This update contains the first 46 achievements of many more.
+				<br><br>
+				<a href="/achievements">View Achievements</a>
+				<br><br>
+				<div align="center"><img width="90%" src="/img/achievementExample.png"></div>
+				<br>
+			</div>
+		</div>
+		
+		<div id="news-left-2">
+			<p class="title4">Update 14.10.2023</p>
+			<div class="new1">
+				<b>Improved comments</b><br><br>
+				• <b>Link position in comments</b>: It is now possible to link board positions by clicking "Link current position".
+				<br>
+				<div align="center"><img width="90%" src="/img/commentPositionExample1.JPG"></div>
+				<br>
+				The position can be accessed by selecting the icon in the comment.
+				<br>
+				<div align="center"><img width="50%" src="/img/commentPositionExample2.png"></div>
+				<br>
+				• <b>Dynamic coordinates</b>: The coordinates written in the comments adjust according to the visible board area.
+				<br>
+				<div align="center"><img width="90%" src="/img/dynCommentsExample.png"></div>
+				<br>
+				Example: <a href="/tsumegos/play/25881">1000 Weiqi problems - 58</a>
+			</div>
+		</div>
+		
+		
+		<div id="news-left-1">
+			<p class="title4">Update 20.07.2023</p>
+			<div class="new1">
+				<b>New board viewer: BesoGo</b><br><br>
+				We changed the technology that is used to display the problems from jGoBoard to BesoGo. There are various advantages, such as 
+				a tree display in the review, changing views without refresh, editing and saving problems on the website and more. It also opens
+				possibilities to merge recurring board positions and to make a better result distinction. Instead of correct and incorrect,
+				a future update is going to include more details.
+				<br><br>
+				<div align="center"><img width="60%" src="/img/besoGoExample.png"></div>
+				<br>
+				It comes
+				with a separate editor which was the starting point to make this possible. <a href="https://kovarex.github.io/besogo/testing.html" target="_blank">Editor</a>
+				<br><br>
+			</div>
+		</div>
+		<div id="show-more-left" class="show-more" align="center">
+			<a >Show more</a>
+		</div>
+		
+
+		</div>
+
 		<br>
-		<div style="clear:both;"></div> 
-		<br>
+		<div style="clear:both;"></div>
 	</div>
 	
 	<script>
+		let highestLeft = <?php echo $highestLeft; ?>;
+		let highestRight = <?php echo $highestRight; ?>;
+
+		let currentLeft = highestLeft - 4;
+		let currentRight = highestRight - 5;
+
+		$("#show-more-left").click(function(){
+			currentLeft -= 3;
+			for(let i=highestLeft;i>currentLeft;i--)
+				if(i>1)
+					$("#news-left-"+i).fadeIn(250);
+				else
+					$("#show-more-left").hide();
+		});
+
+		$("#show-more-right").click(function(){
+			currentRight -= 3;
+			for(let i=highestRight;i>currentRight;i--)
+				if(i>1)
+					$("#news-right-"+i).fadeIn(250);
+				else
+					$("#show-more-right").hide();
+		});
+
 		function donateHover(){
 			document.getElementById("donateH").src = '/img/upgradeButton1h.png';
 		}	
@@ -862,4 +965,35 @@
 	}
 	?>
 	
-		
+	<style>
+		<?php 
+			$highestLeft = 18;
+			$left = $highestLeft;
+			while($left>0){
+				if($left<$highestLeft-4){
+					echo '#news-left-'.$left.'{display:none;}';
+				}
+				$left--;
+			}
+			$highestRight = 11;
+			$right = $highestRight;
+			while($right>0){
+				if($right<$highestRight-5){
+					echo '#news-right-'.$right.'{display:none;}';
+				}
+				$right--;
+			}
+		?>
+	</style>
+	<style>
+		.show-more{
+			padding:10px;
+		}
+		.show-more a{
+			text-decoration:underline;
+			cursor:pointer;
+		}
+		.show-more a:hover{
+			text-decoration:none;
+		}
+	</style>

@@ -566,6 +566,7 @@
 		?>
 		<div class="tag-container" align="center">
 			<div class="tag-list"></div>
+			<?php if($isAllowedToContribute2){ ?>
 			<div class="add-tag-list-button"><a class="add-tag-list-anchor" id="open-add-tag-menu">
 			<?php if($isAllowedToContribute){ ?>
 			<?php if($firstRanks==0 && $t['Tsumego']['set_id']!=181 && $t['Tsumego']['set_id']!=191){ ?>
@@ -573,6 +574,9 @@
 			<?php } ?>
 			<?php } ?>
 			</a></div>
+			<?php }else{
+				echo '<div style="color:gray;font-size:14px">Daily limit reached.</div>';
+			} ?>
 			<div class="add-tag-list-popular"></div>
 			<div class="add-tag-list"></div>
 		</div>
@@ -1991,8 +1995,10 @@
 					}else{
 						clearInterval(x);
 						<?php
-						if(isset($sprintActivated))
+						if(isset($sprintActivated)){
 							echo 'document.cookie = "sprint=2;path=/tsumegos/play;SameSite=none;Secure=false";';
+							echo 'document.cookie = "doublexp=0;path=/tsumegos/play;SameSite=none;Secure=false";';
+						}
 						if($levelBar==1){
 							if($t['Tsumego']['status']=='setS2' || $t['Tsumego']['status']=='setC2'){
 								 echo '
@@ -2494,7 +2500,8 @@
 			doubleXP = true;
 			countDownDate = new Date();
 			countDownDate.setMinutes(countDownDate.getMinutes() + 2);
-			setCookie("doublexp", countDownDate.getTime());
+			//setCookie("doublexp", countDownDate.getTime());
+			document.cookie = "doublexp="+countDownDate.getTime()+";path=/tsumegos/play;SameSite=none;Secure=false";
 			document.cookie = "sprint=1;path=/tsumegos/play;SameSite=none;Secure=false";
 			document.cookie = "misplay="+misplays+";path=/tsumegos/play;SameSite=none;Secure=false";
 			document.getElementById("sprint").src = "/img/hp1x.png";
@@ -2518,10 +2525,10 @@
 									timeOutput = minutes + ":" + seconds;
 								document.getElementById("status2").innerHTML = "<h3>Double XP "+timeOutput+"</h3>";
 								document.getElementById("status2").style.color = "<?php echo $playBlueColor; ?>";
-								document.getElementById("xpDisplay").style.color = "<?php echo $playBlueColor; ?>";
+								//document.getElementById("xpDisplay").style.color = "<?php echo $playBlueColor; ?>";
 								<?php
-								if(!$goldenTsumego) echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4">'.$t['Tsumego']['difficulty'].'×2 XP</font>\';';
-								else echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4">'.$t['Tsumego']['difficulty'].' XP</font>\';';
+								//if(!$goldenTsumego) echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4">'.$t['Tsumego']['difficulty'].'×2 XP</font>\';';
+								//else echo 'document.getElementById("xpDisplay").innerHTML = \'<font size="4">'.$t['Tsumego']['difficulty'].' XP</font>\';';
 								?>
 								document.cookie = "sprint=1;path=/tsumegos/play;SameSite=none;Secure=false";
 							}else{

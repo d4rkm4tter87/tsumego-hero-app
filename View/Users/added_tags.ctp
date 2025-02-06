@@ -48,7 +48,7 @@
 			}
 		}
 		for($i=0; $i<count($a); $i++){
-			if(true){
+			if($a[$i]['name'] != ''){
 				$bgColor = '#fff';
 				if($i==0) $bgColor = '#ffec85';
 				if($i==1) $bgColor = '#939393';

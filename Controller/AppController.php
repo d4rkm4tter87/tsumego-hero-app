@@ -840,7 +840,7 @@ class AppController extends Controller{
 		$out = $this->TsumegoAttempt->find('all', array('limit' => 30000, 'order' => 'created DESC', 'conditions' => array('gain >=' => 40)));
 		
 		$date = date('Y-m-d', strtotime('yesterday'));
-		$s = $this->Schedule->find('all', array('conditions' =>  array('date' => $date)));
+		$s = $this->Schedule->find('all', array('conditions' => array('date' => $date)));
 		$ids = array();
 		for($i=0; $i<count($ut); $i++){
 			$date2 = new DateTime($ut[$i]['TsumegoRatingAttempt']['created']);
