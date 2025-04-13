@@ -3969,9 +3969,6 @@ pre {
   );
   border: 1px solid black;
 }
-.modify-description-panel {
-  display: none;
-}
 #plus2 {
   display: none;
   position: absolute;

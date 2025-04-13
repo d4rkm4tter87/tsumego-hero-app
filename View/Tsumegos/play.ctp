@@ -147,7 +147,7 @@
 		$plRand = true;
 	}
 	if($checkBSize!=19 || $t['Tsumego']['set_id']==159 || $t['Tsumego']['set_id']==161 || $t['Tsumego']['set_id']==239 
-	|| $t['Tsumego']['set_id']==243 || $t['Tsumego']['set_id']==244 || $t['Tsumego']['set_id']==246)
+	|| $t['Tsumego']['set_id']==243 || $t['Tsumego']['set_id']==244 || $t['Tsumego']['set_id']==246 || $t['Tsumego']['set_id']==251 || $t['Tsumego']['set_id']==253)
 		$pl=0;
 	if($pl==0){
 		$playerColor[0] = 'BLACK';
@@ -167,7 +167,7 @@
 		else if($descriptionColor=='White ')
 			$descriptionColor = 'Black ';
 	}	
-	$t['Tsumego']['description'] = str_replace('b ', $descriptionColor, $t['Tsumego']['description']);
+	$t['Tsumego']['description'] = str_replace('[b]', $descriptionColor, $t['Tsumego']['description']);
 	if($nothingInRange!=false)
 		echo '<div align="center" style="color:red;font-weight:800;">'.$nothingInRange.'</div>';
 	?>
@@ -326,8 +326,7 @@
 		<a class="modify-description" href="#">(Edit)</a>
 		<div class="modify-description-panel">
 			<?php
-				$placeholder = str_replace('Black', 'b', $t['Tsumego']['description']);
-				$placeholder = str_replace('White', 'b', $placeholder);
+				$placeholder = str_replace($descriptionColor, '[b]', $t['Tsumego']['description']);
 				echo $this->Form->create('Comment');
 				echo $this->Form->input('id', array('type' => 'hidden', 'value' => $t['Tsumego']['id']));
 				echo $this->Form->input('admin_id', array('type' => 'hidden', 'value' => $_SESSION['loggedInUser']['User']['id']));
@@ -803,6 +802,10 @@
 			if($allowed)
 				echo $this->Form->input('message', array('label' => '', 'type' => 'textarea', 'placeholder' => 'Message'));
 			echo $this->Form->input('position', array('label' => '', 'type' => 'hidden'));
+
+			if($_SESSION['loggedInUser']['User']['isAdmin']>=1)
+				echo $this->Form->input('status', array('type' => 'hidden', 'value' => 97));
+
 			echo $this->Form->end('Submit');
 		?>
 		<br>
@@ -1352,14 +1355,17 @@
 		setCookie("search3", "@");
 		window.location.href = "/tsumegos/play/<?php echo $t['Tsumego']['id']; ?>";
 	});
-	
+
 	<?php 
 	if($tv!=null){
 	if($tv['TsumegoVariant']['type']=='multiple_choice' && $tv['TsumegoVariant']['explanation']!=""){
 		echo 'mText = "'.$tv['TsumegoVariant']['explanation'].'";';
 	}}
-	
+
 	if(isset($_SESSION['loggedInUser']['User']['id'])){
+		if($_SESSION['loggedInUser']['User']['isAdmin']>0){
+			echo '$(".modify-description-panel").hide();';
+		}
 		echo 'var besogoUserId = '.$_SESSION['loggedInUser']['User']['id'].';';
 	}else{
 		echo 'besogoNoLogin = true;';

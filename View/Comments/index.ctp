@@ -127,11 +127,15 @@
 							echo '
 								<tr>
 								<td width="73%">		
-								<div style="padding-bottom:7px;"><b>#'.$comments[$j]['Comment']['counter'].'</b> | 
-								<a href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].$sid.$QorA.'search=topics">
-									'.$comments[$j]['Comment']['set'].' '.$comments[$j]['Comment']['set2'].' - '.$comments[$j]['Comment']['num'].'
-								</a><br>
-								
+								<div style="padding-bottom:7px;"><b>#'.$comments[$j]['Comment']['counter'].'</b> | ';
+								if($comments[$j]['Comment']['num']!=null){
+									echo '<a href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].$sid.$QorA.'search=topics">
+										'.$comments[$j]['Comment']['set'].' '.$comments[$j]['Comment']['set2'].' - '.$comments[$j]['Comment']['num'].'
+									</a>';
+								}else{
+									echo '<i>Deleted problem.</i> <a href="/comments/remove/'.$comments[$j]['Comment']['id'].'?token='.md5($comments[$j]['Comment']['id']).'" target="_blank">[remove comment]</a>';
+								}
+								echo '<br>
 								</div>
 								<div class="'.$commentColor.'"> 
 								'.$comments[$j]['Comment']['user_name'].':<br>
@@ -161,22 +165,32 @@
 								echo '</td>
 								<td class="sandboxTable2time" align="right">'.$comments[$j]['Comment']['created'].'</td>';
 							echo '</tr>';
-							echo '
-								<tr>
-									<td colspan="2">
-										<div width="100%">
-											<div align="center">
-												<li id="naviElement0" class="set'.$comments[$j]['Comment']['user_tsumego'].'1" style="float:left;margin-top:14px;">
-													<a id="tooltip-hover'.$j.'" class="tooltip" href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].$sid.$QorA
-													.'search=topics">'.$comments[$j]['Comment']['num']
-													.'<span><div id="tooltipSvg'.$j.'"></div></span></a>
-													
-												</li>
-											</div>
+							if($comments[$j]['Comment']['num']!=null){
+								echo '<tr>
+								<td colspan="2">
+									<div width="100%">
+										<div align="center">
+											<li id="naviElement0" class="set'.$comments[$j]['Comment']['user_tsumego'].'1" style="float:left;margin-top:14px;">
+												<a id="tooltip-hover'.$j.'" class="tooltip" href="/tsumegos/play/'.$comments[$j]['Comment']['tsumego_id'].$sid.$QorA
+												.'search=topics">'.$comments[$j]['Comment']['num']
+												.'<span><div id="tooltipSvg'.$j.'"></div></span></a>
+												
+											</li>
 										</div>
-									</td>
-								</tr>
-							';
+									</div>
+								</td>
+							</tr>';
+							}else{
+								echo '<tr>
+								<td colspan="2">
+									<div width="100%">
+										<div align="center">
+											
+										</div>
+									</div>
+								</td>
+							</tr>';
+							}
 						echo '</table>';
 					}else{
 						if($comments[$j]['Comment']['set_id']!=null){

@@ -1,7 +1,7 @@
 
 <?php
 	$highestLeft = 18;
-	$highestRight = 11;
+	$highestRight = 14;
 ?>
 	
 	<script src ="/js/previewBoard.js"></script>
@@ -79,6 +79,47 @@
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
+		<div id="news-right-14">
+			<p class="title4">New Collection: Invasion Hero | 24.03.2024</p>
+			<div class="new1">	
+			An invasion is a play made inside an enemy extension or framework with the intention of living, escaping, or sacrificing. By living or escaping, the invader denies the opponent of large territory and may create weak groups for the opponent. Invasions occur throughout the game. In the opening they are probably part of a joseki. In the middle game, they may be joseki, follow-ups or just as likely occur as one player exerts the power of influence built up in an earlier fight. In the endgame they can be considered as gouging tactics. This collection teaches the best ways to start and continue invasions in the early- and middle game.    <br><br>
+				<div align="center"><img width="90%" src="/img/invasion-hero-promo.png" alt="New Collection: Invasion Hero" title="New Collection: Invasion Hero"><br><br>
+				<?php if($hasPremium){ ?>
+					<a class="new-button main-page" style="font-size:14px;" href="/sets/view/253">Play</a><br><br>
+					<?php }else{ ?>
+						<a class="new-button-inactive main-page" style="font-size:14px;">Play</a><br><br>
+					<?php } ?>
+				</div>
+			</div>
+		</div>
+
+		<div id="news-right-13">
+			<p class="title4">New Collection: The L Group | 12.03.2024</p>
+			<div class="new1">	
+			Basic knowledge of the L group to boost double digit kyu player's confidence ! A diligent study is worth it. The L group is a corner shape that 
+			will appear again and again in your game.  <br><br>
+				<div align="center"><img width="60%" src="/img/promo-lgroup.png" alt="New Collection: The L Group" title="New Collection: The L Group"><br><br>
+				<a class="new-button main-page" style="font-size:14px;" href="/sets/view/252">Play</a><br><br>
+				</div>
+			</div>
+		</div>
+
+		<div id="news-right-12">
+			<p class="title4">New Collection: Fuseki Hero | 19.02.2024</p>
+			<div class="new1">	
+			Fuseki is the whole board opening in the game of Go. It is the phase where both players make their initial claims to the territory on the board. Typically, 
+			an opening can last 30-60 moves, after which the board has been divided into several zones where each player hopes to make territory. 
+			This collection teaches the most common principles about the early phase of the game. The focus is on common principles, but AI answers are also considered correct. <br><br>
+				<div align="center"><img width="60%" src="/img/fuseki-hero-promo.png" alt="New Collection: Fuseki Hero" title="New Collection: Fuseki Hero"><br><br>
+					<?php if($hasPremium){ ?>
+						<a class="new-button main-page" style="font-size:14px;" href="/sets/view/251">Play</a><br><br>
+					<?php }else{ ?>
+						<a class="new-button-inactive main-page" style="font-size:14px;">Play</a><br><br>
+					<?php } ?>
+				</div>
+			</div>
+		</div>
+
 		<div id="news-right-11">
 			<p class="title4">New Collection: Weiqi Life&Death Drills | 05.02.2025</p>
 			<div class="new1">

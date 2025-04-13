@@ -347,7 +347,7 @@ class TsumegosController extends AppController{
 						$raS = $this->Set->findById($rafSc['SetConnection']['set_id']);
 						if($raS['Set']['public']==1){
 							if($raS['Set']['id']!=210 && $raS['Set']['id']!=191 && $raS['Set']['id']!=181 && $raS['Set']['id']!=207 && $raS['Set']['id']!=172 && 
-							$raS['Set']['id']!=202 && $raS['Set']['id']!=81578 && $raS['Set']['id']!=74761 && $raS['Set']['id']!=71790 && $raS['Set']['id']!=33007 && 
+							$raS['Set']['id']!=202 && $raS['Set']['id']!=237 && $raS['Set']['id']!=81578 && $raS['Set']['id']!=74761 && $raS['Set']['id']!=71790 && $raS['Set']['id']!=33007 && 
 							$raS['Set']['id']!=31813 && $raS['Set']['id']!=29156 && $raS['Set']['id']!=11969 && $raS['Set']['id']!=6473){
 								if(!in_array($raS['Set']['id'], $setsWithPremium) || $hasPremium)
 									$ratingFound = true;
@@ -385,8 +385,7 @@ class TsumegosController extends AppController{
 		$t = $this->Tsumego->findById($id);//the tsumego
 		$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 
-		if($t['Tsumego']['elo_rating_mode'] < 1000)
-			$t = $this->checkEloAdjust($t);
+		//if($t['Tsumego']['elo_rating_mode'] < 1000) $t = $this->checkEloAdjust($t);
 
 		$activityValue = $this->getActivityValue($_SESSION['loggedInUser']['User']['id'], $t['Tsumego']['id']);
 		$eloDifference = abs($_SESSION['loggedInUser']['User']['elo_rating_mode'] - $t['Tsumego']['elo_rating_mode']);

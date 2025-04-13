@@ -22,7 +22,8 @@ class UsersController extends AppController{
 		$this->loadModel('Duplicate');
 		$this->loadModel('PublishDate');
 		$this->loadModel('TagName');
-	
+
+		
 		/*
 		$setFrom = 241;
 		$setTo = 248;
@@ -71,7 +72,24 @@ class UsersController extends AppController{
 		}
 
 		echo '<pre>'; print_r(count($t)); echo '</pre>';
-		
+		//
+		$st = $this->Tsumego->find('all', array('conditions' => array(
+			'id >=' => 1,
+			'id <=' => 10000
+		)));
+		$counter=0;
+
+		for($i=0;$i<count($st);$i++){
+			if(strpos(' '.$st[$i]['Tsumego']['description'], 'b ')){
+				$st[$i]['Tsumego']['description'] = str_replace('b ', '[b] ', $st[$i]['Tsumego']['description']);
+				$this->Tsumego->save($st[$i]);
+				$counter++;
+			}
+		}
+		echo '<pre>'; print_r($counter); echo '</pre>';
+		echo '<pre>'; print_r(' | '); echo '</pre>';
+		echo '<pre>'; print_r(count($st)); echo '</pre>';
+		//
 		$tn = $this->TagName->find('all');
 		for($i=0;$i<count($tn);$i++){
 			$tn[$i]['TagName']['color'] = rand(0,24);
@@ -273,7 +291,7 @@ class UsersController extends AppController{
 			$this->Schedule->create();
 			$this->Schedule->save($s);
 		}*/
-		
+
 		$this->set('t', $t);
 		$this->set('u', $u);
 		$this->set('ou', $ou);

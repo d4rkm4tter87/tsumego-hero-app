@@ -143,6 +143,7 @@ class CommentsController extends AppController{
 							$comments[$i]['Comment']['set'] = $s['Set']['title'];
 							$comments[$i]['Comment']['set2'] = $s['Set']['title2'];
 							$comments[$i]['Comment']['num'] = $scT['SetConnection']['num'];
+							
 							if(!in_array($t['Tsumego']['id'], $keyList)) $comments[$i]['Comment']['user_tsumego'] = 'N';
 							else $comments[$i]['Comment']['user_tsumego'] = $keyListStatus[array_search($t['Tsumego']['id'], $keyList)];
 							$comments[$i]['Comment']['solved'] = $solved;
@@ -376,6 +377,9 @@ class CommentsController extends AppController{
 			for($i=0; $i<count($uc); $i++)
 				$this->Comment->delete($uc[$i]['Comment']['id']);
 		}
+
+		//echo '<pre>'; print_r($c); echo '</pre>';
+
 		$this->set('admins', $admins);
 		$this->set('paramindex', $paramindex);
 		$this->set('paramdirection', $paramdirection);
@@ -397,6 +401,18 @@ class CommentsController extends AppController{
 		$this->set('tooltipBoardSize', $tooltipBoardSize);
 		$this->set('tooltipBoardSize2', $tooltipBoardSize2);
   }
+
+	public function remove($id){
+		$token = true;
+		if($_SESSION['loggedInUser']['User']['isAdmin']<1)
+			$token = false;
+		else if($this->params['url']['token']!=md5($id))
+			$token = false;
+		if($token){
+			$this->Comment->delete($id);
+		}
+		$this->set('token', $token);
+	}
 }
 
 ?>
