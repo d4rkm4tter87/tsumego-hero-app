@@ -356,6 +356,11 @@
 					echo '<p style="color:#d63a49;">You have requested account deletion.&nbsp;';
 					echo '<a class="new-button-default" href="/users/view/'.$user['User']['id'].'?undo='.($user['User']['id']*1111).'">Undo</a></p>';
 				}
+				if(isset($_SESSION['loggedInUser']['User']['id'])){
+					if($_SESSION['loggedInUser']['User']['isAdmin']!=0){
+						echo '<div><a style="color:gray;" href="/users/demote_admin">Remove admin status</a></div><br>';
+					}
+				}
 			?>
 		</div>
 	</div>

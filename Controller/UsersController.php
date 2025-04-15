@@ -4291,6 +4291,33 @@ Joschka Zimdars';
 		$this->set('status', $status);
 		$this->set('u', $u);
 	}
+
+	public function demote_admin(){
+		$u = null;
+		$redirect = false;
+		$status = '';
+		if(isset($_SESSION['loggedInUser']['User']['id'])){
+			$u = $this->User->findById($_SESSION['loggedInUser']['User']['id']);
+		}
+
+		if(!empty($this->data)){
+			if(isset($this->data['User']['demote'])){
+				if($u['User']['pw'] == $this->tinkerEncode($this->data['User']['demote'], 1)){
+					$u['User']['isAdmin'] = 0;
+					$_SESSION['loggedInUser']['User']['isAdmin'] = 0;
+					$this->User->save($u);
+					$redirect = true;
+				}else{
+					$status = '<p style="color:#d63a49">Password incorrect.</p>';
+				}
+			}
+		}
+		$u['User']['name'] = $this->checkPicture($u);
+
+		$this->set('redirect', $redirect);
+		$this->set('status', $status);
+		$this->set('u', $u);
+	}
 	
 	public function set_score(){
 		$this->loadModel('TsumegoAttempt');

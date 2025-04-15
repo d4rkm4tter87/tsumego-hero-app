@@ -378,8 +378,6 @@ class CommentsController extends AppController{
 				$this->Comment->delete($uc[$i]['Comment']['id']);
 		}
 
-		//echo '<pre>'; print_r($c); echo '</pre>';
-
 		$this->set('admins', $admins);
 		$this->set('paramindex', $paramindex);
 		$this->set('paramdirection', $paramdirection);
