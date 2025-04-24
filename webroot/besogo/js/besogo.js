@@ -24,6 +24,7 @@
   besogo.multipleChoiceSetup = []; //multiple choice random stone placement
   besogo.multipleChoiceCustom = false;
   besogo.multipleChoiceCustomSetup = null;
+  besogo.usedEditor = false;
   besogo.onSite = null;
   let corner;
 

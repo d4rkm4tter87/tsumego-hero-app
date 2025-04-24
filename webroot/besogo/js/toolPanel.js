@@ -551,6 +551,7 @@ besogo.makeToolPanel = function (container, editor) {
         "Review",
         "review mode",
         function () {
+          besogo.usedEditor = true;
           if (trueBoardHeight === null) {
             trueBoardWidth = $(".besogo-board").width();
             trueBoardHeight = $(".besogo-board").height();
@@ -609,7 +610,6 @@ besogo.makeToolPanel = function (container, editor) {
                 trueRatio = trueBoardWidth / trueBoardHeight;
                 reviewBoardHeight = reviewBoardWidth / trueRatio;
               }
-              //$(".besogo-board").css("height",reviewBoardHeight);
               if ($(".besogo-tree").height() > 350) {
                 $(".besogo-panels").css("max-height", "350px");
                 $(".besogo-panels").css("overflow", "scroll");
@@ -694,7 +694,6 @@ besogo.makeToolPanel = function (container, editor) {
                 $(".besogo-board").css("width", "50%");
                 $(".besogo-board").css("margin", "0 315px");
               }
-              //$(".besogo-board").css("height",trueBoardHeight);
               deleteNextMoveGroup = false;
               editor.setReviewMode(false);
             }
@@ -1012,8 +1011,9 @@ besogo.makeToolPanel = function (container, editor) {
     });
 
     makeButtonText("Rotate", "Rotate the board clockwise", function () {
+      console.log("!");
       let transformation = besogo.makeTransformation();
-      transformation.rotate = true;
+      transformation.rotateClockwise = true;
       editor.applyTransformation(transformation);
     });
 

@@ -385,7 +385,7 @@ class TsumegosController extends AppController{
 		$t = $this->Tsumego->findById($id);//the tsumego
 		$t['Tsumego']['set_id'] = $scT['SetConnection']['set_id'];
 
-		//if($t['Tsumego']['elo_rating_mode'] < 1000) $t = $this->checkEloAdjust($t);
+		if($t['Tsumego']['elo_rating_mode'] < 1000) $t = $this->checkEloAdjust($t);
 
 		$activityValue = $this->getActivityValue($_SESSION['loggedInUser']['User']['id'], $t['Tsumego']['id']);
 		$eloDifference = abs($_SESSION['loggedInUser']['User']['elo_rating_mode'] - $t['Tsumego']['elo_rating_mode']);
@@ -637,6 +637,7 @@ class TsumegosController extends AppController{
 				if($this->params['url']['changeComment']==1) $deleteComment['Comment']['status'] = 97;
 				elseif($this->params['url']['changeComment']==2) $deleteComment['Comment']['status'] = 98;
 				elseif($this->params['url']['changeComment']==3) $deleteComment['Comment']['status'] = 96;
+				elseif($this->params['url']['changeComment']==4) $deleteComment['Comment']['status'] = 0;
 			}else $deleteComment['Comment']['status'] = 99;
 			$adminActivity = array();
 			$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
@@ -2441,7 +2442,8 @@ class TsumegosController extends AppController{
 
 		$u['User']['name'] = $this->checkPicture($u);
 		$tags = $this->getTags($id);
-		//$tags = $this->checkTagDuplicates($tags);
+		$tags = $this->checkTagDuplicates($tags);
+
 		$allTags = $this->getAllTags($tags);
 		$popularTags = $this->getPopularTags($tags);
 		$uc = $this->UserContribution->find('first', array('conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])));
@@ -2639,38 +2641,21 @@ class TsumegosController extends AppController{
 	private function checkTagDuplicates($array){
 		$tagIds = array();
 		$foundDuplicate = 0;
-		for($i=0; $i<count($array); $i++)
-				array_push($tagIds, $array[$i]['Tag']['tag_name_id']);
-		$tagIds = array_count_values($tagIds);
-
-		foreach ($tagIds as $key => $value){
-			if($value > 1)
-				$foundDuplicate = $key;
-		}
-		$counter = 0;
-		$hasDeleted = false;
-		$positionDeletedTag = 0;
-		while($foundDuplicate != 0){
-			if($array[$counter]['Tag']['tag_name_id']==$foundDuplicate){
-				$this->Tag->delete($array[$counter]['Tag']['id']);
-				$foundDuplicate = 0;
-				$positionDeletedTag = $counter;
-				$hasDeleted = true;
+		$newArray = array();
+		for($i=0; $i<count($array); $i++){
+			if(!$this->inArrayX($array[$i], $newArray)){
+				array_push($newArray, $array[$i]);
 			}
-			$counter++;
-			$positionDeletedTag++;
-			if($counter>count($array))
-				break;
 		}
-		if($hasDeleted){
-			$tags = array();
-			for($i=0; $i<count($array); $i++)
-				if($i != $positionDeletedTag)
-					array_push($tags, $array[$i]);
-			return $tags;
-		}else{
-			return $array;
+		return $newArray;
+	}
+
+	private function inArrayX($x, $newArray){
+		for($i=0; $i<count($newArray); $i++){
+			if($x['Tag']['tag_name_id'] == $newArray[$i]['Tag']['tag_name_id'] && $x['Tag']['approved'] == 1)
+				return true;
 		}
+		return false;
 	}
 
 	public function open($id=null, $sgf1=null, $sgf2=null){

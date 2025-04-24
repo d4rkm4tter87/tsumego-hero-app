@@ -23,7 +23,6 @@ class UsersController extends AppController{
 		$this->loadModel('PublishDate');
 		$this->loadModel('TagName');
 
-		
 		/*
 		$setFrom = 241;
 		$setTo = 248;
