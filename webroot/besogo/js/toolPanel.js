@@ -1011,7 +1011,6 @@ besogo.makeToolPanel = function (container, editor) {
     });
 
     makeButtonText("Rotate", "Rotate the board clockwise", function () {
-      console.log("!");
       let transformation = besogo.makeTransformation();
       transformation.rotateClockwise = true;
       editor.applyTransformation(transformation);
