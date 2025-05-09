@@ -257,7 +257,8 @@ class TsumegosController extends AppController{
 						$rm = array();
 						$rm['Rank']['session'] = $_SESSION['loggedInUser']['User']['activeRank'];
 						$rm['Rank']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
-						$rm['Rank']['tsumego_id'] = $rankTs[$i]['Tsumego']['id'];;
+						$rm['Rank']['tsumego_id'] = $rankTs[$i]['Tsumego']['id'];
+						if($rm['Rank']['tsumego_id']==null) $rm['Rank']['tsumego_id'] = 5127;
 						$rm['Rank']['rank'] = $r;
 						$rm['Rank']['num'] = $i+1;
 						$rm['Rank']['currentNum'] = 1;

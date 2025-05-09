@@ -79,8 +79,17 @@
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
+		<div id="news-right-15">
+			<p class="title4">New Collection: Boundless Sky | 01.05.2025</p>
+			<div class="new1">
+			The Goban is just like a boundless sky with unlimited possibilities. The only limit is your imagination. Expand your imagination with this set of problems that contain extraordinary shapes and solutions. 	
+				<div align="center"><img width="68%" src="/img/boundless-sky-promo.png" alt="New Collection: Boundless Sky" title="New Collection: Boundless Sky"><br><br>
+					<a class="new-button main-page" style="font-size:14px;" href="/sets/view/254">Play</a><br><br>
+				</div>
+			</div>
+		</div>
 		<div id="news-right-14">
-			<p class="title4">New Collection: Invasion Hero | 24.03.2024</p>
+			<p class="title4">New Collection: Invasion Hero | 24.03.2025</p>
 			<div class="new1">	
 			An invasion is a play made inside an enemy extension or framework with the intention of living, escaping, or sacrificing. By living or escaping, the invader denies the opponent of large territory and may create weak groups for the opponent. Invasions occur throughout the game. In the opening they are probably part of a joseki. In the middle game, they may be joseki, follow-ups or just as likely occur as one player exerts the power of influence built up in an earlier fight. In the endgame they can be considered as gouging tactics. This collection teaches the best ways to start and continue invasions in the early- and middle game.    <br><br>
 				<div align="center"><img width="90%" src="/img/invasion-hero-promo.png" alt="New Collection: Invasion Hero" title="New Collection: Invasion Hero"><br><br>
@@ -94,7 +103,7 @@
 		</div>
 
 		<div id="news-right-13">
-			<p class="title4">New Collection: The L Group | 12.03.2024</p>
+			<p class="title4">New Collection: The L Group | 12.03.2025</p>
 			<div class="new1">	
 			Basic knowledge of the L group to boost double digit kyu player's confidence ! A diligent study is worth it. The L group is a corner shape that 
 			will appear again and again in your game.  <br><br>
@@ -105,7 +114,7 @@
 		</div>
 
 		<div id="news-right-12">
-			<p class="title4">New Collection: Fuseki Hero | 19.02.2024</p>
+			<p class="title4">New Collection: Fuseki Hero | 19.02.2025</p>
 			<div class="new1">	
 			Fuseki is the whole board opening in the game of Go. It is the phase where both players make their initial claims to the territory on the board. Typically, 
 			an opening can last 30-60 moves, after which the board has been divided into several zones where each player hopes to make territory. 
