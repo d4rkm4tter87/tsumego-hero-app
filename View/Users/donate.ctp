@@ -28,7 +28,7 @@
 						<img src="/img/hero powers.png" alt="Secret Area: Ko Gems" title="Secret Area: Ko Gems"><br>
 					</td>
 					<td>
-						<b>Premium collections (<?php echo $premiumTsumegos; ?> problems):</b><br> 
+						<b>Premium collections (<?php echo $premiumTsumegos; ?> problems)</b><br> 
 						<?php
 							for($i=0;$i<count($premiumSets);$i++){
 								echo $premiumSets[$i]['Set']['title'];
@@ -77,6 +77,14 @@
 					</td>
 					<td>
 						<b>No daily limit</b><br>Removes the current limit of 12000 XP.<br>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<img src="/img/hpEmptyHeart.png" alt="no board locks" title="no board locks"><br>
+					</td>
+					<td>
+						<b>No board locks</b><br>Removes the board locks on failed attempts while hearts are empty.<br>
 					</td>
 				</tr>
 			</table>

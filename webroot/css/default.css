@@ -651,24 +651,16 @@ li a.menuLi {
   padding: 15px;
 }
 .highscoreTable .color1 {
-  background-color: #fff;
-  background-image: url("/img/highscoreButton1.png");
-  background-repeat: no-repeat;
+  background: linear-gradient(#2cfdfe, #6daadd); !important;
 }
 .highscoreTable .color2 {
-  background-color: #fff;
-  background-image: url("/img/highscoreButton2.png");
-  background-repeat: no-repeat;
+  background: linear-gradient(#fcf9b7, #f3da31); !important;
 }
 .highscoreTable .color3 {
-  background-color: #fff;
-  background-image: url("/img/highscoreButton3.png");
-  background-repeat: no-repeat;
+  background: linear-gradient( #eceaea,#939393); !important;
 }
 .highscoreTable .color4 {
-  background-color: #fff;
-  background-image: url("/img/highscoreButton4.png");
-  background-repeat: no-repeat;
+  background: linear-gradient(#fdd5a2, #cd7b41); !important;
 }
 .highscoreTable .color5 {
   /*101-200*/

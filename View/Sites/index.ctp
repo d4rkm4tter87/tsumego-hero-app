@@ -79,6 +79,21 @@
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
+
+		<div id="news-right-15">
+			<p class="title4">Update 17.05.2025</p>
+			<div class="new1"><br>
+				<div align="center">
+					<?php 
+						for($i=0;$i<7;$i++){
+							?><img title="Empty Heart" src="/img/heart2small.png"><?php
+						}
+					?>
+				</div><br>
+				On failed attempts, while the hearts are empty, there are no board locks and "Try again tomorrow" messages, but instead you can continue to try solving the problems. 
+				Currently this is only enabled on <a href="/users/donate">premium</a> accounts.<br><br>
+			</div>
+		</div>
 		<div id="news-right-15">
 			<p class="title4">New Collection: Boundless Sky | 01.05.2025</p>
 			<div class="new1">

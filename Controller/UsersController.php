@@ -2840,7 +2840,7 @@ Joschka Zimdars';
 	
 	public function donate($id = null){
 		$_SESSION['page'] = 'home';
-		$_SESSION['title'] = 'Tsumego Hero - Donate';
+		$_SESSION['title'] = 'Tsumego Hero - Upgrade';
 
 		$overallCounter = 0;
 		$sandboxSets = $this->Set->find('all', array('conditions' => array('public' => 0)));

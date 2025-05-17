@@ -1276,10 +1276,10 @@
 	let besogoRotation = -1;
 	let msgFilterSelected = false;
 	let revelationCounter = <?php echo $user['User']['revelation']; ?>+"";
+	let hasPremium = "<?php echo $hasPremium; ?>";
 	const activeTopicTiles = [];
 	const activeDifficultyTiles = [];
 	const activeTagTiles = [];
-
 	<?php
 		if($hasRevelation)
 			echo 'let hasRevelation = true;';
@@ -1757,7 +1757,7 @@
 		<?php
 		if($t['Tsumego']['status'] == 'setF2' || $t['Tsumego']['status'] == 'setX2'){
 			echo '
-				document.getElementById("status").innerHTML = "<h2>Try again tomorrow</h2>";
+				document.getElementById("status").innerHTML = \'<b style="font-size:17px">Try again tomorrow or <a style="color:#e03c4b" target="_blank" href="/users/donate">upgrade</a></b>\';
 				tryAgainTomorrow = true;
 				document.getElementById("status").style.color = "#e03c4b";
 				document.getElementById("xpDisplay").innerHTML = "&nbsp;";
@@ -3081,10 +3081,15 @@
 					freePlayMode = true;
 					if(mode==1){
 						if(<?php echo $user['User']['health'] - $user['User']['damage']; ?> - misplays<0){
-							document.getElementById("currentElement").style.backgroundColor = "#e03c4b";
-							document.getElementById("status").innerHTML = "<h2>Try again tomorrow</h2>";
-							tryAgainTomorrow = true;
-							toggleBoardLock(true);
+							if(hasPremium !== "1"){
+								document.getElementById("currentElement").style.backgroundColor = "#e03c4b";
+								document.getElementById("status").innerHTML = '<b style="font-size:17px">Try again tomorrow or <a style="color:#e03c4b" target="_blank" href="/users/donate">upgrade</a></b>';
+								tryAgainTomorrow = true;
+								toggleBoardLock(true);
+							}else{
+								document.getElementById("currentElement").style.backgroundColor = "#e03c4b";
+								document.getElementById("status").innerHTML = "<h2>Incorrect</h2>";
+							}
 						}
 					}
 					if(goldenTsumego){

@@ -2884,6 +2884,13 @@ class AppController extends Controller{
 		$lastProfileRight = 2;
 		$hasFavs = false;
 
+		if(!isset($_SESSION['loggedInUser']['User']['id'])
+			|| isset($_SESSION['loggedInUser']['User']['id']) && $_SESSION['loggedInUser']['User']['premium']<1
+		)
+			$hasPremium = false;
+		else
+			$hasPremium = true;
+
 		if(isset($_SESSION['loggedInUser']['User']['id'])){
 			if($_SESSION['loggedInUser']['User']['id']==33) unset($_SESSION['loggedInUser']);
 			$loggedInUser = $_SESSION['loggedInUser'];
@@ -3069,7 +3076,7 @@ class AppController extends Controller{
 				$preTsumego['Tsumego']['difficulty'] = $this->convertEloToXp($preTsumego['Tsumego']['elo_rating_mode']);
 				if($preTsumego['Tsumego']['elo_rating_mode']>100)
 					$this->Tsumego->save($preTsumego);
-				if($mode =! 3){
+				if($mode != 3){
 					//not used
 					if($u['User']['damage']>$u['User']['health']){
 						if($preTsumego==null){
@@ -3077,21 +3084,24 @@ class AppController extends Controller{
 							$preTsumego['TsumegoStatus']['user_id'] = $u['User']['id'];
 							$preTsumego['TsumegoStatus']['tsumego_id'] = $_COOKIE['preId'];
 						}
-						if($preTsumego['TsumegoStatus']['status']=='W')
-							$preTsumego['TsumegoStatus']['status'] = 'X';//W => X
-						else if($preTsumego['TsumegoStatus']['status']=='V')
-							$preTsumego['TsumegoStatus']['status'] = 'F';// V => F
-						else if($preTsumego['TsumegoStatus']['status']=='G')
-							$preTsumego['TsumegoStatus']['status'] = 'F';// G => F
-						else if($preTsumego['TsumegoStatus']['status']=='S')
-							$preTsumego['TsumegoStatus']['status'] = 'S';//S => S
+
+						if(!$hasPremium){
+							if($preTsumego['TsumegoStatus']['status']=='W')
+								$preTsumego['TsumegoStatus']['status'] = 'X';//W => X
+							else if($preTsumego['TsumegoStatus']['status']=='V')
+								$preTsumego['TsumegoStatus']['status'] = 'F';// V => F
+							else if($preTsumego['TsumegoStatus']['status']=='G')
+								$preTsumego['TsumegoStatus']['status'] = 'F';// G => F
+							else if($preTsumego['TsumegoStatus']['status']=='S')
+								$preTsumego['TsumegoStatus']['status'] = 'S';//S => S
+						}
 						$preTsumego['TsumegoStatus']['created'] = date('Y-m-d H:i:s');
 						if(!isset($preTsumego['TsumegoStatus']['status']))
 							$preTsumego['TsumegoStatus']['status'] = 'V';
 						$_SESSION['loggedInUser']['uts'][$preTsumego['TsumegoStatus']['tsumego_id']] = $preTsumego['TsumegoStatus']['status'];
 					}
 				}
-			}	
+			}
 			//Correct!
 			if(isset($_COOKIE['mode']) && isset($_COOKIE['score']) && isset($_COOKIE['preId'])){
 			if($_COOKIE['score'] != '0' && $_COOKIE['preId'] != '0'){

@@ -892,9 +892,11 @@ class TsumegosController extends AppController{
 				}				
 				if($_COOKIE['misplay']!=0){
 					if($u['User']['damage']+$_COOKIE['misplay'] > $u['User']['health']){
-						if($utPre['TsumegoStatus']['status']!='W') $ut['TsumegoStatus']['status'] = 'F';
-						else $ut['TsumegoStatus']['status'] = 'X';
-					}	
+						if(!$hasPremium){
+							if($utPre['TsumegoStatus']['status']!='W') $ut['TsumegoStatus']['status'] = 'F';
+							else $ut['TsumegoStatus']['status'] = 'X';
+						}
+					}
 				}
 			}
 		}elseif($mode==2){
@@ -1074,15 +1076,16 @@ class TsumegosController extends AppController{
 					$utPre['TsumegoStatus']['user_id'] = $u['User']['id'];
 					$utPre['TsumegoStatus']['tsumego_id'] = $_COOKIE['preId'];
 				}
-				if($utPre['TsumegoStatus']['status']=='W')
-					$utPre['TsumegoStatus']['status'] = 'X';//W => X
-				else if($utPre['TsumegoStatus']['status']=='V')
-					$utPre['TsumegoStatus']['status'] = 'F';// V => F
-				else if($utPre['TsumegoStatus']['status']=='G')
-					$utPre['TsumegoStatus']['status'] = 'F';// G => F
-				else if($utPre['TsumegoStatus']['status']=='S')
-					$utPre['TsumegoStatus']['status'] = 'S';//S => S
-				
+				if(!$hasPremium){
+					if($utPre['TsumegoStatus']['status']=='W')
+						$utPre['TsumegoStatus']['status'] = 'X';//W => X
+					else if($utPre['TsumegoStatus']['status']=='V')
+						$utPre['TsumegoStatus']['status'] = 'F';// V => F
+					else if($utPre['TsumegoStatus']['status']=='G')
+						$utPre['TsumegoStatus']['status'] = 'F';// G => F
+					else if($utPre['TsumegoStatus']['status']=='S')
+						$utPre['TsumegoStatus']['status'] = 'S';//S => S
+				}
 				$utPre['TsumegoStatus']['created'] = date('Y-m-d H:i:s');
 				if(isset($_SESSION['loggedInUser']['User']['id'])){
 					if(!isset($utPre['TsumegoStatus']['status']))
@@ -2601,6 +2604,7 @@ class TsumegosController extends AppController{
 		$this->set('amountOfOtherCollection', $amountOfOtherCollection);
 		$this->set('partition', $partition);
 		$this->set('checkNotInSearch', $checkNotInSearch);
+		$this->set('hasPremium', $hasPremium);
   }
 
 	private function getPopularTags($tags){
