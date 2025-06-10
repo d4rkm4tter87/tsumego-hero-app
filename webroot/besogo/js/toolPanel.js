@@ -551,7 +551,6 @@ besogo.makeToolPanel = function (container, editor) {
         "Review",
         "review mode",
         function () {
-          besogo.usedEditor = true;
           if (trueBoardHeight === null) {
             trueBoardWidth = $(".besogo-board").width();
             trueBoardHeight = $(".besogo-board").height();

@@ -790,6 +790,8 @@ besogo.makeEditor = function (sizeX = 19, sizeY = 19, options = []) {
   }
 
   function addToRequired(node, cameFrom) {
+    if (node.localEdit)
+      return;
     let element = [];
     element.node = node;
     element.cameFrom = cameFrom;
@@ -804,7 +806,6 @@ besogo.makeEditor = function (sizeX = 19, sizeY = 19, options = []) {
     )
       remainingRequiredNodes.pop();
     if (remainingRequiredNodes.length == 0) return false;
-    if (besogo.usedEditor) return false;
     performingAutoPlay = true;
 
     setTimeout(function () {
