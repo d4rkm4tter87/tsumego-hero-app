@@ -26,34 +26,37 @@ class UsersController extends AppController{
 		/*
 		$setFrom = 241;
 		$setTo = 248;
-		$step = 5;
-		$endDay = 4;
+		$step = 4;
+		$numFrom = 183;
+		$startDay = 18;
+		$endDay = 27;
+		$month = '07';
 		
-		$numFrom = 51;
-		$numTo = 55;
-		$day = 1;
-		
-		while($day <= $endDay){
+		$numTo = $numFrom + $step - 1;
+		while($startDay <= $endDay){
 			$sc = $this->SetConnection->find('all', array('order' => 'num ASC', 'conditions' => array(
 				'set_id' => $setFrom,
 				'num >=' => $numFrom,
 				'num <=' => $numTo
 			)));
 			for($i=0; $i<count($sc); $i++){
+				if($startDay>9) $digit = '';
+				else $digit = '0';
 				$s = array();
 				$s['Schedule']['published'] = '0';
-				$s['Schedule']['date'] = '2025-02-0'.$day;
+				$s['Schedule']['date'] = '2025-'.$month.'-'.$digit.$startDay;
 				$s['Schedule']['set_id'] = $setTo;
 				$s['Schedule']['tsumego_id'] = $sc[$i]['SetConnection']['tsumego_id'];
 				$this->Schedule->create();
 				$this->Schedule->save($s);
 			}
-			echo '<pre>'; print_r($day); echo '</pre>';
-			
+			echo '<pre>'; print_r($startDay); echo '</pre>';
 			$numFrom += $step;
 			$numTo += $step;
-			$day += 1;
+			$startDay += 1;
 		}
+		
+		////////////////
 
 		$t = $this->Tsumego->find('all', array('conditions' => array(
 			'set_id' => 210,

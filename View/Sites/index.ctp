@@ -1,7 +1,7 @@
 
 <?php
 	$highestLeft = 18;
-	$highestRight = 14;
+	$highestRight = 17;
 ?>
 	
 	<script src ="/js/previewBoard.js"></script>
@@ -79,8 +79,18 @@
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
-
-		<div id="news-right-15">
+		<div id="news-right-17">
+			<p class="title4">New Collection: The J Group | 28.05.2025</p>
+			<div class="new1">	
+			The J group is next to the L group another common shape that can happen in the corner. It is defended with a hanging connection, so it forms a J.
+			The status of the J group on its own is unsettled. Learn the details about this shape to improve your game, as you will certainly see it again. 
+			  <br><br>
+				<div align="center"><img width="60%" src="/img/j-group-promo.png" alt="New Collection: The J Group" title="New Collection: The J Group"><br><br>
+				<a class="new-button main-page" style="font-size:14px;" href="/sets/view/255">Play</a><br><br>
+				</div>
+			</div>
+		</div>
+		<div id="news-right-16">
 			<p class="title4">Update 17.05.2025</p>
 			<div class="new1"><br>
 				<div align="center">
@@ -1032,7 +1042,6 @@
 	
 	<style>
 		<?php 
-			$highestLeft = 18;
 			$left = $highestLeft;
 			while($left>0){
 				if($left<$highestLeft-4){
@@ -1040,10 +1049,9 @@
 				}
 				$left--;
 			}
-			$highestRight = 11;
 			$right = $highestRight;
 			while($right>0){
-				if($right<$highestRight-5){
+				if($right<$highestRight-7){
 					echo '#news-right-'.$right.'{display:none;}';
 				}
 				$right--;

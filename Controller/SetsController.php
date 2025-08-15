@@ -879,7 +879,6 @@ class SetsController extends AppController{
 		$utsMap = array();
 		$setsWithPremium = array();
 		$setDifficulty = 1200;
-
 		if(!isset($_SESSION['loggedInUser']['User']['id'])
 			|| isset($_SESSION['loggedInUser']['User']['id']) && $_SESSION['loggedInUser']['User']['premium']<1
 		)
@@ -941,6 +940,7 @@ class SetsController extends AppController{
 			$adminActivity['AdminActivity']['answer'] = 'Added problem for '.$set['Set']['title'];
 			$this->AdminActivity->save($adminActivity);
 		}
+
 		if(isset($this->params['url']['show'])){
 			if($this->params['url']['show']=='order') $josekiOrder = 1;
 			if($this->params['url']['show']=='num') $josekiOrder = 0;
@@ -1123,7 +1123,6 @@ class SetsController extends AppController{
 				$set = $this->Set->find('first', array('conditions' => array('id' => $id)));
 				$ts = array();
 				$scTs = $this->SetConnection->find('all', array('order' => 'num ASC', 'conditions' => array('set_id' => $set['Set']['id'])));
-				
 				$rankConditions = array();
 				if(count($search2) > 0){
 					$fromTo = array();
@@ -1163,6 +1162,8 @@ class SetsController extends AppController{
 						array_push($ts, $scT);
 					}
 				}
+				if($set['Set']['public']!=1)
+					$collectionSize = 2000;
 				$fromTo = $this->getPartitionRange(count($ts), $collectionSize, $partition);
 				$currentIds = array();
 				$ts1 = array();
