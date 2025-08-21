@@ -1432,6 +1432,13 @@ class SetsController extends AppController{
 					if(!$formChange){
 						$scFormChange = $this->SetConnection->find('first', array('order' => 'num DESC', 'conditions' => array('set_id' => $id)));
 						$tFormChange = $this->Tsumego->findById($scFormChange['SetConnection']['tsumego_id']);
+						if($scFormChange==null){
+							$scFormChange = array();
+							$scFormChange['SetConnection']['set_id'] = $id;
+							$scFormChange['SetConnection']['num'] = $this->data['Tsumego']['num'];
+							$tFormChange = array();
+							$tFormChange['Tsumego']['elo_rating_mode'] = 1000;
+						}
 						$tf = array();
 						$tf['Tsumego']['num'] = $this->data['Tsumego']['num'];
 						$tf['Tsumego']['difficulty'] = 40;

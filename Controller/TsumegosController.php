@@ -29,6 +29,7 @@ class TsumegosController extends AppController{
 		$this->loadModel('TagName');
 		$this->LoadModel('UserContribution');
 		
+		$onlineMode = true;
 		$noUser;
 		$noLogin;
 		$noLoginStatus;
@@ -444,7 +445,7 @@ class TsumegosController extends AppController{
 		if(isset($this->params['url']['rcheat'])) if($this->params['url']['rcheat']==1) $reviewCheat = true;
 		$this->Session->write('lastVisit', $id);
 		if(!empty($this->data)){
-			if(isset($this->data['Comment']['status'])){
+			if(isset($this->data['Comment']['status']) && !isset($this->data['Study2'])){
 				$adminActivity = array();
 				$adminActivity['AdminActivity']['user_id'] = $_SESSION['loggedInUser']['User']['id'];
 				$adminActivity['AdminActivity']['tsumego_id'] = $t['Tsumego']['id'];
@@ -1091,7 +1092,7 @@ class TsumegosController extends AppController{
 					if(!isset($utPre['TsumegoStatus']['status']))
 						$utPre['TsumegoStatus']['status'] = 'V';
 					if($mode!=3){
-						$this->TsumegoStatus->save($utPre);
+						if($onlineMode) $this->TsumegoStatus->save($utPre);
 						$_SESSION['loggedInUser']['uts'][$utPre['TsumegoStatus']['tsumego_id']] = $utPre['TsumegoStatus']['status'];
 						$utsMap[$utPre['TsumegoStatus']['tsumego_id']] = $utPre['TsumegoStatus']['status'];
 					}
@@ -1300,7 +1301,7 @@ class TsumegosController extends AppController{
 					if(isset($_SESSION['loggedInUser']) && !isset($_SESSION['noLogin'])){
 						if(!isset($utPre['TsumegoStatus']['status'])) $utPre['TsumegoStatus']['status'] = 'V';
 						if($mode==1){
-							$this->TsumegoStatus->save($utPre);
+							if($onlineMode) $this->TsumegoStatus->save($utPre);
 							$_SESSION['loggedInUser']['uts'][$utPre['TsumegoStatus']['tsumego_id']] = $utPre['TsumegoStatus']['status'];
 							$utsMap[$utPre['TsumegoStatus']['tsumego_id']] = $utPre['TsumegoStatus']['status'];
 						}
@@ -1531,7 +1532,7 @@ class TsumegosController extends AppController{
 				$ut['TsumegoStatus']['tsumego_id'] = $id;
 				$ut['TsumegoStatus']['status'] = 'V';
 				if($mode!=3){
-					$this->TsumegoStatus->save($ut);
+					if($onlineMode) $this->TsumegoStatus->save($ut);
 					$_SESSION['loggedInUser']['uts'][$ut['TsumegoStatus']['tsumego_id']] = $ut['TsumegoStatus']['status'];
 					$utsMap[$ut['TsumegoStatus']['tsumego_id']] = $ut['TsumegoStatus']['status'];
 				}

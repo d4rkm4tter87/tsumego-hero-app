@@ -3550,6 +3550,7 @@ input:checked + .mode-slider:before {
 #besogo-multipleChoice4,
 #besogo-se-black,
 #besogo-se-white,
+
 #besogo-se-more,
 #besogo-se-less {
   font-family: Times New Roman, verdana, helvetica, arial, sans-serif;
@@ -3583,6 +3584,33 @@ input:checked + .mode-slider:before {
   border-color: #8f9092 !important;
   cursor: pointer;
 }
+#se-result-text{
+  width:145px;
+  font-family: Times New Roman, verdana, helvetica, arial, sans-serif;
+  font-size: 17px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 800;
+  text-decoration: none;
+  color: #fff;
+  padding: 10px 13px;
+  margin: 5px;
+  text-transform: none !important;
+  -moz-border-radius-bottomleft: 9px;
+  -moz-border-radius-bottomright: 9px;
+  border-radius-bottomleft: 9px;
+  border-radius-bottomright: 9px;
+  -moz-border-radius-bottomright: 9px;
+  -moz-border-radius-bottomleft: 9px;
+  border-bottom-right-radius: 9px;
+  border-bottom-left-radius: 9px;
+  -moz-border-radius-topright: 9px;
+  -moz-border-radius-topleft: 9px;
+  border-top-right-radius: 9px;
+  border-top-left-radius: 9px;
+  opacity:0;
+  cursor: context-menu;
+}
 #besogo-multipleChoice1:hover,
 #besogo-multipleChoice2:hover,
 #besogo-multipleChoice3:hover,
@@ -3591,7 +3619,7 @@ input:checked + .mode-slider:before {
 #besogo-se-white:hover,
 #besogo-se-more:hover,
 #besogo-se-less:hover,
-#submitScoreEstimatingSE:hover {
+#submitScoreEstimatingSE:hover, #submitScoreEstimatingBlackWins:hover, #submitScoreEstimatingWhiteWins:hover, #submitScoreEstimatingJigo:hover {
   background-color: #6239ff;
 }
 #besogo-se-more,
@@ -3604,7 +3632,7 @@ input:checked + .mode-slider:before {
   padding-left: 8px;
   padding-right: 8px;
 }
-#submitScoreEstimatingSE {
+#submitScoreEstimatingSE, #submitScoreEstimatingBlackWins, #submitScoreEstimatingWhiteWins, #submitScoreEstimatingJigo {
   font-family: Times New Roman, verdana, helvetica, arial, sans-serif;
   font-size: 16px;
   font-style: normal;
@@ -3638,6 +3666,7 @@ input:checked + .mode-slider:before {
 }
 #ScoreEstimatingSE {
   padding: 7px;
+  margin-top: 7px;
   font-size: 16px;
   font-weight: bold;
 }

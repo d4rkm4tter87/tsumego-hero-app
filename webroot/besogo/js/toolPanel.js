@@ -782,40 +782,43 @@ besogo.makeToolPanel = function (container, editor) {
         prevButtonLink,
         prevButtonId
       );
+      if (nextButtonLinkSet != 262) {
+        makeButtonText(
+          "Black wins",
+          "",
+          function () {
+            displayScoreEstimatingResult("b");
+          },
+          "besogo-se-black"
+        );
 
-      makeButtonText(
-        "Black wins",
-        "",
-        function () {
-          displayScoreEstimatingResult("b");
-        },
-        "besogo-se-black"
-      );
-
-      makeButtonText(
-        "White wins",
-        "",
-        function () {
-          displayScoreEstimatingResult("w");
-        },
-        "besogo-se-white"
-      );
-      makeButtonText(
-        "-",
-        "",
-        function () {
-          displayScoreEstimatingResult("-");
-        },
-        "besogo-se-less"
-      );
-      makeButtonText(
-        "+",
-        "",
-        function () {
-          displayScoreEstimatingResult("+");
-        },
-        "besogo-se-more"
-      );
+        makeButtonText(
+          "White wins",
+          "",
+          function () {
+            displayScoreEstimatingResult("w");
+          },
+          "besogo-se-white"
+        );
+        makeButtonText(
+          "-",
+          "",
+          function () {
+            displayScoreEstimatingResult("-");
+          },
+          "besogo-se-less"
+        );
+        makeButtonText(
+          "+",
+          "",
+          function () {
+            displayScoreEstimatingResult("+");
+          },
+          "besogo-se-more"
+        );
+      } else {
+        makeResultText("", "se-result-text");
+      }
       let nextButtonId;
       let nextButtonLink2 = 0;
       nextButtonId = "besogo-next-button";
@@ -1301,6 +1304,15 @@ besogo.makeToolPanel = function (container, editor) {
     button.text = text;
     container.appendChild(button);
     return button;
+  }
+
+  // Creates result text
+  function makeResultText(text, id) {
+    var p = document.createElement("p");
+    p.id = id;
+    container.appendChild(p);
+    $("#" + id).text(text);
+    return p;
   }
 
   // Creates image button

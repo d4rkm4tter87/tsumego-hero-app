@@ -24,13 +24,13 @@ class UsersController extends AppController{
 		$this->loadModel('TagName');
 
 		/*
-		$setFrom = 241;
-		$setTo = 248;
-		$step = 4;
-		$numFrom = 183;
-		$startDay = 18;
-		$endDay = 27;
-		$month = '07';
+		$setFrom = 259;
+		$setTo = 263;
+		$step = 10;
+		$numFrom = 111;
+		$startDay = 1;
+		$endDay = 20;
+		$month = '09';
 		
 		$numTo = $numFrom + $step - 1;
 		while($startDay <= $endDay){

@@ -1,7 +1,7 @@
 
 <?php
 	$highestLeft = 18;
-	$highestRight = 17;
+	$highestRight = 18;
 ?>
 	
 	<script src ="/js/previewBoard.js"></script>
@@ -79,6 +79,16 @@
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
 		<!-- RIGHT NEWS -->
+		 <div id="news-right-18">
+			<p class="title4">New Collection: Level Evaluation Set: Beginner | 21.08.2025</p>
+			<div class="new1">	
+			The Level Evaluation Set is designed to assess and improve the reader’s strength in the game of Go through a focused collection of Tsumego and Tesuji problems. The first part is titled Beginner and covers problems around the double digit kyu ranks.  
+			  <br><br>
+				<div align="center"><img width="90%" src="/img/level-evaluation-set-promo.png" alt="Level Evaluation Set: Beginner" title="Level Evaluation Set: Beginner"><br><br>
+				<a class="new-button main-page" style="font-size:14px;" href="/sets/view/263">Play</a><br><br>
+				</div>
+			</div>
+		</div>
 		<div id="news-right-17">
 			<p class="title4">New Collection: The J Group | 28.05.2025</p>
 			<div class="new1">	

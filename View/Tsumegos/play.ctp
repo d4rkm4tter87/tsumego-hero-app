@@ -493,9 +493,18 @@
 	</div>
 	<?php }else if($tv!=null&&$tv['TsumegoVariant']['type']=='score_estimating'){ ?>
 	<div align="center">
-		<a href="/tsumegos/play/<?php echo $t['Tsumego']['id']; ?>" title="reset problem" id="besogo-next-button">Reset</a>
-		<input value="0" placeholder="Score" type="text" id="ScoreEstimatingSE">
-		<a id="submitScoreEstimatingSE" href="#">Submit</a>
+		<?php if($t['Tsumego']['set_id']==262){ ?>
+			<br>
+			<a id="submitScoreEstimatingBlackWins" href="#">Black wins</a>
+			<?php if(substr($tv['TsumegoVariant']['answer1'],-2) !== '.5') { ?>
+				<a id="submitScoreEstimatingJigo" href="#">Jigo</a>
+			<?php } ?>
+			<a id="submitScoreEstimatingWhiteWins" href="#">White wins</a>
+		<?php }else{ ?>
+			<a href="/tsumegos/play/<?php echo $t['Tsumego']['id']; ?>" title="reset problem" id="besogo-next-button">Reset</a>
+			<input value="0" placeholder="Score" type="text" id="ScoreEstimatingSE">
+			<a id="submitScoreEstimatingSE" href="#">Submit</a>
+		<?php } ?>
 		<br><br>
 	</div>
 	<?php } ?>
@@ -1536,12 +1545,103 @@
 					color = "#e0747f";
 				}
 				hasChosen = true;
+				locked = true;
 				$("#ScoreEstimatingSE").prop("disabled", true);
 				$("#besogo-se-black").css("background-color", color);
 				$("#besogo-se-white").css("background-color", color);
 				$("#besogo-se-more").css("background-color", color);
 				$("#besogo-se-less").css("background-color", color);
 				$("#submitScoreEstimatingSE").css("background-color", color);
+			}
+		});
+		$("#submitScoreEstimatingBlackWins").click(function(e){
+			e.preventDefault();
+			let scoreResult = "<?php echo $tv['TsumegoVariant']['winner']; ?>";
+			if(!hasChosen){
+				let res1;
+				if(scoreResult.charAt(scoreResult.length - 1) === '0')
+					res1 = "Result: Jigo";
+				else
+					res1 = "Result: "+scoreResult;
+				$("#se-result-text").css("opacity", "1");
+				$("#se-result-text").text(res1);
+				let color = "#e0747f";
+				let color2 = "rgb(224, 60, 75)";
+				if (scoreResult.charAt(0) === 'B' && scoreResult.charAt(scoreResult.length - 1) !== '0') {
+					displayResult("S");
+					color = "#3ecf78";
+					color2 = "rgb(12, 187, 12)";
+				}else{
+					displayResult("F");
+					color = "#e0747f";
+					color2 = "rgb(224, 60, 75)";
+				}
+				hasChosen = true;
+				locked = true;
+				$("#submitScoreEstimatingBlackWins").css("background-color", color);
+				$("#submitScoreEstimatingWhiteWins").css("background-color", color);
+				$("#submitScoreEstimatingJigo").css("background-color", color);
+				$("#se-result-text").css("color", color2);
+			}
+		});
+		$("#submitScoreEstimatingWhiteWins").click(function(e){
+			e.preventDefault();
+			let scoreResult = "<?php echo $tv['TsumegoVariant']['winner']; ?>";
+			if(!hasChosen){
+				let res1;
+				if(scoreResult.charAt(scoreResult.length - 1) === '0')
+					res1 = "Result: Jigo";
+				else
+					res1 = "Result: "+scoreResult;
+				$("#se-result-text").css("opacity", "1");
+				$("#se-result-text").text(res1);
+				let color = "#e0747f";
+				let color2 = "rgb(224, 60, 75)";
+				if (scoreResult.charAt(0) === 'W' && scoreResult.charAt(scoreResult.length - 1) !== '0') {
+					displayResult("S");
+					color = "#3ecf78";
+					color2 = "rgb(12, 187, 12)";
+				}else{
+					displayResult("F");
+					color = "#e0747f";
+					color2 = "rgb(224, 60, 75)";
+				}
+				hasChosen = true;
+				locked = true;
+				$("#submitScoreEstimatingBlackWins").css("background-color", color);
+				$("#submitScoreEstimatingWhiteWins").css("background-color", color);
+				$("#submitScoreEstimatingJigo").css("background-color", color);
+				$("#se-result-text").css("color", color2);
+			}
+		});
+		$("#submitScoreEstimatingJigo").click(function(e){
+			e.preventDefault();
+			let scoreResult = "<?php echo $tv['TsumegoVariant']['winner']; ?>";
+			if(!hasChosen){
+				let res1;
+				if(scoreResult.charAt(scoreResult.length - 1) === '0')
+					res1 = "Result: Jigo";
+				else
+					res1 = "Result: "+scoreResult;
+				$("#se-result-text").css("opacity", "1");
+				$("#se-result-text").text(res1);
+				let color = "#e0747f";
+				let color2 = "rgb(224, 60, 75)";
+				if (scoreResult.charAt(scoreResult.length - 1) === '0') {
+					displayResult("S");
+					color = "#3ecf78";
+					color2 = "rgb(12, 187, 12)";
+				}else{
+					displayResult("F");
+					color = "#e0747f";
+					color2 = "rgb(224, 60, 75)";
+				}
+				hasChosen = true;
+				locked = true;
+				$("#submitScoreEstimatingBlackWins").css("background-color", color);
+				$("#submitScoreEstimatingWhiteWins").css("background-color", color);
+				$("#submitScoreEstimatingJigo").css("background-color", color);
+				$("#se-result-text").css("color", color2);
 			}
 		});
 		$("#besogo-se-edit-black").click(function(e){
