@@ -197,23 +197,12 @@ body {
   width: 1280px;
   position: relative;
   margin: auto;
-  padding: 5px 6px;
+  padding: 0;
   background-color: #fff;
   min-height: 700px;
   border: 2px solid black;
   box-shadow: 10px 10px 15px black;
-  -moz-border-radius-bottomleft: 20px;
-  -moz-border-radius-bottomright: 20px;
-  border-radius-bottomleft: 20px;
-  border-radius-bottomright: 20px;
-  -moz-border-radius-bottomright: 20px;
-  -moz-border-radius-bottomleft: 20px;
-  border-bottom-right-radius: 20px;
-  border-bottom-left-radius: 20px;
-  -moz-border-radius-topright: 20px;
-  -moz-border-radius-topleft: 20px;
-  border-top-right-radius: 20px;
-  border-top-left-radius: 20px;
+  border-radius:10px;
 }
 
 .whitebox3 {
@@ -912,7 +901,7 @@ li a.menuLi {
 .admin-panel-main-page {
   position: absolute;
   top: 5px;
-  left: 539px;
+  left: 538px;
 }
 .admin-panel-main-page ul li {
   padding: 3px;
@@ -1902,92 +1891,100 @@ li a.menuLi {
   cursor: pointer;
   float: left;
   position: absolute;
-  top: 156px;
-  left: 661px;
+  top: 122px;
+  left: 32px;
   width: 134px;
   height: 36px;
   border-radius: 18px;
   -moz-border-radius: 18px;
   -webkit-border-radius: 18px;
+  /* background:green; */
 }
 .modeBox11 {
   cursor: pointer;
   float: left;
   position: absolute;
-  top: 74px;
-  left: 701px;
+  top: 39px;
+  left: 70px;
   width: 55px;
   height: 79px;
   border-radius: 42px;
   -moz-border-radius: 42px;
   -webkit-border-radius: 42px;
+  /* background:green; */
 }
 .modeBox2 {
   float: left;
   position: absolute;
-  top: 156px;
-  left: 812px;
+  top: 122px;
+  left: 179px;
   width: 134px;
   height: 36px;
   border-radius: 18px;
   -moz-border-radius: 18px;
   -webkit-border-radius: 18px;
+  /* background:purple; */
 }
 .modeBox22 {
   cursor: pointer;
   float: left;
   position: absolute;
-  top: 70px;
-  left: 855px;
+  top: 36px;
+  left: 221px;
   width: 47px;
   height: 83px;
   border-radius: 42px;
   -moz-border-radius: 42px;
   -webkit-border-radius: 42px;
+  /* background:purple; */
 }
 .modeBox3 {
   position: absolute;
-  top: 156px;
-  left: 962px;
+  top: 122px;
+  left: 328px;
   width: 134px;
   height: 36px;
   border-radius: 18px;
   -moz-border-radius: 18px;
   -webkit-border-radius: 18px;
+  /* background:orange; */
 }
 .modeBox33 {
   cursor: pointer;
   float: left;
   position: absolute;
-  top: 67px;
-  left: 1007px;
+  top: 33px;
+  left: 374px;
   width: 44px;
   height: 87px;
   border-radius: 42px;
   -moz-border-radius: 42px;
   -webkit-border-radius: 42px;
+  /* background:orange; */
 }
 .modeBox4 {
   position: absolute;
-  top: 156px;
-  left: 1111px;
+  top: 122px;
+  left: 476px;
   width: 134px;
   height: 36px;
   border-radius: 18px;
   -moz-border-radius: 18px;
   -webkit-border-radius: 18px;
+  /* background:teal; */
 }
 .modeBox44 {
   cursor: pointer;
   float: left;
   position: absolute;
-  top: 88px;
-  left: 1159px;
+  top: 53px;
+  left: 522px;
   width: 42px;
   height: 42px;
   border-radius: 42px;
   -moz-border-radius: 42px;
   -webkit-border-radius: 42px;
+  /* background:teal; */
 }
 .time-mode-play {
   position: absolute;
@@ -2322,15 +2319,15 @@ h4 {
 }
 .homeLeft {
   text-align: justify;
-  padding: 0 6px;
-  width: 50%;
+  padding: 0 3px 0 6px;
+  width: 638px;
   overflow: hidden;
 }
 .homeRight {
   float: right;
   text-align: justify;
-  padding: 0 6px;
-  width: 50%;
+  padding: 0 6px 0 3px;
+  width: 638px;
 }
 .homeLeft2 {
   width: 50%;
@@ -2447,7 +2444,7 @@ h4 {
 }
 .title4 {
   padding: 8px;
-  margin-top: 7px;
+  margin-top: 6px;
   margin-bottom: 0px;
   font-size: 24px;
   font-style: normal;
@@ -2540,7 +2537,7 @@ h4 {
   color: white;
 }
 .scheduleTsumego {
-  color: #000 !important;
+  color: #f0f0f0;
 }
 .achievemetProfileLink {
   position: absolute;
@@ -2950,6 +2947,15 @@ h4 {
 .title4right {
   text-align: right;
 }
+.title-date {
+  position: absolute;
+  right: 19px;
+  top: -1px;
+  font-weight: bold;
+  color: #bcbcbcff;
+  text-align:right;
+  width:200px;
+}
 .new1 {
   background: linear-gradient(#fff, #f2f2f2);
   border-radius: 0 0 4px 4px;
@@ -2957,6 +2963,48 @@ h4 {
   border-left: 1px solid #777;
   border-right: 1px solid #777;
   padding: 8px;
+}
+.new-tsumego-box{
+  background-repeat: no-repeat;
+  border-radius: 4px;
+  border: 1px solid #777;
+  padding: 8px;
+  height:175px;
+  margin-top:6px;
+}
+.homeLeft .new-tsumego-box{
+  background-image: url("/img/mode-select-bg-left.png");
+}
+.homeRight .new-tsumego-box{
+  background-image: url("/img/mode-select-bg-right.png");
+}
+.new-tsumego-box-separator{
+  margin-top:8px;
+}
+.achievement-quote-pick{
+  width:629px;
+  border: 1px solid #777;
+  border-radius: 4px;
+  margin-top: 6px;
+}
+.quote-pick-wrapper{
+  display:flex;
+  justify-content: space-between;
+  position:relative;
+  width:629px;
+  margin-top: 6px;
+}
+.user-pick-all{
+  position: absolute;
+  width: 312px;
+  padding: 10px;
+  font-size: 20px;
+  cursor: context-menu;
+}
+.quote-pick-1{
+  width:312px;
+  border: 1px solid #777;
+  border-radius: 4px;
 }
 #logo1 {
   position: absolute;
@@ -3151,10 +3199,10 @@ input.newCheck {
 }
 .google-profile-image-large {
   position: relative;
-  top: 9px;
+  top: 4px;
   border-radius: 50%;
-  width: 45px;
-  height: 45px;
+  width: 23px;
+  height: 23px;
   border: 1px solid #ea4537;
   margin-right: 1px;
 }
@@ -4044,7 +4092,7 @@ nav ul .menuIcons1 {
   padding: 5px 12px;
 }
 #mostPopularToday {
-  color: black;
+  color: #f0f0f0;
   font-weight: 800;
 }
 .historyLink {
@@ -4345,155 +4393,19 @@ nav ul ul ul li {
 #besogo-review-button:hover {
   background-color: #cc6464 !important;
 }
-.quotePick1 {
-  font-size: 20px;
-  position: absolute;
-  top: 140px;
-  left: 100px;
-}
-.quotePick1 .quote1 {
-  color: white !important;
-}
-.quotePick2 {
-  font-size: 20px;
-  position: absolute;
-  top: 140px;
-  left: 140px;
-}
-.quotePick2 .quote1 {
-  color: #e0d7d3 !important;
-}
-.quotePick3 {
-  font-size: 20px;
-  position: absolute;
-  top: 140px;
-  left: 140px;
-}
-.quotePick3 .quote1 {
-  color: #01f1d8 !important;
-}
-.quotePick4 {
-  font-size: 20px;
-  position: absolute;
-  top: 125px;
-  left: 160px;
-}
-.quotePick4 .quote1 {
-  color: #429cd9 !important;
-}
-.quotePick5 {
-  font-size: 20px;
-  position: absolute;
-  top: 140px;
-  left: 120px;
-}
-.quotePick5 .quote1 {
-  color: #ffcc00 !important;
-}
-.quotePick6 {
-  font-size: 20px;
-  position: absolute;
-  top: 140px;
-  left: 140px;
-}
-.quotePick6 .quote1 {
-  color: #fbf2e2 !important;
-}
-.quotePick7 {
-  font-size: 20px;
-  position: absolute;
-  top: 140px;
-  left: 100px;
-}
-.quotePick7 .quote1 {
-  color: black !important;
-}
-.quotePick8 {
-  font-size: 20px;
-  position: absolute;
-  top: 140px;
-  left: 140px;
-}
-.quotePick8 .quote1 {
-  color: black !important;
-}
-.quotePick9 {
-  font-size: 20px;
-  position: absolute;
-  top: 140px;
-  left: 140px;
-}
-.quotePick9 .quote1 {
-  color: #d96270 !important;
-}
-.quotePick10 {
-  font-size: 20px;
-  position: absolute;
-  top: 140px;
-  left: 140px;
-}
-.quotePick10 .quote1 {
-  color: #da477f !important;
-}
-.quotePick11 {
-  font-size: 20px;
-  position: absolute;
-  top: 140px;
-  left: 150px;
-}
-.quotePick11 .quote1 {
-  color: #c5377f !important;
-}
-.quotePick12 {
-  font-size: 20px;
-  position: absolute;
-  top: 140px;
-  left: 140px;
-}
-.quotePick12 .quote1 {
-  color: white !important;
-}
-.quotePick13 {
-  font-size: 20px;
-  position: absolute;
-  top: 140px;
-  left: 155px;
-}
-.quotePick13 .quote1 {
-  color: #b83330 !important;
-}
-.quotePick14 {
-  font-size: 20px;
-  position: absolute;
-  top: 140px;
-  left: 140px;
-}
-.quotePick14 .quote1 {
-  color: #fff4fb !important;
-}
-.quotePick15 {
-  font-size: 20px;
-  position: absolute;
-  top: 140px;
-  left: 168px;
-}
-.quotePick15 .quote1 {
-  color: #6f988f !important;
-}
 .quote1 {
   width: 455px;
-  height: 59px;
+  height: 49px;
 }
 .quote1a {
   float: left;
-  padding: 5px;
+  padding: 0 5px;
 }
 .quote1b {
 }
 #ajaxWallpaper {
   display: none;
 }
-
 #commentPosition {
   margin-top: 10px;
   margin-bottom: 17px;

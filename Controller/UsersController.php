@@ -22,7 +22,6 @@ class UsersController extends AppController{
 		$this->loadModel('Duplicate');
 		$this->loadModel('PublishDate');
 		$this->loadModel('TagName');
-
 		/*
 		$setFrom = 259;
 		$setTo = 263;
@@ -119,24 +118,6 @@ class UsersController extends AppController{
 			'set_id' => null
 		)));
 		echo '<pre>'; print_r(count($ux)); echo '</pre>';
-
-		$this->transferCollection(94, 90);
-		$this->transferCollection(106, 101);
-		$this->transferCollection(108, 107);
-		$this->transferCollection(52, 50);
-		$this->transferCollection(53, 50);
-		$this->transferCollection(54, 50);
-		$this->transferCollection(49, 41);
-		$this->transferCollection(65, 41);
-		$this->transferCollection(66, 41);
-		$this->transferCollection(187, 186);
-		$this->transferCollection(196, 186);
-		$this->transferCollection(203, 186);
-		$this->transferCollection(193, 190);
-		$this->transferCollection(198, 190);
-		$this->transferCollection(115, 113);
-		$this->transferCollection(171, 163);
-		$this->transferCollection(141, 137);
 	
 		$sc = $this->SetConnection->find('all', array('order' => 'num ASC', 'conditions' => array(
 			'set_id' => 194,

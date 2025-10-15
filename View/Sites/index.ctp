@@ -1,65 +1,47 @@
-
+<link rel="stylesheet" type="text/css" href="/css/home-themes.css?v=1.0">
 <?php
-	$highestLeft = 18;
-	$highestRight = 18;
+	$highestLeft = 19;
+	$highestRight = 17;
 ?>
-	
 	<script src ="/js/previewBoard.js"></script>
 	<script src="https://accounts.google.com/gsi/client" async defer></script>
-	<?php if($_SESSION['loggedInUser']['User']['isAdmin'] > 0){ ?>
-	<div class="admin-panel-main-page">
-		<ul>
-			<li><a class="adminLink2" href="/users/adminstats">Activities</a></li>
-		</ul>
-	</div>
-	<?php } ?>
-
 	<div class="homeRight">
-		<p class="title4 title4right"><?php echo $d1; ?></p>
-		<?php
-		if(isset($_SESSION['loggedInUser']['User']['id']))
-			echo '<img id="title-image" src="/img/modeSelect24.png" width="100%" alt="Tsumego Hero Modes" title="Tsumego Hero Modes">';
-		else
-			echo '<img id="title-image" src="/img/modeSelect24x.png" width="100%" alt="Tsumego Hero Modes" title="Tsumego Hero Modes">';
-		?>
-		<br>
-		<p class="title4">Problems of the Day</p>
-		<div class="new1">
-		<?php
-		if(count($scheduleTsumego)!=0){
-			echo '<font color="#444">Added today:</font><br>';
-			if(count($scheduleTsumego)>1){
-				if(!$scheduleTsumego[0]['Tsumego']['locked']){ 
-					echo '<a class="scheduleTsumego" href="/sets/view/'.$newT['Tsumego']['set_id'].'"><b>
-					'.$newT['Tsumego']['set'].' '.$newT['Tsumego']['set2'].' - '.count($scheduleTsumego).' problems</b></a><br>';
-				}else{
-					echo '<a class="scheduleTsumego" href="/users/donate"><b>
-					'.$newT['Tsumego']['set'].' '.$newT['Tsumego']['set2'].' - '.count($scheduleTsumego).' problems</b></a><br>';
+		<div class="new-tsumego-box">
+			<p class="title-date"><?php echo $d1; ?></p>
+			<?php
+			if(count($scheduleTsumego)!=0){
+				echo '<font color="#f0f0f0">Added today:</font><br>';
+				if(count($scheduleTsumego)>1){
+					if(!$scheduleTsumego[0]['Tsumego']['locked']){ 
+						echo '<a class="scheduleTsumego" href="/sets/view/'.$newT['Tsumego']['set_id'].'"><b>
+						'.$newT['Tsumego']['set'].' '.$newT['Tsumego']['set2'].' - '.count($scheduleTsumego).' problems</b></a><br>';
+					}else{
+						echo '<a class="scheduleTsumego" href="/users/donate"><b>
+						'.$newT['Tsumego']['set'].' '.$newT['Tsumego']['set2'].' - '.count($scheduleTsumego).' problems</b></a><br>';
+					}
 				}
-			}
-			for($i=0; $i<count($scheduleTsumego); $i++){
-				if(!$scheduleTsumego[$i]['Tsumego']['locked']){ 
-					echo '<li class="set'.$scheduleTsumego[$i]['Tsumego']['status'].'1" style="margin-top:4px;">
-						<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$scheduleTsumego[$i]['Tsumego']['id'].'?search=topics">'
-						.$scheduleTsumego[$i]['Tsumego']['num'].'<span><div id="tooltipSvg'.$i.'"></div></span></a>
-					</li>';
-				}else{
-					echo '<li class="set'.$scheduleTsumego[$i]['Tsumego']['status'].'1" style="margin-top:4px;background-image: url(\'/img/viewButtonLocked.png\'">
-						<a class="tooltip" href="/users/donate">&nbsp;</a>
-					</li>';
+				for($i=0; $i<count($scheduleTsumego); $i++){
+					if(!$scheduleTsumego[$i]['Tsumego']['locked']){ 
+						echo '<li class="set'.$scheduleTsumego[$i]['Tsumego']['status'].'1" style="margin-top:8px;">
+							<a id="tooltip-hover'.$i.'" class="tooltip" href="/tsumegos/play/'.$scheduleTsumego[$i]['Tsumego']['id'].'?search=topics">'
+							.$scheduleTsumego[$i]['Tsumego']['num'].'<span><div id="tooltipSvg'.$i.'"></div></span></a>
+						</li>';
+					}else{
+						echo '<li class="set'.$scheduleTsumego[$i]['Tsumego']['status'].'1" style="margin-top:8px;background-image: url(\'/img/viewButtonLocked.png\'">
+							<a class="tooltip" href="/users/donate">&nbsp;</a>
+						</li>';
+					}
 				}
+				if(count($scheduleTsumego)<=10) echo '';
+				else echo '<br>';
 			}
-			if(count($scheduleTsumego)<=10) echo '';
-			else echo '<br>';
-		}
-		if(count($scheduleTsumego)!=0) echo '<br><br><br>';
-		else echo ''; 
-		?>
-		<font color="#444">Most popular today:</font><br>
+			if(count($scheduleTsumego)!=0) echo '<br><br><div class="new-tsumego-box-separator"></div>';
+			?>
+			<font color="#f0f0f0">Most popular today:</font><br>
 			<?php if(!$totd['Tsumego']['locked']){ ?>
 				<a id="mostPopularToday" href="/sets/view/<?php echo $totd['Tsumego']['set_id']; ?>"><b>
 					<?php echo $totd['Tsumego']['set'].' '.$totd['Tsumego']['set2']; ?></b> - <?php echo $totd['Tsumego']['num']; ?></a><br>
-				<li class="set<?php echo $totd['Tsumego']['status']; ?>1" style="margin-top:4px;">
+				<li class="set<?php echo $totd['Tsumego']['status']; ?>1" style="margin-top:8px;">
 					<a id="tooltip-hover99" class="tooltip" href="/tsumegos/play/<?php echo $totd['Tsumego']['id'].'?search=topics'; ?>">
 						<?php echo $totd['Tsumego']['num']; ?>
 						<span><div id="tooltipSvg99"></div></span>
@@ -68,18 +50,25 @@
 			<?php }else{ ?>
 				<a id="mostPopularToday" href="/users/donate"><b>
 					<?php echo $totd['Tsumego']['set'].' '.$totd['Tsumego']['set2']; ?></b> - <?php echo $totd['Tsumego']['num']; ?></a><br>
-				<li class="set<?php echo $totd['Tsumego']['status']; ?>1" style="margin-top:4px;background-image: url('/img/viewButtonLocked.png');">
+				<li class="set<?php echo $totd['Tsumego']['status']; ?>1" style="margin-top:8px;background-image: url('/img/viewButtonLocked.png');">
 					<a class="tooltip" href="/users/donate">
 						&nbsp;
 					</a>
 				</li>
 			<?php } ?>
-			<br><br>
+			<br><br><div style="margin-top:6px"></div>
 		</div>
+		
+		<div class="quote-pick-wrapper">
+			<img src="/img/new_startpage/<?php echo $quote; ?>.PNG?v=4.3" class="quote-pick-1" alt="Quote of the Day" title="Quote of the Day">
+			<img src="/img/new_startpage/<?php echo $quote; ?>u.PNG?v=4.3" class="quote-pick-1" alt="User of the Day" title="User of the Day">
+			<div class="user-pick-all user-pick-<?php echo $quote; ?>" align="center">
+					<?php echo $userOfTheDay; ?>
+			</div>
+		</div>
+
 		<!-- RIGHT NEWS -->
-		<!-- RIGHT NEWS -->
-		<!-- RIGHT NEWS -->
-		 <div id="news-right-18">
+		 <div id="news-right-17">
 			<p class="title4">New Collection: Level Evaluation Set: Beginner | 21.08.2025</p>
 			<div class="new1">	
 			The Level Evaluation Set is designed to assess and improve the reader’s strength in the game of Go through a focused collection of Tsumego and Tesuji problems. The first part is titled Beginner and covers problems around the double digit kyu ranks.  
@@ -89,7 +78,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="news-right-17">
+		<div id="news-right-16">
 			<p class="title4">New Collection: The J Group | 28.05.2025</p>
 			<div class="new1">	
 			The J group is next to the L group another common shape that can happen in the corner. It is defended with a hanging connection, so it forms a J.
@@ -98,20 +87,6 @@
 				<div align="center"><img width="60%" src="/img/j-group-promo.png" alt="New Collection: The J Group" title="New Collection: The J Group"><br><br>
 				<a class="new-button main-page" style="font-size:14px;" href="/sets/view/255">Play</a><br><br>
 				</div>
-			</div>
-		</div>
-		<div id="news-right-16">
-			<p class="title4">Update 17.05.2025</p>
-			<div class="new1"><br>
-				<div align="center">
-					<?php 
-						for($i=0;$i<7;$i++){
-							?><img title="Empty Heart" src="/img/heart2small.png"><?php
-						}
-					?>
-				</div><br>
-				On failed attempts, while the hearts are empty, there are no board locks and "Try again tomorrow" messages, but instead you can continue to try solving the problems. 
-				Currently this is only enabled on <a href="/users/donate">premium</a> accounts.<br><br>
 			</div>
 		</div>
 		<div id="news-right-15">
@@ -384,16 +359,27 @@
 	</div>
 	
 	<div class="homeLeft">
-		<p class="title4">Most Recent Achievements</p>
+		<div class="new-tsumego-box">
 		<?php
-			$quotePick = ceil(substr($quote, 1)/3);
+		if(isset($_SESSION['loggedInUser']['User']['id']))
+			echo '<img id="title-image" src="/img/modeSelect24.png?v=1.1" width="100%" alt="Tsumego Hero Modes" title="Tsumego Hero Modes">';
+		else
+			echo '<img id="title-image" src="/img/modeSelect24x.png?v=1.1" width="100%" alt="Tsumego Hero Modes" title="Tsumego Hero Modes">';
+		?>
+		</div>
+		<?php
+		
+			$quotePick = substr($quote, 1);
+
+			//echo '<pre>';print_r($quotePick);echo '</pre>';
+
 			if(!isset($_SESSION['lastVisit'])) $_SESSION['lastVisit'] = 15352;
 			$modeActions = '';
 			$modeActions2 = 'class="modeboxes"';
 			if(isset($_SESSION['loggedInUser']) && $ac) $modeActions = 'class="modeboxes" onmouseover="mode2hover()" onmouseout="modeNoHover()"';
 			if($ac) $modeActions2 = 'class="modeboxes"';
 			else $modeActions2 = 'class="modeboxes"';
-			echo '<div class="quotePick'.$quotePick.'" id="ajaxWallpaper"></div>';
+			echo '<div class="quote-pick-all quote-pick-'.$quotePick.'" id="ajaxWallpaper"></div>';
 		?>
 		<a href="/tsumegos/play/<?php echo $_SESSION['lastVisit']; ?>?mode=1">
 			<div class="modeBox1" onmouseover="mode1hover()" onmouseout="modeNoHover()"></div>
@@ -420,32 +406,31 @@
 		<a href="/achievements">
 			<div class="modeBox44" onmouseover="mode4hover()" onmouseout="modeNoHover()"></div>
 		</a>
-		<?php
-		}
-		echo '<img src="/img/new_startpage/'.$quotePick.'.PNG" width="100%" alt="Tsumego Hero Message of the Day" title="Tsumego Hero Message of the Day">';
-		?>
-		<p class="title4">User of the Day </p>
-		<div class="new1">
-		<div class="uotd mid uotd<?php echo $uotdbg; ?> mid<?php echo $uotdbg; ?> ">
-		  <h2 id="uotdStartPage" <?php if(strlen($userOfTheDay)>=10) echo 'class="midLongName1"'; ?>><?php echo $userOfTheDay; ?></h2>
-		</div>
-		<p class="uotdmargin">&nbsp;</p>
-		</div>
+		<?php } ?>
+		<img src="/img/new_startpage/<?php echo $quote; ?>e.PNG?v=4.3" class="achievement-quote-pick" alt="Most Recent Achievements" title="Most Recent Achievements">
+		
 		<?php if(
 			!isset($_SESSION['loggedInUser']['User']['id'])
 			|| isset($_SESSION['loggedInUser']['User']['id']) && $_SESSION['loggedInUser']['User']['premium']==0
 		){ ?>
-			<p class="title4">Upgrade to Premium</p>
+			<p class="title4" style="margin-top:2px;">Upgrade to Premium</p>
 			<div class="new1">
 			<div align="center">
 				<br>
 				<a href="/users/donate"><img id="donateH" onmouseover="donateHover()" onmouseout="donateNoHover()" width="180px" src="/img/upgradeButton1.png"></a>
 				<br><br>
-				Get access to <a href="/users/donate">Tsumego Hero Premium</a>.<br><br>
 			</div>
 			</div>
 		<?php } ?>
-		
+		<p class="title4"<?php if(isset($_SESSION['loggedInUser']['User']['id'])) echo ' style="margin-top:2px;"'; ?>>Recent Upgrades</p>
+		<div class="new1">
+			<table class="newx">
+				<?php 
+					for($i=0;$i<count($urNames);$i++)
+						echo '<tr><td><img width="40px" src="/img/hpP.png"></td><td><h1 style="margin:2px">'.$urNames[$i].'</h1></td></tr>';
+				?>
+			</table>	
+		</div>
 		<p class="title4">Problem Database Size </p>
 		<div class="new1">
 		<?php
@@ -561,18 +546,22 @@
 		<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 		<br>
 		</div>
-		<p class="title4">Recent Upgrades</p>
-		<div class="new1">
-			<table class="newx" border="0">
-				<?php 
-					for($i=0;$i<count($urNames);$i++)
-						echo '<tr><td><img width="40px" src="/img/hpP.png"></td><td><h1 style="margin:2px">'.$urNames[$i].'</h1></td></tr>';
-				?>
-			</table>	
+		
+		<!-- LEFT NEWS -->
+		 <div id="news-left-19">
+			<p class="title4">Update 17.05.2025</p>
+			<div class="new1"><br>
+				<div align="center">
+					<?php 
+						for($i=0;$i<7;$i++){
+							?><img title="Empty Heart" src="/img/heart2small.png"><?php
+						}
+					?>
+				</div><br>
+				On failed attempts, while the hearts are empty, there are no board locks and "Try again tomorrow" messages, but instead you can continue to try solving the problems. 
+				Currently this is only enabled on <a href="/users/donate">premium</a> accounts.<br><br>
+			</div>
 		</div>
-		<!-- LEFT NEWS -->
-		<!-- LEFT NEWS -->
-		<!-- LEFT NEWS -->
 		<div id="news-left-18">
 			<p class="title4">Update 29.11.2024</p>
 			<div class="new1">
@@ -822,7 +811,6 @@
 			</div>
 		</div>
 		
-
 		<div id="news-left-5">
 			<p class="title4">Update 23.11.2023</p>
 			<div class="new1">
@@ -838,7 +826,6 @@
 			</div>
 		</div>
 		
-
 		<div id="news-left-4">
 			<p class="title4">Update 06.11.2023</p>
 			<div class="new1">
@@ -959,25 +946,25 @@
 		}
 		function mode1hover(){
 			<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
-				$("#title-image").attr("src", "/img/modeSelect24-1.png");
+				$("#title-image").attr("src", "/img/modeSelect24-1.png?v=1.1");
 			<?php }else{ ?>
-				$("#title-image").attr("src", "/img/modeSelect24x-1.png");
+				$("#title-image").attr("src", "/img/modeSelect24x-1.png?v=1.1");
 			<?php } ?>
 		}
 		function mode2hover(){
-			$("#title-image").attr("src", "/img/modeSelect24-2.png");
+			$("#title-image").attr("src", "/img/modeSelect24-2.png?v=1.1");
 		}
 		function mode3hover(){
-			$("#title-image").attr("src", "/img/modeSelect24-3.png");
+			$("#title-image").attr("src", "/img/modeSelect24-3.png?v=1.1");
 		}
 		function mode4hover(){
-			$("#title-image").attr("src", "/img/modeSelect24-4.png");
+			$("#title-image").attr("src", "/img/modeSelect24-4.png?v=1.1");
 		}
 		function modeNoHover(){
 			<?php if(isset($_SESSION['loggedInUser']['User']['id'])){ ?>
-				$("#title-image").attr("src", "/img/modeSelect24.png");
+				$("#title-image").attr("src", "/img/modeSelect24.png?v=1.1");
 			<?php }else{ ?>
-				$("#title-image").attr("src", "/img/modeSelect24x.png");
+				$("#title-image").attr("src", "/img/modeSelect24x.png?v=1.1");
 			<?php } ?>
 		}
 		let textBuffer = "";

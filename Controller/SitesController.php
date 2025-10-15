@@ -91,20 +91,10 @@ class SitesController extends AppController{
 			$idArray = array();
 			array_push($idArray, $totd['Tsumego']['id']);
 			for($i=0; $i<count($scheduleTsumego); $i++){
-				/*
-				$scScheduleTsumego = $this->SetConnection->find('all', array('conditions' => array('tsumego_id' => $scheduleTsumego[$i]['Tsumego']['id'])))
-				for($j=0; $j<count($scheduleTsumego); $j++)
-					if(count($scheduleTsumego)>1 && )
-				$newT['Tsumego']['set_id']
-				*/
 				array_push($idArray, $scheduleTsumego[$i]['Tsumego']['id']);
 			}
-			//echo '<pre>'; print_r($idArray); echo '</pre>';
-			/*
-			$uts = $this->TsumegoStatus->find('all', array(
-				'order' => 'created DESC', 'conditions' => array('user_id' => $_SESSION['loggedInUser']['User']['id'])
-			));
-			*/
+			
+		
 			$uts = $this->TsumegoStatus->find('all', array('order' => 'created DESC', 'conditions' => array(
 				'user_id' => $_SESSION['loggedInUser']['User']['id'],
 				'tsumego_id' => $idArray
@@ -159,10 +149,6 @@ class SitesController extends AppController{
 				$scheduleTsumego[$i]['Tsumego']['status'] = 'N';
 		}
 		
-		/*for($i=0; $i<count($setIDs); $i++){
-			$setNames[$setIDs[$i]] = $this->Set->findById($setIDs[$i]);
-		}*/
-		
 		$d1 = date(' d, Y');
 		$d1day = date('d. ');
 		$d1year = date('Y');
@@ -170,10 +156,12 @@ class SitesController extends AppController{
 		$d2 = date('Y-m-d H:i:s');
 		$month = date("F", strtotime(date('Y-m-d')));
 		$d1 = $d1day.$month.' '.$d1year;
-		
 		$currentQuote = $dateUser['DayRecord']['quote'];
-		$userOfTheDay = $this->User->find('first', array('conditions' =>  array('id' => $dateUser['DayRecord']['user_id'])));
+		$currentQuote = 'q13';
+		$userOfTheDay = $this->User->find('first', array('conditions' => array('id' => $dateUser['DayRecord']['user_id'])));
 		
+		//echo '<pre>';print_r($dateUser);echo '</pre>';
+
 		$totdSc = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $totd['Tsumego']['id'])));
 		$totdS = $this->Set->findById($totdSc['SetConnection']['set_id']);
 		$newTSc = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $newT['Tsumego']['id'])));
@@ -251,7 +239,9 @@ class SitesController extends AppController{
 			$hasPremium = false;
 		else
 			$hasPremium = true;
-		
+
+		//echo '<pre>';print_r($currentQuote);echo '</pre>';
+
 		$this->set('hasPremium', $hasPremium);
 		$this->set('tsumegos', $tsumegoDates);
 		$this->set('quote', $currentQuote);

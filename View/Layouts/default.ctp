@@ -6,6 +6,7 @@
 	$cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version());
 ?>
 	<?php
+	phpInfo();
 		$url = parse_url($_SERVER['HTTP_HOST']);
 		$url['path'] = str_replace('tsumego-hero.com','',$url['path']);
 		if($url['path']=='www.') echo '<script type="text/javascript">window.location.href = "https://tsumego-hero.com'.$_SERVER['REQUEST_URI'].'";</script>';
@@ -31,7 +32,7 @@
 	<meta name="keywords" content="tsumego, problems, puzzles, baduk, weiqi, tesuji, life and death, solve, solving, hero, go, in-seong, level" >
 	<meta name="Author" content="Joschka Zimdars">
 	<meta property="og:title" content="Tsumego Hero">
-	<link rel="stylesheet" type="text/css" href="/css/default.css?v=4.4">
+	<link rel="stylesheet" type="text/css" href="/css/default.css?v=4.5">
 	<?php
 		if($lightDark=='dark')
 			echo '<link rel="stylesheet" type="text/css" href="/css/dark.css?v=4.3">';

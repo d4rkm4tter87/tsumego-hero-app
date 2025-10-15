@@ -142,30 +142,20 @@ class AppController extends Controller{
 		$this->LoadModel('Achievement');
 		$this->LoadModel('AchievementStatus');
 		$str = '';
-		$latest = $this->AchievementStatus->find('all', array('limit' => 6, 'order' => 'created DESC'));
+		$latest = $this->AchievementStatus->find('all', array('limit' => 7, 'order' => 'created DESC'));
 		for($i=0; $i<count($latest); $i++){
 			$a = $this->Achievement->findById($latest[$i]['AchievementStatus']['achievement_id']);
 			$u = $this->User->findById($latest[$i]['AchievementStatus']['user_id']);
 			if(substr($u['User']['name'],0,3)=='g__' && $u['User']['external_id']!=null){
 				$startPageUser = $this->checkPicture($u);
-				if(strlen(substr($startPageUser, strpos($startPageUser, '">')+2))>15){
-					$startPageUser = substr($startPageUser,0,(strpos($startPageUser, '">')+2+15)).'...';
-					$uStartPageUser = array();
-					$uStartPageUser['User']['name'] = $startPageUser;
-					$uStartPageUser['User']['picture'] = $u['User']['picture'];
-					$uStartPageUser['User']['external_id'] = $u['User']['external_id'];
-					$startPageUser = $this->checkPicture($uStartPageUser);
-				}
 			}else{
-				if(strlen($u['User']['name'])>17)
-					$startPageUser = substr($u['User']['name'],0,17).'...';
-				else $startPageUser = $u['User']['name'];
+				$startPageUser = $u['User']['name'];
 			}
 			$latest[$i]['AchievementStatus']['name'] = $a['Achievement']['name'];
 			$latest[$i]['AchievementStatus']['color'] = $a['Achievement']['color'];
 			$latest[$i]['AchievementStatus']['image'] = $a['Achievement']['image'];
 			$latest[$i]['AchievementStatus']['user'] = $startPageUser;
-			$str.='<div class="quote1"><div class="quote1a"><a href="/achievements/view/'.$a['Achievement']['id'].'"><img src="/img/'.$a['Achievement']['image'].'.png" width="40px"></a></div>';
+			$str.='<div class="quote1"><div class="quote1a"><a href="/achievements/view/'.$a['Achievement']['id'].'"><img src="/img/'.$a['Achievement']['image'].'.png" width="34px"></a></div>';
 			$str.='<div class="quote1b">Achievement gained by '.$startPageUser.':<br><div class=""><b>'.$a['Achievement']['name'].'</b></div></div></div>';
 		}
 		file_put_contents('mainPageAjax.txt', $str);
