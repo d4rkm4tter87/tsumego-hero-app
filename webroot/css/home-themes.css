@@ -176,8 +176,8 @@
   left: 100px;
 }
 .user-pick-q12 {
-  left: 321px;
-  top: 118px;
+  left: 314px;
+  top: 151px;
   font-family: Helvetica, Times New Roman, verdana;
 }
 
@@ -192,5 +192,20 @@
 .user-pick-q13 {
   left: 321px;
   top: 118px;
+  font-family: Helvetica, Times New Roman, verdana;
+}
+
+.quote-pick-14 .quote1,
+.user-pick-q14 {
+  color: #2f728d !important;
+}
+.quote-pick-14 {
+  top: 288px;
+  left: 100px;
+}
+.user-pick-q14 {
+  left: 321px;
+  top: 118px;
+  font-size: 24px;
   font-family: Helvetica, Times New Roman, verdana;
 }

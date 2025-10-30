@@ -203,7 +203,7 @@ class AppController extends Controller{
 		$newQuote = 'q01';
 		$quoteChosen = false;
 		while(!$quoteChosen){
-			$newQuote = rand(1,45);
+			$newQuote = rand(1,14);
 			if($newQuote<10) $newQuote='q0'.$newQuote;
 			else $newQuote='q'.$newQuote;
 			

@@ -157,10 +157,8 @@ class SitesController extends AppController{
 		$month = date("F", strtotime(date('Y-m-d')));
 		$d1 = $d1day.$month.' '.$d1year;
 		$currentQuote = $dateUser['DayRecord']['quote'];
-		$currentQuote = 'q13';
+		//$currentQuote = 'q14';
 		$userOfTheDay = $this->User->find('first', array('conditions' => array('id' => $dateUser['DayRecord']['user_id'])));
-		
-		//echo '<pre>';print_r($dateUser);echo '</pre>';
 
 		$totdSc = $this->SetConnection->find('first', array('conditions' => array('tsumego_id' => $totd['Tsumego']['id'])));
 		$totdS = $this->Set->findById($totdSc['SetConnection']['set_id']);
