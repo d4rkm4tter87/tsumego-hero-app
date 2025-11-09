@@ -32,9 +32,6 @@ besogo.addVirtualChildren = function(root, node, addHash = true)
 {
   if (besogo.vChildrenEnabled)
   {
-    if (node.virtualChildren.length > 0)
-      return;
-
     if (addHash)
       root.nodeHashTable.push(node);
 
@@ -113,20 +110,15 @@ besogo.updateCorrectValues = function(root)
     besogo.updateCorrectValuesInternal(root, root);
   else
     besogo.updateCorrectValuesBasedOnStatus(root, root.goal, root.status, true /* isCorrectBranch */);
-  root.unvisit();
 }
 
-besogo.updateStatusResult = function(solversMove, child, status, goal, superkoMeansDead)
+besogo.updateStatusResult = function(solversMove, child, status, goal)
 {
-  let childStatusToUse = child.status;
-  if (childStatusToUse.blackFirst.type == STATUS_ALIVE_IN_SUPER_KO && superkoMeansDead)
-    childStatusToUse.blackFirst.type = STATUS_DEAD_IN_SUPER_KO;
-
-  if (childStatusToUse.isNone())
+  if (child.status.isNone())
     return status;
 
-  if (childStatusToUse.better(status, goal) == solversMove)
-    return childStatusToUse;
+  if (child.status.better(status, goal) == solversMove)
+    return child.status;
   else
     return status;
 }
@@ -142,27 +134,20 @@ besogo.updateStatusValuesInternal = function(root, node, goal)
   if (node.status)
     return;
 
-  // If we encounter this node again while resolving status, it will be marked as super ko
-  // result and we won't go into an infinite loop.
-  node.status = besogo.makeStatusSimple(STATUS_ALIVE_IN_SUPER_KO);
-
   for (let i = 0; i < node.children.length; ++i)
     besogo.updateStatusValuesInternal(root, node.children[i], goal);
   for (let i = 0; i < node.virtualChildren.length; ++i)
   {
 	try
     {
-	    besogo.updateStatusValuesInternal(root, node.virtualChildren[i].target, goal);
-    }
-	  catch(e)
-	  {
-	    if (besogo.isEmbedded)
-		    besogo.editor.displayError("Error: too much recursion.");
-	  }
+	  besogo.updateStatusValuesInternal(root, node.virtualChildren[i].target, goal);
+	}
+	catch(e)
+	{
+	  if (besogo.isEmbedded)
+		besogo.editor.displayError("Error: too much recursion.");
+	}
   }
-  // once the child resolution is done, this node can go back to none, so it its status is assigned in a normal way
-  node.status = besogo.makeStatusSimple(STATUS_NONE);
-
   let solversMove = (node.nextMove() == root.firstMove);
 
   if (solversMove == (goal == GOAL_KILL))
@@ -171,9 +156,9 @@ besogo.updateStatusValuesInternal = function(root, node, goal)
     node.status = besogo.makeStatusSimple(STATUS_DEAD_NONE);
 
   for (let i = 0; i < node.children.length; ++i)
-    node.status = besogo.updateStatusResult(solversMove, node.children[i], node.status, goal, node.superkoMeansDead);
+    node.status = besogo.updateStatusResult(solversMove, node.children[i], node.status, goal);
   for (let i = 0; i < node.virtualChildren.length; ++i)
-    node.status = besogo.updateStatusResult(solversMove, node.virtualChildren[i].target, node.status, goal, node.superkoMeansDead);
+    node.status = besogo.updateStatusResult(solversMove, node.virtualChildren[i].target, node.status, goal);
 
   if (node.status.blackFirst.type == STATUS_ALIVE_NONE || node.status.blackFirst.type == STATUS_DEAD_NONE)
     node.status = besogo.makeStatusSimple(STATUS_NONE);
@@ -181,7 +166,6 @@ besogo.updateStatusValuesInternal = function(root, node, goal)
 
 besogo.updateCorrectValuesInternal = function(root, node)
 {
-  node.visited = true;
   if (node.comment.startsWith("+"))
   {
     if (!node.correctSource)
@@ -207,7 +191,7 @@ besogo.updateCorrectValuesInternal = function(root, node)
   let hasUndefined = false;
 
   for (let i = 0; i < node.children.length; ++i)
-    if (!node.children[i].visited && !node.children[i].localEdit)
+    if (!node.children[i].localEdit)
     {
       let parentStatus = besogo.updateCorrectValuesInternal(root, node.children[i]);
       if (parentStatus == CORRECT_GOOD)
@@ -215,13 +199,13 @@ besogo.updateCorrectValuesInternal = function(root, node)
       else if (parentStatus == CORRECT_BAD)
         hasLoss = true;
       else if (parentStatus == CORRECT_UNDEFINED)
-        hasUndefined = true;
+        hasUndefined
       else
         console.assert(false);
     }
 
   for (let i = 0; i < node.virtualChildren.length; ++i)
-    if (!node.virtualChildren[i].visited && !node.virtualChildren[i].localEdit)
+    if (!node.virtualChildren[i].localEdit)
     {
       let parentStatus = besogo.updateCorrectValuesInternal(root, node.virtualChildren[i].target);
       if (parentStatus == CORRECT_GOOD)
@@ -229,7 +213,7 @@ besogo.updateCorrectValuesInternal = function(root, node)
       else if (parentStatus == CORRECT_BAD)
         hasLoss = true;
       else if (parentStatus == CORRECT_UNDEFINED)
-        hasUndefined = true;
+        hasUndefined
       else
         console.assert(false);
     }
@@ -237,7 +221,7 @@ besogo.updateCorrectValuesInternal = function(root, node)
   let solversMove = (node.nextMove() == root.firstMove);
   if (solversMove)
     node.correct = hasWin ? CORRECT_GOOD : CORRECT_BAD; // on my move, one winning is enough for the branch to be correct
-  else if (hasUndefined && !hasLoss)
+  else if (hasUndefined && !hasLose)
     node.correct = CORRECT_UNDEFINED; // if there is loss possibilty on opponents move, it is loss whatever, so underfined only if it could  change that all variants are good for solver
   else
     node.correct = (hasWin && !hasLoss) ? CORRECT_GOOD : CORRECT_BAD;

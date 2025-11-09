@@ -118,12 +118,6 @@ besogo.composeSgf = function(editor, expand = false)
       string += 'S[' + node.statusSource.str() + ']';
     }
 
-    if (node.superkoMeansDead)
-    {
-      string += (string ? '\n' : '');
-      string += 'SKD[]';
-    }
-
     if (node.parent == null && node.goal != GOAL_NONE)
     {
       string += (string ? '\n' : '');
